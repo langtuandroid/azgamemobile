@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<phomSize>1177945</phomSize>
+	<!--<gameName>TienLenMN</gameName>-->
+	<gameName>tlmn</gameName>
+	<maxCharsChat>140</maxCharsChat>
+	<maxCharsFeedback>500</maxCharsFeedback>
+	<maxCharsInputText>30</maxCharsInputText>
+	<maxCharsRoomName>33</maxCharsRoomName>
+	<ipNumber>183.91.14.52</ipNumber>
+	
+	<swfLoading src="lib/swfList/loadingScreen.swf"/>
+	<swfList size="1230421" > <!--danh sách đường dẫn các file content cần load-->
+		<swfFile src="lib/swfList/background.swf"/>
+		<swfFile src="lib/swfList/chooseChannelScreen.swf" />
+		<swfFile src="lib/swfList/lobbyRoomScreen.swf" />
+		<swfFile src="lib/swfList/playingScreen.swf" />
+		<swfFile src="lib/swfList/baseGUI.swf" />
+		<swfFile src="lib/swfList/faceIcon.swf" />
+	</swfList>
+	
+	<requestLink> <!--danh sách các link request lên server PHP-->
+		<getPersonalInfoLink url="/javajson/user_info/" />
+		<getChannelLink url="http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetServerInfo" />
+		<moneyIcon url="http://123.30.210.55/public/game/ciao88_icon.png" />
+		<convertImg url="http://cdn.ciao66.com/photos/resized/w150/h150/" />
+	</requestLink>
+	
+	<gameDescription> <!--Các đoạn text thể hiện nội dung của game, ví dụ tên các button....-->
+		<moneyUnit>Ciao</moneyUnit>
+		<isTurnOnSms>1</isTurnOnSms>
+		<waitingSentence>Hệ thống đang xử lý, bạn vui lòng chờ trong giây lát</waitingSentence>
+		<waitingLoadRoomSentence>Đang cập nhật danh sách bàn chơi ...</waitingLoadRoomSentence>
+		<loginError>Bạn chưa đăng nhập</loginError>
+		<chooseChannelScreen>
+			<addMoney>Nạp Ciao theo cú pháp sau</addMoney>
+			<addMoneyNumber_1>7739</addMoneyNumber_1>
+			<addMoneyNumber_2>8588</addMoneyNumber_2>
+		</chooseChannelScreen>
+		<playingScreen>
+			<arrangeCardTime>90</arrangeCardTime>
+			<showMoneyTime>5</showMoneyTime>
+			<showGroupTime>5</showGroupTime>
+			<groupName>
+				<node>Gồm có 1 bộ 4 lá Át</node>
+				<node>Gồm 1 dãy liên tiếp và đồng chất</node>
+				<node>Gồm có 1 bộ 4 lá bài cùng số</node>
+				<node>Gồm có 1 bộ 3 và 1 đôi</node>
+				<node>Gồm 1 bộ các lá bài đồng chất</node>
+				<node>Gồm 1 dãy liên tiếp và không đồng chất</node>
+				<node>Gồm 1 bộ ba</node>
+				<node>Gồm 2 bộ đôi</node>
+				<node>Gồm 1 bộ đôi</node>
+				<node>Gồm 1 bộ không kết hợp gì với nhau</node>
+			</groupName>
+			<groupButtonName>
+				<node>Tứ quý át</node>
+				<node>Thùng phá sảnh</node>
+				<node>Tứ quý</node>
+				<node>Cù lũ</node>
+				<node>Thùng</node>
+				<node>Sảnh</node>
+				<node>Sám cô</node>
+				<node>Thú</node>
+				<node>Độn</node>
+				<node>Mậu thầu</node>
+			</groupButtonName>
+			<specialGroupName>
+				<node>Khi xếp được 13 lá từ 2 đến A và đồng chất. Thắng trắng và được 78 lần cược mỗi người</node>
+				<node>Khi xếp được 13 lá từ 2 đến A và không đồng chất. Thắng trắng và được 39 lần cược mỗi người</node>
+				<node>Khi xếp được 13 lá là chất zô hoặc cơ</node>
+				<node>Khi xếp được 13 lá là chất bích hoặc tép</node>
+				<node>Khi xếp được 12 lá là chất bích hoặc tép, lá còn lại là zô hoặc cơ</node>
+				<node>Khi xếp được 12 lá là chất zô hoặc cơ, lá còn lại là bích hoặc tép</node>
+				<node>Khi xếp được 5 đôi và 1 sám cô ở cả 3 chi. Thắng trắng và được 18 lần cược mỗi người</node>
+				<node>Khi xếp được 6 đôi ở cả 3 chi. Thắng trắng và được 9 lần cược mỗi người</node>
+				<node>Khi xếp được 3 thùng ở cả 3 chi. Thắng trắng và được 9 lần cược mỗi người</node>
+				<node>Khi xếp được 3 sảnh ở cả 3 chi. Thắng trắng và được 9 lần cược mỗi người</node>
+				<node>Có thùng phá sảnh ở chi 1 hoặc 2. Thắng được thêm 5 hoặc 10 lần tiền cược</node>
+				<node>Có tứ quý ở chi 1 hoặc 2. Thắng được thêm 4 hoặc 8 lần tiền cược</node>
+				<node>Có cù lũ ở chi 2. Thắng được thêm 1 lần tiền cược</node>
+				<node>Có sám cô ở chi 3. Thắng được thêm 2 lần cược</node>
+			</specialGroupName>
+			<specialGroupButtonName>
+				<node>Rồng cuốn</node>
+				<node>Sảnh rồng</node>
+				<node>13 đỏ</node>
+				<node>13 đen</node>
+				<node>12 đen 1 đỏ</node>
+				<node>12 đỏ 1 đen</node>
+				<node>Năm đôi một sám</node>
+				<node>Lục phé bôn</node>
+				<node>3 thùng</node>
+				<node>3 sảnh</node>
+				<node>Thùng phá sảnh</node>
+				<node>Tứ quý</node>
+				<node>Cù lũ chi 2</node>
+				<node>Sám cô chi 3</node>
+			</specialGroupButtonName>
+			<accuseWindow>
+				<selectSentence_1>Nói tục</selectSentence_1>
+				<selectSentence_2>Liên tục sao chép cùng một nội dung và gửi lên</selectSentence_2>
+				<selectSentence_3>Có những hành động vô vắn hóa</selectSentence_3>
+				<selectSentence_4>Các lý do khác </selectSentence_4>
+				<accuseButton>Tố cáo</accuseButton>
+				<closeButton>Hủy bỏ</closeButton>
+				<noReason>Bạn chưa chọn lý do tố cáo</noReason>
+				<emptyReason>Bạn chưa điền nội dung cho lý do khác</emptyReason>
+			</accuseWindow>
+			
+			<callButton>THEO</callButton>
+			<raiseButton>TỐ</raiseButton>
+			<allInButton>TỐ TẤT CẢ</allInButton>
+			<raiseDoubleButton>TỐ GẤP ĐÔI</raiseDoubleButton>
+			<raiseQuaterButton>TỐ 1/4</raiseQuaterButton>
+			<raiseHalfButton>TỐ 1/2</raiseHalfButton>
+			<foldButton>ÚP BỎ</foldButton>
+			<checkButton>NHƯỜNG TỐ</checkButton>
+			
+			<arrangeFinishButton>HOÀN THÀNH</arrangeFinishButton>
+			<reArrangeButton>XẾP LẠI BÀI</reArrangeButton>
+			<arrangeButton>SẮP XẾP BÀI</arrangeButton>
+			<getCardButton>BỐC BÀI</getCardButton>
+			<stealCardButton>ĂN BÀI</stealCardButton>
+			<playCardButton>ĐÁNH BÀI</playCardButton>
+			<reSelectButton>CHỌN LẠI</reSelectButton>
+			<downCardButton>HẠ BÀI</downCardButton>
+			<downCardFinishButton>TỰ ĐỘNG HẠ</downCardFinishButton>
+			<sendCardButton>GỬI BÀI</sendCardButton>
+			<sendCardFinishButton>THÔI GỬI</sendCardFinishButton>
+			<passButton>BỎ QUA</passButton>
+			<reSelectCardButton>CHỌN LẠI</reSelectCardButton>
+			<arrangeCardButton>XẾP BÀI</arrangeCardButton>
+			<closeButton>Đóng</closeButton>
+			<denyButton>Từ chối</denyButton>
+			<confirmButton>Đồng ý</confirmButton>
+			<feedButton>Chia sẻ</feedButton>
+			<invitePlayButton>Mời</invitePlayButton>
+			<confirmDownCardFinish>Bạn vẫn còn phỏm chưa hạ, bạn có chắc chắn muốn bỏ qua ?</confirmDownCardFinish>
+			<confirmKickOut>Bạn có chắc chắn muốn kick người chơi</confirmKickOut>
+			<confirmSendCardFinish>Bạn vẫn còn bài chưa gửi, bạn có chắc chắn muốn bỏ qua ?</confirmSendCardFinish>
+			<confirmExit>Ván bài chưa kết thúc, nếu thoát ra bạn sẽ mất 4 lần tiền cược</confirmExit>
+			<waitOtherPlayer>Chờ người khác vào phòng chơi</waitOtherPlayer>
+			<readyAlert>Bạn có 20s để sẵn sàng</readyAlert>
+			<playWrongCard>Quân bài bạn đánh không hợp lệ</playWrongCard>
+			<downCard>Hãy chọn phỏm để hạ, hạ theo từng phỏm một</downCard>
+			<playCard>Hãy click chọn một quân bài để đánh</playCard>
+			<sendCard>Hãy chọn quân bài để gửi, gửi từng quân bài một</sendCard>
+			<kickOutReady>Bạn đã bị đẩy ra khỏi phòng do không ấn sẵn sàng</kickOutReady>
+			<kickOutMoney>Bạn đã bị đẩy ra khỏi phòng do không đủ tiền cược để chơi tiếp</kickOutMoney>
+			<roomMasterKick>Bạn đã bị chủ phòng đẩy ra</roomMasterKick>
+			<userLeaveRoom>đã thoát ra khỏi phòng chơi</userLeaveRoom>
+			<userJoinRoom>vừa vào phòng chơi</userJoinRoom>
+			<roomNameDefault>
+				<node>Làm 1 ván nào!!!</node>
+				<node>Nhẹ nhàng đẩy xe hàng!!!</node>
+				<node>Pro thì nhẩy vô!!!!!!</node>
+				<node>Giải trí tí thôi!!!!!!</node>
+			</roomNameDefault>
+			<sendCardRule>Gửi bài</sendCardRule>
+			<notSendCardRule>Không gửi bài</notSendCardRule>
+			<gaRule>Có gà</gaRule>
+			<notGaRule>Không gà</notGaRule>
+			<potMoneyDes>Tiền gà:</potMoneyDes>
+			<potLevelDes>Cấp độ gà:</potLevelDes>
+			<confirmPlayGa1>Phòng cấp độ gà </confirmPlayGa1>
+			<confirmPlayGa2>, bạn sẽ phải trả </confirmPlayGa2>
+			<confirmPlayGa3> lần số tiền gà tương đương với </confirmPlayGa3>
+			<confirmPlayGa4> để tham gia phòng gà.</confirmPlayGa4>
+			<confirmQuitGa1>vả</confirmQuitGa1>
+			<confirmQuitGa2>tiền gà bạn đã góp trong bàn.</confirmQuitGa2>
+			<confirmQuitGa3>Nếu thoát khỏi bàn bạn sẽ mất</confirmQuitGa3>
+		</playingScreen>
+		<lobbyRoomScreen>
+			<addFriendSentence>gửi lời mời kết bạn</addFriendSentence>
+			<addCiao_1>Bạn đã hết tiền và được hệ thống nạp cho 3.500 ciao, bạn còn</addCiao_1>
+			<addCiao_2>lần nạp tiền nữa.</addCiao_2>
+			<acceptAddFriend>đã chấp nhận lời mời kết bạn</acceptAddFriend>
+			<rejectAddFriend>đã từ chối lời mời kết bạn</rejectAddFriend>
+			<sendAddFriendSuccess>Lời mời kết bạn đã được gửi đi</sendAddFriendSuccess>
+			<removeFriendSuccess>Bỏ kết bạn thành công</removeFriendSuccess>
+			<sendCard>Tái gửi</sendCard>
+			<notSendCard>Không gửi</notSendCard>
+			<createRoomButton>Tạo phòng</createRoomButton>
+			<joinRoomButton>Vào phòng</joinRoomButton>
+			<closeButton>Đóng</closeButton>
+			<feedButton>Chia sẻ</feedButton>
+			<confirmButton>Đồng ý</confirmButton>
+			<fullPlayer>Phòng chơi này hiện đã đầy, bạn không thể vào chơi.</fullPlayer>
+			<emptyRoomList>Hiện tại không có phòng chơi nào</emptyRoomList>
+			<fullRoomList>Tất cả các phòng chơi đều đã đầy</fullRoomList>
+			<notEnoughMoneyToCreate1>Bạn không đủ tiền, bạn phải có số tiền tối thiểu bằng</notEnoughMoneyToCreate1>
+			<notEnoughMoneyToCreate2>lần mức cược</notEnoughMoneyToCreate2>
+			
+		</lobbyRoomScreen>
+		<alertSentence>
+			<closeConnection>Đứt kết nối với server</closeConnection>
+			<connectFail>Kết nối tới server thất bại</connectFail>
+			<removeFriendFail>Bỏ bạn thất bại</removeFriendFail>
+			<loginFail>Đăng nhập thất bại</loginFail>
+			<pluginNotFound>Plugin not found</pluginNotFound>
+			<joinGameRoomFail>Tham gia phòng chơi thất bại, bạn hãy thử lại xem</joinGameRoomFail>
+			<gameRoomInvalid>Không tồn tại phòng chơi này</gameRoomInvalid>
+		</alertSentence>
+	</gameDescription>
+	
+	<effect>
+		<time>
+			<moneyEffect>3</moneyEffect>
+			<resultEffect>6</resultEffect>
+		</time>
+	</effect>
+	<playTime>
+		<selectActionTime>20</selectActionTime>
+		<selectOpenCardTime>20</selectOpenCardTime>
+		<playCardTimePhom>20</playCardTimePhom>
+		<playCardTime>15</playCardTime>
+		<downCardTime>15</downCardTime>
+		<sendCardTime>15</sendCardTime>
+		<readyTime>20</readyTime>
+	</playTime>
+	
+	<emoticon>
+		
+	</emoticon>
+	<emoticon2>
+		<child face=":*" className="Kiss" reg=":[*]" />
+		<child face=":-*" className="Kiss" reg=":[-][*]" />
+		
+		<child face=':)&gt;-' className="Victory" reg=':[)][&gt;][\-]' />
+		
+		<child face=":))" className="NormalSmile" reg=":[)][)]" />
+		<child face=":-))" className="NormalSmile" reg=":[-][)][)]" />
+		
+		<child face="O:-)" className="Angel" reg="O[:][-][)]" />
+		<child face="o:-)" className="Angel" reg="o[:][-][)]" />
+		
+		<child face="^:)^" className="Worthy" reg="\^[:][)][\^]" />
+		
+		<child face=":)]" className="Phone" reg=":[)][\]]" />
+		
+		<child face=":-)" className="Smile" reg=":[-][)]" />
+		<child face=":)" className="Smile" reg=":[)]" />
+		
+		<child face=":((" className="Cry" reg=":[(][(]" />
+		<child face=":-((" className="Cry" reg=":[-][(][(]" />
+		
+		<child face=":-(" className="Sad" reg=":[-][(]" />
+		<child face=":(" className="Sad" reg=":[(]" />
+		
+		<child face=";))" className="Hehe" reg=";[)][)]" />
+		
+		<child face=";-)" className="Winking" reg=";[-][)]" />
+		<child face=";)" className="Winking" reg=";[)]" />
+		
+		<child face="\:d/" className="Dancing" reg="\\[:][d][\/]" />
+		<child face="\:D/" className="Dancing" reg="\\[:][D][\/]" />
+		
+		<child face=":-d" className="Grin" reg=":[-][d]" />
+		<child face=":d" className="Grin" reg=":[d]" />
+		<child face=":-D" className="Grin" reg=":[-][D]" />
+		<child face=":D" className="Grin" reg=":[D]" />
+		
+		<child face=";;-)" className="Eyelashes" reg=";[;][-][)]" />
+		<child face=";;)" className="Eyelashes" reg=";[;][)]" />
+		
+		<child face='&gt;:d&lt;' className="Hug" reg="[&gt;][:][d][&lt;]" />
+		<child face='&gt;:D&lt;' className="Hug" reg="[&gt;][:][D][&lt;]" />
+		
+		<child face=":-/" className="Confused" reg=":[-][/]" />
+		
+		<child face="~x(" className="Crazy" reg="~[x][(]" />
+		<child face="~X(" className="Crazy" reg="~[X][(]" />
+		
+		<child face="[-x" className="ShameOnYou" reg="[\[][-][x]" />
+		<child face="[-X" className="ShameOnYou" reg="[\[][-][X]" />
+		
+		<child face=":-x" className="Love" reg=":[-][x]" />
+		<child face=":x" className="Love" reg=":[x]" />
+		<child face=":-X" className="Love" reg=":[-][X]" />
+		<child face=":X" className="Love" reg=":[X]" />
+		
+		<child face=':"&gt;' className="Shy" reg=':["][&gt;]' />
+		
+		<child face=":-*" className="Kiss" reg=":[-][*]" />
+		<child face=":*" className="Kiss" reg=":[*]" />
+		
+		<child face=":-p" className="Tongue" reg=":[-][p]" />
+		<child face=":p" className="Tongue" reg=":[p]" />
+		<child face=":-P" className="Tongue" reg=":[-][P]" />
+		<child face=":P" className="Tongue" reg=":[P]" />
+		
+		<child face=":o)" className="Clown" reg=":[o][)]" />
+		<child face=":O)" className="Clown" reg=":[O][)]" />
+		
+		<child face=":-o" className="Supprised" reg=":[-][o]" />
+		<child face=":o" className="Supprised" reg=":[o]" />
+		<child face=":-O" className="Supprised" reg=":[-][O]" />
+		<child face=":O" className="Supprised" reg=":[O]" />
+		
+		<child face="x-(" className="Angry" reg="x[-][(]" />
+		<child face="x(" className="Angry" reg="x[(]" />
+		<child face="X-(" className="Angry" reg="X[-][(]" />
+		<child face="X(" className="Angry" reg="X[(]" />
+		
+		<child face=":->" className="Smug" reg=":[-][>]" />
+		<child face=":>" className="Smug" reg=":[>]" />
+		
+		<child face="b-)" className="Cool" reg="b[-][)]" />
+		<child face="B-)" className="Cool" reg="B[-][)]" />
+		
+		<child face="#:-s" className="Whew" reg="#[:][-][s]" />
+		<child face="#:-S" className="Whew" reg="#[:][-][S]" />
+		
+		<child face=":-ss" className="Nailbiting" reg=":[-][s][s]" />
+		<child face=":-SS" className="Nailbiting" reg=":[-][S][S]" />
+		<child face=":-sS" className="Nailbiting" reg=":[-][s][S]" />
+		<child face=":-Ss" className="Nailbiting" reg=":[-][S][s]" />
+		
+		<child face=":-s" className="Worrie" reg=":[-][s]" />
+		<child face=":-S" className="Worrie" reg=":[-][S]" />
+		
+		<child face=">:)" className="Satan" reg=">[:][)]" />
+		
+		<child face=":|" className="StraightFace" reg=":[|]" />
+		<child face=":-|" className="StraightFace" reg=":[-][|]" />
+		
+		<child face=":-B" className="Nerd" reg=":[-][B]" />
+		<child face=":-b" className="Nerd" reg=":[-][b]" />
+		
+		<child face="/:)" className="EyeBrow" reg="/[:][)]" />
+		
+		<child face="=;" className="HandTalk" reg="=[;]" />
+		<child face="=))" className="BigSmile" reg="=[)][)]" />
+		
+		<child face="I-)" className="Sleepy" reg="I[-][)]" />
+		<child face="i-)" className="Sleepy" reg="i[-][)]" />
+		
+		<child face="L-)" className="Loser" reg="L[-][)]" />
+		<child face="l-)" className="Loser" reg="l[-][)]" />
+		
+		<child face="8-}" className="Silly" reg="8[-][}]" />
+		
+		<child face="[-(" className="Reject" reg="\[[-][(]" />
+		
+		<child face=":-&amp;" className="Sick" reg=":[-][&amp;]" />
+		<child face=":-$" className="ShutUp" reg=":[-][$]" />
+		
+		<child face="8-|" className="RollingEyes" reg="8[-][|]" />
+		
+		<child face="(-|" className="Yawn" reg="\([-][|]" />
+		
+		<child face="=p~" className="Drooling" reg="=[p][~]" />
+		<child face="=P~" className="Drooling" reg="=[p][~]" />
+		
+		<child face="#-o" className="Regret" reg="#[-][o]" />
+		<child face="#-O" className="Regret" reg="#[-][O]" />
+		
+		<child face="=d&gt;" className="Applause" reg="=[d][&gt;]" />
+		<child face="=D&gt;" className="Applause" reg="=[D][&gt;]" />
+		
+		<child face=":-??" className="Unknow" reg=":[-][?][?]" />
+		
+		<child face=":-?" className="Thinking" reg=":[-][?]" />
+		
+		<child face='b-(' className="Beat" reg='b[-][(]' />
+		<child face='B-(' className="Beat" reg='B[-][(]' />
+		
+		<child face=':-"' className="Whistling" reg=':[-]["]' />
+		
+		<child face="@-)" className="Hynotized" reg="@[-][)]" />
+		
+		<child face=":^o" className="Liar" reg=":[^][o]" />
+		<child face=":^O" className="Liar" reg=":[^][O]" />
+		
+		<child face=":-w" className="Waiting" reg=":[-][w]" />
+		<child face=":-W" className="Waiting" reg=":[-][W]" />
+		
+		<child face="&gt;:p" className="Phbbbt" reg="[&gt;][:][p]" />
+		<child face="&gt;:P" className="Phbbbt" reg="[&gt;][:][P]" />
+		
+		<child face="&gt;:/" className="BringItOn" reg="[&gt;][:][\/]" />
+		
+		<child face=":-&lt;" className="Sigh" reg=":[-][&lt;]" />
+		
+		<child face="&lt;):)" className="Cowboy" reg="[&lt;][)][:][)]" />
+		
+		<child face="&lt;:-P" className="Party" reg="[&lt;][:][-][P]" />
+		<child face="&lt;:-p" className="Party" reg="[&lt;][:][-][p]" />
+		
+		<child face=":-j" className="GoOn" reg=":[-][j]" />
+		<child face=":-J" className="GoOn" reg=":[-][J]" />
+		
+		<child face=":-c" className="CallMe" reg=":[-][c]" />
+		<child face=":-C" className="CallMe" reg=":[-][C]" />
+		
+		<child face=":-h" className="Wave" reg=":[-][h]" />
+		<child face=":-H" className="Wave" reg=":[-][H]" />
+		
+		<child face=":-q" className="ThumbDown" reg=":[-][q]" />
+		<child face=":-Q" className="ThumbDown" reg=":[-][Q]" />
+		
+		<child face="%-(" className="NotListen" reg="%[-][(]" />
+		
+		<child face=":!!" className="HurryUp" reg=":[!][!]" />
+		
+		<child face="8-&gt;" className="Dream" reg="8[\-][&gt;]" />
+		<child face="fuck" className="ThreeDot" reg="fuck" />
+	</emoticon2>
+</data>
