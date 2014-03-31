@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<!--<connection host="123.30.210.55" port="8101" transport="BinaryTCP" serverId="server1" />--> <!--ciao-->
+	<connection host="183.91.14.52" port="5201" transport="BinaryTCP" serverId="server1" />  <!--onplay-->
+</settings>

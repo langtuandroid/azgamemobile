@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<application xmlns="http://ns.adobe.com/air/application/3.5">
+  <id>air.BoGameBaiCiaoMobile</id>
+  <versionNumber>0.1</versionNumber>
+  <supportedProfiles>mobileDevice</supportedProfiles>
+  <filename>BoGameBaiCiaoMobile</filename>
+  <name>BoGameBaiCiaoMobile</name>
+  <android>
+    <colorDepth>16bit</colorDepth>
+    <manifestAdditions><![CDATA[<manifest android:installLocation="auto">
+	<!--See the Adobe AIR documentation for more information about setting Google Android permissions-->
+	<!--Removing the permission android.permission.INTERNET will have the side effect
+		of preventing you from debugging your application on your device-->
+	<uses-permission android:name="android.permission.INTERNET" />
+	<!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>-->
+	<!--<uses-permission android:name="android.permission.READ_PHONE_STATE"/>-->
+	<!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>-->
+	<!--The DISABLE_KEYGUARD and WAKE_LOCK permissions should be toggled together
+		in order to access AIR's SystemIdleMode APIs-->
+	<!--<uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>-->
+	<!--<uses-permission android:name="android.permission.WAKE_LOCK"/>-->
+	<!--<uses-permission android:name="android.permission.CAMERA"/>-->
+	<!--<uses-permission android:name="android.permission.RECORD_AUDIO"/>-->
+	<!--The ACCESS_NETWORK_STATE and ACCESS_WIFI_STATE permissions should be toggled
+		together in order to use AIR's NetworkInfo APIs-->
+	<!--<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>-->
+	<!--<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>-->
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="com.android.vending.BILLING" />
+	<application>
+		<activity android:name="com.freshplanet.natExt.FBLoginActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+		<activity android:name="com.freshplanet.natExt.FBDialogActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+		<activity android:name="com.freshplanet.natExt.ExtendAccessTokenActivity" />
+		<service android:name="com.ingenstudios.billing.google.BillingService" />
+		<receiver android:name="com.ingenstudios.billing.google.BillingReceiver">
+			<intent-filter>
+				<action android:name="com.android.vending.billing.IN_APP_NOTIFY" />
+				<action android:name="com.android.vending.billing.RESPONSE_CODE" />
+				<action android:name="com.android.vending.billing.PURCHASE_STATE_CHANGED" />
+			</intent-filter>
+		</receiver>
+	</application>
+</manifest>]]></manifestAdditions>
+  </android>
+  <iPhone>
+    <InfoAdditions><![CDATA[<key>UIStatusBarStyle</key>
+<string>UIStatusBarStyleBlackOpaque</string>
+<key>UIRequiresPersistentWiFi</key>
+<string>NO</string>
+<key>UIPrerenderedIcon</key>
+<true />
+<key>UIApplicationExitsOnSuspend</key>
+<true />
+<key>UIDeviceFamily</key>
+<array>
+	<!-- iPhone support -->
+	<string>1</string>
+	<!-- iPad support -->
+	<!--<string>2</string>-->
+</array>]]></InfoAdditions>
+    <requestedDisplayResolution>high</requestedDisplayResolution>
+  </iPhone>
+  <initialWindow>
+    <title>BoGameBaiCiaoMobile</title>
+    <content>BoGameBaiCiaoMobile.swf</content>
+    <visible>true</visible>
+    <fullScreen>true</fullScreen>
+    <autoOrients>false</autoOrients>
+    <aspectRatio>landscape</aspectRatio>
+    <renderMode>direct</renderMode>
+    <!--<depthAndStencil>true</depthAndStencil>-->
+    <!-- required for 3D -->
+    <systemChrome>standard</systemChrome>
+  </initialWindow>
+  <icon>
+    <image48x48>icons/icon_48.png</image48x48>
+    <image57x57>icons/icon_57.png</image57x57>
+    <image72x72>icons/icon_72.png</image72x72>
+    <image114x114>icons/icon_114.png</image114x114>
+    <image144x144>icons/icon_144.png</image144x144>
+    <image512x512>icons/icon_512.png</image512x512>
+  </icon>
+  <!-- 
+	AIR options:
+	http://livedocs.adobe.com/flex/3/html/File_formats_1.html#1043413
+	
+	AIR mobile options:
+	http://help.adobe.com/en_US/air/build/WSfffb011ac560372f-5d0f4f25128cc9cd0cb-7ffe.html
+	
+	iOS icons guidelines:
+	http://developer.apple.com/library/ios/#documentation/userexperience/conceptual/mobilehig/IconsImages/IconsImages.html
+	
+	Android manifest documentation:
+	http://developer.android.com/guide/topics/manifest/manifest-intro.html
+	-->
+</application>
