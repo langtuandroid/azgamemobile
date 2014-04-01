@@ -654,6 +654,12 @@ package control
 								case "AZGB_BINH":
 									userData.gameId = MainData.MAUBINH_ID;
 								break;
+								case "AZGB_PHOM":
+									userData.gameId = MainData.PHOM_ID;
+								break;
+								case "AZGB_TLMN":
+									userData.gameId = MainData.TLMN_ID;
+								break;
 								default:
 							}
 						}

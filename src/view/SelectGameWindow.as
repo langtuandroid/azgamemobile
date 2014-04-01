@@ -12,7 +12,6 @@ package view
 	import model.MainData;
 	import request.MainRequest;
 	import view.window.BaseWindow;
-	import view.window.shop.Shop_Coffer_Item_Window;
 	import view.window.windowLayer.WindowLayer;
 	
 	/**
@@ -45,9 +44,6 @@ package view
 		private var addMoneyTabDisable:MovieClip;
 		private var shopTabDisable:MovieClip;
 		private var inventoryTabDisable:MovieClip;
-		
-		private var shopLayer:Sprite;
-		private var _shopWindow:Shop_Coffer_Item_Window;
 		
 		public function SelectGameWindow() 
 		{
@@ -85,12 +81,6 @@ package view
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
-			
-			shopLayer = new Sprite();
-			content.addChild(shopLayer);
-			_shopWindow = new Shop_Coffer_Item_Window();
-			shopLayer.addChild(_shopWindow);
-			//shopLayer.visible = false;
 		}
 		
 		private function onTabClick(e:MouseEvent):void 
@@ -147,8 +137,6 @@ package view
 				case 4:
 					shopTabEnable.visible = false;
 					shopTabDisable.visible = true;
-					
-					shopLayer.visible = true;
 				break;
 				case 5:
 					inventoryTabEnable.visible = false;

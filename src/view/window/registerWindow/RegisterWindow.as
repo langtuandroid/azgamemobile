@@ -35,25 +35,49 @@ package view.window.registerWindow
 			zRegisterWindow(content).cancelButton.addEventListener(MouseEvent.CLICK, onButtonClick);
 			zRegisterWindow(content).loadingLayer.visible = false;
 			
-			zRegisterWindow(content).password.width = 233;
+			zRegisterWindow(content).password.width = 261;
 			zRegisterWindow(content).password.height = 23;
 			
-			zRegisterWindow(content).userName.width = 233;
+			zRegisterWindow(content).userName.width = 261;
 			zRegisterWindow(content).userName.height = 23;
 			
-			zRegisterWindow(content).email.width = 233;
+			zRegisterWindow(content).email.width = 261;
 			zRegisterWindow(content).email.height = 23;
 			
-			var textFormat:TextFormat = new TextFormat("Arial", 18, 0x000000);
+			var textFormat:TextFormat = new TextFormat("Arial", 20, 0x000000);
 			zRegisterWindow(content).password.setStyle("textFormat", textFormat);
 			zRegisterWindow(content).userName.setStyle("textFormat", textFormat);
 			zRegisterWindow(content).email.setStyle("textFormat", textFormat);
+			zRegisterWindow(content).password.displayAsPassword = false;
 			
 			zRegisterWindow(content).showPassword.addEventListener(MouseEvent.CLICK, onShowPasswordClick);
-			zRegisterWindow(content).showPassword.check.visible = false;
+			zRegisterWindow(content).showPassword.check.visible = true;
+			zRegisterWindow(content).showPassword.visible = false;
+			
+			zRegisterWindow(content).maleSelectBox.gotoAndStop("selected");
+			zRegisterWindow(content).femaleSelectBox.gotoAndStop(1);
+			
+			zRegisterWindow(content).maleSelectBox.addEventListener(MouseEvent.CLICK, onSelectBoxClick);
+			zRegisterWindow(content).femaleSelectBox.addEventListener(MouseEvent.CLICK, onSelectBoxClick);
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+		}
+		
+		private function onSelectBoxClick(e:MouseEvent):void 
+		{
+			switch (e.currentTarget) 
+			{
+				case zRegisterWindow(content).maleSelectBox:
+					zRegisterWindow(content).maleSelectBox.gotoAndStop("selected");
+					zRegisterWindow(content).femaleSelectBox.gotoAndStop(1);
+				break;
+				case zRegisterWindow(content).femaleSelectBox:
+					zRegisterWindow(content).femaleSelectBox.gotoAndStop("selected");
+					zRegisterWindow(content).maleSelectBox.gotoAndStop(1);
+				break;
+				default:
+			}
 		}
 		
 		private function onSoftKeyboardActive(e:SoftKeyboardEvent):void 
@@ -158,7 +182,7 @@ package view.window.registerWindow
 					data.password = zRegisterWindow(content).password.text;
 					data.email = zRegisterWindow(content).email.text;
 					zRegisterWindow(content).loadingLayer.visible = true;
-					mainRequest.sendRequest_Post("http://" + MainData.getInstance().gameIp + "/user/register_mobile", data, onRegisterRespond, true);
+					//mainRequest.sendRequest_Post("http://" + MainData.getInstance().gameIp + "/user/register_mobile", data, onRegisterRespond, true);
 				break;
 				case zRegisterWindow(content).cancelButton:
 					close(BaseWindow.MIDDLE_EFFECT);
