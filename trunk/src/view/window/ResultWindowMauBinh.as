@@ -162,16 +162,16 @@ package view.window
 					switch (i) 
 					{
 						case 0:
-							content["lineBackground"].y = - 65;
+							content["lineBackground"].y = -89;
 						break;
 						case 1:
-							content["lineBackground"].y = - 41.5;
+							content["lineBackground"].y = -48;
 						break;
 						case 2:
-							content["lineBackground"].y = - 16.5;
+							content["lineBackground"].y = -5;
 						break;
 						case 3:
-							content["lineBackground"].y = 10;
+							content["lineBackground"].y = 34;
 						break;
 						default:
 					}

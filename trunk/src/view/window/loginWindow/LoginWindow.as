@@ -60,6 +60,9 @@ package view.window.loginWindow
 			zLoginWindow(content).registerButton.addEventListener(MouseEvent.CLICK, onRegisterButtonClick);
 			zLoginWindow(content).forgetPass.addEventListener(MouseEvent.CLICK, onForgetPassClick);
 			zLoginWindow(content).savePassword.addEventListener(MouseEvent.CLICK, onSavePasswordClick);
+			zLoginWindow(content).forgetPass.visible = false;
+			zLoginWindow(content).savePassword.visible = false;
+			zLoginWindow(content).fastLogin.visible = false;
 			
 			sharedObject = SharedObject.getLocal("userInfo");
 			if (sharedObject.data.hasOwnProperty("userName"))

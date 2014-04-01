@@ -13,7 +13,6 @@ package view.screen
 	import flash.display.StageDisplayState;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
-	import flash.events.FullScreenEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
@@ -121,10 +120,10 @@ package view.screen
 		private var invitePlayButtonArray:Array;
 		public var autoReady:MovieClip;
 		
-		private var helpButton:SimpleButton;
+		private var settingBoard:MovieClip;
+		private var settingButton:SimpleButton;
+		private var snapShotButton:SimpleButton;
 		private var showIpButton:SimpleButton;
-		private var fullScreenButton:SimpleButton;
-		private var smallScreenButton:SimpleButton;
 		private var soundOnButton:SimpleButton;
 		private var soundOffButton:SimpleButton;
 		private var musicOnButton:SimpleButton;
@@ -153,7 +152,6 @@ package view.screen
 			createVariable();
 			mainData.playingData.addEventListener(PlayingData.UPDATE_PLAYING_SCREEN, onUpdatePlayingScreen);
 			chatBox = new ChatBox();
-			mainData.addEventListener(MainData.UPDATE_PUBLIC_CHAT, onUpdatePublicChat);
 			chatBox.addEventListener(ChatBox.HAVE_CHAT, onHaveChat);
 			chatBox.x = Math.round(content["chatBoxPosition"].x);
 			chatBox.y = Math.round(content["chatBoxPosition"].y);
@@ -223,6 +221,7 @@ package view.screen
 			
 			addChild(ipBoard);
 			ipBoard.visible = true;
+			settingBoard.visible = false;
 		}
 		
 		private function setupCompareGroupStatus():void 
@@ -292,19 +291,19 @@ package view.screen
 		private var countBinhLungAndMauBinh:int;
 		private var playerMauBinhSex:String;
 		private var timerToHideIpBoard:Timer;
+		private var timerToCheckTime:Timer;
 		private function setupButton():void 
 		{
-			helpButton = content["helpButton"];
-			showIpButton = content["showIpButton"];
-			fullScreenButton = content["fullScreenButton"];
-			smallScreenButton = content["smallScreenButton"];
-			soundOnButton = content["soundOnButton"];
-			soundOffButton = content["soundOffButton"];
-			musicOnButton = content["musicOnButton"];
-			musicOffButton = content["musicOffButton"];
+			settingBoard = content["settingBoard"];
+			settingBoard.visible = false;
+			settingButton = content["settingButton"];
+			snapShotButton = settingBoard["snapShotButton"];
+			showIpButton = settingBoard["showIpButton"];
+			soundOnButton = settingBoard["soundOnButton"];
+			soundOffButton = settingBoard["soundOffButton"];
+			musicOnButton = settingBoard["musicOnButton"];
+			musicOffButton = settingBoard["musicOffButton"];
 			orderCardButton = content["orderCardButton"];
-			
-			smallScreenButton.visible = false;
 			
 			sharedObject = SharedObject.getLocal("soundConfig");
 			
@@ -323,10 +322,10 @@ package view.screen
 				musicOffButton.visible = false;
 			}
 			
-			helpButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
+			settingBoard.addEventListener(MouseEvent.CLICK, onSettingBoardClick);
+			settingButton.addEventListener(MouseEvent.CLICK, onSettingButtonClick);
+			snapShotButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
 			showIpButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
-			fullScreenButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
-			smallScreenButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
 			soundOnButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
 			soundOffButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
 			musicOnButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
@@ -334,17 +333,24 @@ package view.screen
 			orderCardButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
 		}
 		
+		private function onSettingBoardClick(e:MouseEvent):void 
+		{
+			e.stopImmediatePropagation();
+		}
+		
+		private function onSettingButtonClick(e:MouseEvent):void 
+		{
+			settingBoard.visible = !settingBoard.visible;
+			if (settingBoard.visible)
+				ipBoard.visible = false;
+			e.stopImmediatePropagation();
+		}
+		
 		private function onMenuButtonClick(e:MouseEvent):void 
 		{
+			e.stopImmediatePropagation();
 			switch (e.currentTarget) 
 			{
-				case fullScreenButton:
-					stage.scaleMode = StageScaleMode.SHOW_ALL;
-					stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
-				break;
-				case smallScreenButton:
-					stage.displayState = StageDisplayState.NORMAL;
-				break;
 				case soundOnButton:
 					SoundManager.getInstance().isSoundOn = true;
 					sharedObject.setProperty("isSoundOff", !SoundManager.getInstance().isSoundOn);
@@ -376,7 +382,7 @@ package view.screen
 						showIpBoard();
 					e.stopImmediatePropagation();
 				break;
-				case helpButton:
+				case snapShotButton:
 					
 				break;
 				case orderCardButton:
@@ -497,8 +503,29 @@ package view.screen
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			stage.addEventListener(MouseEvent.CLICK, onStageClick);
-			stage.addEventListener(FullScreenEvent.FULL_SCREEN, onFullSscreen);
+			mainData.addEventListener(MainData.UPDATE_PUBLIC_CHAT, onUpdatePublicChat);
 			
+			checkTime();
+			
+			if (timerToCheckTime)
+			{
+				timerToCheckTime.removeEventListener(TimerEvent.TIMER, onTimerToCheckTime);
+				timerToCheckTime.stop();
+			}
+			timerToCheckTime = new Timer(60000);
+			timerToCheckTime.addEventListener(TimerEvent.TIMER, onTimerToCheckTime);
+			timerToCheckTime.start();
+		}
+		
+		private function onTimerToCheckTime(e:TimerEvent):void 
+		{
+			if (!stage)
+				return;
+			checkTime();
+		}
+		
+		private function checkTime():void
+		{
 			var currDate:Date = new Date();
 			
 			var H:int = currDate.getHours();
@@ -511,28 +538,18 @@ package view.screen
 		
 		private function onRemovedFromStage(e:Event):void 
 		{
+			if (timerToCheckTime)
+			{
+				timerToCheckTime.removeEventListener(TimerEvent.TIMER, onTimerToCheckTime);
+				timerToCheckTime.stop();
+			}
 			
 			stage.removeEventListener(MouseEvent.CLICK, onStageClick);
 			removeEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
-			stage.removeEventListener(FullScreenEvent.FULL_SCREEN, onFullSscreen);
 			if (timerToPing)
 			{
 				timerToPing.removeEventListener(TimerEvent.TIMER, onPingToServer);
 				timerToPing.stop();
-			}
-		}
-		
-		private function onFullSscreen(e:FullScreenEvent):void 
-		{
-			if (stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE)
-			{
-				fullScreenButton.visible = false;
-				smallScreenButton.visible = true;
-			}
-			else if (stage.displayState == StageDisplayState.NORMAL)
-			{
-				fullScreenButton.visible = true;
-				smallScreenButton.visible = false;
 			}
 		}
 		
@@ -884,7 +901,7 @@ package view.screen
 			var channelName:String = mainData.playingData.gameRoomData.channelName;
 			var roomId:String = String(mainData.playingData.gameRoomData.roomId);
 			var roomBet:String = PlayingLogic.format(data[DataFieldMauBinh.ROOM_BET], 1);
-			ruleDescription.text = mainData.init.gameName2 + " - " + channelName + " - Bàn " + roomId + " - Cược " + roomBet + " G";
+			ruleDescription.text = mainData.gameName + " - " + channelName + " - Bàn " + roomId + " - Cược " + roomBet + " G";
 			
 			mainData.playingData.gameRoomData.roomBet = data[DataFieldMauBinh.ROOM_BET];
 			mainData.playingData.gameRoomData.roomName = data[DataFieldMauBinh.ROOM_NAME];
@@ -2895,6 +2912,7 @@ package view.screen
 				}
 			}
 			ipBoard.visible = false;
+			settingBoard.visible = false;
 		}
 		
 		// Hàm sắp xếp lại thứ tự của mảng các người chơi

@@ -1141,14 +1141,14 @@ package view.userInfo.playerInfo
 				switch (formName) 
 				{
 					case PlayerInfoMauBinh.BELOW_USER:
-						horizontalDistance = 50;
-						verticalDistance = 50;
+						horizontalDistance = 80;
+						verticalDistance = 93;
 					break;
 					case PlayerInfoMauBinh.LEFT_USER:
 					case PlayerInfoMauBinh.RIGHT_USER:
 					case PlayerInfoMauBinh.ABOVE_USER:
-						horizontalDistance = 21;
-						verticalDistance = 39;
+						horizontalDistance = 31;
+						verticalDistance = 40;
 					break;
 				}
 			}

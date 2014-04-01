@@ -33,7 +33,7 @@ package view.window.windowLayer
 			return _instance;
 		}
 		
-		public function openWindow(window:BaseWindow, _parent:Sprite = null, effectType:String = "middleEffect", isNoBackground:Boolean = false):void
+		public function openWindow(window:BaseWindow, _parent:Sprite = null, effectType:String = "noEffect", isNoBackground:Boolean = false):void
 		{
 			if (!_parent)
 				windowParent = this;

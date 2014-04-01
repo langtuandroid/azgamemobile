@@ -88,13 +88,6 @@ package
 			zOrderCardWindow;
 			zUserProfileWindow;
 			zGroupResultEffect;
-			
-			Shop_Coffer_Item_Mc;
-			ContentAvatarMc;
-			ContentGiftMc;
-			ContentGoldMc;
-			ContentItemMc;
-			ContentTourMc;
 		}
 	}
 }
