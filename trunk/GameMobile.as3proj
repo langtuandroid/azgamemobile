@@ -79,6 +79,7 @@
     <element path="lib\MSGNativeExtension.ane" />
     <element path="lib\AirFacebook.ane" />
     <element path="lib\com.milkmangames.extensions.GoViral.ane" />
+    <element path="lib\chatBoxPhomComponent.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

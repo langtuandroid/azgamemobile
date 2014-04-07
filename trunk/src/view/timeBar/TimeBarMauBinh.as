@@ -10,6 +10,7 @@ package view.timeBar
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getTimer;
 	import model.MainData;
+	import sound.SoundLibChung;
 	import sound.SoundLibMauBinh;
 	import sound.SoundManager;
 	
@@ -50,7 +51,7 @@ package view.timeBar
 		private function onRemovedFromStage(e:Event):void 
 		{
 			removeEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
-			SoundManager.getInstance().stopSound(SoundLibMauBinh.PREPARE_TIME_OUT_SOUND);
+			SoundManager.getInstance().stopSound(SoundLibChung.PREPARE_TIME_OUT_SOUND);
 			if (ticker)
 			{
 				ticker.removeEventListener(TickerEvent.TICK, onCountTime);
@@ -65,7 +66,7 @@ package view.timeBar
 		
 		public function countTime(_timeNumber:Number):void
 		{
-			SoundManager.getInstance().stopSound(SoundLibMauBinh.PREPARE_TIME_OUT_SOUND);
+			SoundManager.getInstance().stopSound(SoundLibChung.PREPARE_TIME_OUT_SOUND);
 			isPrepareTimeOut = false;
 			if(type == 3)
 				filters = null;
@@ -115,52 +116,8 @@ package view.timeBar
 				{
 					isPrepareTimeOut = true;
 					
-					SoundManager.getInstance().playSound(SoundLibMauBinh.PREPARE_TIME_OUT_SOUND, 1000);
-					var randomIndex:int = Math.floor(Math.random() * 5);
-					if (mainData.chooseChannelData.myInfo.sex == 'M')
-					{
-						switch (randomIndex) 
-						{
-							case 0:
-								SoundManager.getInstance().playSound(SoundLibMauBinh.TIME_OUT_SOUND_MALE_1);
-							break;
-							case 1:
-								SoundManager.getInstance().playSound(SoundLibMauBinh.TIME_OUT_SOUND_MALE_2);
-							break;
-							case 2:
-								SoundManager.getInstance().playSound(SoundLibMauBinh.TIME_OUT_SOUND_MALE_3);
-							break;
-							case 3:
-								SoundManager.getInstance().playSound(SoundLibMauBinh.TIME_OUT_SOUND_MALE_4);
-							break;
-							case 4:
-								SoundManager.getInstance().playSound(SoundLibMauBinh.TIME_OUT_SOUND_MALE_5);
-							break;
-							default:
-						}
-					}
-					else
-					{
-						switch (randomIndex) 
-						{
-							case 0:
-								SoundManager.getInstance().playSound(SoundLibMauBinh.TIME_OUT_SOUND_FEMALE_1);
-							break;
-							case 1:
-								SoundManager.getInstance().playSound(SoundLibMauBinh.TIME_OUT_SOUND_FEMALE_2);
-							break;
-							case 2:
-								SoundManager.getInstance().playSound(SoundLibMauBinh.TIME_OUT_SOUND_FEMALE_3);
-							break;
-							case 3:
-								SoundManager.getInstance().playSound(SoundLibMauBinh.TIME_OUT_SOUND_FEMALE_4);
-							break;
-							case 4:
-								SoundManager.getInstance().playSound(SoundLibMauBinh.TIME_OUT_SOUND_FEMALE_5);
-							break;
-							default:
-						}
-					}
+					SoundManager.getInstance().playSound(SoundLibChung.PREPARE_TIME_OUT_SOUND, 1000);
+					SoundManager.getInstance().soundManagerMauBinh.playTimeOutPlayerSound(mainData.chooseChannelData.myInfo.sex);
 				}
 				if (isFilterDown)
 				{

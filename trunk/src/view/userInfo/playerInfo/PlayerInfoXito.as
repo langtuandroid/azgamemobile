@@ -1159,7 +1159,7 @@ package view.userInfo.playerInfo
 			switch (myStatus) 
 			{
 				case SELECT_OPEN_CARD: // Tự động chọn 1 quân bài để lật
-					CardPhom(unLeaveCards[1]).moveUp();
+					unLeaveCards[1].moveUp();
 				break;
 				case SELECT_ACTION: // Nếu hết thời gian mà chưa chọn action thì tự động ụp bài
 					electroServerCommand.fold(userName);

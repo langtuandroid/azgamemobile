@@ -21,6 +21,8 @@
 		private var _isMusicOn:Boolean = true;
 		private var saveMusicVolume:Number;
 		private var saveSoundVolume:Number;
+		public var soundManagerMauBinh:SoundManagerMauBinh;
+		public var soundManagerPhom:SoundManagerPhom;
 		
 		public function SoundManager() 
 		{
@@ -31,6 +33,8 @@
 			saveSoundVolume = 1;
 			soundTransform = new SoundTransform(saveSoundVolume);
 			musicTransform = new SoundTransform(saveMusicVolume);
+			soundManagerMauBinh = new SoundManagerMauBinh();
+			soundManagerPhom = new SoundManagerPhom();
 		}
 		
 		private static var instance:SoundManager;
@@ -52,21 +56,6 @@
 		{
 			var randomFinish:Boolean;
 			stopAllMusic();
-			
-			/*switch (currentBackgroundMusicIndex) 
-			{
-				case 0:
-					stopMusic(SoundLibMauBinh.BACKGROUND_SOUND_1);
-				break;
-				case 1:
-					stopMusic(SoundLibMauBinh.BACKGROUND_SOUND_2);
-				break;
-				case 2:
-					stopMusic(SoundLibMauBinh.BACKGROUND_SOUND_3);
-				break;
-				default:
-			}
-			stopAllSound();*/
 				
 			while (!randomFinish) 
 			{
@@ -79,13 +68,13 @@
 					switch (randomIndex) 
 					{
 						case 0:
-							playMusic(SoundLibMauBinh.BACKGROUND_SOUND_1, 1000);
+							playMusic(SoundLibChung.BACKGROUND_SOUND_1, 1000);
 						break;
 						case 1:
-							playMusic(SoundLibMauBinh.BACKGROUND_SOUND_2, 1000);
+							playMusic(SoundLibChung.BACKGROUND_SOUND_2, 1000);
 						break;
 						case 2:
-							playMusic(SoundLibMauBinh.BACKGROUND_SOUND_3, 1000);
+							playMusic(SoundLibChung.BACKGROUND_SOUND_3, 1000);
 						break;
 						default:
 					}

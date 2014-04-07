@@ -101,7 +101,7 @@ package view.window.loginWindow
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 			
 			deviceId = '1';
-			if (mainData.isOnIos)
+			/*if (mainData.isOnIos)
 			{
 				var ingenNativeExtension:IngenNativeExtension = new IngenNativeExtension();
 				deviceId = ingenNativeExtension.getDeviceID();
@@ -110,7 +110,7 @@ package view.window.loginWindow
 			{
 				var androidUtilsExtension:AndroidUtilsController = AndroidUtilsController.getInstance();
 				deviceId = androidUtilsExtension.generateDeviceId();
-			}
+			}*/
 		}
 		
 		private function onButtonClick(e:MouseEvent):void 

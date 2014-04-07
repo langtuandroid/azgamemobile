@@ -31,10 +31,10 @@ package view.card
 		private var content:Sprite;
 		
 		public static const cardToDesTime:Number = 0.70; // giây - thời gian lá bài di chuyển từ chỗ chia bài đến người chơi
-		public static const arrangeCardTime:Number = 0.4; // giây - thời gian sắp xếp lại các lá bài
+		public static const arrangeCardTime:Number = 0.15; // giây - thời gian sắp xếp lại các lá bài
 		public static const clickCardTime:Number = 0.1; // giây - thời gian di chuyển khi click chọn lá bài
-		public static const playCardTime:Number = 0.5; // giây - thời gian lá bài di chuyển từ chỗ bài chưa đánh đến chỗ bài đánh
-		public static const downCardTime:Number = 0.5; // giây - thời gian lá bài di chuyển từ chỗ người chơi đến chỗ hạ bài
+		public static const playCardTime:Number = 0.2; // giây - thời gian lá bài di chuyển từ chỗ bài chưa đánh đến chỗ bài đánh
+		public static const downCardTime:Number = 0.2; // giây - thời gian lá bài di chuyển từ chỗ người chơi đến chỗ hạ bài
 		private static const divideUserTimeDistance:Number = 160; // mili giây - khoảng thời gian cách nhau khi bắt đầu chia cho mỗi người chơi
 		
 		private var phomLogic:PhomLogic = PhomLogic.getInstance();

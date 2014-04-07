@@ -5,6 +5,7 @@ package view.card
 	import com.gskinner.motion.GTween;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -15,7 +16,7 @@ package view.card
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getTimer;
 	import model.MainData;
-	import view.userInfo.playerInfo.PlayerInfo;
+	import view.userInfo.playerInfo.PlayerInfoPhom;
 	
 	/**
 	 * ...
@@ -57,6 +58,8 @@ package view.card
 		private var isFilterDown:Boolean;
 		private var bitmap:Bitmap;
 		public var isMine:Boolean;
+		public var sendObject:Object;
+		private var hilightMc:MovieClip;
 		
 		public function CardPhom(_size:Number = 1)
 		{
@@ -77,8 +80,26 @@ package view.card
 				content.removeChild(cardChilds[i]);
 			}
 			
+			hilightMc = content["hilightMc"];
+			addChild(hilightMc);
+			hilightMc.visible = false;
+			
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 			//cacheAsBitmap = true;
+		}
+		
+		public function showFilter():void
+		{
+			if (isStealCard)
+				return;
+			hilightMc.visible = true;
+		}
+		
+		public function hideFilter():void
+		{
+			if (isStealCard)
+				return;
+			hilightMc.visible = false;
 		}
 		
 		private function onRemovedFromStage(e:Event):void 
@@ -87,7 +108,7 @@ package view.card
 			
 		}
 		
-		public function moving(finishPoint:Point, movingTime:Number, movingType:String, scaleNumber:Number = 0.88, rotationNumber:Number = 0,reAddChild:Boolean = true,reAddStartPoint:Boolean = true,reRotate:Boolean = true, alphaNumber:Number = 1, isEaseOut:Boolean = true):void
+		public function moving(finishPoint:Point, movingTime:Number, movingType:String, scaleNumber:Number = 1, rotationNumber:Number = 0,reAddChild:Boolean = true,reAddStartPoint:Boolean = true,reRotate:Boolean = true, alphaNumber:Number = 1, isEaseOut:Boolean = false):void
 		{	
 			if (movingTween)
 				movingTween.end();
@@ -109,18 +130,18 @@ package view.card
 			if (int(x) == int(tempPoint.x) && int(y) == int(tempPoint.y)) // Nếu lá bài đang ở đúng điểm đích rồi thì không di chuyển bằng tween nữa
 				return;
 			isMoving = true;
-			if(reRotate)
-				this.rotation = rotationNumber + 60;
+			//if(reRotate)
+				//this.rotation = rotationNumber + 60;
 			switch (movingType) 
 			{
-				case CardManager.TURN_OVER_STYLE:
+				case CardManagerPhom.TURN_OVER_STYLE:
 					if (isEaseOut)
 						movingTween = new GTween(this, movingTime, { x:tempPoint.x, y:tempPoint.y, scaleX:scaleNumber, scaleY:scaleNumber, rotation:rotationNumber, alpha:alphaNumber }, { ease:Back.easeOut } );
 					else
 						movingTween = new GTween(this, movingTime, { x:tempPoint.x, y:tempPoint.y, scaleX:scaleNumber, scaleY:scaleNumber, rotation:rotationNumber, alpha:alphaNumber } );
 					movingTween.addEventListener(Event.COMPLETE, movingComplete);
 				break;
-				case CardManager.OPEN_MIDDLE_STYLE:
+				case CardManagerPhom.OPEN_MIDDLE_STYLE:
 					if (isEaseOut)
 						movingTween = new GTween(this, movingTime, { x:tempPoint.x, y:tempPoint.y, scaleX:scaleNumber, scaleY:scaleNumber, rotation:rotationNumber, alpha:alphaNumber }, { ease:Back.easeOut } );
 					else
@@ -128,7 +149,7 @@ package view.card
 					effectOpen(movingTime);
 					movingTween.addEventListener(Event.COMPLETE, movingComplete);
 				break;
-				case CardManager.OPEN_FINISH_STYLE:
+				case CardManagerPhom.OPEN_FINISH_STYLE:
 					if (isEaseOut)
 						movingTween = new GTween(this, movingTime, { x:tempPoint.x, y:tempPoint.y, scaleX:scaleNumber, scaleY:scaleNumber, rotation:rotationNumber, alpha:alphaNumber }, { ease:Back.easeOut } );
 					else
@@ -317,7 +338,7 @@ package view.card
 				point.x = startX
 				point.y = startY;
 				point = parent.localToGlobal(point);
-				moving(point, CardManager.clickCardTime, CardManager.TURN_OVER_STYLE, 0.73, 0, false, false, false, 1, false);
+				moving(point, CardManagerPhom.clickCardTime, CardManagerPhom.TURN_OVER_STYLE, 1, 0, false, false);
 				dispatchEvent(new Event(IS_DE_SELECTED));
 			}
 			else
@@ -326,7 +347,7 @@ package view.card
 				point.x = startX
 				point.y = startY - height / 4;
 				point = parent.localToGlobal(point);
-				moving(point, CardManager.clickCardTime, CardManager.TURN_OVER_STYLE, 0.73, 0, false, false, false, 1, false);
+				moving(point, CardManagerPhom.clickCardTime, CardManagerPhom.TURN_OVER_STYLE, 1, 0, false, false);
 				dispatchEvent(new Event(IS_SELECTED));
 			}
 		}
@@ -371,17 +392,6 @@ package view.card
 			
 			var filterTemp:GlowFilter = new GlowFilter(0xFF0000, 1, filterNumber, filterNumber, 5, 1);
 			filters = [filterTemp];
-		}
-		
-		public function moveUp():void
-		{
-			var point:Point = new Point();
-			isChoose = true;
-			point.x = startX
-			point.y = startY - height / 4;
-			point = parent.localToGlobal(point);
-			//moving(point, CardManager.clickCardTime, CardManager.TURN_OVER_STYLE, 0.88, 0, false, false);
-			dispatchEvent(new Event(IS_SELECTED));
 		}
 	}
 

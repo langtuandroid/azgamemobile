@@ -167,7 +167,6 @@ package view.window
 		
 		private function onCreateRoom(e:MouseEvent):void 
 		{
-			trace("aaaaaaaaaaaaaaaaaaa onCreateRoom");
 			mainData.playingData.gameRoomData.roomPassword = passInputText.text;
 			var gameOption:Object = new Object();
 			gameOption[DataFieldMauBinh.ROOM_NAME] = '';

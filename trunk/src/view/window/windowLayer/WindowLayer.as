@@ -5,6 +5,8 @@ package view.window.windowLayer
 	import flash.events.Event;
 	import flash.geom.Point;
 	import model.MainData;
+	import sound.SoundLibChung;
+	import sound.SoundManager;
 	import view.window.AlertWindow;
 	import view.window.BaseWindow;
 	import view.window.LoadingWindow;
@@ -35,6 +37,8 @@ package view.window.windowLayer
 		
 		public function openWindow(window:BaseWindow, _parent:Sprite = null, effectType:String = "noEffect", isNoBackground:Boolean = false):void
 		{
+			SoundManager.getInstance().playSound(SoundLibChung.POP_UP_SOUND);
+			
 			if (!_parent)
 				windowParent = this;
 			else

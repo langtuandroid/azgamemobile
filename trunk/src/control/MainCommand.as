@@ -1,7 +1,8 @@
 package control 
 {
-	import control.electroServerCommand.ElectroServerCommandTlmn;
 	import control.electroServerCommand.ElectroServerCommandMauBinh;
+	import control.electroServerCommand.ElectroServerCommandPhom;
+	import control.electroServerCommand.ElectroServerCommandTlmn;
 	import control.getInfoCommand.GetInfoCommand;
 	import control.initCommand.InitCommand;
 	import flash.events.Event;
@@ -17,12 +18,18 @@ package control
 		public var initCommand:InitCommand;
 		public var getInfoCommand:GetInfoCommand;
 		public var electroServerCommand:*;
+		public var electroServerCommandMauBinh:ElectroServerCommandMauBinh;
+		public var electroServerCommandPhom:ElectroServerCommandPhom;
+		public var electroServerCommandTlmn:ElectroServerCommandTlmn;
 		private var mainData:MainData = MainData.getInstance();
 		
 		public function MainCommand() 
 		{
 			initCommand = new InitCommand();
 			getInfoCommand = new GetInfoCommand();
+			electroServerCommandMauBinh = new ElectroServerCommandMauBinh();
+			electroServerCommandPhom = new ElectroServerCommandPhom();
+			electroServerCommandTlmn = new ElectroServerCommandTlmn();
 		}
 		
 		public function initVar():void
@@ -30,10 +37,13 @@ package control
 			switch (mainData.gameType) 
 			{
 				case MainData.MAUBINH:
-					electroServerCommand = new ElectroServerCommandMauBinh();
+					electroServerCommand = electroServerCommandMauBinh;
 				break;
-				case MainData.TLMN:
-					electroServerCommand = new ElectroServerCommandTlmn();
+				case MainData.PHOM:
+					electroServerCommand = electroServerCommandPhom;
+				break;
+				case MainData.PHOM:
+					electroServerCommand = electroServerCommandTlmn;
 				break;
 				default:
 			}

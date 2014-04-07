@@ -3,6 +3,7 @@ package
 	import control.ConstTlmn;
 	import flash.desktop.NativeApplication;
 	import flash.display.MovieClip;
+	import flash.display.SimpleButton;
 	import flash.display.StageScaleMode;
 	import flash.events.IOErrorEvent;
 	import flash.events.KeyboardEvent;
@@ -39,7 +40,9 @@ package
 	import com.adobe.serialization.json.JSON;
 	import model.playingData.PlayingData;
 	import net.hires.debug.Stats;
+	import sound.SoundLibChung;
 	import sound.SoundManager;
+	import view.button.MobileButton;
 	import view.effectLayer.EffectLayer;
 	import view.screen.LoadingScreen;
 	import view.screen.LobbyRoomScreen;
@@ -91,6 +94,7 @@ package
 		public var gamepath:String;
 		public var loadLoadingFinish:Boolean;
 		private var sharedObject:SharedObject;
+		private var countLoadBackgroundSound:int;
 		
 		public function BoGameBaiMainView():void 
 		{
@@ -116,8 +120,66 @@ package
 			addEventListener(Event.ADDED_TO_STAGE, init);
 			scrollRect = new Rectangle(0, 0, mainData.stageWidth, mainData.stageHeight);
 			
-			NativeApplication.nativeApplication.addEventListener(Event.ACTIVATE, handleActivate, false, 0, true);
-			NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, handleDeactivate, false, 0, true);
+			if (mainData.isOnIos || mainData.isOnAndroid)
+			{
+				NativeApplication.nativeApplication.addEventListener(Event.ACTIVATE, handleActivate, false, 0, true);
+				NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, handleDeactivate, false, 0, true);
+			}
+			
+			loadSoundMauBinh();
+			loadSoundChung();
+			
+			loadBackgroundMusic();
+		}
+		
+		private function loadBackgroundMusic():void 
+		{
+			countLoadBackgroundSound = 0;
+			
+			for (var i:int = 0; i < 3; i++) 
+			{
+				var tempSound:Sound = new Sound();
+				tempSound.load(new URLRequest("http://183.91.14.52/gamebai/bimkute/maubinh/soundChung/" + "GB001 (" + String(i + 1) + ")" + ".az"));
+				tempSound.addEventListener(Event.COMPLETE, onLoadBackgroundMusicComplete);
+				tempSound.addEventListener(IOErrorEvent.IO_ERROR, onLoadSoundIOError);
+				SoundManager.getInstance().registerSound("GB001 (" + String(i + 1) + ")", tempSound);
+			}
+		}
+		
+		private function onLoadSoundIOError(e:IOErrorEvent):void 
+		{
+			
+		}
+		
+		private function onLoadBackgroundMusicComplete(e:Event):void 
+		{
+			countLoadBackgroundSound++;
+			if (countLoadBackgroundSound == 3)
+				SoundManager.getInstance().playBackgroundMusicMauBinh();
+		}
+		
+		private function loadSoundMauBinh():void 
+		{
+			for (var i:int = 0; i < mainData.init.soundMauBinhList.child.length(); i++) 
+			{
+				var soundUrl:String = mainData.init.soundMauBinhList.child[i];
+				var tempSound:Sound = new Sound();
+				tempSound.load(new URLRequest("http://183.91.14.52/gamebai/bimkute/maubinh/soundMauBinh/" + soundUrl + ".az"));
+				tempSound.addEventListener(IOErrorEvent.IO_ERROR, onLoadSoundIOError);
+				SoundManager.getInstance().registerSound(soundUrl, tempSound);
+			}
+		}
+		
+		private function loadSoundChung():void 
+		{
+			for (var i:int = 0; i < mainData.init.soundChungList.child.length(); i++) 
+			{
+				var soundUrl:String = mainData.init.soundChungList.child[i];
+				var tempSound:Sound = new Sound();
+				tempSound.load(new URLRequest("http://183.91.14.52/gamebai/bimkute/maubinh/soundChung/" + soundUrl + ".az"));
+				tempSound.addEventListener(IOErrorEvent.IO_ERROR, onLoadSoundIOError);
+				SoundManager.getInstance().registerSound(soundUrl, tempSound);
+			}
 		}
 		
 		private function handleActivate(e:Event):void 
@@ -162,6 +224,7 @@ package
 			//mainCommand.initCommand.loadInit(); // Load file init.xml
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, onStageClick);
 			
 			addSound();
 			
@@ -195,6 +258,13 @@ package
 			mainData.playingData.addEventListener(PlayingData.JOIN_GAME_ROOM_SUCCESS, onJoinGameRoomSuccess);
 		}
 		
+		private function onStageClick(e:MouseEvent):void 
+		{
+			if (e.target is SimpleButton)
+				SoundManager.getInstance().playSound(SoundLibChung.CLICK_SOUND);
+			else if (e.target is MobileButton)
+				SoundManager.getInstance().playSound(SoundLibChung.CLICK_SOUND);
+		}
 		private function addSound():void 
 		{
 			var arrSoundName:Array = ["GameSound1", "GameSound2", "GameSound3", ConstTlmn.SOUND_POPUP, 
@@ -485,6 +555,7 @@ package
 			trace(e.currentTarget)
 		}
 		
+		
 		private function onLogOutClick(e:Event):void 
 		{
 			mainCommand.electroServerCommand.closeConnection();
@@ -725,6 +796,16 @@ package
 		{
 			playingScreen.effectClose();
 			addLobbyRoomScreen();
+			switch (mainData.gameType) 
+			{
+				case MainData.PHOM:
+					SoundManager.getInstance().soundManagerPhom.playOtherExitGamePlayerSound(mainData.chooseChannelData.myInfo.sex);
+				break;
+				case MainData.MAUBINH:
+					SoundManager.getInstance().soundManagerMauBinh.playOtherExitGamePlayerSound(mainData.chooseChannelData.myInfo.sex);
+				break;
+				default:
+			}
 		}
 	}
 }

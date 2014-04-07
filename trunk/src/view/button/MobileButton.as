@@ -35,6 +35,8 @@ package view.button
 		
 		private function onMouseDown(e:MouseEvent):void 
 		{
+			if (!enable)
+				return;
 			stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			gotoAndStop("over");
 		}
@@ -46,6 +48,8 @@ package view.button
 		
 		private function onMouseUp(e:MouseEvent):void 
 		{
+			if (!enable)
+				return;
 			if (stage)
 				stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			if (currentFrameLabel != "disable")
@@ -60,11 +64,11 @@ package view.button
 		public function set enable(value:Boolean):void 
 		{
 			_enable = value;
-			mouseEnabled = value;
 			if (!value)
 				gotoAndStop("disable");
 			else
 				gotoAndStop(1);
+			mouseEnabled = value;
 		}
 		
 	}

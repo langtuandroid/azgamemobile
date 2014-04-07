@@ -17,27 +17,39 @@ package view.effectLayer
 	 */
 	public class TextEffect_1 extends BaseEffect 
 	{
-		private var description:TextField;
+		private var greenTxt:TextField;
+		private var redTxt:TextField;
 		private var bitmap:Bitmap;
 		
 		public function TextEffect_1() 
 		{
 			addContent("zEffectText_1");
-			description = content["content"];
-			description.autoSize = TextFieldAutoSize.LEFT;
-			content.removeChild(description);
-			effectType = BaseEffect.MOVING_TRANSPARENT;
+			greenTxt = content["greenTxt"];
+			redTxt = content["redTxt"];
+			greenTxt.autoSize = TextFieldAutoSize.CENTER;
+			redTxt.autoSize = TextFieldAutoSize.CENTER;
+			//content.removeChild(description);
+			effectType = BaseEffect.SCALE_INCREASE;
 			movingDistanceX = 100;
 		}
 		
 		public function setValue(value:Number):void
 		{
 			if (value >= 0)
-				description.text = "+" + PlayingLogic.format(value, 1);
+			{
+				if(value == 0)
+					greenTxt.text = "+0";
+				else
+					greenTxt.text = "+" + PlayingLogic.format(value, 1);
+				redTxt.visible = false;
+			}
 			else
-				description.text = '-' + PlayingLogic.format(value * -1, 1);
+			{
+				redTxt.text = '-' + PlayingLogic.format(value * -1, 1);
+				greenTxt.visible = false;
+			}
 				
-			var tempBitmapData:BitmapData = new BitmapData(description.width, description.height,true,0x00FFFFFF);
+			/*var tempBitmapData:BitmapData = new BitmapData(description.width, description.height,true,0x00FFFFFF);
 			tempBitmapData.draw(description);
 			
 			if (bitmap)
@@ -52,7 +64,7 @@ package view.effectLayer
 			bitmap.y = - bitmap.height / 2;
 			content = new Sprite();
 			content.addChild(bitmap);
-			addChild(content);
+			addChild(content);*/
 		}
 	}
 
