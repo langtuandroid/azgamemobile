@@ -29,6 +29,7 @@ package view.screen
 	import model.modelField.ModelField;
 	import model.playingData.PlayingData;
 	import model.playingData.PlayingScreenAction;
+	import sound.SoundLibChung;
 	import sound.SoundLibMauBinh;
 	import sound.SoundManager;
 	import view.button.MyButton;
@@ -129,6 +130,9 @@ package view.screen
 		private var musicOnButton:SimpleButton;
 		private var musicOffButton:SimpleButton;
 		private var orderCardButton:SimpleButton;
+		private var playingLayer:Sprite;
+		private var chatboxLayer:Sprite;
+		private var chatButton:SimpleButton;
 		
 		public function PlayingScreenMauBinh() 
 		{
@@ -136,6 +140,7 @@ package view.screen
 			
 			super();
 			addContent("zPlayingScreenMauBinh");
+			createLayer();
 			
 			invitePlayButtonArray = new Array();
 			invitePlayButtonArray.push(content["invitePlayButton1"]);
@@ -152,9 +157,11 @@ package view.screen
 			createVariable();
 			mainData.playingData.addEventListener(PlayingData.UPDATE_PLAYING_SCREEN, onUpdatePlayingScreen);
 			chatBox = new ChatBox();
+			chatBox.visible = false;
 			chatBox.addEventListener(ChatBox.HAVE_CHAT, onHaveChat);
-			chatBox.x = Math.round(content["chatBoxPosition"].x);
-			chatBox.y = Math.round(content["chatBoxPosition"].y);
+			chatBox.addEventListener(ChatBox.BACK_BUTTON_CLICK, onChatBoxBackButtonClick);
+			//chatBox.x = Math.round(content["chatBoxPosition"].x);
+			//chatBox.y = Math.round(content["chatBoxPosition"].y);
 			waitToPlay = content["waitToPlay"];
 			waitToStart = content["waitToStart"];
 			waitToPlay.visible = waitToStart.visible = false;
@@ -166,7 +173,7 @@ package view.screen
 			maubinh = content["maubinh"];
 			maubinh.visible = false;
 			
-			addChild(chatBox);
+			chatboxLayer.addChild(chatBox);
 			
 			timerToPing = new Timer(pingTime * 1000);
 			timerToPing.addEventListener(TimerEvent.TIMER, onPingToServer);
@@ -185,6 +192,20 @@ package view.screen
 			ipBoard.visible = false;
 			
 			//addPlayer();
+		}
+		
+		private function onChatBoxBackButtonClick(e:Event):void 
+		{
+			chatBox.visible = false;
+			chatButton.visible = true;
+		}
+		
+		private function createLayer():void 
+		{
+			playingLayer = new Sprite();
+			chatboxLayer = new Sprite();
+			addChild(playingLayer);
+			addChild(chatboxLayer);
 		}
 		
 		private function onIpBoardClick(e:MouseEvent):void 
@@ -219,7 +240,7 @@ package view.screen
 				}
 			}
 			
-			addChild(ipBoard);
+			playingLayer.addChild(ipBoard);
 			ipBoard.visible = true;
 			settingBoard.visible = false;
 		}
@@ -245,43 +266,34 @@ package view.screen
 			{
 				case 0:
 					compareGroup1.visible = true;
-					addChild(compareGroup1);
-					if (mainData.chooseChannelData.myInfo.sex == 'M')
-						SoundManager.getInstance().playSound(SoundLibMauBinh.DO_CHI_1_SOUND_MALE);
-					else
-						SoundManager.getInstance().playSound(SoundLibMauBinh.DO_CHI_1_SOUND_FEMALE);
+					playingLayer.addChild(compareGroup1);
+					SoundManager.getInstance().soundManagerMauBinh.playDoChiPlayerSound(mainData.chooseChannelData.myInfo.sex, 1);
 				break;
 				case 1:
 					compareGroup2.visible = true;
-					addChild(compareGroup2);
-					if (mainData.chooseChannelData.myInfo.sex == 'M')
-						SoundManager.getInstance().playSound(SoundLibMauBinh.DO_CHI_2_SOUND_MALE);
-					else
-						SoundManager.getInstance().playSound(SoundLibMauBinh.DO_CHI_2_SOUND_FEMALE);
+					playingLayer.addChild(compareGroup2);
+					SoundManager.getInstance().soundManagerMauBinh.playDoChiPlayerSound(mainData.chooseChannelData.myInfo.sex, 2);
 				break;
 				case 2:
 					compareGroup3.visible = true;
-					addChild(compareGroup3);
-					if (mainData.chooseChannelData.myInfo.sex == 'M')
-						SoundManager.getInstance().playSound(SoundLibMauBinh.DO_CHI_3_SOUND_MALE);
-					else
-						SoundManager.getInstance().playSound(SoundLibMauBinh.DO_CHI_3_SOUND_FEMALE);
+					playingLayer.addChild(compareGroup3);
+					SoundManager.getInstance().soundManagerMauBinh.playDoChiPlayerSound(mainData.chooseChannelData.myInfo.sex, 3);
 				break;
 				case 3:
 					sapham.visible = true;
-					addChild(sapham);
+					playingLayer.addChild(sapham);
 				break;
 				case 4:
 					saplang.visible = true;
-					addChild(saplang);
+					playingLayer.addChild(saplang);
 				break;
 				case 5:
 					batsaplang.visible = true;
-					addChild(batsaplang);
+					playingLayer.addChild(batsaplang);
 				break;
 				case 6:
 					soAt.visible = true;
-					addChild(soAt);
+					playingLayer.addChild(soAt);
 				break;
 				default:
 			}
@@ -294,6 +306,7 @@ package view.screen
 		private var timerToCheckTime:Timer;
 		private function setupButton():void 
 		{
+			chatButton = content["chatButton"];
 			settingBoard = content["settingBoard"];
 			settingBoard.visible = false;
 			settingButton = content["settingButton"];
@@ -331,6 +344,13 @@ package view.screen
 			musicOnButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
 			musicOffButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
 			orderCardButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
+			chatButton.addEventListener(MouseEvent.CLICK, onChatButtonClick);
+		}
+		
+		private function onChatButtonClick(e:MouseEvent):void 
+		{
+			chatBox.visible = true;
+			chatButton.visible = false;
 		}
 		
 		private function onSettingBoardClick(e:MouseEvent):void 
@@ -530,7 +550,7 @@ package view.screen
 			
 			var H:int = currDate.getHours();
 			
-			if (H >= 6 && H <= 18)
+			if (H >= 6 && H < 18)
 				MovieClip(content["background"]).gotoAndStop("day");
 			else
 				MovieClip(content["background"]).gotoAndStop("night");
@@ -658,51 +678,7 @@ package view.screen
 		
 		private function listenHaveUserJoinRoom(data:Object):void 
 		{
-			var randomIndex:int = Math.floor(Math.random() * 5);
-			if (data[DataFieldMauBinh.SEX] == 'M')
-			{
-				switch (randomIndex) 
-				{
-					case 0:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_JOIN_GAME_SOUND_MALE_1);
-					break;
-					case 1:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_JOIN_GAME_SOUND_MALE_2);
-					break;
-					case 2:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_JOIN_GAME_SOUND_MALE_3);
-					break;
-					case 3:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_JOIN_GAME_SOUND_MALE_4);
-					break;
-					case 4:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_JOIN_GAME_SOUND_MALE_5);
-					break;
-					default:
-				}
-			}
-			else
-			{
-				switch (randomIndex) 
-				{
-					case 0:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_JOIN_GAME_SOUND_FEMALE_1);
-					break;
-					case 1:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_JOIN_GAME_SOUND_FEMALE_2);
-					break;
-					case 2:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_JOIN_GAME_SOUND_FEMALE_3);
-					break;
-					case 3:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_JOIN_GAME_SOUND_FEMALE_4);
-					break;
-					case 4:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_JOIN_GAME_SOUND_FEMALE_5);
-					break;
-					default:
-				}
-			}
+			SoundManager.getInstance().soundManagerMauBinh.playOtherJoinGamePlayerSound(data[DataFieldMauBinh.SEX]);
 			
 			chatBox.addChatSentence(data[DataFieldMauBinh.DISPLAY_NAME] + " " + mainData.init.gameDescription.playingScreen.userJoinRoom, "Thông báo", false, true);
 			var indexEmpty:int;
@@ -732,7 +708,7 @@ package view.screen
 				waitToPlay.visible = true;
 			}
 			
-			addChild(groupNameBar);
+			playingLayer.addChild(groupNameBar);
 			
 			checkConflictIp();
 		}
@@ -781,51 +757,7 @@ package view.screen
 				{
 					if (PlayerInfoMauBinh(playingPlayerArray[i]).userName == data[DataFieldMauBinh.USER_NAME])
 					{
-						var randomIndex:int = Math.floor(Math.random() * 5);
-						if (PlayerInfoMauBinh(playingPlayerArray[i]).sex == 'M')
-						{
-							switch (randomIndex) 
-							{
-								case 0:
-									SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_EXIT_GAME_SOUND_MALE_1);
-								break;
-								case 1:
-									SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_EXIT_GAME_SOUND_MALE_2);
-								break;
-								case 2:
-									SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_EXIT_GAME_SOUND_MALE_3);
-								break;
-								case 3:
-									SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_EXIT_GAME_SOUND_MALE_4);
-								break;
-								case 4:
-									SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_EXIT_GAME_SOUND_MALE_5);
-								break;
-								default:
-							}
-						}
-						else
-						{
-							switch (randomIndex) 
-							{
-								case 0:
-									SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_EXIT_GAME_SOUND_FEMALE_1);
-								break;
-								case 1:
-									SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_EXIT_GAME_SOUND_FEMALE_2);
-								break;
-								case 2:
-									SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_EXIT_GAME_SOUND_FEMALE_3);
-								break;
-								case 3:
-									SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_EXIT_GAME_SOUND_FEMALE_4);
-								break;
-								case 4:
-									SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_EXIT_GAME_SOUND_FEMALE_5);
-								break;
-								default:
-							}
-						}
+						SoundManager.getInstance().soundManagerMauBinh.playOtherExitGamePlayerSound(playingPlayerArray[i].sex)
 						playingPlayerArray.splice(i, 1);
 					}
 				}
@@ -833,7 +765,7 @@ package view.screen
 			
 			if (isPlaying)
 			{
-				SoundManager.getInstance().playSound(SoundLibMauBinh.GIVE_UP_SOUND);
+				SoundManager.getInstance().playSound(SoundLibChung.GIVE_UP_SOUND);
 				
 				for (i = 0; i < allPlayerArray.length; i++) 
 				{
@@ -898,6 +830,8 @@ package view.screen
 		
 		private function listenJoinRoom(data:Object):void 
 		{
+			SoundManager.getInstance().soundManagerMauBinh.playOtherJoinGamePlayerSound(mainData.chooseChannelData.myInfo.sex);
+			
 			var channelName:String = mainData.playingData.gameRoomData.channelName;
 			var roomId:String = String(mainData.playingData.gameRoomData.roomId);
 			var roomBet:String = PlayingLogic.format(data[DataFieldMauBinh.ROOM_BET], 1);
@@ -1004,9 +938,9 @@ package view.screen
 			
 			groupNameBar = new GroupNameBar();
 			groupNameBar.deckRank = belowUserInfo.deckRank;
-			addChild(groupNameBar);
+			playingLayer.addChild(groupNameBar);
 			groupNameBar.visible = false;
-			addChild(chatBox);
+			chatboxLayer.addChild(chatBox);
 			
 			checkConflictIp();
 		}
@@ -1180,7 +1114,7 @@ package view.screen
 					i = playingPlayerArray.length + 1;
 				}
 			}
-			addChild(groupNameBar);
+			playingLayer.addChild(groupNameBar);
 		}
 		
 		private function listenWhiteWin(data:Object):void // Thắng trắng
@@ -1419,53 +1353,7 @@ package view.screen
 							if (resultArray[i][DataFieldMauBinh.IS_BINH_LUNG])
 							{
 								if (PlayerInfoMauBinh(playingPlayerArray[j]) == belowUserInfo)
-								{
-									var randomIndex:int = Math.floor(Math.random() * 5);
-									if (mainData.chooseChannelData.myInfo.sex == 'M')
-									{
-										switch (randomIndex) 
-										{
-											case 0:
-												SoundManager.getInstance().playSound(SoundLibMauBinh.BINH_LUNG_SOUND_MALE_1);
-											break;
-											case 1:
-												SoundManager.getInstance().playSound(SoundLibMauBinh.BINH_LUNG_SOUND_MALE_2);
-											break;
-											case 2:
-												SoundManager.getInstance().playSound(SoundLibMauBinh.BINH_LUNG_SOUND_MALE_3);
-											break;
-											case 3:
-												SoundManager.getInstance().playSound(SoundLibMauBinh.BINH_LUNG_SOUND_MALE_4);
-											break;
-											case 4:
-												SoundManager.getInstance().playSound(SoundLibMauBinh.BINH_LUNG_SOUND_MALE_5);
-											break;
-											default:
-										}
-									}
-									else
-									{
-										switch (randomIndex) 
-										{
-											case 0:
-												SoundManager.getInstance().playSound(SoundLibMauBinh.BINH_LUNG_SOUND_FEMALE_1);
-											break;
-											case 1:
-												SoundManager.getInstance().playSound(SoundLibMauBinh.BINH_LUNG_SOUND_FEMALE_2);
-											break;
-											case 2:
-												SoundManager.getInstance().playSound(SoundLibMauBinh.BINH_LUNG_SOUND_FEMALE_3);
-											break;
-											case 3:
-												SoundManager.getInstance().playSound(SoundLibMauBinh.BINH_LUNG_SOUND_FEMALE_4);
-											break;
-											case 4:
-												SoundManager.getInstance().playSound(SoundLibMauBinh.BINH_LUNG_SOUND_FEMALE_5);
-											break;
-											default:
-										}
-									}
-								}
+									SoundManager.getInstance().soundManagerMauBinh.playBinhLungPlayerSound(mainData.chooseChannelData.myInfo.sex);
 								if (countBinhLungAndMauBinh < playingPlayerArray.length - 1)
 								{
 									effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, p2, time * 3, 0, '-19');
@@ -1525,7 +1413,7 @@ package view.screen
 				
 			if (haveMauBinh)
 			{
-				SoundManager.getInstance().playSound(SoundLibMauBinh.SPECIAL_SOUND);
+				SoundManager.getInstance().playSound(SoundLibChung.SPECIAL_SOUND);
 				
 				time = mainData.init.gameDescription.playingScreen.hideMauBinhTime;
 				var timerToHideMauBinh:Timer = new Timer(time * 1000, 1);
@@ -1533,343 +1421,21 @@ package view.screen
 				timerToHideMauBinh.start();
 				maubinh.visible = true;
 				
-				if (mainData.chooseChannelData.myInfo.sex == 'M')
-				{
-					switch (mauBinhIndex) 
-					{
-						case '30':
-							SoundManager.getInstance().playSound(SoundLibMauBinh.BA_SANH_SOUND_MALE);
-						break;
-						case '31':
-							SoundManager.getInstance().playSound(SoundLibMauBinh.BA_THUNG_SOUND_MALE);
-						break;
-						case '32':
-							SoundManager.getInstance().playSound(SoundLibMauBinh.LUC_PHE_BON_SOUND_MALE);
-						break;
-						case '33':
-							SoundManager.getInstance().playSound(SoundLibMauBinh.NAM_DOI_MOT_SAM_SOUND_MALE);
-						break;
-						case '34':
-							
-						break;
-						case '35':
-							
-						break;
-						case '36':
-							
-						break;
-						case '37':
-							
-						break;
-						case '38':
-							SoundManager.getInstance().playSound(SoundLibMauBinh.SANH_RONG_SOUND_MALE);
-						break;
-						case '39':
-							SoundManager.getInstance().playSound(SoundLibMauBinh.SANH_RONG_CUON_SOUND_MALE);
-						break;
-						default:
-					}
-				}
-				else
-				{
-					switch (groupResult) 
-					{
-						case '30':
-							SoundManager.getInstance().playSound(SoundLibMauBinh.BA_SANH_SOUND_FEMALE);
-						break;
-						case '31':
-							SoundManager.getInstance().playSound(SoundLibMauBinh.BA_THUNG_SOUND_FEMALE);
-						break;
-						case '32':
-							SoundManager.getInstance().playSound(SoundLibMauBinh.LUC_PHE_BON_SOUND_FEMALE);
-						break;
-						case '33':
-							SoundManager.getInstance().playSound(SoundLibMauBinh.NAM_DOI_MOT_SAM_SOUND_FEMALE);
-						break;
-						case '34':
-							
-						break;
-						case '35':
-							
-						break;
-						case '36':
-							
-						break;
-						case '37':
-							
-						break;
-						case '38':
-							SoundManager.getInstance().playSound(SoundLibMauBinh.SANH_RONG_SOUND_FEMALE);
-						break;
-						case '39':
-							SoundManager.getInstance().playSound(SoundLibMauBinh.SANH_RONG_CUON_SOUND_FEMALE);
-						break;
-						default:
-					}
-				}
+				SoundManager.getInstance().soundManagerMauBinh.playSpecialPlayerSound(mainData.chooseChannelData.myInfo.sex, mauBinhIndex, groupResult);
 				
 				var timerToPlaySoundMauBinh:Timer = new Timer(3000, 1);
 				timerToPlaySoundMauBinh.addEventListener(TimerEvent.TIMER_COMPLETE, onPlaySoundMaubinh)
 				timerToPlaySoundMauBinh.start();
 			}
 			
-			if (mainData.chooseChannelData.myInfo.sex == 'M')
-			{
-				switch (bestResult) 
-				{
-					case '22':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.THUNG_PHA_SANH_CHI_2_SOUND_MALE);
-					break;
-					case '21':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.THUNG_PHA_SANH_CHI_2_SOUND_MALE);
-					break;
-					case '20':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.THUNG_PHA_SANH_CHI_2_SOUND_MALE);
-					break;
-					case '19':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.TU_QUY_CHI_2_SOUND_MALE);
-					break;
-					case '18':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.TU_QUY_CHI_2_SOUND_MALE);
-					break;
-					case '17':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.CU_LU_CHI_2_SOUND_MALE);
-					break;
-					case '16':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.XAM_CHI_3_SOUND_MALE);
-					break;
-					case '15':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.XAM_CHI_3_SOUND_MALE);
-					break;
-					case '14':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.THUNG_PHA_SANH_SOUND_MALE);
-					break;
-					case '13':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.THUNG_PHA_SANH_SOUND_MALE);
-					break;
-					case '12':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.THUNG_PHA_SANH_SOUND_MALE);
-					break;
-					case '11':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.TU_QUY_SOUND_MALE);
-					break;
-					case '10':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.TU_QUY_SOUND_MALE);
-					break;
-					case '9':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.CU_LU_SOUND_MALE);
-					break;
-					case '8':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.THUNG_SOUND_MALE);
-					break;
-					case '7':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.SANH_SOUND_MALE);
-					break;
-					case '6':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.SANH_SOUND_MALE);
-					break;
-					case '5':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.SANH_SOUND_MALE);
-					break;
-					case '4':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.XAM_SOUND_MALE);
-					break;
-					case '3':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.THU_SOUND_MALE);
-					break;
-					case '2':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.DOI_SOUND_MALE);
-					break;
-					case '-4':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_4_SOUND_MALE);
-					break;
-					case '-5':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_5_SOUND_MALE);
-					break;
-					case '-6':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_6_SOUND_MALE);
-					break;
-					case '-7':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_7_SOUND_MALE);
-					break;
-					case '-8':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_8_SOUND_MALE);
-					break;
-					case '-9':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_9_SOUND_MALE);
-					break;
-					case '-10':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_10_SOUND_MALE);
-					break;
-					case '-11':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_J_SOUND_MALE);
-					break;
-					case '-12':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_Q_SOUND_MALE);
-					break;
-					case '-13':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_K_SOUND_MALE);
-					break;
-					case '-14':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_A_SOUND_MALE);
-					break;
-					default:
-				}
-			}
-			else
-			{
-				switch (bestResult) 
-				{
-					case '22':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.THUNG_PHA_SANH_CHI_2_SOUND_FEMALE);
-					break;
-					case '21':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.THUNG_PHA_SANH_CHI_2_SOUND_FEMALE);
-					break;
-					case '20':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.THUNG_PHA_SANH_CHI_2_SOUND_FEMALE);
-					break;
-					case '19':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.TU_QUY_CHI_2_SOUND_FEMALE);
-					break;
-					case '18':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.TU_QUY_CHI_2_SOUND_FEMALE);
-					break;
-					case '17':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.CU_LU_CHI_2_SOUND_FEMALE);
-					break;
-					case '16':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.XAM_CHI_3_SOUND_FEMALE);
-					break;
-					case '15':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.XAM_CHI_3_SOUND_FEMALE);
-					break;
-					case '14':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.THUNG_PHA_SANH_SOUND_FEMALE);
-					break;
-					case '13':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.THUNG_PHA_SANH_SOUND_FEMALE);
-					break;
-					case '12':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.THUNG_PHA_SANH_SOUND_FEMALE);
-					break;
-					case '11':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.TU_QUY_SOUND_FEMALE);
-					break;
-					case '10':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.TU_QUY_SOUND_FEMALE);
-					break;
-					case '9':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.CU_LU_SOUND_FEMALE);
-					break;
-					case '8':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.THUNG_SOUND_FEMALE);
-					break;
-					case '7':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.SANH_SOUND_FEMALE);
-					break;
-					case '6':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.SANH_SOUND_FEMALE);
-					break;
-					case '5':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.SANH_SOUND_FEMALE);
-					break;
-					case '4':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.XAM_SOUND_FEMALE);
-					break;
-					case '3':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.THU_SOUND_FEMALE);
-					break;
-					case '2':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.DOI_SOUND_FEMALE);
-					break;
-					case '-4':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_4_SOUND_FEMALE);
-					break;
-					case '-5':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_5_SOUND_FEMALE);
-					break;
-					case '-6':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_6_SOUND_FEMALE);
-					break;
-					case '-7':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_7_SOUND_FEMALE);
-					break;
-					case '-8':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_8_SOUND_FEMALE);
-					break;
-					case '-9':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_9_SOUND_FEMALE);
-					break;
-					case '-10':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_10_SOUND_FEMALE);
-					break;
-					case '-11':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_J_SOUND_FEMALE);
-					break;
-					case '-12':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_Q_SOUND_FEMALE);
-					break;
-					case '-13':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_K_SOUND_FEMALE);
-					break;
-					case '-14':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_A_SOUND_FEMALE);
-					break;
-					default:
-				}
-			}
+			SoundManager.getInstance().soundManagerMauBinh.playNormalPlayerSound(mainData.chooseChannelData.myInfo.sex, bestResult);
 		}
 		
 		private function onPlaySoundMaubinh(e:TimerEvent):void 
 		{
 			if (!stage)
 				return;
-			var randomIndex:int = Math.floor(Math.random() * 5);
-			if (playerMauBinhSex == 'M')
-			{
-				switch (randomIndex) 
-				{
-					case 0:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_BINH_SOUND_MALE_1);
-					break;
-					case 1:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_BINH_SOUND_MALE_2);
-					break;
-					case 2:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_BINH_SOUND_MALE_3);
-					break;
-					case 3:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_BINH_SOUND_MALE_4);
-					break;
-					case 4:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_BINH_SOUND_MALE_5);
-					break;
-					default:
-				}
-			}
-			else
-			{
-				switch (randomIndex) 
-				{
-					case 0:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_BINH_SOUND_FEMALE_1);
-					break;
-					case 1:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_BINH_SOUND_FEMALE_2);
-					break;
-					case 2:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_BINH_SOUND_FEMALE_3);
-					break;
-					case 3:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_BINH_SOUND_FEMALE_4);
-					break;
-					case 4:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_BINH_SOUND_FEMALE_5);
-					break;
-					default:
-				}
-			}
+			SoundManager.getInstance().soundManagerMauBinh.playMauBinhPlayerSound(playerMauBinhSex);
 			
 			var timerToPlaySoundMauBinhLose:Timer = new Timer(3000, 1);
 			timerToPlaySoundMauBinhLose.addEventListener(TimerEvent.TIMER_COMPLETE, onPlaySoundMaubinhLose)
@@ -1880,51 +1446,7 @@ package view.screen
 		{
 			if (!stage)
 				return;
-			var randomIndex:int = Math.floor(Math.random() * 5);
-			if (mainData.chooseChannelData.myInfo.sex == 'M')
-			{
-				switch (randomIndex) 
-				{
-					case 0:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_BINH_LOSE_SOUND_MALE_1);
-					break;
-					case 1:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_BINH_LOSE_SOUND_MALE_2);
-					break;
-					case 2:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_BINH_LOSE_SOUND_MALE_3);
-					break;
-					case 3:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_BINH_LOSE_SOUND_MALE_4);
-					break;
-					case 4:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_BINH_LOSE_SOUND_MALE_5);
-					break;
-					default:
-				}
-			}
-			else
-			{
-				switch (randomIndex) 
-				{
-					case 0:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_BINH_LOSE_SOUND_FEMALE_1);
-					break;
-					case 1:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_BINH_LOSE_SOUND_FEMALE_2);
-					break;
-					case 2:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_BINH_LOSE_SOUND_FEMALE_3);
-					break;
-					case 3:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_BINH_LOSE_SOUND_FEMALE_4);
-					break;
-					case 4:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_BINH_LOSE_SOUND_FEMALE_5);
-					break;
-					default:
-				}
-			}
+			SoundManager.getInstance().soundManagerMauBinh.playMauBinhLosePlayerSound(mainData.chooseChannelData.myInfo.sex);
 		}
 		
 		private function onHideMauBinh(e:TimerEvent):void 
@@ -1981,7 +1503,7 @@ package view.screen
 				return;
 			var time:int = mainData.init.gameDescription.playingScreen.showGroupTime;
 			
-			SoundManager.getInstance().playSound(SoundLibMauBinh.MORE_COMPARE_SOUND);
+			SoundManager.getInstance().playSound(SoundLibChung.MORE_COMPARE_SOUND);
 			
 			setCompareGroupStatus(SAP_HAM_INDEX);
 			
@@ -2048,7 +1570,7 @@ package view.screen
 			if (!stage)
 				return;
 			
-			SoundManager.getInstance().playSound(SoundLibMauBinh.MORE_COMPARE_SOUND);
+			SoundManager.getInstance().playSound(SoundLibChung.MORE_COMPARE_SOUND);
 			
 			var resultArray:Array = compareGroupData[DataFieldMauBinh.PLAYER_LIST];
 			var p1:Point;
@@ -2111,7 +1633,7 @@ package view.screen
 			if (!stage)
 				return;
 			
-			SoundManager.getInstance().playSound(SoundLibMauBinh.MORE_COMPARE_SOUND);
+			SoundManager.getInstance().playSound(SoundLibChung.MORE_COMPARE_SOUND);
 				
 			var resultArray:Array = compareGroupData[DataFieldMauBinh.PLAYER_LIST];
 			var p1:Point;
@@ -2165,7 +1687,7 @@ package view.screen
 			if (!stage)
 				return;
 			
-			SoundManager.getInstance().playSound(SoundLibMauBinh.MORE_COMPARE_SOUND);
+			SoundManager.getInstance().playSound(SoundLibChung.MORE_COMPARE_SOUND);
 				
 			var resultArray:Array = compareGroupData[DataFieldMauBinh.PLAYER_LIST];
 			var p1:Point;
@@ -2217,51 +1739,7 @@ package view.screen
 					{
 						if (resultArray[i][DataFieldMauBinh.TOTAL] > 0 && i == 0)
 						{
-							var randomIndex:int = Math.floor(Math.random() * 5);
-							if (PlayerInfoMauBinh(playingPlayerArray[j]).sex == 'M')
-							{
-								switch (randomIndex) 
-								{
-									case 0:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_WIN_SOUND_MALE_1);
-									break;
-									case 1:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_WIN_SOUND_MALE_2);
-									break;
-									case 2:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_WIN_SOUND_MALE_3);
-									break;
-									case 3:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_WIN_SOUND_MALE_4);
-									break;
-									case 4:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_WIN_SOUND_MALE_5);
-									break;
-									default:
-								}
-							}
-							else
-							{
-								switch (randomIndex) 
-								{
-									case 0:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_WIN_SOUND_FEMALE_1);
-									break;
-									case 1:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_WIN_SOUND_FEMALE_2);
-									break;
-									case 2:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_WIN_SOUND_FEMALE_3);
-									break;
-									case 3:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_WIN_SOUND_FEMALE_4);
-									break;
-									case 4:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.OTHER_WIN_SOUND_FEMALE_5);
-									break;
-									default:
-								}
-							}
+							SoundManager.getInstance().soundManagerMauBinh.playOtherWinPlayerSound(playingPlayerArray[j].sex);
 						}
 						if (resultArray[i][DataFieldMauBinh.TOTAL] > 0)
 							PlayerInfoMauBinh(playingPlayerArray[j]).setStatus('win');
@@ -2299,155 +1777,21 @@ package view.screen
 			{
 				if (belowUserInfo.userName == resultArray[i][DataFieldMauBinh.USER_NAME])
 				{
-					var randomIndex:int = Math.floor(Math.random() * 5);
 					if (resultArray[i][DataFieldMauBinh.TOTAL] == 0)
 					{
-						if (belowUserInfo.sex == 'M')
-						{
-							switch (randomIndex) 
-							{
-								case 0:
-									SoundManager.getInstance().playSound(SoundLibMauBinh.DRAW_SOUND_MALE_1);
-								break;
-								case 1:
-									SoundManager.getInstance().playSound(SoundLibMauBinh.DRAW_SOUND_MALE_2);
-								break;
-								case 2:
-									SoundManager.getInstance().playSound(SoundLibMauBinh.DRAW_SOUND_MALE_3);
-								break;
-								case 3:
-									SoundManager.getInstance().playSound(SoundLibMauBinh.DRAW_SOUND_MALE_4);
-								break;
-								case 4:
-									SoundManager.getInstance().playSound(SoundLibMauBinh.DRAW_SOUND_MALE_5);
-								break;
-								default:
-							}
-						}
-						else
-						{
-							switch (randomIndex) 
-							{
-								case 0:
-									SoundManager.getInstance().playSound(SoundLibMauBinh.DRAW_SOUND_FEMALE_1);
-								break;
-								case 1:
-									SoundManager.getInstance().playSound(SoundLibMauBinh.DRAW_SOUND_FEMALE_2);
-								break;
-								case 2:
-									SoundManager.getInstance().playSound(SoundLibMauBinh.DRAW_SOUND_FEMALE_3);
-								break;
-								case 3:
-									SoundManager.getInstance().playSound(SoundLibMauBinh.DRAW_SOUND_FEMALE_4);
-								break;
-								case 4:
-									SoundManager.getInstance().playSound(SoundLibMauBinh.DRAW_SOUND_FEMALE_5);
-								break;
-								default:
-							}
-						}
+						SoundManager.getInstance().soundManagerMauBinh.playDrawPlayerSound(belowUserInfo.sex);
 					}
 					else if (resultArray[i][DataFieldMauBinh.TOTAL] < 0)
 					{
-						SoundManager.getInstance().playSound(SoundLibMauBinh.LOSE_SOUND);
+						SoundManager.getInstance().playSound(SoundLibChung.LOSE_SOUND);
 						if (mainData.chooseChannelData.myInfo.money <= Number(mainData.playingData.gameRoomData.roomBet))
-						{
-							if (belowUserInfo.sex == 'M')
-							{
-								switch (randomIndex) 
-								{
-									case 0:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.LOSE_ALL_SOUND_MALE_1);
-									break;
-									case 1:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.LOSE_ALL_SOUND_MALE_2);
-									break;
-									case 2:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.LOSE_ALL_SOUND_MALE_3);
-									break;
-									case 3:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.LOSE_ALL_SOUND_MALE_4);
-									break;
-									case 4:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.LOSE_ALL_SOUND_MALE_5);
-									break;
-									default:
-								}
-							}
-							else
-							{
-								switch (randomIndex) 
-								{
-									case 0:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.LOSE_ALL_SOUND_FEMALE_1);
-									break;
-									case 1:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.LOSE_ALL_SOUND_FEMALE_2);
-									break;
-									case 2:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.LOSE_ALL_SOUND_FEMALE_3);
-									break;
-									case 3:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.LOSE_ALL_SOUND_FEMALE_4);
-									break;
-									case 4:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.LOSE_ALL_SOUND_FEMALE_5);
-									break;
-									default:
-								}
-							}
-						}
+							SoundManager.getInstance().soundManagerMauBinh.playLoseAllPlayerSound(belowUserInfo.sex);
 						else
-						{
-							if (belowUserInfo.sex == 'M')
-							{
-								switch (randomIndex) 
-								{
-									case 0:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.LOSE_SOUND_MALE_1);
-									break;
-									case 1:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.LOSE_SOUND_MALE_2);
-									break;
-									case 2:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.LOSE_SOUND_MALE_3);
-									break;
-									case 3:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.LOSE_SOUND_MALE_4);
-									break;
-									case 4:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.LOSE_SOUND_MALE_5);
-									break;
-									default:
-								}
-							}
-							else
-							{
-								switch (randomIndex) 
-								{
-									case 0:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.LOSE_SOUND_FEMALE_1);
-									break;
-									case 1:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.LOSE_SOUND_FEMALE_2);
-									break;
-									case 2:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.LOSE_SOUND_FEMALE_3);
-									break;
-									case 3:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.LOSE_SOUND_FEMALE_4);
-									break;
-									case 4:
-										SoundManager.getInstance().playSound(SoundLibMauBinh.LOSE_SOUND_FEMALE_5);
-									break;
-									default:
-								}
-							}
-						}
+							SoundManager.getInstance().soundManagerMauBinh.playLosePlayerSound(belowUserInfo.sex);
 					}
 					else
 					{
-						SoundManager.getInstance().playSound(SoundLibMauBinh.WIN_SOUND);
+						SoundManager.getInstance().playSound(SoundLibChung.WIN_SOUND);
 					}
 				}
 			}
@@ -2505,51 +1849,7 @@ package view.screen
 		
 		private function resetMatch():void // reset ván bài
 		{
-			var randomIndex:int = Math.floor(Math.random() * 5);
-			if (mainData.chooseChannelData.myInfo.sex == 'M')
-			{
-				switch (randomIndex) 
-				{
-					case 0:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.START_GAME_SOUND_MALE_1);
-					break;
-					case 1:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.START_GAME_SOUND_MALE_2);
-					break;
-					case 2:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.START_GAME_SOUND_MALE_3);
-					break;
-					case 3:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.START_GAME_SOUND_MALE_4);
-					break;
-					case 4:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.START_GAME_SOUND_MALE_5);
-					break;
-					default:
-				}
-			}
-			else
-			{
-				switch (randomIndex) 
-				{
-					case 0:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.START_GAME_SOUND_FEMALE_1);
-					break;
-					case 1:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.START_GAME_SOUND_FEMALE_2);
-					break;
-					case 2:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.START_GAME_SOUND_FEMALE_3);
-					break;
-					case 3:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.START_GAME_SOUND_FEMALE_4);
-					break;
-					case 4:
-						SoundManager.getInstance().playSound(SoundLibMauBinh.START_GAME_SOUND_FEMALE_5);
-					break;
-					default:
-				}
-			}
+			SoundManager.getInstance().soundManagerMauBinh.playStartGamePlayerSound(mainData.chooseChannelData.myInfo.sex);
 			
 			setCompareGroupStatus();
 			for (var i:int = 0; i < allPlayerArray.length; i++) 
@@ -2621,7 +1921,7 @@ package view.screen
 			groupNameBar.deckRank = belowUserInfo.deckRank;
 			//groupNameBar.x = Math.round(belowUserInfo.localToGlobal(belowUserInfo.groupNameBarPosition).x);
 			//groupNameBar.y = Math.round(belowUserInfo.localToGlobal(belowUserInfo.groupNameBarPosition).y);
-			addChild(groupNameBar);
+			playingLayer.addChild(groupNameBar);
 			groupNameBar.visible = false;
 			
 			var tempTimer:Timer = new Timer(4000, 1);
@@ -2669,7 +1969,7 @@ package view.screen
 			if (!readyButton)
 				createButton("readyButton", "zReadyButton", "readyButtonPosition");
 			readyButton.addEventListener(MouseEvent.CLICK, onButtonClick);
-			addChild(readyButton);
+			playingLayer.addChild(readyButton);
 			
 			if (mainData.isAutoReady)
 				mainCommand.electroServerCommand.readyPlay();
@@ -2687,8 +1987,8 @@ package view.screen
 				
 			if (readyButton)
 			{
-				if (this.contains(readyButton))
-					removeChild(readyButton);	
+				if (readyButton.parent)
+					readyButton.parent.removeChild(readyButton);	
 			}
 		}
 		
@@ -2700,15 +2000,15 @@ package view.screen
 				startButton.buttonMode = false;
 			}
 			startButton.content["child"].addEventListener(MouseEvent.CLICK, onButtonClick);
-			addChild(startButton);
+			playingLayer.addChild(startButton);
 		}
 		
 		private function hideStartButton():void
 		{
 			if (startButton)
 			{
-				if (this.contains(startButton))
-					removeChild(startButton);	
+				if (startButton.parent)
+					startButton.parent.removeChild(startButton);	
 			}
 		}
 		
@@ -2847,7 +2147,7 @@ package view.screen
 				
 			this[playerType].x = Math.round(content[playerType + "Position"].x);
 			this[playerType].y = Math.round(content[playerType + "Position"].y);
-			addChild(this[playerType]);
+			playingLayer.addChild(this[playerType]);
 			allPlayerArray[position] = this[playerType];
 		}
 		
@@ -2904,11 +2204,11 @@ package view.screen
 		{
 			if (myContextMenu)
 			{
-				if (contains(myContextMenu))
+				if (myContextMenu.parent)
 				{
 					myContextMenu.removeEventListener(MyContextMenu.KICK_OUT_CLICK, onKickOutClick);
 					myContextMenu.removeEventListener(MyContextMenu.ACCUSE_CLICK, onAccuseClick);
-					removeChild(myContextMenu);
+					myContextMenu.parent.removeChild(myContextMenu);
 				}
 			}
 			ipBoard.visible = false;
@@ -2946,12 +2246,12 @@ package view.screen
 			}
 			cardManager.x = content["cardManagerPosition"].x;
 			cardManager.y = content["cardManagerPosition"].y;
-			addChild(cardManager);
+			playingLayer.addChild(cardManager);
 		}
 		
 		private function onDivideFinish(e:Event):void 
 		{
-			addChild(groupNameBar);
+			playingLayer.addChild(groupNameBar);
 			if (isFirstJoinGame)
 			{
 				//groupNameBar.open();
@@ -2970,8 +2270,8 @@ package view.screen
 		{
 			if (cardManager)
 			{
-				if (contains(cardManager))
-					removeChild(cardManager);
+				if (cardManager.parent)
+					cardManager.parent.removeChild(cardManager);
 			}
 		}
 		

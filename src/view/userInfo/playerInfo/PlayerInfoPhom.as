@@ -5,13 +5,13 @@ package view.userInfo.playerInfo
 	import com.gskinner.motion.easing.Back;
 	import com.gskinner.motion.GTween;
 	import com.hallopatidu.utils.StringFormatUtils;
+	import control.electroServerCommand.ElectroServerCommandPhom;
 	import control.MainCommand;
-	import event.DataField;
-	import flash.desktop.NativeApplication;
+	import event.DataFieldPhom;
+	import flash.display.MovieClip;
 	import flash.display.SimpleButton;
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.filters.GlowFilter;
@@ -22,6 +22,7 @@ package view.userInfo.playerInfo
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import flash.utils.Dictionary;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getTimer;
 	import flash.utils.Timer;
@@ -29,14 +30,16 @@ package view.userInfo.playerInfo
 	import logic.PlayingLogic;
 	import model.MainData;
 	import model.modelField.ModelField;
-	import view.BubbleChat;
-	import view.button.BigButton;
+	import sound.SoundLibChung;
+	import sound.SoundLibPhom;
+	import sound.SoundManager;
+	import view.button.MobileButton;
 	import view.card.CardPhom;
-	import view.card.CardManager;
+	import view.card.CardManagerPhom;
 	import view.contextMenu.MyContextMenu;
 	import view.effectLayer.EffectLayer;
-	import view.screen.PlayingScreen;
-	import view.timeBar.TimeBar;
+	import view.screen.PlayingScreenPhom;
+	import view.timeBar.TimeBarPhom;
 	import view.userInfo.avatar.Avatar;
 	import view.window.AlertWindow;
 	import view.window.BaseWindow;
@@ -73,10 +76,10 @@ package view.userInfo.playerInfo
 		public var leavedCardPosition:Array; // vị trí các quân bài đã đánh
 		public var downCardPosition:Point; // vị trí để xác định quân bài vừa hạ phỏm
 		
-		private const belowUserCardSize:Object = {"unLeaveCard":0.73,"leavedCard":0.5,"downCard":0.5}; // kích thước các quân bài của user bên dưới
-		private const leftUserCardSize:Object = {"unLeaveCard":0.5,"leavedCard":0.5,"downCard":0.5}; // kích thước các quân bài của user bên trái
-		private const rightUserCardSize:Object = {"unLeaveCard":0.5,"leavedCard":0.5,"downCard":0.5}; // kích thước các quân bài của user bên phải
-		private const aboveUserCardSize:Object = { "unLeaveCard":0.5, "leavedCard":0.5, "downCard":0.5 }; // kích thước các quân bài của user bên trên
+		private const belowUserCardSize:Object = {"unLeaveCard":1,"leavedCard":0.6,"downCard":0.52}; // kích thước các quân bài của user bên dưới
+		private const leftUserCardSize:Object = {"unLeaveCard":0.6,"leavedCard":0.6,"downCard":0.52}; // kích thước các quân bài của user bên trái
+		private const rightUserCardSize:Object = {"unLeaveCard":0.6,"leavedCard":0.6,"downCard":0.52}; // kích thước các quân bài của user bên phải
+		private const aboveUserCardSize:Object = { "unLeaveCard":0.6, "leavedCard":0.6, "downCard":0.52 }; // kích thước các quân bài của user bên trên
 		
 		private const belowUserCardRotation:Object = {"unLeaveCard":0,"leavedCard":0,"downCard":0}; // góc quay của các quân bài của user bên dưới
 		private const leftUserCardRotation:Object = {"unLeaveCard":90,"leavedCard":0,"downCard":0}; // góc quay của các quân bài của user bên trái
@@ -92,17 +95,19 @@ package view.userInfo.playerInfo
 		public var downCardRotation:Number;
 		
 		private const distanceDeckVertical:Number = 25; // khoảng cách giữa các phỏm nằm dọc
-		private const distanceDeckHorizontal:Number = 2; // khoảng cách giữa các phỏm nằm ngang
+		private const distanceDeckHorizontal:Number = 10; // khoảng cách giữa các phỏm nằm ngang
 		
-		public var timeBar:TimeBar; // thanh đếm thời gian
+		public var timeBar:TimeBarPhom; // thanh đếm thời gian
 		private var content:Sprite;
 		public var formName:String;
+		public var ip:String;
 		public var deckNumber:int = 0; // số phỏm của người chơi
 		private var totalDownCard:int = 0; // Tổng số lá của các phỏm cộng lại
 		
-		private const smallDistance:Number = 10; // khoảng cách giữa các quân bài chưa đánh của user trái,phải,trên
-		private const largeDistance:Number = 20; // khoảng cách giữa các quân bài chưa đánh của user chính
-		private const largeDistance_2:Number = 10; // khoảng cách giữa các quân bài đã đánh, hoặc đã hạ
+		private const smallDistance:Number = 18; // khoảng cách giữa các quân bài kích thước nhỏ
+		private const normalDistance:Number = 22; // khoảng cách giữa các quân bài kích thước vừa
+		private const largeDistance:Number = 60; // khoảng cách giữa các quân bài kích thước to
+		private const largeDistance_2:Number = 22; // khoảng cách giữa các quân bài đã đánh, hoặc đã hạ
 		
 		public var unLeaveCards:Array; // Mảng chứa các lá bài chưa đánh
 		public var leavedCards:Array; // Mảng chứa các lá bài đã đánh
@@ -110,15 +115,14 @@ package view.userInfo.playerInfo
 		public var downCards_2:Array; // Mảng chứa các lá bài của phỏm 2
 		public var downCards_3:Array; // Mảng chứa các lá bài của phỏm 3
 		
-		private var getCardButton:BigButton; // Nút bốc bài
-		public var stealCardButton:BigButton; // Nút ăn bài
-		public var arrangeCardButton:BigButton; // Nút xếp bài
-		private var playCardButton:BigButton; // Nút đánh bài
-		private var reSelectButton:BigButton; // Nút chọn lại
-		private var downCardButton:BigButton; // Nút hạ bài
-		private var downCardFinishButton:BigButton; // Nút hạ bài xong
-		private var sendCardButton:BigButton; // Nút gửi bài
-		private var sendCardFinishButton:BigButton; // Nút gửi bài xong
+		private var getCardButton:MobileButton; // Nút bốc bài
+		public var stealCardButton:MobileButton; // Nút ăn bài
+		public var arrangeCardButton:MobileButton; // Nút xếp bài
+		private var playCardButton:MobileButton; // Nút đánh bài
+		private var reSelectButton:MobileButton; // Nút chọn lại
+		private var downCardButton:MobileButton; // Nút hạ bài
+		private var sendCardButton:MobileButton; // Nút gửi bài
+		private var noticeFullDeckButton:MobileButton; // Nút gửi bài
 		private var buttonArray:Array; // mảng chứa tất cả các nút
 		
 		private var mainData:MainData = MainData.getInstance();
@@ -128,8 +132,7 @@ package view.userInfo.playerInfo
 		private var money:TextField;
 		private var homeIcon:Sprite;
 		private var readyIcon:Sprite;
-		private var moneyNumber:Number;
-		private var addMoneyText:TextField;
+		public var moneyNumber:Number;
 		
 		public var cardInfoArray:Array;
 		
@@ -153,13 +156,12 @@ package view.userInfo.playerInfo
 		public var isHaveUserDownCard:Boolean; // Biến cờ đánh dấu xem đã có user nào trước đó hạ bài hay chưa
 		
 		private var mainCommand:MainCommand = MainCommand.getInstance();
-		private var electroServerCommand:* = mainCommand.electroServerCommand;
+		private var electroServerCommand:ElectroServerCommandPhom = mainCommand.electroServerCommand;
 		private var phomLogic:PhomLogic = PhomLogic.getInstance();
 		
 		private var leftLimit:Point; // Giới hạn di chuyển phía trái, khi drag quân bài về phía trái không thể dịch quá giới hạn này
 		private var rightLimit:Point; // Giới hạn di chuyển phía phải, khi drag quân bài về phía phải không thể dịch quá giới hạn này
 		
-		private var invitePlayButton:SimpleButton; // Nút mời chơi
 		private var exitButton:SimpleButton; // Nút thoát
 		
 		private var invitePlayWindow:InvitePlayWindow; // Cửa sổ mời chơi
@@ -168,21 +170,20 @@ package view.userInfo.playerInfo
 		private const effectTime:Number = 0.5;
 		public var playingPlayerArray:Array; // Danh sách những người đang chơi
 		
-		private var confirmDownCardFinishWindow:ConfirmWindow; // Bảng xác nhận hạ xong
-		private var confirmSendCardFinishWindow:ConfirmWindow; // Bảng xác nhận gửi xong
 		private var confirmExitWindow:ConfirmWindow; // Bảng xác nhận thoát ra khỏi phòng
-		
-		private var countShowTooltipPlayCard:int = 0;
-		private var countShowTooltipDownCard:int = 0;
-		private var countShowTooltipSendCard:int = 0;
 		
 		public var isWaitingToReady:Boolean;
 		public var avatarString:String;
 		public var logoString:String;
 		
-		private var tooltip:Sprite; // tooltip
-		private var bubbleChat:BubbleChat;
-		private var timerToHideBubbleChat:Timer;
+		public var levelNumber:Number;
+		public var winLoseIcon:MovieClip;
+		
+		public var downCards_1_index:int; // index phỏm 1 của server
+		public var downCards_2_index:int; // index phỏm 2 của server
+		public var downCards_3_index:int; // index phỏm 3 của server
+		
+		public var sex:String;
 		
 		public function PlayerInfoPhom() 
 		{
@@ -192,83 +193,6 @@ package view.userInfo.playerInfo
 			downCards_2 = new Array();
 			downCards_3 = new Array();
 			//cacheAsBitmap = true;
-			
-			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
-		}
-		
-		public function addChatSentence(sentence:String):void
-		{
-			if (timerToHideBubbleChat)
-			{
-				timerToHideBubbleChat.removeEventListener(TimerEvent.TIMER_COMPLETE, onHideBubbleChat);
-				timerToHideBubbleChat.stop();	
-			}
-			
-			if (!bubbleChat)
-				bubbleChat = new BubbleChat();
-			bubbleChat.addString(sentence);
-			bubbleChat.x = avatar.x;
-			bubbleChat.y = avatar.y;
-			var globalPosition:Point = new Point(bubbleChat.x, bubbleChat.y);
-			globalPosition = localToGlobal(globalPosition);
-			if (globalPosition.x + bubbleChat.width > mainData.stageWidth)
-				bubbleChat.x = - (globalPosition.x + bubbleChat.width - mainData.stageWidth);
-				
-			bubbleChat.x = globalPosition.x;
-			bubbleChat.y = globalPosition.y;
-			
-			parent.addChild(bubbleChat);
-			bubbleChat.visible = true;
-			
-			timerToHideBubbleChat = new Timer(mainData.showBubbleChatTime * 1000, 1);
-			timerToHideBubbleChat.addEventListener(TimerEvent.TIMER_COMPLETE, onHideBubbleChat);
-			timerToHideBubbleChat.start();
-		}
-		
-		private function onHideBubbleChat(e:TimerEvent):void 
-		{
-			if (!stage)
-				return;
-			bubbleChat.visible = false;
-		}
-		
-		private function onRemovedFromStage(e:Event):void 
-		{
-			if (mainData.isOnAndroid)
-				NativeApplication.nativeApplication.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown, false);
-				
-			if (bubbleChat)
-			{
-				if (bubbleChat.parent)
-					bubbleChat.parent.removeChild(bubbleChat);
-			}
-		}
-		
-		private function onKeyDown(e:KeyboardEvent):void
-		{
-			switch(e.keyCode)
-			{
-				case 16777238:
-				e.preventDefault();
-				e.stopImmediatePropagation();
-				e.stopPropagation();
-				
-				if (isPlaying)
-				{
-					confirmExitWindow = new ConfirmWindow();
-					confirmExitWindow.setNotice(mainData.init.gameDescription.playingScreen.confirmExit);
-					confirmExitWindow.addEventListener(ConfirmWindow.CONFIRM, onConfirmWindow);
-					windowLayer.openWindow(confirmExitWindow);
-				}
-				else
-				{
-					exitButton.removeEventListener(MouseEvent.CLICK, onOtherButtonClick);
-					dispatchEvent(new Event(EXIT, true));
-					electroServerCommand.joinLobbyRoom();
-					EffectLayer.getInstance().removeAllEffect();
-				}
-				break;
-			}
 		}
 		
 		private function addAvatar():void 
@@ -282,7 +206,7 @@ package view.userInfo.playerInfo
 				}
 				else
 				{
-					avatar.setForm(Avatar.FRIEND_AVATAR);
+					avatar.setForm(Avatar.MY_AVATAR);
 					avatar.buttonMode = true;
 				}
 			}
@@ -297,53 +221,11 @@ package view.userInfo.playerInfo
 			playerName = content["playerName"];
 			level = content["level"];
 			money = content["money"];
-			if (formName == BELOW_USER)
-			{
-				addMoneyText = content["addMoneyText"];
-				//addMoneyText.selectable = false;
-			}
-			playerName.selectable = /*level.selectable = */money.selectable = false;
+			playerName.selectable = level.selectable = money.selectable = false;
 			homeIcon = content["homeIcon"];
 			content.removeChild(homeIcon);
 			readyIcon = content["readyIcon"];
-			readyIcon.cacheAsBitmap = true;
-			if (formName == PlayerInfoPhom.BELOW_USER)
-			{
-				tooltip = content["tooltip"];
-				TextField(tooltip["description"]).selectable = false;
-				hideToolTip();
-			}
 			content.removeChild(readyIcon);
-		}
-		
-		public function showTooltip(description:String):void
-		{
-			if (formName != PlayerInfoPhom.BELOW_USER)
-				return;
-			tooltip["description"].text = description;
-			tooltip.visible = true;
-			if (stage)
-			{
-				if (tooltip.parent != stage && tooltip.parent == content)
-				{
-					var tempPoint:Point = localToGlobal(new Point(tooltip.x, tooltip.y));
-					tooltip.x = tempPoint.x;
-					tooltip.y = tempPoint.y;
-				}
-				stage.addChild(tooltip);
-			}
-		}
-		
-		public function hideToolTip():void
-		{
-			if (formName != PlayerInfoPhom.BELOW_USER)
-				return;
-			tooltip.visible = false;
-			if (stage)
-			{
-				if (tooltip.parent == stage)
-					stage.removeChild(tooltip);
-			}
 		}
 		
 		public function setForm(_formName:String):void
@@ -356,9 +238,6 @@ package view.userInfo.playerInfo
 					addContent(1);
 					createAllButton();
 					createOtherButton();
-					
-					if (mainData.isOnAndroid)
-						NativeApplication.nativeApplication.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown, false, 0, true);
 				break;
 				case PlayerInfoPhom.LEFT_USER:
 					addContent(2);
@@ -386,8 +265,10 @@ package view.userInfo.playerInfo
 		// update text tên, cấp độ và số tiền
 		public function updatePersonalInfo(infoObject:Object):void
 		{
+			sex = infoObject[DataFieldPhom.SEX];
 			userName = infoObject[ModelField.USER_NAME];
 			displayName = infoObject[ModelField.DISPLAY_NAME];
+			ip = infoObject[DataFieldPhom.IP];
 			var nameString:String;
 			if(formName == BELOW_USER)
 				nameString = StringFormatUtils.shortenedString(infoObject[ModelField.DISPLAY_NAME], 14);
@@ -395,17 +276,10 @@ package view.userInfo.playerInfo
 				nameString = StringFormatUtils.shortenedString(infoObject[ModelField.DISPLAY_NAME], 11);
 			playerName.text = nameString;
 			
-			if (formName == BELOW_USER)
-			{
-				var phoneNumber_1:String = mainData.init.gameDescription.chooseChannelScreen.addMoneyNumber_1;
-				//if (mainData.init.gameDescription.isTurnOnSms == '1')
-					//addMoneyText.text = 'Soạn "' + mainData.init.gameDescription.moneyUnit + ' ' + String(mainData.chooseChannelData.myInfo.uId) + '" gửi ' + phoneNumber_1 + ' (15k/tin)';
-				//else
-					//addMoneyText.text = '';
-			}
-			//level.text = infoObject[ModelField.LEVEL];
-			moneyNumber = infoObject[ModelField.MONEY];
+			levelNumber = infoObject[ModelField.LEVEL];
+			level.text = infoObject[ModelField.LEVEL];
 			
+			moneyNumber = infoObject[ModelField.MONEY];
 			money.text = PlayingLogic.format(moneyNumber,1);
 			
 			if (moneyNumber <= 0)
@@ -435,23 +309,11 @@ package view.userInfo.playerInfo
 				money.text = "0";
 			else
 				money.text = PlayingLogic.format(value, 1);
-			/*moneyNumber += value;
 			
-			if (moneyNumber <= 0)
-			{
-				money.text = '0';
-				moneyNumber = 0;
-			}
-			else
-			{
-				money.text = PlayingLogic.format(moneyNumber, 1);
-			}*/
+			moneyNumber = value;
 			
-			if (formName == PlayerInfo.BELOW_USER) // Nếu là user của mình thì cập nhật lại tiền cho phòng chờ và phòng chọn kênh
-			{
+			if(formName == PlayerInfoPhom.BELOW_USER) // Nếu là user của mình thì cập nhật lại tiền cho phòng chờ và phòng chọn kênh
 				mainData.chooseChannelData.myInfo.money = value;
-				mainData.chooseChannelData.myInfo = mainData.chooseChannelData.myInfo;
-			}
 		}
 		
 		public function removeAllCards():void
@@ -470,6 +332,7 @@ package view.userInfo.playerInfo
 			unLeaveCardPosition = new Array();
 			leavedCardPosition = new Array();
 			selectedCardArray = new Array();
+			saveDownCardArray = new Array();
 			
 			deckNumber = 0;
 			totalDownCard = 0;
@@ -538,11 +401,13 @@ package view.userInfo.playerInfo
 		
 		public function playOneCard(cardId:int):void
 		{
+			SoundManager.getInstance().playSound(SoundLibChung.CARD_SOUND);
+			
 			var tempPoint:Point;
 			var tempCardInfo:Array;
 			var movingType:String;
 			var tempCard:CardPhom;
-			movingType = CardManager.OPEN_FINISH_STYLE;
+			movingType = CardManagerPhom.OPEN_FINISH_STYLE;
 			
 			// tìm quân bài cần đánh
 			tempCard = getCardById(CardPhom.UN_LEAVE_CARD, cardId);
@@ -551,28 +416,49 @@ package view.userInfo.playerInfo
 			tempPoint = getPointByCardType(CardPhom.LEAVED_CARD);
 			
 			// gọi hàm di chuyển
-			tempCard.moving(tempPoint, CardManager.playCardTime , movingType, leavedCardSize);
+			tempCard.moving(tempPoint, CardManagerPhom.playCardTime , movingType, leavedCardSize);
 			
 			moveUnleaveToLeavedCard(cardId);
+			
+			reArrangeDownCard();
+			
+			if (deckNumber == 0 && leavedCards.length == 4)
+			{
+				var timerToAlertNoDeck:Timer = new Timer(2000, 1);
+				timerToAlertNoDeck.addEventListener(TimerEvent.TIMER, onAlertNoDeck);
+				timerToAlertNoDeck.start();
+			}
+		}
+		
+		private function onAlertNoDeck(e:TimerEvent):void 
+		{
+			if (!stage)
+				return;
+			SoundManager.getInstance().soundManagerPhom.playNoDeckPlayerSound(sex);
 		}
 		
 		// Hạ một bộ bài
-		public function downOneDeck(deckArray:Array, isLocal:Boolean = false):void
+		public function downOneDeck(deckArray:Array, isLocal:Boolean, index:int):void
 		{
+			SoundManager.getInstance().playSound(SoundLibChung.CARD_SOUND);
+			
 			deckNumber++;
 			var downCards:Array;
 			switch (deckNumber) 
 			{
 				case 1:
 					downCards_1 = new Array();
+					downCards_1_index = index;
 					downCards = downCards_1;
 				break;
 				case 2:
 					downCards_2 = new Array();
+					downCards_2_index = index;
 					downCards = downCards_2;
 				break;
 				case 3:
 					downCards_3 = new Array();
+					downCards_3_index = index;
 					downCards = downCards_3;
 				break;
 			}
@@ -588,6 +474,7 @@ package view.userInfo.playerInfo
 						CardPhom(unLeaveCards[j]).isMouseInteractive = false;
 						if (CardPhom(unLeaveCards[j]).isStealCard)
 							CardPhom(unLeaveCards[j]).isStealCard = false;
+						CardPhom(unLeaveCards[j]).hideFilter();
 						downCards.push(unLeaveCards[j]);
 						unLeaveCards.splice(j, 1);
 						j = unLeaveCards.length + 1;
@@ -595,38 +482,48 @@ package view.userInfo.playerInfo
 					}
 				}
 			}
+			downCards.sortOn("id");
 			
-			reArrangeUnleaveCard();
 			reArrangeDownCard();
+			reArrangeUnleaveCard();
+			reAddUnleaveCard();
 			
-			if (isLocal)
-				return;
-			
-			// Kiểm tra xem còn phỏm hạ không, nếu không thì cho hạ finish
-			if (phomLogic.countDeck(unLeaveCards).length == 0 && formName == PlayerInfoPhom.BELOW_USER) 
-			{
+			if (formName == BELOW_USER && totalDeck == deckNumber)
 				electroServerCommand.downCardFinish(userName);
-				downCardFinishButton.enable = false;
-			}
 		}
 		
-		public function pushCardToOndeDeck(card:CardPhom, deckIndex:int):void
+		public function pushCardToOneDeck(card:CardPhom, deckIndex:int):void
 		{
-			switch (deckIndex) 
+			if (downCards_1_index == deckIndex)
 			{
-				case 1:
+				downCards_1.push(card);
+				phomLogic.arrangeDeck(downCards_1);
+			}
+			else if (downCards_2_index == deckIndex)
+			{
+				downCards_2.push(card);
+				phomLogic.arrangeDeck(downCards_2);
+			}
+			else if (downCards_3_index == deckIndex)
+			{
+				downCards_3.push(card);
+				phomLogic.arrangeDeck(downCards_3);
+			}
+			/*switch (deckIndex) 
+			{
+				case 0:
 					downCards_1.push(card);
 					phomLogic.arrangeDeck(downCards_1);
 				break;
-				case 2:
+				case 1:
 					downCards_2.push(card);
 					phomLogic.arrangeDeck(downCards_2);
 				break;
-				case 3:
+				case 2:
 					downCards_3.push(card);
 					phomLogic.arrangeDeck(downCards_3);
 				break;
-			}
+			}*/
 			totalDownCard++;
 			reArrangeDownCard();
 		}
@@ -638,17 +535,24 @@ package view.userInfo.playerInfo
 			removeAllButton();
 			addChild(arrangeCardButton);
 			arrangeCardButton.enable = true;
-			hideToolTip();
+			var j:int
 			switch (status) 
 			{
 				case PlayerInfoPhom.DO_NOTHING:
 					timeBar.stopCountTime();
 					addChild(playCardButton);
-					addChild(reSelectButton);
+					addChild(getCardButton);
+					getCardButton.enable = false;
+					if (currentSelectedCard) // nếu đã có lá bài được chọn thì enable nút đánh bài và nút chọn lại
+					{
+						addChild(reSelectButton);
+						reSelectButton.enable = true;
+					}
 				break;
 				case PlayerInfoPhom.GET_CARD:
+					SoundManager.getInstance().playSound(SoundLibChung.MY_TURN_SOUND);
 					dispatchEvent(new Event(GET_CARD_TURN));
-					timeBar.countTime(mainData.init.playTime.playCardTimePhom);
+					timeBar.countTime(mainData.init.playTime.playCardTime);
 					addChild(getCardButton);
 					addChild(stealCardButton);
 					getCardButton.enable = true;
@@ -662,34 +566,37 @@ package view.userInfo.playerInfo
 					}
 				break;
 				case PlayerInfoPhom.PLAY_CARD:
-					if (countShowTooltipPlayCard == 0)
-					{
-						showTooltip(mainData.init.gameDescription.playingScreen.playCard);
-						countShowTooltipPlayCard++;
-					}
 					addChild(playCardButton);
-					addChild(reSelectButton);
+					addChild(getCardButton);
+					getCardButton.enable = false;
 					currentSelectedCard = null;
-					for (var j:int = 0; j < unLeaveCards.length; j++) // Kiểm tra xem đang có lá bài nào được chọn để enable nút đánh
+					for (j = 0; j < unLeaveCards.length; j++) // Kiểm tra xem đang có lá bài nào được chọn để enable nút đánh
 					{
 						if (CardPhom(unLeaveCards[j]).isChoose)
 							currentSelectedCard = unLeaveCards[j];
 					}
 					if (currentSelectedCard) // nếu đã có lá bài được chọn thì enable nút đánh bài và nút chọn lại
+					{
+						addChild(reSelectButton);
 						reSelectButton.enable = playCardButton.enable = true;
+					}
 				break;
 				case PlayerInfoPhom.DOWN_CARD:
 					var deckCount:int = phomLogic.countDeck(unLeaveCards).length;
 					if (deckCount > 0) // Nếu có phỏm hạ
 					{
+						checkDownCard();
 						timeBar.countTime(mainData.init.playTime.downCardTime);
 						addChild(downCardButton);
-						addChild(downCardFinishButton);
-						downCardFinishButton.enable = true;
-						if (countShowTooltipDownCard == 0)
+						addChild(playCardButton);
+						
+						var deckArray:Array = phomLogic.getDeckToAutoDownCard(unLeaveCards);
+						for (j = 0; j < deckArray.length; j++) 
 						{
-							showTooltip(mainData.init.gameDescription.playingScreen.downCard);
-							//countShowTooltipDownCard++;
+							for (var k:int = 0; k < deckArray[j].length; k++) 
+							{
+								CardPhom(deckArray[j][k]).showFilter();
+							}
 						}
 					}
 					else // Nếu móm
@@ -702,12 +609,16 @@ package view.userInfo.playerInfo
 				case PlayerInfoPhom.SEND_CARD:
 					timeBar.countTime(mainData.init.playTime.sendCardTime);
 					addChild(sendCardButton);
-					addChild(sendCardFinishButton);
-					sendCardFinishButton.enable = true;
-					if (countShowTooltipSendCard == 0)
+					addChild(playCardButton);
+					
+					sendCardButton.enable = true;
+					for (j = 0; j < unLeaveCards.length; j++)
 					{
-						showTooltip(mainData.init.gameDescription.playingScreen.sendCard);
-						countShowTooltipSendCard++;
+						if (CardPhom(unLeaveCards[j]).isChoose)
+						{
+							sendCardButton.enable = false;
+							break;
+						}
 					}
 				break;
 			}
@@ -753,7 +664,7 @@ package view.userInfo.playerInfo
 					{
 						deckArray.push(CardPhom(fullDeckArray[i][j]).id);
 					}
-					downOneDeck(deckArray, true);
+					downOneDeck(deckArray, true, 0);
 				}
 			}
 		}
@@ -762,9 +673,9 @@ package view.userInfo.playerInfo
 		{
 			for (var i:int = 0; i < buttonArray.length; i++) 
 			{
-				if (contains(buttonArray[i]))
-					removeChild(buttonArray[i]);
-				BigButton(buttonArray[i]).enable = false;
+				if (buttonArray[i].parent)
+					buttonArray[i].parent.removeChild(buttonArray[i]);
+				MobileButton(buttonArray[i]).enable = false;
 			}
 		}
 		
@@ -805,7 +716,7 @@ package view.userInfo.playerInfo
 		}
 		
 		// push new card vào mảng các lá bài chưa đánh
-		public function pushNewUnLeaveCard(card:CardPhom):void
+		public function pushNewUnLeaveCard(card:CardPhom, isCheckGetDeck:Boolean = false):void
 		{
 			if (!unLeaveCards)
 				unLeaveCards = new Array();
@@ -834,6 +745,24 @@ package view.userInfo.playerInfo
 				timerToCheckFullDeck.addEventListener(TimerEvent.TIMER_COMPLETE, onCheckFullDeck);
 				timerToCheckFullDeck.start();
 			}
+			
+			// check xem lá bài vừa bốc có tạo thành phỏm không
+			if (isCheckGetDeck && formName == PlayerInfoPhom.BELOW_USER)
+			{
+				if (phomLogic.checkNewCard(unLeaveCards, card))
+				{
+					var timerToPlayGetDeckSound:Timer = new Timer(1000, 1);
+					timerToPlayGetDeckSound.addEventListener(TimerEvent.TIMER_COMPLETE, onPlayGetDeckSound)
+					timerToPlayGetDeckSound.start();
+				}
+			}
+		}
+		
+		private function onPlayGetDeckSound(e:TimerEvent):void 
+		{
+			if (!stage)
+				return;
+			SoundManager.getInstance().soundManagerPhom.playGetDeckPlayerSound(sex);
 		}
 		
 		private function onCheckFullDeck(e:TimerEvent):void 
@@ -844,9 +773,8 @@ package view.userInfo.playerInfo
 			{
 				if (phomLogic.checkFullDeck(unLeaveCards))
 				{
-					var confirmFullDeckWindow:ConfirmFullDeckWindow = new ConfirmFullDeckWindow();
-					windowLayer.openWindow(confirmFullDeckWindow);
-					windowLayer.addEventListener(ConfirmFullDeckWindow.CONFIRM_FULL_DECK, onConfirmFullDeck);
+					addChild(noticeFullDeckButton);
+					noticeFullDeckButton.enable = true;
 				}
 			}
 		}
@@ -937,6 +865,7 @@ package view.userInfo.playerInfo
 			}
 			else
 			{
+				//reArrangeUnleaveCard(0,true);
 				reAddUnleaveCard();
 			}
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
@@ -957,11 +886,20 @@ package view.userInfo.playerInfo
 		{
 			var tempPoint:Point;
 			var i:int;
-			for (i = 0; i < unLeaveCards.length; i++) 
+			
+			if (formName == RIGHT_USER || formName == ABOVE_USER)
 			{
-				//tempPoint = getPointByCardType(Card.UN_LEAVE_CARD);
-				//Card(unLeaveCards[i]).moving(tempPoint, 0, CardManager.TURN_OVER_STYLE, unLeaveCardSize, unLeaveCardRotation);
-				CardPhom(unLeaveCards[i]).parent.addChild(unLeaveCards[i]);
+				for (i = unLeaveCards.length - 1; i >= 0; i--) 
+				{
+					CardPhom(unLeaveCards[i]).parent.addChild(unLeaveCards[i]);
+				}
+			}
+			else
+			{
+				for (i = 0; i < unLeaveCards.length; i++) 
+				{
+					CardPhom(unLeaveCards[i]).parent.addChild(unLeaveCards[i]);
+				}
 			}
 		}
 		
@@ -1011,85 +949,134 @@ package view.userInfo.playerInfo
 		{
 			if (formName != PlayerInfoPhom.BELOW_USER)
 				return;
-			hideToolTip();
 			if (myStatus == DOWN_CARD) // trường hợp đang hạ bài
 			{
 				checkDownCard();
 				return;
 			}
+			
+			if (myStatus == SEND_CARD) // trường hợp đang hạ bài
+			{
+				var checkArray:Array = new Array;
+				var j:int;
+				for (j = 0; j < unLeaveCards.length; j++)
+				{
+					if (CardPhom(unLeaveCards[j]).isChoose)
+						checkArray.push(unLeaveCards[j]);
+				}
+				var sendArray:Array = checkSendCard(checkArray);
+				if (sendArray && sendArray.length == checkArray.length)
+					sendCardButton.enable = true;
+				else if (checkArray.length != 0)
+					sendCardButton.enable = false;
+				return;
+			}
 				
 			// nếu không thì chỉ cho chọn 1 quân bài 1 thời điểm
 			currentSelectedCard = CardPhom(e.currentTarget);
-			
-			if (myStatus != DO_NOTHING)
-				playCardButton.enable = reSelectButton.enable = true;
+			addChild(reSelectButton);
+			if (myStatus == PLAY_CARD)
+				playCardButton.enable = true;
+			reSelectButton.enable = true;
 				
 			for (var i:int = 0; i < unLeaveCards.length; i++) 
 			{
 				if (unLeaveCards[i] != e.currentTarget)
 					CardPhom(unLeaveCards[i]).moveToStartPoint();
 			}
-			
-			if (myStatus == SEND_CARD)
-			{
-				if (checkSendCard([currentSelectedCard]))
-					sendCardButton.enable = true;
-				else
-					sendCardButton.enable = false;
-			}
 		}
 		
-		public function checkSendCard(cardArray:Array):Array
+		public function checkSendCard(checkArray:Array):Array
 		{
-			// Tìm người chơi trước mình
-			var sendDeckArray:Array = new Array();
+			checkArray = checkArray.concat();
+			var deckArray:Array = new Array();
+			var sendArray:Array = new Array();
 			
-			// Tìm các bộ bài của những người hạ bài trc mình xem có thể gửi không
+			// Tập hợp lại các bộ đã hạ của tất cả user
 			var object:Object;
-			for (var i:int = 0; i < playingPlayerArray.length; i++) 
+			var i:int;
+			var j:int;
+			for (i = 0; i < playingPlayerArray.length; i++) 
 			{
-				if (PlayerInfoPhom(playingPlayerArray[i]).userName != userName)
+				if(PlayerInfoPhom(playingPlayerArray[i]).downCards_1)
 				{
-					if(PlayerInfoPhom(playingPlayerArray[i]).downCards_1)
+					object = new Object();
+					object[DataFieldPhom.USER_NAME] = PlayerInfoPhom(playingPlayerArray[i]).userName;
+					object[DataFieldPhom.CARDS] = PlayerInfoPhom(playingPlayerArray[i]).downCards_1;
+					object[DataFieldPhom.INDEX] = PlayerInfoPhom(playingPlayerArray[i]).downCards_1_index;
+					deckArray.push(object);
+				}
+				if (PlayerInfoPhom(playingPlayerArray[i]).downCards_2)
+				{
+					object = new Object();
+					object[DataFieldPhom.USER_NAME] = PlayerInfoPhom(playingPlayerArray[i]).userName;
+					object[DataFieldPhom.CARDS] = PlayerInfoPhom(playingPlayerArray[i]).downCards_2;
+					object[DataFieldPhom.INDEX] = PlayerInfoPhom(playingPlayerArray[i]).downCards_2_index;
+					deckArray.push(object);
+				}
+				if (PlayerInfoPhom(playingPlayerArray[i]).downCards_3)
+				{
+					object = new Object();
+					object[DataFieldPhom.USER_NAME] = PlayerInfoPhom(playingPlayerArray[i]).userName;
+					object[DataFieldPhom.CARDS] = PlayerInfoPhom(playingPlayerArray[i]).downCards_3;
+					object[DataFieldPhom.INDEX] = PlayerInfoPhom(playingPlayerArray[i]).downCards_3_index;
+					deckArray.push(object);
+				}
+			}
+			
+			for (i = checkArray.length - 1; i >= 0; i--)
+			{
+				for (j = 0; j < deckArray.length; j++)
+				{
+					if (phomLogic.checkSendCard([checkArray[i]], deckArray[j][DataFieldPhom.CARDS]))
 					{
-						if (phomLogic.checkSendCard(cardArray, PlayerInfoPhom(playingPlayerArray[i]).downCards_1))
+						CardPhom(checkArray[i]).sendObject = deckArray[j];
+						sendArray.push(checkArray[i]);
+						// Nếu là phỏm dây thì tìm xem còn lá bài nào trong checkArray có thể ghép dây tiếp ko
+						if (phomLogic.convertIdToSuit(checkArray[i].id) == phomLogic.convertIdToSuit(deckArray[j][DataFieldPhom.CARDS][0].id))
 						{
-							object = new Object();
-							object[DataField.USER_NAME] = PlayerInfoPhom(playingPlayerArray[i]).userName;
-							object[DataField.CARDS] = PlayerInfoPhom(playingPlayerArray[i]).downCards_1;
-							object[DataField.INDEX] = 0;
-							sendDeckArray.push(object);
+							var tempArray:Array = (deckArray[j][DataFieldPhom.CARDS] as Array).concat();
+							tempArray.push(checkArray[i]);
+							checkArray.splice(i, 1);
+							var isEmptyCard:Boolean = false;
+							while (!isEmptyCard) 
+							{
+								isEmptyCard = true;
+								for (var k:int = 0; k < checkArray.length; k++) 
+								{
+									var tempArray2:Array = tempArray.concat();
+									tempArray2.push(checkArray[k]);
+									if (phomLogic.checkCardDeck(tempArray2))
+									{
+										CardPhom(checkArray[k]).sendObject = deckArray[j];
+										sendArray.push(checkArray[k]);
+										checkArray.splice(k, 1);
+										isEmptyCard = false;
+										tempArray = tempArray2;
+										break;
+									}
+								}
+							}
+						}
+						else
+						{
+							checkArray.splice(i, 1);
 						}
 					}
-					if (PlayerInfoPhom(playingPlayerArray[i]).downCards_2)
+					if (checkArray.length == 0)
 					{
-						if (phomLogic.checkSendCard(cardArray, PlayerInfoPhom(playingPlayerArray[i]).downCards_2))
-						{
-							object = new Object();
-							object[DataField.USER_NAME] = PlayerInfoPhom(playingPlayerArray[i]).userName;
-							object[DataField.CARDS] = PlayerInfoPhom(playingPlayerArray[i]).downCards_2;
-							object[DataField.INDEX] = 1;
-							sendDeckArray.push(object);
-						}
-					}
-					if (PlayerInfoPhom(playingPlayerArray[i]).downCards_3)
-					{
-						if (phomLogic.checkSendCard(cardArray, PlayerInfoPhom(playingPlayerArray[i]).downCards_3))
-						{
-							object = new Object();
-							object[DataField.USER_NAME] = PlayerInfoPhom(playingPlayerArray[i]).userName;
-							object[DataField.CARDS] = PlayerInfoPhom(playingPlayerArray[i]).downCards_3;
-							object[DataField.INDEX] = 2;
-							sendDeckArray.push(object);
-						}
+						if(sendArray.length == 0)
+							return null;
+						else
+							return sendArray;
 					}
 				}
 			}
 			
-			if(sendDeckArray.length == 0)
+			if(sendArray.length == 0)
 				return null;
 			else
-				return sendDeckArray;
+				return sendArray;
 		}
 		
 		private function getPreviousPlayer():PlayerInfoPhom
@@ -1139,24 +1126,30 @@ package view.userInfo.playerInfo
 						currentSelectedCard = unLeaveCards[j];
 				}
 				if (!currentSelectedCard)
+				{
+					if (reSelectButton.parent)
+						reSelectButton.parent.removeChild(reSelectButton);
 					playCardButton.enable = reSelectButton.enable = false;
+				}
 				else
+				{
+					addChild(reSelectButton);
 					playCardButton.enable = reSelectButton.enable = true;
+				}
 			}
 			if (myStatus == SEND_CARD)
 			{
-				sendCardButton.enable = false;
-				currentSelectedCard = null;
-				for (j = 0; j < unLeaveCards.length; j++) // Kiểm tra xem đang có lá bài nào được chọn để gán lại currentSelectedCard
+				var checkArray:Array = new Array;
+				for (j = 0; j < unLeaveCards.length; j++)
 				{
 					if (CardPhom(unLeaveCards[j]).isChoose)
-						currentSelectedCard = unLeaveCards[j];
+						checkArray.push(unLeaveCards[j]);
 				}
-				if (currentSelectedCard)
-				{
-					if (checkSendCard([currentSelectedCard]))
-						sendCardButton.enable = true;
-				}
+				var sendArray:Array = checkSendCard(checkArray);
+				if (sendArray && sendArray.length == checkArray.length)
+					sendCardButton.enable = true;
+				else if (checkArray.length != 0)
+					sendCardButton.enable = false;
 			}
 		}
 		
@@ -1219,7 +1212,7 @@ package view.userInfo.playerInfo
 		public function pushNewLeavedCard(card:CardPhom, time:Number = 0):void
 		{
 			if (time == 0)
-				time = CardManager.playCardTime;
+				time = CardManagerPhom.playCardTime;
 			if (!leavedCards)
 				leavedCards = new Array();
 			leavedCards.push(card);
@@ -1229,7 +1222,7 @@ package view.userInfo.playerInfo
 			var tempPoint:Point = getPointByCardType(CardPhom.LEAVED_CARD);
 			
 			// gọi hàm di chuyển
-			card.moving(tempPoint, time , CardManager.TURN_OVER_STYLE, leavedCardSize);
+			card.moving(tempPoint, time , CardManagerPhom.TURN_OVER_STYLE, leavedCardSize);
 		}
 		
 		private function removeCardsArray(cardsArray:Array):void
@@ -1251,13 +1244,13 @@ package view.userInfo.playerInfo
 			}
 		}
 		
-		public function reArrangeUnleaveCard(time:Number = 0, isRotate:Boolean = true):void
+		public function reArrangeUnleaveCard(time:Number = 0, isRotate:Boolean = false):void
 		{
 			if (!stage || !unLeaveCards)
 				return;
 				
 			if (time == 0)
-				time = CardManager.arrangeCardTime;
+				time = CardManagerPhom.arrangeCardTime;
 				
 			var index:int;
 			var scaleNumber:Number;
@@ -1295,16 +1288,13 @@ package view.userInfo.playerInfo
 				CardPhom(unLeaveCards[i]).isChoose = false;
 				if (isRotate)
 				{
-					CardPhom(unLeaveCards[i]).moving(tempPoint, time, CardManager.TURN_OVER_STYLE, unLeaveCardSize, unLeaveCardRotation);
+					CardPhom(unLeaveCards[i]).moving(tempPoint, time, CardManagerPhom.TURN_OVER_STYLE, unLeaveCardSize, unLeaveCardRotation);
 				}
 				else
 				{
-					CardPhom(unLeaveCards[i]).moving(tempPoint, time, CardManager.TURN_OVER_STYLE, unLeaveCardSize, unLeaveCardRotation, true, true, false);
+					CardPhom(unLeaveCards[i]).moving(tempPoint, time, CardManagerPhom.TURN_OVER_STYLE, unLeaveCardSize, unLeaveCardRotation, true, true, false);
 				}
 			}
-			
-			if (formName == ABOVE_USER) // nếu là user ở trên và đã hạ bài thì cho các quân bài hạ lên layer trên
-				reArrangeDownCard();
 		}
 		
 		private function addContent(type:int):void
@@ -1327,6 +1317,7 @@ package view.userInfo.playerInfo
 					className = "zPlayUserProfileForm_4_Phom";
 				break;
 				default:
+					
 				break;
 			}
 			
@@ -1352,6 +1343,26 @@ package view.userInfo.playerInfo
 			content["effectMoneyPosition"].visible = false;
 			
 			addAvatar();
+			addChild(content["levelIcon"]);
+			addChild(level);
+			if (isRoomMaster)
+				addChild(homeIcon);
+			winLoseIcon = content["winLoseIcon"];
+			addChild(winLoseIcon);
+			winLoseIcon.visible = false;
+			winLoseIcon.stop();
+		}
+		
+		public function setStatus(type:String):void
+		{
+			if (type == '')
+			{
+				winLoseIcon.visible = false;
+				return;
+			}
+			winLoseIcon.parent.addChild(winLoseIcon);
+			winLoseIcon.gotoAndStop(type);
+			winLoseIcon.visible = true;
 		}
 		
 		private function addTimeBar():void 
@@ -1372,9 +1383,9 @@ package view.userInfo.playerInfo
 			}
 			if (!timeBar)
 			{
-				timeBar = new TimeBar(_type);
+				timeBar = new TimeBarPhom(_type);
 				timeBar.visible = false;
-				timeBar.addEventListener(TimeBar.COUNT_TIME_FINISH, onCountTimeFinish);
+				timeBar.addEventListener(TimeBarPhom.COUNT_TIME_FINISH, onCountTimeFinish);
 			}
 			timeBar.x = content["timeBarPosition"].x;
 			timeBar.y = content["timeBarPosition"].y;
@@ -1418,30 +1429,9 @@ package view.userInfo.playerInfo
 					setMyTurn(DO_NOTHING);
 				break;
 				case DOWN_CARD:
-					var deckArray:Array = phomLogic.getDeckToAutoDownCard(unLeaveCards);
-					var deckIdArray:Array = new Array();
-					for (j = 0; j < deckArray.length; j++) 
-					{
-						var tempArray:Array = new Array();
-						deckIdArray.push(tempArray);
-						for (var k:int = 0; k < deckArray[j].length; k++) 
-						{
-							tempArray[k] = CardPhom(deckArray[j][k]).id;
-						}
-					}
-					for (j = 0; j < deckIdArray.length; j++)
-					{
-						electroServerCommand.downOneDeck(userName, deckIdArray[j]);
-					}
-					electroServerCommand.downCardFinish(userName);
+					autoDownCard();
 				break;
 				case SEND_CARD:
-					for (var j:int = 0; j < unLeaveCards.length; j++)
-					{
-						var sendDeckArray:Array = checkSendCard([unLeaveCards[j]]);
-						if(sendDeckArray)
-							electroServerCommand.sendCard(userName, sendDeckArray[0][DataField.USER_NAME], sendDeckArray[0][DataField.INDEX], CardPhom(unLeaveCards[j]).id);
-					}
 					electroServerCommand.sendCardFinish(userName);
 					setMyTurn(PLAY_CARD);
 				break;
@@ -1459,6 +1449,27 @@ package view.userInfo.playerInfo
 						EffectLayer.getInstance().removeAllEffect();
 					}*/
 				break;
+			}
+		}
+		
+		private function autoDownCard():void 
+		{
+			var deckArray:Array = phomLogic.getDeckToAutoDownCard(unLeaveCards);
+			var deckIdArray:Array = new Array();
+			var j:int;
+			for (j = 0; j < deckArray.length; j++) 
+			{
+				var tempArray:Array = new Array();
+				deckIdArray.push(tempArray);
+				for (var k:int = 0; k < deckArray[j].length; k++) 
+				{
+					tempArray[k] = CardPhom(deckArray[j][k]).id;
+				}
+			}
+			totalDeck = deckArray.length;
+			for (j = 0; j < deckIdArray.length; j++)
+			{
+				electroServerCommand.downOneDeck(userName, deckIdArray[j]);
 			}
 		}
 		
@@ -1544,8 +1555,14 @@ package view.userInfo.playerInfo
 			for (i = 1; i < positionNumber; i++) 
 			{
 				this[positionName][i] = new Object();
-				this[positionName][i].x = this[positionName][i - 1].x + horizontalDistance;
-				this[positionName][i].y = this[positionName][i - 1].y + verticalDistance;
+				if (formName == ABOVE_USER && positionName == "unLeaveCardPosition")
+					this[positionName][i].x = this[positionName][i - 1].x - horizontalDistance;
+				else
+					this[positionName][i].x = this[positionName][i - 1].x + horizontalDistance;
+				if (formName == RIGHT_USER && positionName == "unLeaveCardPosition")
+					this[positionName][i].y = this[positionName][i - 1].y - verticalDistance;
+				else
+					this[positionName][i].y = this[positionName][i - 1].y + verticalDistance;
 			}
 			
 			if (formName == PlayerInfoPhom.BELOW_USER)
@@ -1577,7 +1594,7 @@ package view.userInfo.playerInfo
 			totalDownCard = 0;
 			
 			playerName = null;
-			//level = null
+			level = null
 			money = null
 			homeIcon = null;
 			
@@ -1607,10 +1624,8 @@ package view.userInfo.playerInfo
 				{
 					buttonArray[i].removeEventListener(MouseEvent.CLICK, onButtonClick);
 				}
-				invitePlayButton.removeEventListener(MouseEvent.CLICK, onOtherButtonClick);
 				exitButton.removeEventListener(MouseEvent.CLICK, onOtherButtonClick);
 				
-				invitePlayButton = null;
 				exitButton = null;
 			}
 			
@@ -1644,94 +1659,47 @@ package view.userInfo.playerInfo
 		// Sắp xếp lại các quân bài hạ
 		public function reArrangeDownCard():void 
 		{
+			if (deckNumber == 0)
+				return;
 			var startX:int;
 			var tempPoint:Point;
-			var movingType:String = CardManager.OPEN_FINISH_STYLE;
+			var movingType:String = CardManagerPhom.OPEN_FINISH_STYLE;
 			var i:int;
 			
-			// Nếu người hạ là người chơi bên trái và bên phải thì hạ dọc
-			if (formName == PlayerInfoPhom.LEFT_USER || formName == PlayerInfoPhom.RIGHT_USER)
+			// tính toán điểm hạ dựa vào số phỏm và số lượng quân bài tổng của các phỏm - căn vào giữa
+			startX = downCardPosition.x - ((totalDownCard - deckNumber) * largeDistance_2 + distanceDeckHorizontal * (deckNumber - 1) + downCards_1[0].width * deckNumber) /2 + downCards_1[0].width / 2; 
+			
+			// bắt đầu thực hiện di chuyển
+			if (deckNumber >= 1) // hạ phỏm 1
 			{
-				if (deckNumber >= 3) // hạ phỏm 3
+				for (i = 0; i < downCards_1.length; i++) 
 				{
-					for (i = 0; i < downCards_3.length; i++) 
-					{
-						tempPoint = new Point();
-						if(formName == PlayerInfoPhom.LEFT_USER)
-							tempPoint.x = downCardPosition.x + i * largeDistance_2;
-						else
-							tempPoint.x = downCardPosition.x - (downCards_3.length - i) * largeDistance_2;
-						tempPoint.y = downCardPosition.y - distanceDeckVertical;
-						CardPhom(downCards_3[i]).moving(localToGlobal(tempPoint), CardManager.downCardTime, movingType, downCardSize, downCardRotation);
-					}
-				}
-				
-				if (deckNumber >= 1) // hạ phỏm 1
-				{
-					for (i = 0; i < downCards_1.length; i++) 
-					{
-						tempPoint = new Point();
-						if(formName == PlayerInfoPhom.LEFT_USER)
-							tempPoint.x = downCardPosition.x + i * largeDistance_2;
-						else
-							tempPoint.x = downCardPosition.x - (downCards_1.length - i) * largeDistance_2;
-						tempPoint.y = downCardPosition.y;
-						CardPhom(downCards_1[i]).moving(localToGlobal(tempPoint), CardManager.downCardTime, movingType, downCardSize, downCardRotation);
-					}
-				}
-				
-				if (deckNumber >= 2) // hạ phỏm 2
-				{
-					for (i = 0; i < downCards_2.length; i++) 
-					{
-						tempPoint = new Point();
-						if(formName == PlayerInfoPhom.LEFT_USER)
-							tempPoint.x = downCardPosition.x + i * largeDistance_2;
-						else
-							tempPoint.x = downCardPosition.x - (downCards_2.length - i) * largeDistance_2;
-						tempPoint.y = downCardPosition.y + distanceDeckVertical;
-						CardPhom(downCards_2[i]).moving(localToGlobal(tempPoint), CardManager.downCardTime, movingType, downCardSize, downCardRotation);
-					}
+					tempPoint = new Point();
+					tempPoint.x = startX + i * largeDistance_2;
+					tempPoint.y = downCardPosition.y;
+					CardPhom(downCards_1[i]).moving(localToGlobal(tempPoint), CardManagerPhom.downCardTime, movingType, downCardSize, downCardRotation);
 				}
 			}
-			else // Nếu người hạ là người chơi bên trên và bên dưới thì hạ ngang
+			
+			if (deckNumber >= 2) // hạ phỏm 2
 			{
-				// tính toán điểm hạ dựa vào số phỏm và số lượng quân bài tổng của các phỏm - căn vào giữa
-				var standardWidth:Number = (new CardPhom()).width * downCardSize;
-				startX = downCardPosition.x - ((totalDownCard - deckNumber) * largeDistance_2 + distanceDeckHorizontal * (deckNumber - 1) + standardWidth * deckNumber) / 2 + standardWidth / 2; 
-				
-				// bắt đầu thực hiện di chuyển
-				if (deckNumber >= 1) // hạ phỏm 1
+				for (i = 0; i < downCards_2.length; i++) 
 				{
-					for (i = 0; i < downCards_1.length; i++) 
-					{
-						tempPoint = new Point();
-						tempPoint.x = startX + i * largeDistance_2;
-						tempPoint.y = downCardPosition.y;
-						CardPhom(downCards_1[i]).moving(localToGlobal(tempPoint), CardManager.downCardTime, movingType, downCardSize, downCardRotation);
-					}
+					tempPoint = new Point();
+					tempPoint.x = startX + (downCards_1.length - 1) * largeDistance_2 + downCards_1[0].width + distanceDeckHorizontal + i * largeDistance_2;
+					tempPoint.y = downCardPosition.y;
+					CardPhom(downCards_2[i]).moving(localToGlobal(tempPoint), CardManagerPhom.downCardTime, movingType, downCardSize, downCardRotation);
 				}
-				
-				if (deckNumber >= 2) // hạ phỏm 2
+			}
+			
+			if (deckNumber >= 3) // hạ phỏm 3
+			{
+				for (i = 0; i < downCards_3.length; i++) 
 				{
-					for (i = 0; i < downCards_2.length; i++) 
-					{
-						tempPoint = new Point();
-						tempPoint.x = startX + (downCards_1.length - 1) * largeDistance_2 + standardWidth + distanceDeckHorizontal + i * largeDistance_2;
-						tempPoint.y = downCardPosition.y;
-						CardPhom(downCards_2[i]).moving(localToGlobal(tempPoint), CardManager.downCardTime, movingType, downCardSize, downCardRotation);
-					}
-				}
-				
-				if (deckNumber >= 3) // hạ phỏm 3
-				{
-					for (i = 0; i < downCards_3.length; i++) 
-					{
-						tempPoint = new Point();
-						tempPoint.x = startX + (downCards_1.length + downCards_2.length - 2) * largeDistance_2 + standardWidth * (deckNumber - 1) + distanceDeckHorizontal * (deckNumber - 1) + i * largeDistance_2;
-						tempPoint.y = downCardPosition.y;
-						CardPhom(downCards_3[i]).moving(localToGlobal(tempPoint), CardManager.downCardTime, movingType, downCardSize, downCardRotation);
-					}
+					tempPoint = new Point();
+					tempPoint.x = startX + (downCards_1.length + downCards_2.length - 2) * largeDistance_2 + downCards_1[0].width * (deckNumber - 1) + distanceDeckHorizontal * (deckNumber - 1) + i * largeDistance_2;
+					tempPoint.y = downCardPosition.y;
+					CardPhom(downCards_3[i]).moving(localToGlobal(tempPoint), CardManagerPhom.downCardTime, movingType, downCardSize, downCardRotation);
 				}
 			}
 		}
@@ -1779,47 +1747,51 @@ package view.userInfo.playerInfo
 		private function createAllButton():void 
 		{
 			buttonArray = new Array();
-			createButton("getCardButton", "getCardButtonPosition");
-			createButton("stealCardButton", "stealCardButtonPosition");
-			createButton("arrangeCardButton", "arrangeCardButtonPosition");
-			createButton("playCardButton", "getCardButtonPosition");
-			createButton("reSelectButton", "stealCardButtonPosition");
-			createButton("downCardButton", "getCardButtonPosition");
-			createButton("downCardFinishButton", "stealCardButtonPosition");
-			createButton("sendCardButton", "getCardButtonPosition");
-			createButton("sendCardFinishButton", "stealCardButtonPosition");
+			
+			getCardButton = content["getCardButton"];
+			stealCardButton = content["stealCardButton"];
+			arrangeCardButton = content["arrangeCardButton"];
+			playCardButton = content["playCardButton"];
+			reSelectButton = content["reSelectButton"];
+			downCardButton = content["downCardButton"];
+			sendCardButton = content["sendCardButton"];
+			noticeFullDeckButton = content["noticeFullDeckButton"];
+			
+			buttonArray.push(getCardButton);
+			buttonArray.push(stealCardButton);
+			buttonArray.push(arrangeCardButton);
+			buttonArray.push(playCardButton);
+			buttonArray.push(reSelectButton);
+			buttonArray.push(downCardButton);
+			buttonArray.push(sendCardButton);
+			buttonArray.push(noticeFullDeckButton);
+			
+			getCardButton.addEventListener(MouseEvent.CLICK, onButtonClick);
+			stealCardButton.addEventListener(MouseEvent.CLICK, onButtonClick);
+			arrangeCardButton.addEventListener(MouseEvent.CLICK, onButtonClick);
+			playCardButton.addEventListener(MouseEvent.CLICK, onButtonClick);
+			reSelectButton.addEventListener(MouseEvent.CLICK, onButtonClick);
+			downCardButton.addEventListener(MouseEvent.CLICK, onButtonClick);
+			sendCardButton.addEventListener(MouseEvent.CLICK, onButtonClick);
+			noticeFullDeckButton.addEventListener(MouseEvent.CLICK, onButtonClick);
 		}
 		
 		// Các nút ngoài chức năng chơi bài
 		private function createOtherButton():void
 		{
-			invitePlayButton = content["invitePlayButton"];
 			exitButton = content["exitButton"];
-			invitePlayButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
 			exitButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
-		}
-		
-		private function createButton(buttonName:String,buttonPositionName:String):void
-		{
-			this[buttonName] = new BigButton();
-			
-			BigButton(this[buttonName]).setLabel(mainData.init.gameDescription.playingScreen[buttonName]);
-			
-			BigButton(this[buttonName]).x = content[buttonPositionName].x;
-			BigButton(this[buttonName]).y = content[buttonPositionName].y;
-			content[buttonPositionName].visible = false;
-			
-			BigButton(this[buttonName]).addEventListener(MouseEvent.CLICK, onButtonClick);
-			
-			addChild(this[buttonName]);
-			
-			buttonArray.push(this[buttonName]);
 		}
 		
 		private function onButtonClick(e:MouseEvent):void 
 		{
-			if (BigButton(e.currentTarget).enable)
+			if (MobileButton(e.currentTarget).enable)
 			{
+				if (noticeFullDeckButton)
+				{
+					if (noticeFullDeckButton.parent)
+						noticeFullDeckButton.parent.removeChild(noticeFullDeckButton);
+				}
 				switch (e.currentTarget) 
 				{
 					case playCardButton:
@@ -1831,10 +1803,6 @@ package view.userInfo.playerInfo
 								electroServerCommand.playOneCard(currentSelectedCard.id, getNextPlayer().userName);
 								playOneCard(currentSelectedCard.id);
 								currentSelectedCard = null;
-							}
-							else
-							{
-								showTooltip(mainData.init.gameDescription.playingScreen.playWrongCard);
 							}
 						}
 					break;
@@ -1866,88 +1834,128 @@ package view.userInfo.playerInfo
 							CardPhom(unLeaveCards[i]).moveToStartPoint();
 						}
 						reSelectButton.enable = playCardButton.enable = false;
+						if (reSelectButton.parent)
+							reSelectButton.parent.removeChild(reSelectButton);
 						currentSelectedCard = null;
 					break;
 					case downCardButton:
-						downCardButton.enable = false;
-						electroServerCommand.downOneDeck(userName, selectedCardArray);
-						selectedCardArray = null;
-					break;
-					case downCardFinishButton:
-						var deckArray:Array = phomLogic.getDeckToAutoDownCard(unLeaveCards);
-						var deckIdArray:Array = new Array();
-						for (var j:int = 0; j < deckArray.length; j++) 
+						var cardDeck:Array = new Array();
+						for (var j:int = 0; j < unLeaveCards.length; j++) 
 						{
-							var tempArray:Array = new Array();
-							deckIdArray.push(tempArray);
-							for (var k:int = 0; k < deckArray[j].length; k++) 
+							if (CardPhom(unLeaveCards[j]).isChoose)
+								cardDeck.push(unLeaveCards[j]);
+						}
+						if (cardDeck.length == 0) // trường hợp không chọn lá bài nào thì cho hạ tự động
+						{
+							autoDownCard();
+							return;
+						}
+					
+						if (!saveDownCardArray)
+							return;
+						if (saveDownCardArray.length == 0)
+							return;
+						totalDeck = saveDownCardArray.length;
+						for (i = 0; i < saveDownCardArray.length; i++) 
+						{
+							var idArray:Array = new Array();
+							for (j = 0; j < saveDownCardArray[i].length; j++)
 							{
-								tempArray[k] = CardPhom(deckArray[j][k]).id;
+								idArray.push(CardPhom(saveDownCardArray[i][j]).id);
 							}
+							electroServerCommand.downOneDeck(userName, idArray);
 						}
-						for (j = 0; j < deckIdArray.length; j++)
-						{
-							electroServerCommand.downOneDeck(userName, deckIdArray[j]);
-						}
-						electroServerCommand.downCardFinish(userName);
+						saveDownCardArray = new Array();
 					break;
 					case sendCardButton:
-						var sendDeckArray:Array = checkSendCard([currentSelectedCard]);
-						electroServerCommand.sendCard(userName, sendDeckArray[0][DataField.USER_NAME], sendDeckArray[0][DataField.INDEX], currentSelectedCard.id);
-						sendCardButton.enable = false;
-					break;
-					case sendCardFinishButton:
-						if (!checkSendCard(unLeaveCards)) // Nếu không còn bài để gửi
+						var sendArray:Array = new Array();
+						for (i = 0; i < unLeaveCards.length; i++) 
 						{
+							if (CardPhom(unLeaveCards[i]).isChoose)
+								sendArray.push(unLeaveCards[i]);
+						}
+						var sendDict:Dictionary = new Dictionary();
+						
+						if (sendArray.length == 0) // Nếu không chọn lá bài nào thì cho tự động gửi
+						{
+							sendArray = checkSendCard(unLeaveCards);
+							sendDict = new Dictionary();
+							for (i = 0; i < sendArray.length; i++)
+							{
+								if (!sendDict[CardPhom(sendArray[i]).sendObject])
+									sendDict[CardPhom(sendArray[i]).sendObject] = new Array();
+								sendDict[CardPhom(sendArray[i]).sendObject].push(sendArray[i]);
+							}
+							for (obj in sendDict)
+							{
+								idArray = new Array();
+								for (i = 0; i < sendDict[obj].length; i++)
+								{
+									idArray.push(CardPhom(sendDict[obj][i]).id);
+								}
+								electroServerCommand.sendCard(userName, obj[DataFieldPhom.USER_NAME], obj[DataFieldPhom.INDEX], idArray);
+							}
+							sendCardButton.enable = false;
 							electroServerCommand.sendCardFinish(userName);
-							setMyTurn(PLAY_CARD);
+							return;
 						}
-						else // Nếu còn bài để gửi thì bật bảng xác nhận
+						
+						sendArray = checkSendCard(sendArray);
+						for (i = 0; i < sendArray.length; i++)
 						{
-							confirmSendCardFinishWindow = new ConfirmWindow();
-							confirmSendCardFinishWindow.setNotice(mainData.init.gameDescription.playingScreen.confirmSendCardFinish);
-							confirmSendCardFinishWindow.addEventListener(ConfirmWindow.CONFIRM, onConfirmWindow);
-							windowLayer.openWindow(confirmSendCardFinishWindow);
+							if (!sendDict[CardPhom(sendArray[i]).sendObject])
+								sendDict[CardPhom(sendArray[i]).sendObject] = new Array();
+							sendDict[CardPhom(sendArray[i]).sendObject].push(sendArray[i]);
 						}
+						for (var obj:Object in sendDict)
+						{
+							idArray = new Array();
+							for (i = 0; i < sendDict[obj].length; i++)
+							{
+								idArray.push(CardPhom(sendDict[obj][i]).id);
+							}
+							electroServerCommand.sendCard(userName, obj[DataFieldPhom.USER_NAME], obj[DataFieldPhom.INDEX], idArray);
+						}
+						sendCardButton.enable = false;
+						electroServerCommand.sendCardFinish(userName);
 					break;
 					case arrangeCardButton:
+						SoundManager.getInstance().playSound(SoundLibChung.ARRANGE_CARD_SOUND);
 						countArrangeCard++;
 						unLeaveCards = phomLogic.arrangeUnleaveCard(unLeaveCards);
-						reArrangeUnleaveCard(0, false);
+						reArrangeUnleaveCard(0);
 						if (myStatus == DOWN_CARD)
 							checkDownCard();
+					break;
+					case noticeFullDeckButton:
+						electroServerCommand.noticeFullDeck();
 					break;
 				}
 			}
 		}
 		
 		private function onConfirmWindow(e:Event):void 
-		{
-			if (e.currentTarget == confirmDownCardFinishWindow)
+		{			
+			if (e.currentTarget == confirmExitWindow)
 			{
-				downCardFinishButton.enable = false;
-				electroServerCommand.downCardFinish(userName);
-			}
-			else if (e.currentTarget == confirmSendCardFinishWindow)
-			{
-				electroServerCommand.sendCardFinish(userName);
-				setMyTurn(PLAY_CARD);
-			}
-			else if (e.currentTarget == confirmExitWindow)
-			{
-				if (stage)
-				{
-					if (tooltip.parent == stage)
-						stage.removeChild(tooltip);
-				}
-			
 				mainData.chooseChannelData.myInfo.money -= Number(mainData.playingData.gameRoomData.roomBet) * 4;
 				if (mainData.chooseChannelData.myInfo.money < 0)
 					mainData.chooseChannelData.myInfo.money = 0;
 					
-				exitButton.removeEventListener(MouseEvent.CLICK, onOtherButtonClick);
-				dispatchEvent(new Event(EXIT, true));
-				electroServerCommand.joinLobbyRoom();
+				/*if (mainData.chooseChannelData.myInfo.money < mainData.playingData.gameRoomData.betting[0])
+				{
+					var kickOutWindow:AlertWindow = new AlertWindow();
+					kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
+					windowLayer.openWindow(kickOutWindow);
+					dispatchEvent(new Event(PlayingScreen.BACK_TO_CHOOSE_CHANNEL_SCREEN, true));
+					electroServerCommand.closeConnection();
+				}
+				else
+				{*/
+					exitButton.removeEventListener(MouseEvent.CLICK, onOtherButtonClick);
+					dispatchEvent(new Event(EXIT, true));
+					electroServerCommand.joinLobbyRoom();
+				/*}*/
 				EffectLayer.getInstance().removeAllEffect();
 			}
 		}
@@ -1960,11 +1968,16 @@ package view.userInfo.playerInfo
 				{
 					electroServerCommand.sendCardFinish(userName);
 					setMyTurn(PLAY_CARD);
-					countTime(mainData.init.playTime.playCardTimePhom);
+					countTime(mainData.init.playTime.playCardTime);
 				}
 				else if (checkSendCard(unLeaveCards) && deckNumber > 0) // check xem có bài để gửi không
 				{
 					setMyTurn(SEND_CARD);
+					var sendArray:Array = checkSendCard(unLeaveCards);
+					for (var i:int = 0; i < sendArray.length; i++) 
+					{
+						CardPhom(sendArray[i]).showFilter();
+					}
 				}
 				else // nếu không có bài gửi thì bỏ qua luôn phần gửi
 				{
@@ -1977,7 +1990,7 @@ package view.userInfo.playerInfo
 				if (mainData.playingData.gameRoomData.isSendCard)
 					countTime(mainData.init.playTime.sendCardTime);
 				else
-					countTime(mainData.init.playTime.playCardTimePhom);
+					countTime(mainData.init.playTime.playCardTime);
 			}
 		}
 		
@@ -1985,55 +1998,29 @@ package view.userInfo.playerInfo
 		{
 			switch (e.currentTarget) 
 			{
-				case invitePlayButton:
-					invitePlayWindow = new InvitePlayWindow();
-					windowLayer.openWindow(invitePlayWindow);
-				break;
 				case exitButton:
 					if (isPlaying)
 					{
 						confirmExitWindow = new ConfirmWindow();
 						var st1:String = mainData.init.gameDescription.playingScreen.confirmQuitGa1;
 						var st2:String = mainData.init.gameDescription.playingScreen.confirmQuitGa2;
-						if (mainData.isPhomGa)
-						{
-							var myMoneyInGa:String = String(mainData.gaData[DataField.POT_LEVEL] * int(mainData.playingData.gameRoomData.roomBet));
-							var confirmGaSentence:String = " " + st1 + " " + myMoneyInGa + " " + st2;
-						} 
-						if (mainData.isPhomGa)
-							confirmExitWindow.setNotice(mainData.init.gameDescription.playingScreen.confirmExit + confirmGaSentence);
-						else
-							confirmExitWindow.setNotice(mainData.init.gameDescription.playingScreen.confirmExit);
+						confirmExitWindow.setNotice(mainData.init.gameDescription.playingScreen.confirmExit);
 						confirmExitWindow.addEventListener(ConfirmWindow.CONFIRM, onConfirmWindow);
 						windowLayer.openWindow(confirmExitWindow);
 					}
 					else
 					{
-						if (mainData.isPhomGa && !isNoPlay && mainData.gaData[DataField.POT_LEVEL] != 0)
-						{
-							confirmExitWindow = new ConfirmWindow();
-							st1 = mainData.init.gameDescription.playingScreen.confirmQuitGa3;
-							st2 = mainData.init.gameDescription.playingScreen.confirmQuitGa2;
-							myMoneyInGa = String(mainData.gaData[DataField.POT_LEVEL] * int(mainData.playingData.gameRoomData.roomBet));
-							confirmGaSentence = " " + st1 + " " + myMoneyInGa + " " + st2; 
-							confirmExitWindow.setNotice(confirmGaSentence);
-							confirmExitWindow.addEventListener(ConfirmWindow.CONFIRM, onConfirmWindow);
-							windowLayer.openWindow(confirmExitWindow);
-						}
-						else
-						{
-							exitButton.removeEventListener(MouseEvent.CLICK, onOtherButtonClick);
-							dispatchEvent(new Event(EXIT, true));
-							electroServerCommand.joinLobbyRoom();
-							EffectLayer.getInstance().removeAllEffect();
-						}
+						exitButton.removeEventListener(MouseEvent.CLICK, onOtherButtonClick);
+						dispatchEvent(new Event(EXIT, true));
+						electroServerCommand.joinLobbyRoom();
+						EffectLayer.getInstance().removeAllEffect();
 					}
 				break;
 			}
 		}
 		
 		// check xem có được hạ bài hay không
-		private function checkDownCard():Boolean
+		private function checkDownCard():void
 		{
 			var cardDeck:Array = new Array();
 			for (var j:int = 0; j < unLeaveCards.length; j++) 
@@ -2042,21 +2029,14 @@ package view.userInfo.playerInfo
 					cardDeck.push(unLeaveCards[j]);
 			}
 			
-			if (phomLogic.checkCardDeck(cardDeck)) // Kiểm tra xem nếu đúng là phỏm thì cho hạ
-			{
-				selectedCardArray = new Array();
-				for (var i:int = 0; i < cardDeck.length; i++) 
-				{
-					selectedCardArray.push(CardPhom(cardDeck[i]).id);
-				}
-				downCardButton.enable = true;
-			}
-			else
-			{
-				downCardButton.enable = false;
-			}
+			saveDownCardArray = phomLogic.checkDownCard(cardDeck);
 			
-			return downCardButton.enable;
+			if (saveDownCardArray.length != 0)
+				downCardButton.enable = true;
+			else if (cardDeck.length == 0)
+				downCardButton.enable = true;
+			else
+				downCardButton.enable = false;
 		}
 		
 		private var _isCurrentWinner:Boolean;
@@ -2155,14 +2135,16 @@ package view.userInfo.playerInfo
 		public function set isMyTurn(value:Boolean):void 
 		{
 			_isMyTurn = value;
-			//if (value)
-				//avatar.playingStatus.visible = true;
-			//else
-				//avatar.playingStatus.visible = false;
+			/*if (value)
+				avatar.playingStatus.visible = true;
+			else
+				avatar.playingStatus.visible = false;*/
 		}
 		
 		private var _isPlaying:Boolean; // Biến cờ thể hiện user đó đang chơi hay không
 		private var isNoPlay:Boolean = true;
+		private var saveDownCardArray:Array;
+		private var totalDeck:int;
 		public var countArrangeCard:int = 0;
 		
 		public function get isPlaying():Boolean 
@@ -2173,7 +2155,8 @@ package view.userInfo.playerInfo
 		public function set isPlaying(value:Boolean):void 
 		{
 			_isPlaying = value;
-			timeBar.visible = value;
+			if (!value)
+				timeBar.visible = value;
 			if (value)
 				isNoPlay = false;
 			else

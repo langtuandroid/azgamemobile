@@ -34,6 +34,7 @@ package
 			zInvitePlayWindow;
 			zPlayingScreen;
 			zPlayingScreenMauBinh;
+			zPlayingScreenPhom;
 			zPlayingScreenXito;
 			zPlayUserProfileForm_1;
 			zPlayUserProfileForm_2;
@@ -88,6 +89,13 @@ package
 			zOrderCardWindow;
 			zUserProfileWindow;
 			zGroupResultEffect;
+			zComboBoxRow;
+			zSlideBar;
+			zAddFriendWindow;
+			zChannelList;
+			zChannelRow;
+			zCardManagerPhom;
+			zTimeBar_1_Phom;
 			
 			Shop_Coffer_Item_Mc;
 			ContentAvatarMc;

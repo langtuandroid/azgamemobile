@@ -175,6 +175,7 @@ package view
 		{
 			//WindowLayer.getInstance().openLoadingWindow();
 			
+			mainData.isFirstJoinLobby = true;
 			mainData.maxPlayer = 4;
 			switch (e.currentTarget) 
 			{
@@ -183,6 +184,8 @@ package view
 				break;
 				case phomIcon:
 					gameId = 2;
+					mainData.gameName = 'PHỎM';
+					mainData.portNumber = 5301;
 				break;
 				case maubinhIcon:
 					gameId = 6;

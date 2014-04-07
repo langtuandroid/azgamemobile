@@ -26,6 +26,7 @@ package control
 	import com.electrotank.electroserver5.api.UserVariable;
 	import com.electrotank.electroserver5.api.UserVariableUpdateAction;
 	import com.electrotank.electroserver5.api.ZoneUpdateAction;
+	import com.electrotank.electroserver5.connection.AvailableConnection;
 	import com.electrotank.electroserver5.ElectroServer
 	import com.electrotank.electroserver5.api.ConnectionClosedEvent;
 	import com.electrotank.electroserver5.api.CreateOrJoinGameResponse;
@@ -48,6 +49,7 @@ package control
 	import com.electrotank.electroserver5.api.ZoneUpdateEvent;
 	import com.electrotank.electroserver5.ElectroServer;
 	import com.electrotank.electroserver5.events.ConnectionEvent;
+	import com.electrotank.electroserver5.server.Server;
 	import com.electrotank.electroserver5.user.User;
 	import com.electrotank.electroserver5.zone.Room;
 	import com.electrotank.electroserver5.zone.Zone;
@@ -91,9 +93,7 @@ package control
 			myData.lobbyName = "LobbyMauBinh";
 			myData.lobbyPluginName = "LobbyMauBinhPlugin";
 		
-			electroServer = new ElectroServer();
-			
-			mainData.electroServer = electroServer;
+			electroServer = mainData.electroServer;
 			
 			electroServer.engine.addEventListener(MessageType.UserUpdateEvent.name, onUserListUpdateEvent);
 			electroServer.engine.addEventListener(MessageType.LeaveRoomEvent.name, onLeaveRoomEvent);
@@ -108,8 +108,12 @@ package control
 			electroServer.engine.addEventListener(MessageType.ZoneUpdateEvent.name, onZoneUpdateEvent);
 			electroServer.engine.addEventListener(MessageType.FindGamesResponse.name, onFindGameRespond);
 			
-			//electroServer.setProtocol(configuration.protocol);
-			electroServer.loadAndConnect(configuration.path);
+			var server:Server = new Server("server1");
+			var availConn:AvailableConnection = new AvailableConnection(configuration.ip, configuration.port, configuration.protocol.name);
+			server.addAvailableConnection(availConn);
+			
+			electroServer.engine.addServer(server);
+			electroServer.engine.connect();
 			
 			electroServer.engine.addEventListener(MessageType.ConnectionResponse.name, onConnectionEvent);
 			//electroServer.engine.createConnection(configuration.ip, configuration.port);
@@ -373,7 +377,7 @@ package control
 				
 			var pluginMessage:EsObject = new EsObject();
 			pluginMessage.setString("command", Command.GET_ROOM_LIST);
-			sendPluginRequest(myData.zoneId, myData.roomId, "LobbyMauBinhPlugin", pluginMessage);
+			sendPluginRequest(myData.zoneId, myData.roomId, myData.lobbyPluginName, pluginMessage);
 				
 			/*myData.countGame = 0;
 			myData.roomList = new Object();

@@ -63,7 +63,9 @@ package control.getInfoCommand
 					object.game_id = 'AZGB_TLMN';
 				break;
 				case MainData.PHOM:
-					url = "http://" + mainData.gameIp + "/javajson/Getgamegroup2/2";
+					url = /*mainData.basepath + */mainData.init.requestLink.getChannelLink.@url;
+					var object:Object = new Object();
+					object.game_id = 'AZGB_PHOM';
 				break;
 				case MainData.MAUBINH:
 					url = /*mainData.basepath + */mainData.init.requestLink.getChannelLink.@url;

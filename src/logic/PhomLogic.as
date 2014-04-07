@@ -1,9 +1,8 @@
 package logic 
 {
 	import com.adobe.serialization.json.JSON;
-	import event.DataField;
-	import view.card.CardManager;
 	import view.card.CardPhom;
+	import view.card.CardManagerPhom;
 	import view.userInfo.playerInfo.PlayerInfoPhom;
 	/**
 	 * ...
@@ -59,7 +58,7 @@ package logic
 				if (beforePlayer.leavedCards.length > player.leavedCards.length && player != stealPlayer)
 				{
 					card = beforePlayer.popOneLeavedCard(0);
-					player.pushNewLeavedCard(card, CardManager.playCardTime * 1.4);
+					player.pushNewLeavedCard(card, CardManagerPhom.playCardTime * 1.4);
 				}
 			}
 			for (i = playerArray.length - 1; i > startIndex; i--) 
@@ -69,7 +68,7 @@ package logic
 				if (beforePlayer.leavedCards.length > player.leavedCards.length && player != stealPlayer)
 				{
 					card = beforePlayer.popOneLeavedCard(0);
-					player.pushNewLeavedCard(card, CardManager.playCardTime * 1.4);
+					player.pushNewLeavedCard(card, CardManagerPhom.playCardTime * 1.4);
 				}
 			}
 		}
@@ -208,7 +207,7 @@ package logic
 		}
 		
 		// Tìm lá bài bài ăn được trong mảng
-		private function getStealCardPhom(cardArray:Array):CardPhom
+		private function getStealCard(cardArray:Array):CardPhom
 		{
 			for (var i:int = 0; i < cardArray.length; i++) 
 			{
@@ -513,7 +512,7 @@ package logic
 			return false;
 		}
 		
-		public function arrangeUnleaveCard(cardArray:Array):Array
+		public function arrangeUnleaveCard(cardArray:Array, isIncrease:Boolean = true):Array
 		{
 			var deckArray:Array = countDeck(cardArray);
 			
@@ -643,9 +642,26 @@ package logic
 				}
 			}
 			
-			arrangeCardNoDeck(cardArray);
+			arrangeCardNoDeck(cardArray, isIncrease);
 			newCardArray = newCardArray.concat(cardArray);
 			return newCardArray;
+		}
+		
+		// check xem lá bài vừa bốc có tạo thành phỏm ko
+		public function checkNewCard(cardArray:Array, newCard:CardPhom):Boolean
+		{
+			var deckArray:Array = countDeck(cardArray);
+			
+			for (var i:int = 0; i < deckArray.length; i++) 
+			{
+				for (var j:int = 0; j < deckArray[i].length; j++) 
+				{
+					if (newCard.id == deckArray[i][j].id)
+						return true;
+				}
+			}
+			
+			return false;
 		}
 		
 		// Hàm để tìm triệt để xem còn cạ nào của deck trong cardArray không
@@ -669,7 +685,7 @@ package logic
 			}
 		}
 		
-		public function arrangeCardNoDeck(cardArray:Array):void
+		public function arrangeCardNoDeck(cardArray:Array, isIncrease:Boolean = true):void
 		{
 			var arrangeFinish:Boolean;
 			while (!arrangeFinish)
@@ -677,38 +693,240 @@ package logic
 				arrangeFinish = true;
 				for (var i:int = 0; i < cardArray.length - 1; i++) 
 				{
-					if (CardPhom(cardArray[i]).id % 13 == 0)
-					{
-						if (CardPhom(cardArray[i + 1]).id % 13 != 0)
-						{
-							arrangeFinish = false;
-						}
-						else
-						{
-							if (CardPhom(cardArray[i]).id > CardPhom(cardArray[i + 1]).id)
-								arrangeFinish = false;
-						}
-					}
-					else
-					{
-						if (CardPhom(cardArray[i]).id % 13 > CardPhom(cardArray[i + 1]).id % 13 && CardPhom(cardArray[i + 1]).id % 13 != 0)
-						{
-							arrangeFinish = false;
-						}
-						else if (CardPhom(cardArray[i]).id % 13 == CardPhom(cardArray[i + 1]).id % 13)
-						{
-							if (CardPhom(cardArray[i]).id > CardPhom(cardArray[i + 1]).id)
-								arrangeFinish = false;
-						}
-					}
-					if (!arrangeFinish)
+					if (convertIdToRank(cardArray[i].id) > convertIdToRank(cardArray[i + 1].id))
 					{
 						var tempCard:CardPhom = cardArray[i];
 						cardArray[i] = cardArray[i + 1];
 						cardArray[i + 1] = tempCard;
+						arrangeFinish = false;
 					}
 				}
 			}
+			
+			//if (isIncrease)
+				//return;
+			
+			arrangeFinish = false;
+			var cardNumber:int = cardArray.length;
+			var lengthCheck:int = cardArray.length;
+			
+			for (var j:int = 0; j < cardNumber; j++) 
+			{
+				for (i = 0; i < lengthCheck; i++) 
+				{
+					if (i > 0)
+						var rankPrevious:int = convertIdToRank(cardArray[i - 1].id);
+					else
+						rankPrevious = -10;
+					var rankCurrent:int = convertIdToRank(cardArray[i].id);
+					
+					if (i < lengthCheck - 1)
+						var rankNext:int = convertIdToRank(cardArray[i + 1].id);
+					else
+						rankNext = -10;
+					
+					if (i > 0)
+						var suitPrevious:int = convertIdToSuit(cardArray[i - 1].id);
+					else
+						suitPrevious = -10;
+					var suitCurrent:int = convertIdToSuit(cardArray[i].id);
+					
+					if (i < lengthCheck - 1)
+						var suitNext:int = convertIdToSuit(cardArray[i + 1].id);
+					else
+						suitNext = -10;
+					
+					if (rankPrevious != rankCurrent && rankNext != rankCurrent)
+					{
+						if (suitPrevious == suitCurrent && Math.abs(rankPrevious - rankCurrent) <= 2)
+						{
+							
+						}
+						else if (suitNext == suitCurrent && Math.abs(rankNext - rankCurrent) <= 2)
+						{
+							
+						}
+						else
+						{
+							tempCard = cardArray.splice(i, 1)[0];
+							cardArray.push(tempCard);
+							lengthCheck--;
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		public function checkDownCard(cardArray:Array):Array
+		{
+			//if (checkCardDeck(cardArray))
+				//return [cardArray];
+			
+			var deckArray:Array = countDeck(cardArray);
+			var i:int;
+			var j:int;
+			var k:int;
+			var l:int;
+			var m:int;
+			
+			// truong hop co 1 phom
+			if (deckArray.length > 0 && cardArray.length < 6)
+			{
+				var newArray:Array = cardArray.concat();
+				for (k = 0; k < deckArray[0].length; k++)
+				{
+					for (l = 0; l < newArray.length; l++)
+					{
+						if (newArray[l] == deckArray[0][k])
+						{
+							newArray.splice(l, 1);
+							l = newArray.length + 1;
+						}
+					}
+				}
+				findFullDeck(deckArray[0], newArray);
+				
+				if (deckArray[0].length == cardArray.length)
+					return [cardArray];
+			}
+				
+			var downCardArray:Array = new Array();
+			// truong hop co 2 phom
+			for (i = 0; i < deckArray.length - 1; i++)
+			{
+				for (j = i + 1; j < deckArray.length; j++)
+				{
+					if (!compareTwoDeck(deckArray[i], deckArray[j]))
+					{
+						newArray = cardArray.concat();
+						for (k = 0; k < deckArray[i].length; k++)
+						{
+							for (l = 0; l < newArray.length; l++)
+							{
+								if (newArray[l] == deckArray[i][k])
+								{
+									newArray.splice(l, 1);
+									l = newArray.length + 1;
+								}
+							}
+						}
+						for (k = 0; k < deckArray[j].length; k++)
+						{
+							for (l = 0; l < newArray.length; l++)
+							{
+								if (newArray[l] == deckArray[j][k])
+								{
+									newArray.splice(l, 1);
+									l = newArray.length + 1;
+								}
+							}
+						}
+						findFullDeck(deckArray[i], newArray);
+						findFullDeck(deckArray[j], newArray);
+						
+						if (deckArray[i].length + deckArray[j].length >= cardArray.length)
+						{
+							downCardArray = new Array();
+							downCardArray.push(deckArray[i]);
+							downCardArray.push(deckArray[j]);
+							if (convertIdToRank(CardPhom(deckArray[i][0]).id) == convertIdToRank(CardPhom(deckArray[i][1]).id) && deckArray[i].length == 4) // Uu tien phom tu quy
+								return downCardArray;
+							if (convertIdToRank(CardPhom(deckArray[j][0]).id) == convertIdToRank(CardPhom(deckArray[j][1]).id) && deckArray[j].length == 4) // Uu tien phom tu quy
+								return downCardArray;
+						}
+					}
+				}
+			}
+			
+			if (downCardArray.length >= 2)
+				return downCardArray;
+			
+			// truong hop co 3 phom
+			for (i = 0; i < deckArray.length - 2; i++) // Tìm 3 phỏm khác nhau
+			{
+				for (j = i + 1; j < deckArray.length - 1; j++)
+				{
+					for (k = j + 1; k < deckArray.length; k++) 
+					{
+						if (!compareTwoDeck(deckArray[i], deckArray[j]) && !compareTwoDeck(deckArray[j], deckArray[k]) && !compareTwoDeck(deckArray[i], deckArray[k]))
+						{
+							if (cardArray.length == 10)
+							{
+								if (deckArray[i].length + deckArray[j].length + deckArray[k].length == cardArray.length)
+								{
+									downCardArray.push(deckArray[i]);
+									downCardArray.push(deckArray[j]);
+									downCardArray.push(deckArray[k]);
+									return downCardArray;
+								}
+							}
+							
+							for (m = 0; m < cardArray.length; m++)
+							{
+								var isDifferentCard:Boolean = true;
+								for (l = 0; l < deckArray[i].length; l++)
+								{
+									if (deckArray[i][l] == cardArray[m])
+										isDifferentCard = false;
+									if (deckArray[j][l] == cardArray[m])
+										isDifferentCard = false;
+									if (deckArray[k][l] == cardArray[m])
+										isDifferentCard = false;
+								}
+								// Tránh trường hợp con thứ 10 không thuộc 3 phỏm là con bài ăn
+								if (isDifferentCard && !CardPhom(cardArray[m]).isStealCard)
+								{
+									var tempArray:Array = deckArray[i].concat();
+									tempArray.push(cardArray[m])
+									if (checkCardDeck(tempArray))
+									{
+										downCardArray = new Array();
+										downCardArray.push(tempArray);
+										downCardArray.push(deckArray[j]);
+										downCardArray.push(deckArray[k]);
+										return downCardArray;
+									}
+									tempArray = deckArray[j].concat();
+									tempArray.push(cardArray[m])
+									if (checkCardDeck(tempArray))
+									{
+										downCardArray = new Array();
+										downCardArray.push(tempArray);
+										downCardArray.push(deckArray[i]);
+										downCardArray.push(deckArray[k]);
+										return downCardArray;
+									}
+									tempArray = deckArray[k].concat();
+									tempArray.push(cardArray[m])
+									if (checkCardDeck(tempArray))
+									{
+										downCardArray = new Array();
+										downCardArray.push(tempArray);
+										downCardArray.push(deckArray[i]);
+										downCardArray.push(deckArray[j]);
+										return downCardArray;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			return new Array();
+		}
+		
+		public function convertIdToSuit(id:int):int
+		{
+			return Math.ceil((id / 13));
+		}
+		
+		public function convertIdToRank(id:int):int
+		{
+			if (id % 13 == 0)
+				return 13;
+			return id % 13;
 		}
 		
 		public function countDeck(cardArray:Array):Array

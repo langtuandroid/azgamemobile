@@ -20,67 +20,74 @@ package view.effectLayer
 		{
 			if (value == 1)
 				effectType = BaseEffect.SMALL_SCALE_INCREASE;
+				
 			switch (type) 
 			{
-				case '30':
+				case '39':
 					mc.gotoAndStop("sanhrongcuon");
 				break;
-				case '29':
+				case '38':
 					mc.gotoAndStop("sanhrong");
 				break;
-				case '28':
+				case '37':
 					mc.gotoAndStop("rongmau");
 				break;
-				case '27':
+				case '36':
 					mc.gotoAndStop("rongmau");
 				break;
-				case '26':
+				case '35':
 					mc.gotoAndStop("rong1mat");
 				break;
-				case '25':
+				case '34':
 					mc.gotoAndStop("rong1mat");
 				break;
-				case '24':
-					mc.gotoAndStop("5doi1sam");
+				case '33':
+					mc.gotoAndStop("5doi1xam");
 				break;
-				case '23':
+				case '32':
 					mc.gotoAndStop("lucphebon");
 				break;
-				case '22':
+				case '31':
 					mc.gotoAndStop("3thung");
 				break;
-				case '21':
+				case '30':
 					mc.gotoAndStop("3sanh");
 				break;
-				case '20':
+				case '22':
 					mc.gotoAndStop("thungphasanhlon");
+				break;
+				case '21':
+					mc.gotoAndStop("thungphasanhnho");
+				break;
+				case '20':
+					mc.gotoAndStop("thungphasanh");
 				break;
 				case '19':
-					mc.gotoAndStop("thungphasanhnho");
+					mc.gotoAndStop("tuquyAchi2");
 				break;
 				case '18':
-					mc.gotoAndStop("thungphasanh");
-				break;
-				case '17':
 					mc.gotoAndStop("tuquychi2");
 				break;
-				case '16':
+				case '17':
 					mc.gotoAndStop("culuchi2");
 				break;
+				case '16':
+					mc.gotoAndStop("xamAcuoi");
+				break;
 				case '15':
-					mc.gotoAndStop("samcochicuoi");
+					mc.gotoAndStop("xamchicuoi");
 				break;
 				case '14':
-					mc.gotoAndStop("tuquyat");
-				break;
-				case '13':
 					mc.gotoAndStop("thungphasanhlon");
 				break;
-				case '12':
+				case '13':
 					mc.gotoAndStop("thungphasanhnho");
 				break;
-				case '11':
+				case '12':
 					mc.gotoAndStop("thungphasanh");
+				break;
+				case '11':
+					mc.gotoAndStop("tuquyA");
 				break;
 				case '10':
 					mc.gotoAndStop("tuquy");
@@ -101,7 +108,7 @@ package view.effectLayer
 					mc.gotoAndStop("sanh");
 				break;
 				case '4':
-					mc.gotoAndStop("samchi");
+					mc.gotoAndStop("xamchi");
 				break;
 				case '3':
 					mc.gotoAndStop("thu");

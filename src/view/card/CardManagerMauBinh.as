@@ -12,6 +12,7 @@ package view.card
 	import flash.utils.getDefinitionByName;
 	import flash.utils.Timer;
 	import model.MainData;
+	import sound.SoundLibChung;
 	import sound.SoundLibMauBinh;
 	import sound.SoundManager;
 	import view.userInfo.playerInfo.PlayerInfoMauBinh;
@@ -121,7 +122,7 @@ package view.card
 		
 		public function divideOneCard(player:PlayerInfoMauBinh, cardId:int, time:Number = 0):void
 		{
-			SoundManager.getInstance().playSound(SoundLibMauBinh.CARD_SOUND);
+			SoundManager.getInstance().playSound(SoundLibChung.CARD_SOUND);
 			
 			if (time == 0)
 				time = cardToDesTime;

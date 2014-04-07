@@ -42,7 +42,6 @@ package view.effectLayer
 				}
 				else
 				{
-					trace("aaaaaaaaaaaaaaaa",content["chiMc"].width);
 					greenTxt.x = content["chiMc"].x + (35 - greenTxt.width);
 				}
 				greenTxt.visible = true;

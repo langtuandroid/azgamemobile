@@ -407,4 +407,237 @@
 		<child face="8-&gt;" className="Dream" reg="8[\-][&gt;]" />
 		<child face="fuck" className="ThreeDot" reg="fuck" />
 	</emoticon2>
+	
+	<soundMauBinhList>
+		<child>B.M001 (1)</child>
+		<child>B.M001 (2)</child>
+		
+		<child>B.F001 (1)</child>
+		<child>B.F001 (2)</child>
+		
+		<child>B.M002 (1)</child>
+		<child>B.M002 (2)</child>
+		<child>B.M002 (3)</child>
+		<child>B.M002 (4)</child>
+		<child>B.M002 (5)</child>
+		
+		<child>B.F002 (1)</child>
+		<child>B.F002 (2)</child>
+		<child>B.F002 (3)</child>
+		<child>B.F002 (4)</child>
+		<child>B.F002 (5)</child>
+		
+		<child>B.M003 (1)</child>
+		<child>B.M003 (2)</child>
+		<child>B.M003 (3)</child>
+		<child>B.M003 (4)</child>
+		<child>B.M003 (5)</child>
+		
+		<child>B.F003 (1)</child>
+		<child>B.F003 (2)</child>
+		<child>B.F003 (3)</child>
+		<child>B.F003 (4)</child>
+		<child>B.F003 (5)</child>
+		
+		<child>B.M004 (1)</child>
+		<child>B.M004 (2)</child>
+		<child>B.M004 (3)</child>
+		<child>B.M004 (4)</child>
+		<child>B.M004 (5)</child>
+		
+		<child>B.F004 (1)</child>
+		<child>B.F004 (2)</child>
+		<child>B.F004 (3)</child>
+		<child>B.F004 (4)</child>
+		<child>B.F004 (5)</child>
+		
+		<child>B.M005 (1)</child>
+		<child>B.M005 (2)</child>
+		<child>B.M005 (3)</child>
+		<child>B.M005 (4)</child>
+		<child>B.M005 (5)</child>
+		
+		<child>B.F005 (1)</child>
+		<child>B.F005 (2)</child>
+		<child>B.F005 (3)</child>
+		<child>B.F005 (4)</child>
+		<child>B.F005 (5)</child>
+		
+		<child>B.M006 (1)</child>
+		<child>B.M006 (2)</child>
+		<child>B.M006 (3)</child>
+		<child>B.M006 (4)</child>
+		<child>B.M006 (5)</child>
+		
+		<child>B.F006 (1)</child>
+		<child>B.F006 (2)</child>
+		<child>B.F006 (3)</child>
+		<child>B.F006 (4)</child>
+		<child>B.F006 (5)</child>
+		
+		<child>B.M007 (1)</child>
+		<child>B.M007 (2)</child>
+		<child>B.M007 (3)</child>
+		<child>B.M007 (4)</child>
+		<child>B.M007 (5)</child>
+		
+		<child>B.F007 (1)</child>
+		<child>B.F007 (2)</child>
+		<child>B.F007 (3)</child>
+		<child>B.F007 (4)</child>
+		<child>B.F007 (5)</child>
+		
+		<child>B.F008</child>
+		<child>B.F009</child>
+		<child>B.F010</child>
+		<child>B.F011</child>
+		<child>B.F012a</child>
+		
+		<child>B.M008</child>
+		<child>B.M009</child>
+		<child>B.M010</child>
+		<child>B.M011</child>
+		<child>B.M012a</child>
+		
+		<child>B.M013 (1)</child>
+		<child>B.M013 (2)</child>
+		<child>B.M013 (3)</child>
+		<child>B.M013 (4)</child>
+		<child>B.M013 (5)</child>
+		
+		<child>B.F013 (1)</child>
+		<child>B.F013 (2)</child>
+		<child>B.F013 (3)</child>
+		<child>B.F013 (4)</child>
+		<child>B.F013 (5)</child>
+		
+		<child>B.M014 (1)</child>
+		<child>B.M014 (2)</child>
+		<child>B.M014 (3)</child>
+		<child>B.M014 (4)</child>
+		<child>B.M014 (5)</child>
+		
+		<child>B.F014 (1)</child>
+		<child>B.F014 (2)</child>
+		<child>B.F014 (3)</child>
+		<child>B.F014 (4)</child>
+		<child>B.F014 (5)</child>
+		
+		<child>B.M015</child>
+		<child>B.M016</child>
+		<child>B.M017</child>
+		
+		<child>B.F015</child>
+		<child>B.F016</child>
+		<child>B.F017</child>
+		
+		<child>B.M018</child>
+		<child>B.M019</child>
+		<child>B.M020</child>
+		<child>B.M021</child>
+		<child>B.M022</child>
+		<child>B.M023</child>
+		<child>B.M024</child>
+		<child>B.M025</child>
+		<child>B.M026</child>
+		<child>B.M027</child>
+		<child>B.M028</child>
+		<child>B.M029</child>
+		<child>B.M030</child>
+		<child>B.M031</child>
+		<child>B.M032</child>
+		<child>B.M033</child>
+		<child>B.M034</child>
+		<child>B.M035</child>
+		<child>B.M036</child>
+		<child>B.M037</child>
+		<child>B.M038</child>
+		<child>B.M039</child>
+		<child>B.M040</child>
+		
+		<child>B.F018</child>
+		<child>B.F019</child>
+		<child>B.F020</child>
+		<child>B.F021</child>
+		<child>B.F022</child>
+		<child>B.F023</child>
+		<child>B.F024</child>
+		<child>B.F025</child>
+		<child>B.F026</child>
+		<child>B.F027</child>
+		<child>B.F028</child>
+		<child>B.F029</child>
+		<child>B.F030</child>
+		<child>B.F031</child>
+		<child>B.F032</child>
+		<child>B.F033</child>
+		<child>B.F034</child>
+		<child>B.F035</child>
+		<child>B.F036</child>
+		<child>B.F037</child>
+		<child>B.F038</child>
+		<child>B.F039</child>
+		<child>B.F040</child>
+		
+		<child>B.M041 (1)</child>
+		<child>B.M041 (2)</child>
+		<child>B.M041 (3)</child>
+		<child>B.M041 (4)</child>
+		<child>B.M041 (5)</child>
+		
+		<child>B.F041 (1)</child>
+		<child>B.F041 (2)</child>
+		<child>B.F041 (3)</child>
+		<child>B.F041 (4)</child>
+		<child>B.F041 (5)</child>
+		
+		<child>B.M042 (1)</child>
+		<child>B.M042 (2)</child>
+		<child>B.M042 (3)</child>
+		<child>B.M042 (4)</child>
+		<child>B.M042 (5)</child>
+		
+		<child>B.F042 (1)</child>
+		<child>B.F042 (2)</child>
+		<child>B.F042 (3)</child>
+		<child>B.F042 (4)</child>
+		<child>B.F042 (5)</child>
+		
+		<child>B.M043 (1)</child>
+		<child>B.M043 (2)</child>
+		<child>B.M043 (3)</child>
+		<child>B.M043 (4)</child>
+		<child>B.M043 (5)</child>
+		
+		<child>B.F043 (1)</child>
+		<child>B.F043 (2)</child>
+		<child>B.F043 (3)</child>
+		<child>B.F043 (4)</child>
+		<child>B.F043 (5)</child>
+		
+		<child>B.M044 (1)</child>
+		<child>B.M044 (2)</child>
+		<child>B.M044 (3)</child>
+		<child>B.M044 (4)</child>
+		<child>B.M044 (5)</child>
+		
+		<child>B.F044 (1)</child>
+		<child>B.F044 (2)</child>
+		<child>B.F044 (3)</child>
+		<child>B.F044 (4)</child>
+		<child>B.F044 (5)</child>
+	</soundMauBinhList>
+	
+	<soundChungList>
+		<child>GB002</child>
+		<child>GB003</child>
+		<child>GB004</child>
+		<child>GB005</child>
+		<child>GB008</child>
+		<child>GB009</child>
+		<child>GB010</child>
+		<child>GB011</child>
+		<child>GB012</child>
+		<child>GB013</child>
+	</soundChungList>
 </data>

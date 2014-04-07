@@ -11,6 +11,7 @@ package view.screen
 	import model.ChannelData;
 	import model.chooseChannelData.ChooseChannelData;
 	import RoomListComponent
+	import sound.SoundLibChung;
 	import sound.SoundLibMauBinh;
 	import sound.SoundManager;
 	import view.channelList.ChannelList;
@@ -71,7 +72,6 @@ package view.screen
 		private var mainCommand:MainCommand = MainCommand.getInstance();
 		private var windowLayer:WindowLayer = WindowLayer.getInstance();
 		private var isHideFullRoom:Boolean;
-		private var isFirstJoinLobby:Boolean = true;
 		private var lobbyBtn:MovieClip;
 		private var friendBtn:MovieClip;
 		
@@ -85,6 +85,7 @@ package view.screen
 		private var selectGameButton:SimpleButton;
 		private var channelList:ChannelList;
 		
+		private var exitButton:SimpleButton;
 		private var helpButton:SimpleButton;
 		private var soundOnButton:SimpleButton;
 		private var soundOffButton:SimpleButton;
@@ -252,11 +253,18 @@ package view.screen
 			selectGameButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
 			
 			
+			exitButton = content["exitButton"];
 			helpButton = content["helpButton"];
 			soundOnButton = content["soundOnButton"];
 			soundOffButton = content["soundOffButton"];
 			musicOnButton = content["musicOnButton"];
 			musicOffButton = content["musicOffButton"];
+			
+			addChild(userList);
+			addChild(soundOnButton);
+			addChild(soundOffButton);
+			addChild(musicOnButton);
+			addChild(musicOffButton);
 			
 			sharedObject = SharedObject.getLocal("soundConfig");
 			
@@ -275,11 +283,27 @@ package view.screen
 				musicOffButton.visible = false;
 			}
 			
+			exitButton.addEventListener(MouseEvent.CLICK, onExitButtonClick);
 			helpButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
 			soundOnButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
 			soundOffButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
 			musicOnButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
 			musicOffButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
+		}
+		
+		private function onExitButtonClick(e:MouseEvent):void 
+		{
+			if (!selectGameWindow)
+			{	
+				selectGameWindow = new SelectGameWindow();
+				selectGameWindow.addEventListener(SelectGameWindow.SELECT_GAME, onSelectGame);
+				selectGameWindow.addEventListener(SelectGameWindow.RE_LOGIN_CLICK, onReLoginClick);
+				selectGameWindow.x = mainData.stageWidth / 2;
+				selectGameWindow.y = mainData.stageHeight / 2;
+				selectGameWindow.visible = true;
+			}
+			addChild(selectGameWindow);
+			mainCommand.electroServerCommand.closeConnection();
 		}
 		
 		private function onMenuButtonClick(e:MouseEvent):void 
@@ -319,14 +343,26 @@ package view.screen
 		
 		private function onOtherButtonClick(e:MouseEvent):void 
 		{
-			
+			switch (mainData.gameType) 
+			{
+				case MainData.MAUBINH:
+					SoundManager.getInstance().soundManagerMauBinh.playExitGamePlayerSound(mainData.chooseChannelData.myInfo.sex);
+				break;
+				case MainData.MAUBINH:
+					SoundManager.getInstance().soundManagerPhom.playExitGamePlayerSound(mainData.chooseChannelData.myInfo.sex);
+				break;
+				default:
+			}
 		}
 		
 		private function onChannelButtonClick(e:MouseEvent):void 
 		{
+			SoundManager.getInstance().playSound(SoundLibChung.CLICK_SOUND);
 			if (currentChannelButton == e.currentTarget)
 			{
 				reArrageChannelButton( -1, true);
+				if (channelList.parent)
+					channelList.parent.removeChild(channelList);
 				return;
 			}
 			for (var i:int = 0; i < channelButtonArray.length; i++) 
@@ -334,7 +370,7 @@ package view.screen
 				if (e.currentTarget == channelButtonArray[i])
 				{
 					if (i == 3) // Giải đấu
-						SoundManager.getInstance().playSound(SoundLibMauBinh.SELECT_TOURNAMENT_SOUND);
+						SoundManager.getInstance().playSound(SoundLibChung.SELECT_TOURNAMENT_SOUND);
 					var dataList:Array = new Array();
 					for (var j:int = 0; j < mainData.chooseChannelData.channelInfoArray.length; j++) 
 					{
@@ -374,6 +410,7 @@ package view.screen
 		
 		private function onChannelClick(e:Event):void 
 		{
+			SoundManager.getInstance().playSound(SoundLibChung.CLICK_SOUND);
 			mainCommand.electroServerCommand.closeConnection();
 			WindowLayer.getInstance().openLoadingWindow();
 			mainCommand.electroServerCommand.startConnect("", channelList.currentChannelData.channelId);
@@ -428,6 +465,8 @@ package view.screen
 			friendBtn.buttonMode = friendBtn.mouseChildren = friendBtn.mouseEnabled = true;
 			lobbyBtn.gotoAndStop("out");
 			friendBtn.gotoAndStop("out");
+			
+			SoundManager.getInstance().playSound(SoundLibChung.CLICK_SOUND);
 			
 			switch (e.currentTarget) 
 			{
@@ -543,51 +582,36 @@ package view.screen
 					selectGameWindow.visible = true;
 				}
 				addChild(selectGameWindow);
+				mainCommand.electroServerCommand.closeConnection();
 				break;
 			}
 		}
 		
 		private function onUpdateChannelInfo(e:Event):void 
 		{
-			if (!mainData.electroServer)
+			if (mainData.isFirstJoinLobby)
 			{
 				var channelObject:Object = mainData.chooseChannelData.channelInfoArray[0];
+				WindowLayer.getInstance().openLoadingWindow();
 				mainCommand.electroServerCommand.startConnect("", channelObject[DataFieldMauBinh.CHANNEL_NUM]);
 				channelInfoTxt.text = mainData.gameName + " - " + channelObject[DataFieldMauBinh.CHANNEL_NAME];
 				mainData.playingData.gameRoomData.channelName = channelObject[DataFieldMauBinh.CHANNEL_NAME];
 			}
 			
-			if (isFirstJoinLobby)
+			if (mainData.isFirstJoinLobby)
 			{
-				var randomIndex:int = Math.floor(Math.random() * 2);
-				if (mainData.chooseChannelData.myInfo.sex == 'M')
+				switch (mainData.gameType) 
 				{
-					switch (randomIndex) 
-					{
-						case 0:
-							SoundManager.getInstance().playSound(SoundLibMauBinh.LOBBY_SOUND_MALE_1);
-						break;
-						case 1:
-							SoundManager.getInstance().playSound(SoundLibMauBinh.LOBBY_SOUND_MALE_2);
-						break;
-						default:
-					}
-				}
-				else
-				{
-					switch (randomIndex) 
-					{
-						case 0:
-							SoundManager.getInstance().playSound(SoundLibMauBinh.LOBBY_SOUND_FEMALE_1);
-						break;
-						case 1:
-							SoundManager.getInstance().playSound(SoundLibMauBinh.LOBBY_SOUND_FEMALE_2);
-						break;
-						default:
-					}
+					case MainData.MAUBINH:
+						SoundManager.getInstance().soundManagerMauBinh.playLobbyPlayerSound(mainData.chooseChannelData.myInfo.sex);
+					break;
+					case MainData.PHOM:
+						SoundManager.getInstance().soundManagerPhom.playLobbyPlayerSound(mainData.chooseChannelData.myInfo.sex);
+					break;
+					default:
 				}
 			}
-			isFirstJoinLobby = false;
+			mainData.isFirstJoinLobby = false;
 			
 			for (var i:int = 0; i < channelButtonArray.length; i++) 
 			{
@@ -992,8 +1016,6 @@ package view.screen
 			//userList.useContextMenu = true;
 			
 			userList.userDataList = new Array();
-			
-			addChild(userList);
 		}
 		
 		private function onUserRowClick(e:Event):void 

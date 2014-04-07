@@ -4,19 +4,23 @@ package view.screen
 	import com.google.analytics.AnalyticsTracker;
 	import com.google.analytics.GATracker;
 	import com.gskinner.motion.GTween;
+	import control.electroServerCommand.ElectroServerCommandPhom;
 	import control.MainCommand;
 	import event.Command;
-	import event.DataField;
+	import event.DataFieldPhom;
 	import event.PlayingScreenEvent;
 	import flash.display.MovieClip;
 	import flash.display.SimpleButton;
 	import flash.display.Sprite;
+	import flash.display.StageDisplayState;
+	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.net.SharedObject;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.utils.Timer;
@@ -26,10 +30,12 @@ package view.screen
 	import model.modelField.ModelField;
 	import model.playingData.PlayingData;
 	import model.playingData.PlayingScreenAction;
+	import sound.SoundLibChung;
+	import sound.SoundLibPhom;
+	import sound.SoundManager;
 	import view.button.MyButton;
-	import view.card.Card;
-	import view.card.CardManagerPhom;
 	import view.card.CardPhom;
+	import view.card.CardManagerPhom;
 	import view.contextMenu.MyContextMenu;
 	import view.effectLayer.EffectLayer;
 	import view.effectLayer.TextEffect_1;
@@ -39,7 +45,10 @@ package view.screen
 	import view.window.BaseWindow;
 	import view.window.ConfirmWindow;
 	import view.window.FeedbackWindow;
+	import view.window.InvitePlayWindow;
+	import view.window.OrderCardWindow;
 	import view.window.ResultWindowPhom;
+	import view.window.UserProfileWindow;
 	import view.window.windowLayer.WindowLayer;
 	/**
 	 * ...
@@ -48,13 +57,14 @@ package view.screen
 	public class PlayingScreenPhom extends BaseScreen 
 	{
 		public static const CLOSE_COMPLETE:String = "closeComplete";
+		public static const BACK_TO_CHOOSE_CHANNEL_SCREEN:String = "backToChooseChannelScreen";
 		
 		private var belowUserInfo:PlayerInfoPhom;
 		private var rightUserInfo:PlayerInfoPhom;
 		private var leftUserInfo:PlayerInfoPhom;
 		private var aboveUserInfo:PlayerInfoPhom;
 		
-		private var chatBox:ChatBox;
+		private var chatBox:ChatBoxPhom;
 		
 		private var cardManager:CardManagerPhom;
 		private var allPlayerArray:Array; // Mảng chứa tất cả người chơi
@@ -63,17 +73,16 @@ package view.screen
 		private var roomBet:TextField;
 		private var channelNameAndRoomId:TextField;
 		private var ruleDescription:TextField;
-		private var waitToReady:TextField;
-		private var waitToPlay:TextField;
-		private var waitToStart:TextField;
+		private var waitToPlay:MovieClip;
+		private var waitToStart:MovieClip;
 		
 		private var mainData:MainData = MainData.getInstance();
 		
 		private var readyButton:MyButton;
 		private var startButton:MyButton;
 		private var mainCommand:MainCommand = MainCommand.getInstance();
-		private var electroServerCommand:* = mainCommand.electroServerCommand;
-		private var timerToResetMatch:Timer;
+		private var electroServerCommand:ElectroServerCommandPhom = mainCommand.electroServerCommand;
+		private var timerToShowResultWindow:Timer;
 		private var windowLayer:WindowLayer = WindowLayer.getInstance();
 		private var effectTime:Number = 1;
 		private var jumpIndex:int = 0; // Bước nhẩy để tính khoảng cách chênh lệch giữa position người chơi của server và client
@@ -86,48 +95,84 @@ package view.screen
 		private var pingTime:int = 55;
 		private var myContextMenu:MyContextMenu;
 		
-		private var playingLayer:Sprite;
-		private var chatboxLayer:Sprite;
-		
-		private var potMoneyTxt:TextField;
-		
 		private var autoStartTimeTxt:TextField;
-		private var gaIcon:Sprite;
 		private var isFirstJoin:Boolean;
 		private var timerToAutoStart:Timer;
+		
+		private var settingBoard:MovieClip;
+		private var settingButton:SimpleButton;
+		private var snapShotButton:SimpleButton;
+		private var showIpButton:SimpleButton;
+		private var soundOnButton:SimpleButton;
+		private var soundOffButton:SimpleButton;
+		private var musicOnButton:SimpleButton;
+		private var musicOffButton:SimpleButton;
+		private var orderCardButton:SimpleButton;
+		private var versionTxt:TextField;
+		private var invitePlayButtonArray:Array;
+		
+		private var ipBoard:Sprite;
+		public var autoReady:MovieClip;
+		private var playingLayer:Sprite;
+		private var chatboxLayer:Sprite;
+		private var chatButton:SimpleButton;
 		
 		public function PlayingScreenPhom() 
 		{
 			super();
-			addContent("zPlayingScreen");
+			addContent("zPlayingScreenPhom");
 			createLayer();
+			
+			invitePlayButtonArray = new Array();
+			invitePlayButtonArray.push(content["invitePlayButton1"]);
+			invitePlayButtonArray.push(content["invitePlayButton2"]);
+			invitePlayButtonArray.push(content["invitePlayButton3"]);
+			for (var i:int = 0; i < 3; i++) 
+			{
+				invitePlayButtonArray[i].addEventListener(MouseEvent.CLICK, onInvitePlayButtonClick);
+			}
+			
+			versionTxt = content["versionTxt"];
+			versionTxt.text = "10h20 - 04.04.2014";
+			setupButton();
 			setupTextField();
 			hidePosition();
 			createVariable();
 			mainData.playingData.addEventListener(PlayingData.UPDATE_PLAYING_SCREEN, onUpdatePlayingScreen);
-			chatBox = new ChatBox();
-			waitToPlay = content["waitToPlay"];
-			waitToReady = content["waitToReady"];
-			waitToStart = content["waitToStart"];
-			waitToPlay.selectable = waitToReady.selectable = waitToStart.selectable = false;
-			waitToReady.visible = waitToPlay.visible = waitToStart.visible = false;
-			chatboxLayer.addChild(chatBox);
+			chatBox = new ChatBoxPhom();
 			chatBox.visible = false;
-			
-			autoStartTimeTxt = content["autoStartTimeTxt"];
-			autoStartTimeTxt.text = '';
-			autoStartTimeTxt.visible = false;
-			gaIcon = content["gaIcon"];
-			gaIcon.visible = false;
+			chatBox.addEventListener(ChatBox.HAVE_CHAT, onHaveChat);
+			chatBox.addEventListener(ChatBox.BACK_BUTTON_CLICK, onChatBoxBackButtonClick);
+			waitToPlay = content["waitToPlay"];
+			waitToStart = content["waitToStart"];
+			waitToPlay.visible = waitToStart.visible = false;
+			chatboxLayer.addChild(chatBox);
 			
 			timerToPing = new Timer(pingTime * 1000);
 			timerToPing.addEventListener(TimerEvent.TIMER, onPingToServer);
 			timerToPing.start();
 			
+			autoStartTimeTxt = content["autoStartTimeTxt"];
+			autoStartTimeTxt.text = '';
+			autoStartTimeTxt.visible = false;
+			
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			
-			zPlayingScreen(content).chatButton.addEventListener(MouseEvent.CLICK, onChatIconClick);
+			autoReady = content["autoReady"];
+			autoReady.stop();
+			autoReady.buttonMode = true;
+			autoReady.addEventListener(MouseEvent.CLICK, onAutoReadyClick);
+			
+			ipBoard = content["ipBoard"];
+			ipBoard.addEventListener(MouseEvent.CLICK, onIpBoardClick);
+			ipBoard.visible = false;
+		}
+		
+		private function onChatBoxBackButtonClick(e:Event):void 
+		{
+			chatBox.visible = false;
+			chatButton.visible = true;
 		}
 		
 		private function createLayer():void 
@@ -138,60 +183,249 @@ package view.screen
 			addChild(chatboxLayer);
 		}
 		
-		private function onChatIconClick(e:MouseEvent):void 
+		private function onInvitePlayButtonClick(e:MouseEvent):void 
+		{
+			var invitePlayWindow:InvitePlayWindow = new InvitePlayWindow();
+			windowLayer.openWindow(invitePlayWindow);
+		}
+		
+		private function onHaveChat(e:Event):void 
+		{
+			electroServerCommand.sendPublicChat(mainData.chooseChannelData.myInfo.name, chatBox.currentText);
+		}
+		
+		private function onAutoReadyClick(e:MouseEvent):void 
+		{
+			if (autoReady.currentFrame == 1)
+			{
+				autoReady.gotoAndStop(2);
+				mainData.isAutoReady = true;
+			}
+			else
+			{
+				autoReady.gotoAndStop(1);
+				mainData.isAutoReady = false;
+			}
+		}
+		
+		private function onIpBoardClick(e:MouseEvent):void 
+		{
+			e.stopImmediatePropagation();
+		}
+		
+		private var timerToHideIpBoard:Timer;
+		private function showIpBoard():void
+		{
+			if (timerToHideIpBoard)
+			{
+				timerToHideIpBoard.removeEventListener(TimerEvent.TIMER_COMPLETE, onHideIpBoard);
+				timerToHideIpBoard.stop();
+			}
+			
+			var ipIndex:int = 0;
+			var i:int;
+			
+			for (i = 0; i < mainData.maxPlayer; i++) 
+			{
+				TextField(ipBoard["displayNameTxt" + String(ipIndex + 1)]).text = '';
+				TextField(ipBoard["ipTxt" + String(ipIndex + 1)]).text = '';
+			}
+			
+			for (i = 0; i < allPlayerArray.length; i++) 
+			{
+				if (allPlayerArray[i])
+				{
+					TextField(ipBoard["displayNameTxt" + String(ipIndex + 1)]).text = PlayerInfoPhom(allPlayerArray[i]).displayName;
+					TextField(ipBoard["ipTxt" + String(ipIndex + 1)]).text = PlayerInfoPhom(allPlayerArray[i]).ip;
+					ipIndex++;
+				}
+			}
+			
+			playingLayer.addChild(ipBoard);
+			ipBoard.visible = true;
+			settingBoard.visible = false;
+		}
+		
+		private function onHideIpBoard(e:TimerEvent):void 
+		{
+			ipBoard.visible = false;
+		}
+		
+		private function checkConflictIp():void 
+		{
+			var isConflictIp:Boolean;
+			for (var i:int = 0; i < allPlayerArray.length; i++) 
+			{
+				for (var j:int = 0; j < allPlayerArray.length; j++) 
+				{
+					if (allPlayerArray[i] != allPlayerArray[j])
+					{
+						if (allPlayerArray[i] && allPlayerArray[j])
+						{
+							if (PlayerInfoPhom(allPlayerArray[i]).ip == PlayerInfoPhom(allPlayerArray[j]).ip)
+								isConflictIp = true;
+						}
+					}
+				}
+			}
+			if (isConflictIp)
+			{
+				showIpBoard();
+				timerToHideIpBoard = new Timer(3000, 1);
+				timerToHideIpBoard.addEventListener(TimerEvent.TIMER_COMPLETE, onHideIpBoard);
+				timerToHideIpBoard.start();
+			}
+		}
+		
+		private var sharedObject:SharedObject;
+		private var timerToCheckTime:Timer;
+		private var startPlayer:PlayerInfoPhom;
+		private var stealedPlayerObject:Object;
+		private var stealPlayerObject:Object;
+		private var playerCompensateAll:PlayerInfoPhom;
+		private var playerWin:PlayerInfoPhom;
+		private function setupButton():void 
+		{
+			chatButton = content["chatButton"];
+			settingBoard = content["settingBoard"];
+			settingBoard.visible = false;
+			settingButton = content["settingButton"];
+			snapShotButton = settingBoard["snapShotButton"];
+			showIpButton = settingBoard["showIpButton"];
+			soundOnButton = settingBoard["soundOnButton"];
+			soundOffButton = settingBoard["soundOffButton"];
+			musicOnButton = settingBoard["musicOnButton"];
+			musicOffButton = settingBoard["musicOffButton"];
+			orderCardButton = content["orderCardButton"];
+			
+			sharedObject = SharedObject.getLocal("soundConfig");
+			
+			musicOnButton.visible = false;
+			musicOffButton.visible = true;
+			soundOnButton.visible = false;
+			soundOffButton.visible = true;
+			if (sharedObject.data.isSoundOff)
+			{
+				soundOnButton.visible = true;
+				soundOffButton.visible = false;
+			}
+			if (sharedObject.data.isMusicOff)
+			{
+				musicOnButton.visible = true;
+				musicOffButton.visible = false;
+			}
+			
+			settingBoard.addEventListener(MouseEvent.CLICK, onSettingBoardClick);
+			settingButton.addEventListener(MouseEvent.CLICK, onSettingButtonClick);
+			snapShotButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
+			showIpButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
+			soundOnButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
+			soundOffButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
+			musicOnButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
+			musicOffButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
+			orderCardButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
+			chatButton.addEventListener(MouseEvent.CLICK, onChatButtonClick);
+		}
+		
+		private function onChatButtonClick(e:MouseEvent):void 
 		{
 			chatBox.visible = true;
+			chatButton.visible = false;
+		}
+		
+		private function onSettingBoardClick(e:MouseEvent):void 
+		{
+			e.stopImmediatePropagation();
+		}
+		
+		private function onSettingButtonClick(e:MouseEvent):void 
+		{
+			settingBoard.visible = !settingBoard.visible;
+			if (settingBoard.visible)
+				ipBoard.visible = false;
+			e.stopImmediatePropagation();
+		}
+		
+		private function onMenuButtonClick(e:MouseEvent):void 
+		{
+			e.stopImmediatePropagation();
+			switch (e.currentTarget) 
+			{
+				case soundOnButton:
+					SoundManager.getInstance().isSoundOn = true;
+					sharedObject.setProperty("isSoundOff", !SoundManager.getInstance().isSoundOn);
+					soundOnButton.visible = false;
+					soundOffButton.visible = true;
+				break;
+				case soundOffButton:
+					SoundManager.getInstance().isSoundOn = false;
+					sharedObject.setProperty("isSoundOff", !SoundManager.getInstance().isSoundOn);
+					soundOnButton.visible = true;
+					soundOffButton.visible = false;
+				break;
+				case musicOnButton:
+					SoundManager.getInstance().isMusicOn = true;
+					sharedObject.setProperty("isMusicOff", !SoundManager.getInstance().isMusicOn);
+					musicOnButton.visible = false;
+					musicOffButton.visible = true;
+				break;
+				case musicOffButton:
+					SoundManager.getInstance().isMusicOn = false;
+					sharedObject.setProperty("isMusicOff", !SoundManager.getInstance().isMusicOn);
+					musicOnButton.visible = true;
+					musicOffButton.visible = false;
+				break;
+				case showIpButton:
+					if (ipBoard.visible)
+						ipBoard.visible = false;
+					else
+						showIpBoard();
+					e.stopImmediatePropagation();
+				break;
+				case snapShotButton:
+					
+				break;
+				case orderCardButton:
+					if (belowUserInfo.isRoomMaster)
+					{
+						var orderCardWindow:OrderCardWindow = new OrderCardWindow();
+						windowLayer.openWindow(orderCardWindow);
+					}
+				break;
+				default:
+			}
 		}
 		
 		private function onFriendConfirmAddFriendInvite(e:Event):void 
 		{
-			var alertWindow:AlertWindow = new AlertWindow();
 			
-			if (mainData.responseAddFriendData[DataField.CONFIRM])
-			{
-				alertWindow.setNotice(mainData.responseAddFriendData[DataField.DISPLAY_NAME] + " " + mainData.init.gameDescription.lobbyRoomScreen.acceptAddFriend);
-				if (mainData.chooseChannelData.myInfo.siteId == 2)
-				{
-					alertWindow.addFeedButton();
-					alertWindow.feedName = DataField.ACCEPT_FRIEND;
-					var option:Object = new Object();
-					option[DataField.FRIEND_NAME] = mainData.responseAddFriendData[DataField.DISPLAY_NAME];
-					alertWindow.feedOption = option;
-				}
-			}
-			else
-			{
-				alertWindow.setNotice(mainData.responseAddFriendData[DataField.DISPLAY_NAME] + " " + mainData.init.gameDescription.lobbyRoomScreen.rejectAddFriend);
-			}
-			
-			windowLayer.openWindow(alertWindow);
 		}
 		
 		private function onConfirmFriendRequest(e:Event):void 
 		{
-			var invitedNameArray:Array = [mainData.confirmFriendRequestData[DataField.FRIEND_ID]];
+			var invitedNameArray:Array = [mainData.confirmFriendRequestData[DataFieldPhom.FRIEND_ID]];
 			var mess:String = "";
 			var esObject:EsObject = new EsObject();
-			esObject.setString(DataField.DISPLAY_NAME, mainData.chooseChannelData.myInfo.name);
-			esObject.setString(DataField.USER_NAME, mainData.chooseChannelData.myInfo.uId);
-			esObject.setString(DataField.MESSAGE, mess);
+			esObject.setString(DataFieldPhom.DISPLAY_NAME, mainData.chooseChannelData.myInfo.name);
+			esObject.setString(DataFieldPhom.USER_NAME, mainData.chooseChannelData.myInfo.uId);
+			esObject.setString(DataFieldPhom.MESSAGE, mess);
 			
-			if (mainData.confirmFriendRequestData[DataField.CONFIRM])
+			if (mainData.confirmFriendRequestData[DataFieldPhom.CONFIRM])
 			{
 				if (electroServerCommand.coreAPI.myData.friendList)
 				{
-					electroServerCommand.coreAPI.myData.friendList[mainData.confirmFriendRequestData[DataField.FRIEND_ID]] = new Object();
-					if (electroServerCommand.coreAPI.myData.userList[mainData.confirmFriendRequestData[DataField.FRIEND_ID]])
+					electroServerCommand.coreAPI.myData.friendList[mainData.confirmFriendRequestData[DataFieldPhom.FRIEND_ID]] = new Object();
+					if (electroServerCommand.coreAPI.myData.userList[mainData.confirmFriendRequestData[DataFieldPhom.FRIEND_ID]])
 					{
-						var displayName:String = electroServerCommand.coreAPI.myData.userList[mainData.confirmFriendRequestData[DataField.FRIEND_ID]][DataField.USER_INFO][DataField.DISPLAY_NAME];
-						electroServerCommand.coreAPI.myData.friendList[mainData.confirmFriendRequestData[DataField.FRIEND_ID]][DataField.DISPLAY_NAME] = displayName;
+						var displayName:String = electroServerCommand.coreAPI.myData.userList[mainData.confirmFriendRequestData[DataFieldPhom.FRIEND_ID]][DataFieldPhom.USER_INFO][DataFieldPhom.DISPLAY_NAME];
+						electroServerCommand.coreAPI.myData.friendList[mainData.confirmFriendRequestData[DataFieldPhom.FRIEND_ID]][DataFieldPhom.DISPLAY_NAME] = displayName;
 					}
 				}
-				esObject.setBoolean(DataField.CONFIRM, true);
+				esObject.setBoolean(DataFieldPhom.CONFIRM, true);
 			}
 			else
 			{
-				esObject.setBoolean(DataField.CONFIRM, false);
+				esObject.setBoolean(DataFieldPhom.CONFIRM, false);
 			}
 			
 			electroServerCommand.sendPrivateMessage(invitedNameArray, Command.CONFIRM_ADD_FRIEND_INVITE, esObject);
@@ -200,7 +434,7 @@ package view.screen
 		private function onInviteAddFriend(e:Event):void 
 		{
 			var inviteAddFriendWindow:ConfirmWindow = new ConfirmWindow();
-			inviteAddFriendWindow.setNotice(mainData.inviteAddFriendData[DataField.DISPLAY_NAME] + " " + mainData.init.gameDescription.lobbyRoomScreen.addFriendSentence);
+			inviteAddFriendWindow.setNotice(mainData.inviteAddFriendData[DataFieldPhom.DISPLAY_NAME] + " " + mainData.init.gameDescription.lobbyRoomScreen.addFriendSentence);
 			inviteAddFriendWindow.addEventListener(ConfirmWindow.CONFIRM, onConfirmInvite);
 			inviteAddFriendWindow.addEventListener(ConfirmWindow.REJECT, onRejectInvite);
 			windowLayer.openWindow(inviteAddFriendWindow);
@@ -208,129 +442,70 @@ package view.screen
 		
 		private function onConfirmInvite(e:Event):void 
 		{
-			electroServerCommand.confirmInviteAddFriend(mainData.inviteAddFriendData[DataField.USER_NAME], true, DataField.IN_GAME_ROOM);
+			electroServerCommand.confirmInviteAddFriend(mainData.inviteAddFriendData[DataFieldPhom.USER_NAME], true, DataFieldPhom.IN_GAME_ROOM);
 		}
 		
 		private function onRejectInvite(e:Event):void 
 		{
-			electroServerCommand.confirmInviteAddFriend(mainData.inviteAddFriendData[DataField.USER_NAME], false, DataField.IN_GAME_ROOM);
+			electroServerCommand.confirmInviteAddFriend(mainData.inviteAddFriendData[DataFieldPhom.USER_NAME], false, DataFieldPhom.IN_GAME_ROOM);
 		}
 		
 		private function onAddedToStage(e:Event):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			stage.addEventListener(MouseEvent.CLICK, onStageClick);
-			//addPlayer();
-			isFirstJoin = true;
+			mainData.addEventListener(MainData.UPDATE_PUBLIC_CHAT, onUpdatePublicChat);
 			
+			isFirstJoin = true;
+			//addPlayer();
+			
+			checkTime();
+			
+			if (timerToCheckTime)
+			{
+				timerToCheckTime.removeEventListener(TimerEvent.TIMER, onTimerToCheckTime);
+				timerToCheckTime.stop();
+			}
+			timerToCheckTime = new Timer(60000);
+			timerToCheckTime.addEventListener(TimerEvent.TIMER, onTimerToCheckTime);
+			timerToCheckTime.start();
+		}
+		
+		private function onUpdatePublicChat(e:Event):void 
+		{
+			var isMe:Boolean;
+			if (mainData.chooseChannelData.myInfo.uId == mainData.publicChatData.userName)
+				isMe = true;
+			chatBox.addChatSentence(mainData.publicChatData.chatContent, mainData.publicChatData.displayName, isMe);
+		}
+		
+		private function onTimerToCheckTime(e:TimerEvent):void 
+		{
+			if (!stage)
+				return;
+			checkTime();
+		}
+		
+		private function checkTime():void
+		{
 			var currDate:Date = new Date();
 			
 			var H:int = currDate.getHours();
 			
-			if (H >= 6 && H <= 18)
+			if (H >= 6 && H < 18)
 				MovieClip(content["background"]).gotoAndStop("day");
 			else
 				MovieClip(content["background"]).gotoAndStop("night");
 		}
 		
-		public function addPlayer():void // add người chơi - tùy thuộc số lượng
-		{
-			addOnePlayer(0);
-			addOnePlayer(1);
-			addOnePlayer(3);
-			addOnePlayer(2);
-			
-			belowUserInfo.cardInfoArray = [1, 2, 3, 13, 11, 12, 11, 17, 18];
-			
-			leftUserInfo.cardInfoArray = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-			rightUserInfo.cardInfoArray = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-			aboveUserInfo.cardInfoArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-			
-			addCardManager();
-			playingPlayerArray = new Array();
-			for (var i:int = 0; i < allPlayerArray.length; i++) 
-			{
-				if (allPlayerArray[i])
-					playingPlayerArray.push(allPlayerArray[i]);
-			}
-			cardManager.playerArray = playingPlayerArray;
-			//cardManager.divideCard();
-			belowUserInfo.setMyTurn(PlayerInfoPhom.PLAY_CARD);
-			
-			var cardInfo:Object = new Object();
-			cardInfo[DataField.NUM_CARD] = 7;
-			cardInfo[DataField.STOLE_CARDS] = [1, 2, 3];
-			cardInfo[DataField.DISCARDED_CARDS] = [4, 5, 6, 7];
-			cardInfo[DataField.LAYING_CARDS] = [[40, 41, 42], [44, 45, 46], [43, 44, 45, 46]];
-			cardManager.addAllCard(rightUserInfo, cardInfo);
-			
-			cardInfo = new Object();
-			cardInfo[DataField.NUM_CARD] = 7;
-			cardInfo[DataField.STOLE_CARDS] = [1, 2, 3];
-			cardInfo[DataField.DISCARDED_CARDS] = [4, 5, 6, 7];
-			cardInfo[DataField.LAYING_CARDS] = [[40, 41, 42], [44, 45, 46], [44, 45, 46]];
-			cardManager.addAllCard(leftUserInfo, cardInfo);
-			
-			cardInfo = new Object();
-			cardInfo[DataField.NUM_CARD] = 7;
-			cardInfo[DataField.STOLE_CARDS] = [1, 2, 3];
-			cardInfo[DataField.DISCARDED_CARDS] = [4, 5, 6, 7];
-			cardInfo[DataField.LAYING_CARDS] = [[40, 41, 42], [44, 45, 46], [44, 45, 46]];
-			cardManager.addAllCard(aboveUserInfo, cardInfo);
-			
-			cardInfo = new Object();
-			cardInfo[DataField.NUM_CARD] = 7;
-			cardInfo[DataField.STOLE_CARDS] = [1, 2, 3];
-			cardInfo[DataField.DISCARDED_CARDS] = [4, 5, 6, 7];
-			cardInfo[DataField.LAYING_CARDS] = [[40, 41, 42], [44, 45, 46], [44, 45, 46]];
-			cardManager.addAllCard(belowUserInfo, cardInfo);
-			
-			for (i = 0; i < belowUserInfo.cardInfoArray.length; i++) 
-			{
-				var card:CardPhom;
-				card = new CardPhom(belowUserInfo.unLeaveCardSize);
-				card.id = belowUserInfo.cardInfoArray[i];
-				card.rotation = belowUserInfo.unLeaveCardRotation;
-				
-				var tempPoint:Point = new Point();
-				var tempObject:Object = belowUserInfo.getUnUsePosition(Card.UN_LEAVE_CARD);
-				tempObject["isUsed"] = true;
-				tempPoint.x = tempObject.x;
-				tempPoint.y = tempObject.y;
-				tempPoint.x = belowUserInfo.localToGlobal(tempPoint).x;
-				tempPoint.y = belowUserInfo.localToGlobal(tempPoint).y;
-			
-				var point:Point = tempPoint;
-				point = cardManager.globalToLocal(point);
-				card.x = point.x;
-				card.y = point.y;
-				cardManager.addChild(card);
-				card.simpleOpen();
-				belowUserInfo.pushNewUnLeaveCard(card);
-			}
-			
-			belowUserInfo.playingPlayerArray = new Array();
-			belowUserInfo.playingPlayerArray.push(belowUserInfo);
-			belowUserInfo.playingPlayerArray.push(rightUserInfo);
-			belowUserInfo.playingPlayerArray.push(leftUserInfo);
-			belowUserInfo.userName = "aaa";
-			isPlaying = true;
-			//cardManager.sendCard(belowUserInfo, rightUserInfo, 17, 2);
-			//var tempArray:Array = belowUserInfo.checkSendCard(belowUserInfo.unLeaveCards);
-			
-			/*var moneyEffectPosition:Point;
-			var resultEffectPosition:Point;
-			for (i = 0; i < playingPlayerArray.length; i++) 
-			{
-				moneyEffectPosition = PlayerInfo(playingPlayerArray[i]).localToGlobal(PlayerInfo(playingPlayerArray[i]).moneyEffectPosition);
-				resultEffectPosition = PlayerInfo(playingPlayerArray[i]).localToGlobal(PlayerInfo(playingPlayerArray[i]).resultEffectPosition);
-				effectLayer.addEffect(EffectLayer.MONEY_EFFECT, moneyEffectPosition, 100, 10000);
-				effectLayer.addEffect(EffectLayer.NO_DECK_EFFECT, resultEffectPosition, 100);
-			}*/
-		}
-		
 		private function onRemovedFromStage(e:Event):void 
 		{
+			if (timerToCheckTime)
+			{
+				timerToCheckTime.removeEventListener(TimerEvent.TIMER, onTimerToCheckTime);
+				timerToCheckTime.stop();
+			}
+			
 			stage.removeEventListener(MouseEvent.CLICK, onStageClick);
 			removeEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 			if (timerToPing)
@@ -357,7 +532,6 @@ package view.screen
 			mainData.addEventListener(MainData.INVITE_ADD_FRIEND, onInviteAddFriend); // Lời mời kết bạn
 			mainData.addEventListener(MainData.CONFIRM_FRIEND_REQUEST, onConfirmFriendRequest);
 			mainData.addEventListener(MainData.FRIEND_CONFIRM_ADD_FRIEND_INVITE, onFriendConfirmAddFriendInvite);
-			mainData.addEventListener(MainData.UPDATE_PUBLIC_CHAT, onUpdatePublicChat);
 			//alpha = 0;
 			//var tempTween1:GTween = new GTween(this, effectTime, { alpha:1 } );
 		}
@@ -368,24 +542,10 @@ package view.screen
 			mainData.removeEventListener(MainData.CONFIRM_FRIEND_REQUEST, onConfirmFriendRequest);
 			mainData.removeEventListener(MainData.FRIEND_CONFIRM_ADD_FRIEND_INVITE, onFriendConfirmAddFriendInvite);
 			mainData.removeEventListener(MainData.UPDATE_PUBLIC_CHAT, onUpdatePublicChat);
-			//var tempTween1:GTween = new GTween(this, effectTime, { alpha:0 } );
+			var tempTween1:GTween = new GTween(this, effectTime, { alpha:0 } );
 			//tempTween1.addEventListener(Event.COMPLETE, closeComplete);
+			
 			dispatchEvent(new Event(CLOSE_COMPLETE));
-		}
-		
-		private function onUpdatePublicChat(e:Event):void 
-		{
-			for (var i:int = 0; i < allPlayerArray.length; i++) 
-			{
-				if (allPlayerArray[i])
-				{
-					if (allPlayerArray[i].userName == mainData.publicChatData.userName)
-					{
-						PlayerInfoPhom(allPlayerArray[i]).addChatSentence(mainData.publicChatData.chatContent);
-						return;
-					}
-				}
-			}
 		}
 		
 		private function closeComplete(e:Event):void 
@@ -406,9 +566,9 @@ package view.screen
 			content["rightUserInfoPosition"].visible = false;
 			content["aboveUserInfoPosition"].visible = false;
 			content["cardManagerPosition"].visible = false;
+			content["startButtonPosition"].visible = false;
 			content["readyButtonPosition"].visible = false;
 			content["chatBoxPosition"].visible = false;
-			content["leaveCardPoint"].visible = false;
 		}
 		
 		private function onUpdatePlayingScreen(e:PlayingScreenEvent):void 
@@ -478,7 +638,9 @@ package view.screen
 		
 		private function listenHaveUserJoineRoom(data:Object):void 
 		{
-			chatBox.addChatSentence(data[DataField.DISPLAY_NAME] + " " + mainData.init.gameDescription.playingScreen.userJoinRoom, "Thông báo");
+			SoundManager.getInstance().soundManagerPhom.playOtherJoinGamePlayerSound(data[DataFieldPhom.SEX]);
+			
+			chatBox.addChatSentence(data[DataFieldPhom.DISPLAY_NAME] + " " + mainData.init.gameDescription.playingScreen.userJoinRoom, "Thông báo");
 			var indexEmpty:int;
 			indexEmpty = allPlayerArray.length;
 			for (var i:int = 0; i < allPlayerArray.length; i++) 
@@ -496,7 +658,7 @@ package view.screen
 			if (indexEmpty < 0)
 				indexEmpty += mainData.maxPlayer;
 			addOnePlayer(indexEmpty);
-			data[DataField.POSITION] = indexEmpty;
+			data[DataFieldPhom.POSITION] = indexEmpty;
 			addPersonalInfo(data);
 			
 			var countPlayer:int = 0;
@@ -509,22 +671,26 @@ package view.screen
 			{
 				removeCardManager();
 				waitToPlay.visible = true;
-				waitToReady.visible = false;
 			}
+			
+			checkConflictIp();
 		}
 		
 		private function listenHaveUserOutRoom(data:Object):void 
 		{
 			var i:int;
 			var j:int;
+			var outPlayer:PlayerInfoPhom;
 			if (isPlaying)
 			{
+				SoundManager.getInstance().playSound(SoundLibChung.GIVE_UP_SOUND);
 				for (i = 0; i < allPlayerArray.length; i++) 
 				{
 					if (allPlayerArray[i])
 					{
-						if (PlayerInfoPhom(allPlayerArray[i]).userName == data[DataField.USER_NAME])
+						if (PlayerInfoPhom(allPlayerArray[i]).userName == data[DataFieldPhom.USER_NAME])
 						{
+							outPlayer = allPlayerArray[i];
 							chatBox.addChatSentence(PlayerInfoPhom(allPlayerArray[i]).displayName + " " + mainData.init.gameDescription.playingScreen.userLeaveRoom, "Thông báo");
 							for (j = 0; j < playingPlayerArray.length; j++)
 							{
@@ -543,7 +709,7 @@ package view.screen
 									}
 									else if (PlayerInfoPhom(playingPlayerArray[myIndex]).isPlaying)
 									{
-										PlayerInfoPhom(playingPlayerArray[myIndex]).countTime(mainData.init.playTime.playCardTimePhom);
+										PlayerInfoPhom(playingPlayerArray[myIndex]).countTime(mainData.init.playTime.playCardTime);
 									}
 								}
 								// Nếu mình đang có turn mà thằng trc mình thoát thì đề phòng trường hợp mình đang có thể ăn đc con bài thằng kia vừa đánh
@@ -569,8 +735,9 @@ package view.screen
 				{
 					if (allPlayerArray[i])
 					{
-						if (PlayerInfoPhom(allPlayerArray[i]).userName == data[DataField.USER_NAME])
+						if (PlayerInfoPhom(allPlayerArray[i]).userName == data[DataFieldPhom.USER_NAME])
 						{
+							outPlayer = allPlayerArray[i];
 							chatBox.addChatSentence(PlayerInfoPhom(allPlayerArray[i]).displayName + " " + mainData.init.gameDescription.playingScreen.userLeaveRoom, "Thông báo");
 							removeOnePlayer(i);
 						}
@@ -585,8 +752,8 @@ package view.screen
 				{
 					waitToPlay.visible = false;
 					waitToStart.visible = false;
-					waitToReady.visible = true;
 					belowUserInfo.isReadyPlay = false;
+					//isHaveUserReady = false;
 					hideReadyButton();
 				}
 				if (belowUserInfo.isRoomMaster)
@@ -604,41 +771,37 @@ package view.screen
 						waitToPlay.visible = true;
 				}
 			}
+			
+			SoundManager.getInstance().soundManagerPhom.playOtherExitGamePlayerSound(outPlayer.sex);
 		}
 		
 		private function listenJoinRoom(data:Object):void 
 		{
-			roomBet.text = PlayingLogic.format(data[DataField.ROOM_BET], 1);
-			roomBet.selectable = ruleDescription.selectable = false;
-			roomBet.mouseEnabled = ruleDescription.mouseEnabled = false;
+			SoundManager.getInstance().soundManagerPhom.playOtherJoinGamePlayerSound(mainData.chooseChannelData.myInfo.sex);
 			
-			mainData.playingData.gameRoomData.roomBet = data[DataField.ROOM_BET];
-			mainData.playingData.gameRoomData.roomName = data[DataField.ROOM_NAME];
-			mainData.playingData.gameRoomData.isSendCard = data[DataField.IS_SEND_CARD];
+			var channelName:String = mainData.playingData.gameRoomData.channelName;
+			var roomId:String = String(mainData.playingData.gameRoomData.roomId);
+			var roomBet:String = PlayingLogic.format(data[DataFieldPhom.ROOM_BET], 1);
+			ruleDescription.text = mainData.gameName + " - " + channelName + " - Bàn " + roomId + " - Cược " + roomBet + " G";
 			
-			if (data[DataField.IS_SEND_CARD])
+			mainData.playingData.gameRoomData.roomBet = data[DataFieldPhom.ROOM_BET];
+			mainData.playingData.gameRoomData.roomName = data[DataFieldPhom.ROOM_NAME];
+			mainData.playingData.gameRoomData.isSendCard = data[DataFieldPhom.IS_SEND_CARD];
+			
+			if (data[DataFieldPhom.IS_SEND_CARD])
 				var sendCardRule:String = mainData.init.gameDescription.playingScreen.sendCardRule;
 			else
 				sendCardRule = mainData.init.gameDescription.playingScreen.notSendCardRule;
 				
-			if (data[DataField.IS_GA])
+			if (data[DataFieldPhom.IS_GA])
 				var gaRule:String = mainData.init.gameDescription.playingScreen.gaRule;
 			else
 				gaRule = mainData.init.gameDescription.playingScreen.notGaRule;
 				
-			gaIcon.visible = data[DataField.IS_GA];
-			mainData.isPhomGa = data[DataField.IS_GA];
-				
-			ruleDescription.text = sendCardRule + " - " + gaRule;
-				
-			if (data[DataField.IS_GA])
-			{
-				potMoneyTxt.text = PlayingLogic.format(data[DataField.POT], 1) + " - " + data[DataField.POT_LEVEL];
-				mainData.gaData = data;
-			}
+			mainData.isPhomGa = data[DataFieldPhom.IS_GA];
 			
 			var i:int;
-			var userList:Array = data[DataField.USER_LIST] as Array;
+			var userList:Array = data[DataFieldPhom.USER_LIST] as Array;
 			
 			// sắp xếp lại các position
 			reArrangePositions(userList);
@@ -646,7 +809,7 @@ package view.screen
 			// add người chơi
 			for (i = 0; i < userList.length; i++) 
 			{
-				addOnePlayer(userList[i][DataField.POSITION]);
+				addOnePlayer(userList[i][DataFieldPhom.POSITION]);
 			}
 			
 			// bổ sung thông tin cá nhân
@@ -658,12 +821,10 @@ package view.screen
 			belowUserInfo.setMyTurn(PlayerInfoPhom.DO_NOTHING);
 			belowUserInfo.arrangeCardButton.enable = false;
 			
-			if (data[DataField.GAME_STATE] == DataField.WAITING) // Nếu phòng chơi chưa bắt đầu
+			if (data[DataFieldPhom.GAME_STATE] == DataFieldPhom.WAITING) // Nếu phòng chơi chưa bắt đầu
 			{
 				if (allPlayerArray.length > 1)
 					showReadyButton();
-				else
-					waitToReady.visible = true;
 					//belowUserInfo.showTooltip(mainData.init.gameDescription.playingScreen.waitOtherPlayer);
 			}
 			else // Nếu phòng chơi đang chơi
@@ -673,7 +834,7 @@ package view.screen
 				for (i = 0; i < userList.length; i++) 
 				{
 					// Không phải add cho mình vì minh vừa vào nên chắc chắc là không có bài
-					if(!userList[i][DataField.IS_VIEWER]) 
+					if(!userList[i][DataFieldPhom.IS_VIEWER]) 
 						addCardInfo(userList[i]);
 				}
 			
@@ -696,21 +857,27 @@ package view.screen
 			{
 				if (allPlayerArray[i])
 				{
-					if (PlayerInfoPhom(allPlayerArray[i]).userName == data[DataField.ROOM_MASTER])
+					if (PlayerInfoPhom(allPlayerArray[i]).userName == data[DataFieldPhom.ROOM_MASTER])
 					{
 						PlayerInfoPhom(allPlayerArray[i]).isRoomMaster = true;
+						if (allPlayerArray[i] == belowUserInfo)
+							autoReady.visible = false;
 						i = allPlayerArray.length + 1;
 					}
 				}
 			}
+			
+			checkConflictIp();
 		}
 		
 		private function listenDealCard(data:Object):void 
 		{
 			//isHaveUserReady = false;
+			stealedPlayerObject = new Object();
+			stealPlayerObject = new Object();
 			hideReadyButton();
+			hideStartButton();
 			waitToPlay.visible = false;
-			waitToReady.visible = false;
 			waitToStart.visible = false;
 			var i:int;
 			isPlaying = true;
@@ -719,13 +886,13 @@ package view.screen
 			{
 				if (allPlayerArray[i])
 				{
-					if (PlayerInfoPhom(allPlayerArray[i]).isReadyPlay)
+					if (PlayerInfoPhom(allPlayerArray[i]).isReadyPlay || PlayerInfoPhom(allPlayerArray[i]).isRoomMaster)
 						playingPlayerArray.push(allPlayerArray[i]);
 				}
 			}
 			
 			// tính index của người thắng
-			var winnerIndex:int = data[DataField.WINNER_INDEX];
+			var winnerIndex:int = data[DataFieldPhom.WINNER_INDEX];
 			winnerIndex -= jumpIndex;
 			if (winnerIndex < 0)
 				winnerIndex += mainData.maxPlayer;
@@ -738,7 +905,7 @@ package view.screen
 					
 				if (playingPlayerArray[i] == belowUserInfo) // Gán cho mình dữ liệu các lá bài của server gửi về
 				{							
-					PlayerInfoPhom(playingPlayerArray[i]).cardInfoArray = data[DataField.PLAYER_CARDS] as Array;
+					PlayerInfoPhom(playingPlayerArray[i]).cardInfoArray = data[DataFieldPhom.PLAYER_CARDS] as Array;
 				}
 				else // Nếu không thì chuyền dữ liệu gồm các lá bài úp
 				{
@@ -746,8 +913,9 @@ package view.screen
 					{
 						nextTurn = PlayerInfoPhom(playingPlayerArray[i]).userName;
 						PlayerInfoPhom(playingPlayerArray[i]).isCurrentWinner = true;
-						PlayerInfoPhom(playingPlayerArray[i]).countTime(Number(mainData.init.playTime.playCardTimePhom) + 3);
+						//PlayerInfoPhom(playingPlayerArray[i]).countTime(Number(mainData.init.playTime.playCardTime) + 3);
 						PlayerInfoPhom(playingPlayerArray[i]).cardInfoArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+						startPlayer = playingPlayerArray[i];
 					}
 					else
 					{
@@ -759,43 +927,65 @@ package view.screen
 			addCardManager();
 			cardManager.playerArray = playingPlayerArray;
 			cardManager.divideCard();
-			if (data[DataField.IS_CURRENT_WINNER])
+			if (data[DataFieldPhom.IS_CURRENT_WINNER])
 			{
 				nextTurn = belowUserInfo.userName;
 				belowUserInfo.setMyTurn(PlayerInfoPhom.PLAY_CARD);
 				belowUserInfo.isCurrentWinner = true;
-				belowUserInfo.countTime(Number(mainData.init.playTime.playCardTimePhom) + 3);
+				//belowUserInfo.countTime(Number(mainData.init.playTime.playCardTime) + 3);
+				startPlayer = belowUserInfo;
 			}
 			else
 			{
 				belowUserInfo.isCurrentWinner = false;
 			}
+			
+			var timerToCountTimeForStartPlayer:Timer = new Timer(3000, 1)
+			timerToCountTimeForStartPlayer.addEventListener(TimerEvent.TIMER_COMPLETE, onCountTimeForStartPlayer);
+			timerToCountTimeForStartPlayer.start();
+		}
+		
+		private function onCountTimeForStartPlayer(e:TimerEvent):void 
+		{
+			if (!stage)
+				return;
+			if (startPlayer == belowUserInfo)
+				SoundManager.getInstance().playSound(SoundLibChung.MY_TURN_SOUND);
+			startPlayer.countTime(Number(mainData.init.playTime.playCardTime));
 		}
 		
 		private function listenHaveUserDiscard(data:Object):void 
 		{
 			var i:int;
-			nextTurn = data[DataField.NEXT_TURN];
+			
+			nextTurn = data[DataFieldPhom.NEXT_TURN];
+			var playerDisCard:PlayerInfoPhom;
 			// Nếu người đánh bài không phải là mình thì xử lý đánh bài
-			if (data[DataField.USER_NAME] != belowUserInfo.userName)
+			if (data[DataFieldPhom.USER_NAME] != belowUserInfo.userName)
 			{
 				for (i = 0; i < playingPlayerArray.length; i++) // Tìm user server vừa gửi về để gọi lệnh đánh bài của user đó
 				{
-					if (PlayerInfoPhom(playingPlayerArray[i]).userName == data[DataField.USER_NAME])
+					if (PlayerInfoPhom(playingPlayerArray[i]).userName == data[DataFieldPhom.USER_NAME])
 					{
-						PlayerInfoPhom(playingPlayerArray[i]).addValueForOneUnleavedCard(data[DataField.CARD]);
-						PlayerInfoPhom(playingPlayerArray[i]).playOneCard(data[DataField.CARD]);
+						PlayerInfoPhom(playingPlayerArray[i]).addValueForOneUnleavedCard(data[DataFieldPhom.CARD]);
+						PlayerInfoPhom(playingPlayerArray[i]).playOneCard(data[DataFieldPhom.CARD]);
 						var tempCard:CardPhom = PlayerInfoPhom(playingPlayerArray[i]).leavedCards[PlayerInfoPhom(playingPlayerArray[i]).leavedCards.length - 1];
 						if (playingPlayerArray[i] != belowUserInfo)
 							PlayerInfoPhom(playingPlayerArray[i]).stopCountTime();
+						playerDisCard = playingPlayerArray[i];
 						i = playingPlayerArray.length;
 					}
 				}
 			}
+			else
+			{
+				playerDisCard = belowUserInfo;
+			}
 			
+			var isBolt:Boolean;
 			for (i = 0; i < playingPlayerArray.length; i++)
 			{
-				if (data[DataField.NEXT_TURN] == PlayerInfoPhom(playingPlayerArray[i]).userName) 
+				if (data[DataFieldPhom.NEXT_TURN] == PlayerInfoPhom(playingPlayerArray[i]).userName) 
 				{
 					if (PlayerInfoPhom(playingPlayerArray[i]).isPlaying && PlayerInfoPhom(playingPlayerArray[i]).leavedCards.length < 4) // Nếu đang chơi
 					{
@@ -806,7 +996,13 @@ package view.screen
 						}
 						else
 						{
-							PlayerInfoPhom(playingPlayerArray[i]).countTime(mainData.init.playTime.playCardTimePhom);
+							PlayerInfoPhom(playingPlayerArray[i]).countTime(mainData.init.playTime.playCardTime);
+						}
+						
+						if (PlayerInfoPhom(playingPlayerArray[i]).leavedCards.length == 3)
+						{
+							isBolt = true;
+							SoundManager.getInstance().soundManagerPhom.playBoltSoundPlayerSound(playerDisCard.sex);
 						}
 					}
 					else // Nếu không thì đây là lần đánh cuối cùng của người hạ cuối, và ván chơi đã kết thúc
@@ -816,22 +1012,30 @@ package view.screen
 					}
 				}
 			}
+			
+			if (!isBolt)
+			{
+				if (stealedPlayerObject[playerDisCard.userName] == 2)
+					SoundManager.getInstance().soundManagerPhom.playRiskDiscardPlayerSound(playerDisCard.sex);
+				else
+					SoundManager.getInstance().soundManagerPhom.playDiscardPlayerSound(playerDisCard.sex);
+			}
 		}
 		
 		private function listenGetCardSuccess(data:Object):void 
 		{
-			cardManager.divideOneCard(belowUserInfo, data[DataField.CARD], CardManagerPhom.cardToDesTime / 2);
+			cardManager.divideOneCard(belowUserInfo, data[DataFieldPhom.CARD], CardManagerPhom.cardToDesTime / 2, true);
 			belowUserInfo.checkAutoPlayCard();
 			belowUserInfo.getCardSuccess();
 		}
 		
 		private function listenHaveUserGetCard(data:Object):void // Có người bốc bài
 		{
-			if (data[DataField.USER_NAME] == belowUserInfo.userName)
+			if (data[DataFieldPhom.USER_NAME] == belowUserInfo.userName)
 				return;
 			for (var i:int = 0; i < playingPlayerArray.length; i++) 
 			{
-				if (PlayerInfoPhom(playingPlayerArray[i]).userName == data[DataField.USER_NAME])
+				if (PlayerInfoPhom(playingPlayerArray[i]).userName == data[DataFieldPhom.USER_NAME])
 				{
 					cardManager.divideOneCard(PlayerInfoPhom(playingPlayerArray[i]), CardManagerPhom.cardToDesTime / 2);
 					
@@ -847,22 +1051,22 @@ package view.screen
 		private function listenHaveUserDownCard(data:Object):void // Có người hạ bài
 		{
 			var i:int;
-			var downCardArray:Array = data[DataField.CARDS] as Array;
-			if (data[DataField.USER_NAME] == belowUserInfo.userName) // Nếu người hạ bài là mình
+			var downCardArray:Array = data[DataFieldPhom.CARDS] as Array;
+			if (data[DataFieldPhom.USER_NAME] == belowUserInfo.userName) // Nếu người hạ bài là mình
 			{
-				belowUserInfo.downOneDeck(downCardArray);
+				belowUserInfo.downOneDeck(downCardArray, false, data[DataFieldPhom.INDEX]);
 				return;
 			}
 			belowUserInfo.isHaveUserDownCard = true;
 			for (i = 0; i < playingPlayerArray.length; i++) 
 			{
-				if (PlayerInfoPhom(playingPlayerArray[i]).userName == data[DataField.USER_NAME])
+				if (PlayerInfoPhom(playingPlayerArray[i]).userName == data[DataFieldPhom.USER_NAME])
 				{
 					for (var j:int = 0; j < downCardArray.length; j++) 
 					{
 						PlayerInfoPhom(playingPlayerArray[i]).addValueForOneUnleavedCard(downCardArray[j]);
 					}
-					PlayerInfoPhom(playingPlayerArray[i]).downOneDeck(downCardArray);
+					PlayerInfoPhom(playingPlayerArray[i]).downOneDeck(downCardArray, false, data[DataFieldPhom.INDEX]);
 					i = playingPlayerArray.length;
 				}
 			}
@@ -872,7 +1076,7 @@ package view.screen
 		{
 			for (var i:int = 0; i < playingPlayerArray.length; i++) 
 			{
-				if (data[DataField.USER_NAME] == PlayerInfoPhom(playingPlayerArray[i]).userName)
+				if (data[DataFieldPhom.USER_NAME] == PlayerInfoPhom(playingPlayerArray[i]).userName)
 				{
 					PlayerInfoPhom(playingPlayerArray[i]).downCardFinish();
 					return;
@@ -884,9 +1088,9 @@ package view.screen
 		{
 			for (var i:int = 0; i < playingPlayerArray.length; i++) 
 			{
-				if (data[DataField.USER_NAME] == PlayerInfoPhom(playingPlayerArray[i]).userName)
+				if (data[DataFieldPhom.USER_NAME] == PlayerInfoPhom(playingPlayerArray[i]).userName)
 				{
-					PlayerInfoPhom(playingPlayerArray[i]).countTime(mainData.init.playTime.playCardTimePhom);
+					PlayerInfoPhom(playingPlayerArray[i]).countTime(mainData.init.playTime.playCardTime);
 					return;
 				}
 			}
@@ -899,10 +1103,18 @@ package view.screen
 			{
 				if (allPlayerArray[i])
 				{
-					if (PlayerInfoPhom(allPlayerArray[i]).userName == data[DataField.ROOM_MASTER])
+					if (PlayerInfoPhom(allPlayerArray[i]).userName == data[DataFieldPhom.ROOM_MASTER])
+					{
+						if (allPlayerArray[i] == belowUserInfo)
+							autoReady.visible = false;
 						PlayerInfoPhom(allPlayerArray[i]).isRoomMaster = true;
+					}
 					else
+					{
+						if (allPlayerArray[i] == belowUserInfo)
+							autoReady.visible = true;
 						PlayerInfoPhom(allPlayerArray[i]).isRoomMaster = false;
+					}
 				}
 			}
 			if (!isPlaying)
@@ -910,7 +1122,6 @@ package view.screen
 				if (belowUserInfo.isRoomMaster)
 				{
 					waitToPlay.visible = false;
-					waitToReady.visible = false;
 					waitToStart.visible = false;
 				
 					for (i = 0; i < allPlayerArray.length; i++)
@@ -949,7 +1160,7 @@ package view.screen
 		
 		private function listenRoomMasterKick(data:Object):void // Bị chủ phòng kick
 		{
-			if (data[DataField.USER_NAME] == belowUserInfo.userName) // Nếu người bị kick là mình
+			if (data[DataFieldPhom.USER_NAME] == belowUserInfo.userName) // Nếu người bị kick là mình
 			{
 				var kickOutWindow:AlertWindow = new AlertWindow();
 				kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.roomMasterKick);
@@ -967,11 +1178,11 @@ package view.screen
 			{
 				if (allPlayerArray[i])
 				{
-					if (PlayerInfoPhom(allPlayerArray[i]).userName == data[DataField.USER_NAME])
+					if (PlayerInfoPhom(allPlayerArray[i]).userName == data[DataFieldPhom.USER_NAME])
 					{
-						PlayerInfoPhom(allPlayerArray[i]).updateMoney(data[DataField.MONEY]);
+						PlayerInfoPhom(allPlayerArray[i]).updateMoney(data[DataFieldPhom.MONEY]);
 						
-						if (data[DataField.USER_NAME] == belowUserInfo.userName && !isPlaying)
+						if (data[DataFieldPhom.USER_NAME] == belowUserInfo.userName && !isPlaying)
 						{
 							// Nếu không đủ tiền để chơi ván mới
 							if (mainData.chooseChannelData.myInfo.money < Number(mainData.playingData.gameRoomData.roomBet))
@@ -997,8 +1208,8 @@ package view.screen
 		
 		private function listenUpdatePot(data:Object):void // update tiền trong gà
 		{
-			potMoneyTxt.text = PlayingLogic.format(data[DataField.POT], 1) + " - " + data[DataField.POT_LEVEL];
-			mainData.gaData = data;
+
+			//mainData.gaData = data;
 		}
 		
 		private function listenHaveUserSendCard(data:Object):void // có user hạ bài xong
@@ -1007,30 +1218,34 @@ package view.screen
 			var toPlayer:PlayerInfoPhom;
 			for (var i:int = 0; i < playingPlayerArray.length; i++) 
 			{
-				if (data[DataField.USER_NAME] == PlayerInfoPhom(playingPlayerArray[i]).userName)
+				if (data[DataFieldPhom.USER_NAME] == PlayerInfoPhom(playingPlayerArray[i]).userName)
 					fromPlayer = playingPlayerArray[i];
-				if (data[DataField.PLAYER_DESTINATION] == PlayerInfoPhom(playingPlayerArray[i]).userName)
+				if (data[DataFieldPhom.DESTINATION_USER] == PlayerInfoPhom(playingPlayerArray[i]).userName)
 					toPlayer = playingPlayerArray[i];
 			}
-			if (fromPlayer != belowUserInfo)
+			for (i = 0; i < data[DataFieldPhom.CARD].length; i++)
 			{
-				fromPlayer.addValueForOneUnleavedCard(data[DataField.CARD]);
+				if (fromPlayer != belowUserInfo)
+				{
+					fromPlayer.addValueForOneUnleavedCard(data[DataFieldPhom.CARD][i]);
+				}
+				cardManager.sendCard(fromPlayer, toPlayer, data[DataFieldPhom.CARD][i], data[DataFieldPhom.INDEX]);
 			}
-			cardManager.sendCard(fromPlayer, toPlayer, data[DataField.CARD], data[DataField.INDEX] + 1);
 		}
 		
 		private function listenGameOver(data:Object):void // ván bài kết thúc
 		{
-			var playerList:Array = data[DataField.PLAYER_LIST] as Array;
+			var playerList:Array = data[DataFieldPhom.PLAYER_LIST] as Array;
 			var moneyEffectPosition:Point;
 			var resultEffectPosition:Point;
 			var time:Number;
 			var playerFullDeck:PlayerInfoPhom;
+			playerCompensateAll = null;
 			for (var i:int = 0; i < playerList.length; i++) 
 			{
 				for (var j:int = 0; j < playingPlayerArray.length; j++)
 				{
-					if (playerList[i][DataField.USER_NAME] == PlayerInfoPhom(playingPlayerArray[j]).userName)
+					if (playerList[i][DataFieldPhom.USER_NAME] == PlayerInfoPhom(playingPlayerArray[j]).userName)
 					{
 						PlayerInfoPhom(playingPlayerArray[j]).isPlaying = false;
 						PlayerInfoPhom(playingPlayerArray[j]).stopCountTime();
@@ -1038,50 +1253,65 @@ package view.screen
 						// add effect cộng trừ tiền
 						time = mainData.init.effect.time.moneyEffect;
 						moneyEffectPosition = PlayerInfoPhom(playingPlayerArray[j]).localToGlobal(PlayerInfoPhom(playingPlayerArray[j]).moneyEffectPosition);
-						if (playerList[i][DataField.RESULT_POSITION] != 0)
+						if (playerList[i][DataFieldPhom.RESULT_POSITION] != 0)
 						{
-							//PlayerInfoPhom(playingPlayerArray[j]).updateMoney(playerList[i][DataField.MONEY] * -1);
-							effectLayer.addEffect(EffectLayer.MONEY_EFFECT, moneyEffectPosition, time, playerList[i][DataField.MONEY] * -1);
+							//PlayerInfoPhom(playingPlayerArray[j]).updateMoney(playerList[i][DataFieldPhom.MONEY] * -1);
+							effectLayer.addEffect(EffectLayer.MONEY_EFFECT, moneyEffectPosition, time, playerList[i][DataFieldPhom.MONEY] * -1);
 						}
 						else
 						{
-							//PlayerInfoPhom(playingPlayerArray[j]).updateMoney(playerList[i][DataField.MONEY]);
-							effectLayer.addEffect(EffectLayer.MONEY_EFFECT, moneyEffectPosition, time, playerList[i][DataField.MONEY]);
+							//PlayerInfoPhom(playingPlayerArray[j]).updateMoney(playerList[i][DataFieldPhom.MONEY]);
+							effectLayer.addEffect(EffectLayer.MONEY_EFFECT, moneyEffectPosition, time, playerList[i][DataFieldPhom.MONEY]);
+							playerWin = playingPlayerArray[j];
 						}
 							
 						// add effect kết quả - móm, ù, thắng
 						time = mainData.init.effect.time.resultEffect;
 						resultEffectPosition = PlayerInfoPhom(playingPlayerArray[j]).localToGlobal(PlayerInfoPhom(playingPlayerArray[j]).resultEffectPosition);
 						
-						if (playerList[i][DataField.RESULT_POSITION] == 0) // Về nhất
+						if (playerList[i][DataFieldPhom.RESULT_POSITION] == 0) // Về nhất
 						{
-							if (playerList[i][DataField.POINT] == 0) // Ù
+							if (playerList[i][DataFieldPhom.POINT] == 0) // Ù
 							{
-								playerFullDeck = PlayerInfoPhom(playingPlayerArray[j])
+								playerFullDeck = PlayerInfoPhom(playingPlayerArray[j]);
+								PlayerInfoPhom(playingPlayerArray[j]).setStatus("fullDeck");
+								SoundManager.getInstance().playSound(SoundLibChung.SPECIAL_SOUND);
 								effectLayer.addEffect(EffectLayer.FULL_DECK_EFFECT, resultEffectPosition, time);
 							}
-							else if (playerList[i][DataField.POINT] == -5) // Ù khan
+							else if (playerList[i][DataFieldPhom.POINT] == -5) // Ù khan
 							{
-								playerFullDeck = PlayerInfoPhom(playingPlayerArray[j])
+								playerFullDeck = PlayerInfoPhom(playingPlayerArray[j]);
 								effectLayer.addEffect(EffectLayer.NO_RELATIONSHIP_EFFECT, resultEffectPosition, time);
 							}
 							else
 							{
-								effectLayer.addEffect(EffectLayer.WIN_EFFECT, resultEffectPosition, time); // Thắng
+								//effectLayer.addEffect(EffectLayer.WIN_EFFECT, resultEffectPosition, time); // Thắng
+								PlayerInfoPhom(playingPlayerArray[j]).setStatus("win")
 							}
 						}
 						else // Không về nhất
 						{
-							if(playerList[i][DataField.POINT] == -1) // Móm
-								effectLayer.addEffect(EffectLayer.NO_DECK_EFFECT, resultEffectPosition, time);
-							else if(playerList[i][DataField.POINT] == -2) // Đền
-								effectLayer.addEffect(EffectLayer.COMPENSATE_ALL_EFFECT, resultEffectPosition, time);
+							if (playerList[i][DataFieldPhom.POINT] == -1) // Móm
+							{
+								PlayerInfoPhom(playingPlayerArray[j]).setStatus("noDeck");
+								//effectLayer.addEffect(EffectLayer.NO_DECK_EFFECT, resultEffectPosition, time);
+							}
+							else if (playerList[i][DataFieldPhom.POINT] == -2) // Đền
+							{
+								PlayerInfoPhom(playingPlayerArray[j]).setStatus("compensateAll");
+								playerCompensateAll = PlayerInfoPhom(playingPlayerArray[j]);
+								//effectLayer.addEffect(EffectLayer.COMPENSATE_ALL_EFFECT, resultEffectPosition, time);
+							}
+							else
+							{
+								PlayerInfoPhom(playingPlayerArray[j]).setStatus("lose");
+							}
 						}
 					}
 					
-					if (PlayerInfoPhom(playingPlayerArray[j]).userName == playerList[i][DataField.USER_NAME] && playingPlayerArray[j] != belowUserInfo)
+					if (PlayerInfoPhom(playingPlayerArray[j]).userName == playerList[i][DataFieldPhom.USER_NAME] && playingPlayerArray[j] != belowUserInfo)
 					{
-						var cardArray:Array = playerList[i][DataField.PLAYER_CARDS] as Array;
+						var cardArray:Array = playerList[i][DataFieldPhom.PLAYER_CARDS] as Array;
 						for (var k:int = 0; k < cardArray.length; k++) 
 						{
 							PlayerInfoPhom(playingPlayerArray[j]).addValueForOneUnleavedCard(cardArray[k]);
@@ -1089,6 +1319,26 @@ package view.screen
 						PlayerInfoPhom(playingPlayerArray[j]).openAllCard();
 					}
 				}
+				
+				if (playerFullDeck && !playerCompensateAll)
+				{
+					SoundManager.getInstance().soundManagerPhom.playFullDeckPlayerSound(playerFullDeck.sex);
+				}
+				else if (playerFullDeck && playerCompensateAll)
+				{
+					SoundManager.getInstance().soundManagerPhom.playFullDeckAndCompensateAllPlayerSound(playerFullDeck.sex);
+					
+					var timerToAlertCompensateAll:Timer = new Timer(2000, 1)
+					timerToAlertCompensateAll.addEventListener(TimerEvent.TIMER_COMPLETE, onAlertCompensateAll);
+					timerToAlertCompensateAll.start();
+				}
+			}
+			
+			if (!playerFullDeck)
+			{
+				var timerToAlertWin:Timer = new Timer(mainData.resetMatchTime * 1000, 1)
+				timerToAlertWin.addEventListener(TimerEvent.TIMER_COMPLETE, onAlertWin);
+				timerToAlertWin.start();
 			}
 			
 			if (playerFullDeck) // nếu có người ù giữa ván thì hạ tất cả các phỏm của người đó xuống
@@ -1102,11 +1352,12 @@ package view.screen
 			belowUserInfo.arrangeCardButton.enable = false;
 			
 			resultWindow = new ResultWindowPhom();
+			resultWindow.addEventListener(PlayerInfoPhom.EXIT, onExitButtonClick);
 			resultWindow.setInfo(playerList);
 			
-			timerToResetMatch = new Timer(mainData.resetMatchTime * 1000, 1);
-			timerToResetMatch.addEventListener(TimerEvent.TIMER_COMPLETE, onResetMatch);
-			timerToResetMatch.start();
+			timerToShowResultWindow = new Timer(mainData.resetMatchTime * 1000, 1);
+			timerToShowResultWindow.addEventListener(TimerEvent.TIMER_COMPLETE, onShowResultWindow);
+			timerToShowResultWindow.start();
 			
 			if (cardManager)
 			{
@@ -1114,14 +1365,52 @@ package view.screen
 			}
 		}
 		
-		private function onResetMatch(e:TimerEvent):void 
+		private function onExitButtonClick(e:Event):void 
+		{
+			dispatchEvent(new Event(PlayerInfoPhom.EXIT));
+			windowLayer.isNoCloseAll = true;
+			electroServerCommand.joinLobbyRoom(true);
+		}
+		
+		private function onAlertWin(e:TimerEvent):void 
+		{
+			if (!stage)
+				return;
+				
+			SoundManager.getInstance().soundManagerPhom.playOtherWinPlayerSound(playerWin.sex);
+		}
+		
+		private function onAlertCompensateAll(e:TimerEvent):void 
+		{
+			if (!stage)
+				return;
+				
+			SoundManager.getInstance().soundManagerPhom.playCompensateAllPlayerSound(playerCompensateAll.sex);
+		}
+		
+		private function onShowResultWindow(e:TimerEvent):void 
 		{
 			if (!stage || !resultWindow)
 				return;
 			
+			windowLayer.openWindow(resultWindow);
+			
+			isPlaying = false;
+			
+			var timerToResetMatch:Timer = new Timer(mainData.resetMatchTime * 1000, 1);
+			timerToResetMatch.addEventListener(TimerEvent.TIMER_COMPLETE, onResetMatch);
+			timerToResetMatch.start();
+		}
+		
+		private function onResetMatch(e:TimerEvent):void 
+		{
+			if (!stage)
+				return;
+				
 			// Nếu không đủ tiền để chơi ván mới
 			if (mainData.chooseChannelData.myInfo.money < Number(mainData.playingData.gameRoomData.roomBet))
 			{
+				SoundManager.getInstance().soundManagerPhom.playLoseAllPlayerSound(mainData.chooseChannelData.myInfo.sex);
 				if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
 				{
 					var kickOutWindow:AlertWindow = new AlertWindow();
@@ -1129,17 +1418,25 @@ package view.screen
 					windowLayer.openWindow(kickOutWindow);
 				}
 				
-				dispatchEvent(new Event(PlayerInfoPhom.EXIT));
-				windowLayer.isNoCloseAll = true;
-				electroServerCommand.joinLobbyRoom();
+				/*if (mainData.chooseChannelData.myInfo.money < mainData.playingData.gameRoomData.betting[0])
+				{
+					dispatchEvent(new Event(BACK_TO_CHOOSE_CHANNEL_SCREEN));
+					electroServerCommand.closeConnection();
+				}
+				else
+				{*/
+					dispatchEvent(new Event(PlayerInfoPhom.EXIT));
+					windowLayer.isNoCloseAll = true;
+					electroServerCommand.joinLobbyRoom();
+				/*}*/
 				
 				EffectLayer.getInstance().removeAllEffect();
 				return;
 			}
 			
-			windowLayer.openWindow(resultWindow);
+			SoundManager.getInstance().soundManagerPhom.playStartGamePlayerSound(mainData.chooseChannelData.myInfo.sex);
+			
 			resetMatch();
-			isPlaying = false;
 			
 			if (belowUserInfo.isReadyPlay && !belowUserInfo.isRoomMaster)
 				waitToStart.visible = true;
@@ -1148,6 +1445,7 @@ package view.screen
 			{
 				if (allPlayerArray[i])
 				{
+					PlayerInfoPhom(allPlayerArray[i]).setStatus("");
 					if (PlayerInfoPhom(allPlayerArray[i]).isReadyPlay)
 						PlayerInfoPhom(allPlayerArray[i]).isReadyPlay = true;
 				}
@@ -1194,7 +1492,6 @@ package view.screen
 			{
 				waitToPlay.visible = false;
 				waitToStart.visible = false;
-				waitToReady.visible = true;
 			}
 			removeCardManager();
 		}
@@ -1203,22 +1500,47 @@ package view.screen
 		{
 			var stealedPlayer:PlayerInfoPhom; // Người bị ăn bài
 			var stealPlayer:PlayerInfoPhom; // Người ăn bài
+			
 			var i:int;
 			var effectPosition:Point;
 			var time:Number = mainData.init.effect.time.moneyEffect;
-			var addMoney:Number = data[DataField.MONEY_AFTER_REBET];
-			var lessMoney:Number = data[DataField.MONEY_BEFORE_REBET];
+			var addMoney:Number = data[DataFieldPhom.MONEY_AFTER_REBET];
+			var lessMoney:Number = data[DataFieldPhom.MONEY_BEFORE_REBET];
 				
 			for (i = 0; i < playingPlayerArray.length; i++) 
 			{
-				if (PlayerInfoPhom(playingPlayerArray[i]).userName == data[DataField.USER_NAME])
+				if (PlayerInfoPhom(playingPlayerArray[i]).userName == data[DataFieldPhom.USER_NAME])
 				{
 					stealPlayer = playingPlayerArray[i];
 					if (i == 0)
 						stealedPlayer = playingPlayerArray[playingPlayerArray.length - 1];
 					else
 						stealedPlayer = playingPlayerArray[i - 1];
-					cardManager.stealCard(stealPlayer, stealedPlayer, data[DataField.CARD]);
+						
+					if (!stealedPlayerObject[stealedPlayer.userName])
+						stealedPlayerObject[stealedPlayer.userName] = 1;
+					else
+						stealedPlayerObject[stealedPlayer.userName] = 2;
+						
+					if (!stealPlayerObject[stealPlayer.userName])
+						stealPlayerObject[stealPlayer.userName] = 1;
+					else
+						stealPlayerObject[stealPlayer.userName] += 1;
+						
+					if (stealPlayer.leavedCards.length == 3 && stealPlayerObject[stealPlayer.userName] != 3)
+					{
+						SoundManager.getInstance().soundManagerPhom.playStealBoltPlayerSound(stealPlayer.sex);
+					}
+					else
+					{
+						if (stealPlayerObject[stealPlayer.userName] == 1)
+							SoundManager.getInstance().soundManagerPhom.playStealFirstCardPlayerSound(stealPlayer.sex);
+						
+						if (stealPlayerObject[stealPlayer.userName] == 2)
+							SoundManager.getInstance().soundManagerPhom.playStealSecondCardPlayerSound(stealPlayer.sex);
+					}
+			
+					cardManager.stealCard(stealPlayer, stealedPlayer, data[DataFieldPhom.CARD]);
 					i = playingPlayerArray.length;
 					
 					// add effect tiền
@@ -1232,14 +1554,111 @@ package view.screen
 			}
 		}
 		
+		public function addPlayer():void // add người chơi - tùy thuộc số lượng
+		{
+			addOnePlayer(0);
+			addOnePlayer(1);
+			addOnePlayer(3);
+			addOnePlayer(2);
+			
+			belowUserInfo.cardInfoArray = [1, 2, 3, 13, 11, 12, 11, 17, 18];
+			
+			leftUserInfo.cardInfoArray = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+			rightUserInfo.cardInfoArray = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+			aboveUserInfo.cardInfoArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+			
+			addCardManager();
+			playingPlayerArray = new Array();
+			for (var i:int = 0; i < allPlayerArray.length; i++) 
+			{
+				if (allPlayerArray[i])
+					playingPlayerArray.push(allPlayerArray[i]);
+			}
+			cardManager.playerArray = playingPlayerArray;
+			//cardManager.divideCard();
+			belowUserInfo.setMyTurn(PlayerInfoPhom.PLAY_CARD);
+			
+			var cardInfo:Object = new Object();
+			cardInfo[DataFieldPhom.NUM_CARD] = 7;
+			cardInfo[DataFieldPhom.STOLE_CARDS] = [1, 2, 3];
+			cardInfo[DataFieldPhom.DISCARDED_CARDS] = [4, 5, 6, 7];
+			cardInfo[DataFieldPhom.LAYING_CARDS] = [[40, 41, 42], [44, 45, 46], [43, 44, 45, 46]];
+			cardManager.addAllCard(rightUserInfo, cardInfo);
+			
+			cardInfo = new Object();
+			cardInfo[DataFieldPhom.NUM_CARD] = 7;
+			cardInfo[DataFieldPhom.STOLE_CARDS] = [1, 2, 3];
+			cardInfo[DataFieldPhom.DISCARDED_CARDS] = [4, 5, 6, 7];
+			cardInfo[DataFieldPhom.LAYING_CARDS] = [[40, 41, 42], [44, 45, 46], [44, 45, 46]];
+			cardManager.addAllCard(leftUserInfo, cardInfo);
+			
+			cardInfo = new Object();
+			cardInfo[DataFieldPhom.NUM_CARD] = 7;
+			cardInfo[DataFieldPhom.STOLE_CARDS] = [1, 2, 3];
+			cardInfo[DataFieldPhom.DISCARDED_CARDS] = [4, 5, 6, 7];
+			cardInfo[DataFieldPhom.LAYING_CARDS] = [[40, 41, 42], [44, 45, 46], [44, 45, 46]];
+			cardManager.addAllCard(aboveUserInfo, cardInfo);
+			
+			cardInfo = new Object();
+			cardInfo[DataFieldPhom.NUM_CARD] = 7;
+			cardInfo[DataFieldPhom.STOLE_CARDS] = [1, 2, 3];
+			cardInfo[DataFieldPhom.DISCARDED_CARDS] = [4, 5, 6, 7];
+			cardInfo[DataFieldPhom.LAYING_CARDS] = [[40, 41, 42], [44, 45, 46], [44, 45, 46]];
+			cardManager.addAllCard(belowUserInfo, cardInfo);
+			
+			for (i = 0; i < belowUserInfo.cardInfoArray.length; i++) 
+			{
+				var card:CardPhom;
+				card = new CardPhom(belowUserInfo.unLeaveCardSize);
+				card.id = belowUserInfo.cardInfoArray[i];
+				card.rotation = belowUserInfo.unLeaveCardRotation;
+				
+				var tempPoint:Point = new Point();
+				var tempObject:Object = belowUserInfo.getUnUsePosition(CardPhom.UN_LEAVE_CARD);
+				tempObject["isUsed"] = true;
+				tempPoint.x = tempObject.x;
+				tempPoint.y = tempObject.y;
+				tempPoint.x = belowUserInfo.localToGlobal(tempPoint).x;
+				tempPoint.y = belowUserInfo.localToGlobal(tempPoint).y;
+			
+				var point:Point = tempPoint;
+				point = cardManager.globalToLocal(point);
+				card.x = point.x;
+				card.y = point.y;
+				cardManager.addChild(card);
+				card.simpleOpen();
+				belowUserInfo.pushNewUnLeaveCard(card);
+			}
+			
+			belowUserInfo.playingPlayerArray = new Array();
+			belowUserInfo.playingPlayerArray.push(belowUserInfo);
+			belowUserInfo.playingPlayerArray.push(rightUserInfo);
+			belowUserInfo.playingPlayerArray.push(leftUserInfo);
+			belowUserInfo.userName = "aaa";
+			isPlaying = true;
+			//cardManager.sendCard(belowUserInfo, rightUserInfo, 17, 2);
+			//var tempArray:Array = belowUserInfo.checkSendCard(belowUserInfo.unLeaveCards);
+			
+			/*var moneyEffectPosition:Point;
+			var resultEffectPosition:Point;
+			for (i = 0; i < playingPlayerArray.length; i++) 
+			{
+				moneyEffectPosition = PlayerInfoPhom(playingPlayerArray[i]).localToGlobal(PlayerInfoPhom(playingPlayerArray[i]).moneyEffectPosition);
+				resultEffectPosition = PlayerInfoPhom(playingPlayerArray[i]).localToGlobal(PlayerInfoPhom(playingPlayerArray[i]).resultEffectPosition);
+				effectLayer.addEffect(EffectLayer.MONEY_EFFECT, moneyEffectPosition, 100, 10000);
+				effectLayer.addEffect(EffectLayer.NO_DECK_EFFECT, resultEffectPosition, 100);
+			}*/
+		}
+		
 		private function showReadyButton():void
 		{
-			waitToReady.visible = false;
-			
 			if (!readyButton)
 				createButton("readyButton", "zReadyButton", "readyButtonPosition");
 			readyButton.addEventListener(MouseEvent.CLICK, onButtonClick);
 			playingLayer.addChild(readyButton);
+			
+			if (mainData.isAutoReady)
+				mainCommand.electroServerCommand.readyPlay();
 		}
 		
 		private function hideReadyButton():void
@@ -1254,10 +1673,10 @@ package view.screen
 				
 			if (readyButton)
 			{
-				if (this.contains(readyButton))
+				if (readyButton.parent)
 				{
 					//belowUserInfo.stopCountTime();
-					playingLayer.removeChild(readyButton);	
+					readyButton.parent.removeChild(readyButton);	
 				}
 			}
 		}
@@ -1266,7 +1685,7 @@ package view.screen
 		{
 			if (!startButton)
 			{
-				createButton("startButton", "zStartButton", "readyButtonPosition");
+				createButton("startButton", "zStartButton", "startButtonPosition");
 				startButton.buttonMode = false;
 			}
 			startButton.content["child"].addEventListener(MouseEvent.CLICK, onButtonClick);
@@ -1307,8 +1726,8 @@ package view.screen
 		{
 			if (startButton)
 			{
-				if (this.contains(startButton))
-					playingLayer.removeChild(startButton);	
+				if (startButton.parent)
+					startButton.parent.removeChild(startButton);	
 			}
 			
 			autoStartTimeTxt.visible = false;
@@ -1344,6 +1763,8 @@ package view.screen
 					addPlayerByType(PlayerInfoPhom.LEFT_USER, position, false);
 				break;
 			}
+			if (position != 0)
+				invitePlayButtonArray[position - 1].visible = false;
 		}
 		
 		private function onGetCard(e:Event):void 
@@ -1361,17 +1782,17 @@ package view.screen
 			cardManager.showTwinkle();
 		}
 		
-		// add thông tin cá nhân (tên, money, cấp độ, avatar)
+		// add thông tin cá nhân (tên, ciao, cấp độ, avatar)
 		public function addPersonalInfo(data:Object):void
 		{
 			for (var i:int = 0; i < allPlayerArray.length; i++) 
 			{
 				if (allPlayerArray[i])
 				{
-					if (PlayerInfoPhom(allPlayerArray[i]).position == data[DataField.POSITION])
+					if (PlayerInfoPhom(allPlayerArray[i]).position == data[DataFieldPhom.POSITION])
 					{
 						PlayerInfoPhom(allPlayerArray[i]).updatePersonalInfo(data);
-						if (data[DataField.READY])
+						if (data[DataFieldPhom.READY])
 						{
 							//isHaveUserReady = true;
 							PlayerInfoPhom(allPlayerArray[i]).isReadyPlay = true;
@@ -1389,7 +1810,7 @@ package view.screen
 			{
 				if (allPlayerArray[i])
 				{
-					if (PlayerInfoPhom(allPlayerArray[i]).position == data[DataField.POSITION])
+					if (PlayerInfoPhom(allPlayerArray[i]).position == data[DataFieldPhom.POSITION])
 					{
 						cardManager.addAllCard(allPlayerArray[i], data);
 						PlayerInfoPhom(allPlayerArray[i]).isPlaying = true;
@@ -1448,6 +1869,9 @@ package view.screen
 					PlayerInfoPhom(this[PlayerInfoPhom.LEFT_USER]).destroy();
 				break;
 			}
+			
+			if (position != 0)
+				invitePlayButtonArray[position - 1].visible = true;
 		}
 		
 		private function addPlayerByType(playerType:String, position:int, isCardInteractive:Boolean = false):void
@@ -1469,53 +1893,32 @@ package view.screen
 		
 		private function onShowContextMenu(e:Event):void 
 		{
-			if (myContextMenu)
+			var userProfileWindow:UserProfileWindow = new UserProfileWindow();
+			userProfileWindow.displayName = PlayerInfoPhom(e.currentTarget).displayName;
+			userProfileWindow.userName = PlayerInfoPhom(e.currentTarget).userName;
+			userProfileWindow.gold = PlayerInfoPhom(e.currentTarget).moneyNumber;
+			userProfileWindow.level = PlayerInfoPhom(e.currentTarget).levelNumber;
+			userProfileWindow.avatarString = PlayerInfoPhom(e.currentTarget).avatarString;
+			userProfileWindow.isFriend = false;
+			for (var i:int = 0; i < mainData.lobbyRoomData.friendList.length; i++) 
 			{
-				if (contains(myContextMenu))
+				if (UserDataULC(mainData.lobbyRoomData.friendList[i]).userName == userProfileWindow.userName)
 				{
-					myContextMenu.removeEventListener(MyContextMenu.KICK_OUT_CLICK, onKickOutClick);
-					myContextMenu.removeEventListener(MyContextMenu.ACCUSE_CLICK, onAccuseClick);
-					playingLayer.removeChild(myContextMenu);
+					userProfileWindow.isFriend = true;
+					break;
 				}
 			}
-			
-			myContextMenu = new MyContextMenu();
-			myContextMenu.addEventListener(MyContextMenu.KICK_OUT_CLICK, onKickOutClick);
-			myContextMenu.addEventListener(MyContextMenu.ACCUSE_CLICK, onAccuseClick);
-				
-			var contextMenuData:Object = new Object();
-			contextMenuData[DataField.DISPLAY_NAME] = PlayerInfoPhom(e.currentTarget).displayName;
-			contextMenuData[DataField.USER_NAME] = PlayerInfoPhom(e.currentTarget).userName;
-			contextMenuData[DataField.AVATAR] = PlayerInfoPhom(e.currentTarget).avatarString;
-			contextMenuData[DataField.LOGO] = PlayerInfoPhom(e.currentTarget).logoString;
-			myContextMenu.data = contextMenuData;
-			
-			if (!isPlaying && belowUserInfo.isRoomMaster)
-				myContextMenu.enableKickOut = true;
+			if (belowUserInfo.isRoomMaster && !isPlaying)
+				userProfileWindow.isShowKickOut = true;
 			else
-				myContextMenu.enableKickOut = false;
-				
-			var tempPoint:Point = PlayerInfoPhom(e.currentTarget).contextMenuPosition;
-			tempPoint = PlayerInfoPhom(e.currentTarget).localToGlobal(tempPoint);
-			tempPoint = globalToLocal(tempPoint);
-			myContextMenu.x = Math.round(tempPoint.x);
-			myContextMenu.y = Math.round(tempPoint.y);
-			if (!contains(myContextMenu))
-			{
-				playingLayer.addChild(myContextMenu);
-			}
-			else
-			{
-				myContextMenu.removeEventListener(MyContextMenu.KICK_OUT_CLICK, onKickOutClick);
-				myContextMenu.removeEventListener(MyContextMenu.ACCUSE_CLICK, onAccuseClick);
-				playingLayer.removeChild(myContextMenu);
-			}
+				userProfileWindow.isShowKickOut = false;
+			windowLayer.openWindow(userProfileWindow);
 		}
 		
 		private function onKickOutClick(e:Event):void 
 		{
 			var confirmKickOutWindow:ConfirmWindow = new ConfirmWindow();
-			confirmKickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.confirmKickOut + " " + myContextMenu.data[DataField.DISPLAY_NAME]);
+			confirmKickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.confirmKickOut + " " + myContextMenu.data[DataFieldPhom.DISPLAY_NAME]);
 			confirmKickOutWindow.addEventListener(ConfirmWindow.CONFIRM, onConfirmKickOut);
 			windowLayer.openWindow(confirmKickOutWindow);
 		}
@@ -1529,20 +1932,22 @@ package view.screen
 		
 		private function onConfirmKickOut(e:Event):void 
 		{
-			electroServerCommand.kickUser(myContextMenu.data[DataField.USER_NAME]);
+			electroServerCommand.kickUser(myContextMenu.data[DataFieldPhom.USER_NAME]);
 		}
 		
 		private function onStageClick(e:MouseEvent):void 
 		{
 			if (myContextMenu)
 			{
-				if (contains(myContextMenu))
+				if (myContextMenu.parent)
 				{
 					myContextMenu.removeEventListener(MyContextMenu.KICK_OUT_CLICK, onKickOutClick);
 					myContextMenu.removeEventListener(MyContextMenu.ACCUSE_CLICK, onAccuseClick);
-					playingLayer.removeChild(myContextMenu);
+					myContextMenu.parent.removeChild(myContextMenu);
 				}
 			}
+			ipBoard.visible = false;
+			settingBoard.visible = false;
 		}
 		
 		// Hàm sắp xếp lại thứ tự của mảng các người chơi
@@ -1586,10 +1991,10 @@ package view.screen
 		{
 			if (cardManager)
 			{
-				if (contains(cardManager))
+				if (cardManager.parent)
 				{
 					cardManager.removeEventListener(CardManagerPhom.GET_CARD, onClickCardManagerToGetCard);
-					playingLayer.removeChild(cardManager);
+					cardManager.parent.removeChild(cardManager);
 				}
 			}
 		}
@@ -1597,7 +2002,6 @@ package view.screen
 		private function createButton(buttonName:String,className:String,positionName:String):void
 		{
 			this[buttonName] = new MyButton();
-			this[buttonName].scaleX = this[buttonName].scaleY = 0.9;
 			MyButton(this[buttonName]).addContent(className);
 			this[buttonName].x = content[positionName].x;
 			this[buttonName].y = content[positionName].y;
@@ -1608,25 +2012,9 @@ package view.screen
 			switch (e.currentTarget) 
 			{
 				case readyButton:
-					if (mainData.isPhomGa && isFirstJoin && mainData.gaData[DataField.POT_LEVEL] > 0)
-					{
-						isFirstJoin = false;
-						var confirmPlayWindow:ConfirmWindow = new ConfirmWindow();
-						confirmPlayWindow.addEventListener(ConfirmWindow.CONFIRM, onConfirmPlay);
-						var st1:String = mainData.init.gameDescription.playingScreen.confirmPlayGa1;
-						var st2:String = mainData.init.gameDescription.playingScreen.confirmPlayGa2;
-						var st3:String = mainData.init.gameDescription.playingScreen.confirmPlayGa3;
-						var st4:String = mainData.init.gameDescription.playingScreen.confirmPlayGa4;
-						var potLevel:int = mainData.gaData[DataField.POT_LEVEL] + 1;
-						var conditionMoney:int = int(mainData.playingData.gameRoomData.roomBet) * potLevel
-						confirmPlayWindow.setNotice(st1 + " " + String(potLevel) + " " + st2 + " " + String(potLevel) + " " + st3 + " " + String(conditionMoney) + " " + st4);
-						windowLayer.openWindow(confirmPlayWindow);
-					}
-					else
-					{
-						electroServerCommand.readyPlay();
-						readyButton.removeEventListener(MouseEvent.CLICK, onButtonClick);
-					}
+					electroServerCommand.readyPlay();
+					readyButton.removeEventListener(MouseEvent.CLICK, onButtonClick);
+					SoundManager.getInstance().playSound(SoundLibChung.CLICK_SOUND);
 				break;
 				case startButton.content["child"]:
 					if (timerToAutoStart)
@@ -1638,6 +2026,7 @@ package view.screen
 					autoStartTimeTxt.visible = false;
 					electroServerCommand.startGame();
 					startButton.content["child"].removeEventListener(MouseEvent.CLICK, onButtonClick);
+					SoundManager.getInstance().playSound(SoundLibChung.CLICK_SOUND);
 				break;
 			}
 		}
@@ -1661,7 +2050,7 @@ package view.screen
 				{
 					if (allPlayerArray[i])
 					{
-						if (data[DataField.USER_NAME] == PlayerInfoPhom(allPlayerArray[i]).userName)
+						if (data[DataFieldPhom.USER_NAME] == PlayerInfoPhom(allPlayerArray[i]).userName)
 							PlayerInfoPhom(allPlayerArray[i]).isReadyPlay = true;
 					}
 				}
@@ -1680,29 +2069,11 @@ package view.screen
 			{
 				if (allPlayerArray[i])
 				{
-					if (data[DataField.USER_NAME] == PlayerInfoPhom(allPlayerArray[i]).userName)
+					if (data[DataFieldPhom.USER_NAME] == PlayerInfoPhom(allPlayerArray[i]).userName)
 					{
-						/*if (!isHaveUserReady)
-						{
-							for (var j:int = 0; j < allPlayerArray.length; j++) 
-							{
-								if (allPlayerArray[j])
-								{
-									if (allPlayerArray[j] != allPlayerArray[i] && !PlayerInfoPhom(allPlayerArray[j]).isReadyPlay)
-									{
-										PlayerInfoPhom(allPlayerArray[j]).showTooltip(mainData.init.gameDescription.playingScreen.readyAlert)
-										PlayerInfoPhom(allPlayerArray[j]).countTime(Number(mainData.init.playTime.readyTime));
-										PlayerInfoPhom(allPlayerArray[j]).isWaitingToReady = true;
-									}
-								}
-							}
-						}*/
-						
 						PlayerInfoPhom(allPlayerArray[i]).isReadyPlay = true;
-						//isHaveUserReady = true;
 						if (allPlayerArray[i] == belowUserInfo)
 						{
-							//belowUserInfo.isWaitingToReady = false;
 							hideReadyButton();
 							if (!isPlaying)
 								waitToStart.visible = true;
@@ -1715,20 +2086,8 @@ package view.screen
 		
 		private function setupTextField():void
 		{
-			roomBet = content["roomBet"];
-			roomBet.autoSize = TextFieldAutoSize.LEFT;
-			channelNameAndRoomId = content["channelNameAndRoomId"];
-			channelNameAndRoomId.autoSize = TextFieldAutoSize.LEFT;
 			ruleDescription = content["ruleDescription"];
 			ruleDescription.selectable = false;
-			channelNameAndRoomId.selectable = false;
-			channelNameAndRoomId.text = "Kênh " + mainData.playingData.gameRoomData.channelName + " - Phòng " + mainData.playingData.gameRoomData.roomId;
-			
-			potMoneyTxt = content["potMoneyTxt"];
-			
-			potMoneyTxt.text = '';
-			
-			potMoneyTxt.mouseEnabled = false;
 		}
 		
 		// Sắp xếp lại vị trí của người chơi để position 0 bắt đầu từ chính người chơi của mình
@@ -1740,9 +2099,9 @@ package view.screen
 			// tính lại vị trí của các người chơi, vì position của chính mình bao giờ cũng là 0
 			for (i = 0; i < userList.length; i++) 
 			{
-				if (userList[i][DataField.USER_NAME] == mainData.chooseChannelData.myInfo.uId)
+				if (userList[i][DataFieldPhom.USER_NAME] == mainData.chooseChannelData.myInfo.uId)
 				{
-					jumpIndex = userList[i][DataField.POSITION];
+					jumpIndex = userList[i][DataFieldPhom.POSITION];
 					i = userList.length;
 				}
 			}
@@ -1750,9 +2109,9 @@ package view.screen
 			{
 				for (i = 0; i < userList.length; i++) 
 				{
-					userList[i][DataField.POSITION] -= jumpIndex;
-					if (userList[i][DataField.POSITION] < 0)
-						userList[i][DataField.POSITION] += mainData.maxPlayer;
+					userList[i][DataFieldPhom.POSITION] -= jumpIndex;
+					if (userList[i][DataFieldPhom.POSITION] < 0)
+						userList[i][DataFieldPhom.POSITION] += mainData.maxPlayer;
 				}
 			}
 		}
@@ -1792,11 +2151,11 @@ package view.screen
 			electroServerCommand = null;
 			windowLayer = null;
 			
-			if (timerToResetMatch)
+			if (timerToShowResultWindow)
 			{
-				timerToResetMatch.removeEventListener(TimerEvent.TIMER_COMPLETE, onResetMatch);
-				timerToResetMatch.stop();
-				timerToResetMatch = null;
+				timerToShowResultWindow.removeEventListener(TimerEvent.TIMER_COMPLETE, onShowResultWindow);
+				timerToShowResultWindow.stop();
+				timerToShowResultWindow = null;
 			}
 			
 			if (parent)
