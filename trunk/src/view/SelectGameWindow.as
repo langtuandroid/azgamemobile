@@ -149,7 +149,7 @@ package view
 					shopTabDisable.visible = true;
 					
 					_shopWindow = new Shop_Coffer_Item_Window();
-					windowLayer.openWindow(_shopWindow);
+					addChild(_shopWindow);
 					_shopWindow.x = 0;
 					_shopWindow.y = 0;
 				break;
