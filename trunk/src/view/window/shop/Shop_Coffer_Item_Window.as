@@ -1,9 +1,16 @@
 package view.window.shop 
 {
+	import com.adobe.crypto.MD5;
+	import control.ConstTlmn;
 	import flash.display.MovieClip;
+	import flash.events.Event;
+	import model.chooseChannelData.MyInfo;
+	import model.MainData;
 	import request.HTTPRequest;
 	import view.ScrollView.ScrollViewYun;
 	import view.window.BaseWindow;
+	import view.window.ConfirmWindow;
+	import view.window.windowLayer.WindowLayer;
 	
 	/**
 	 * ...
@@ -21,6 +28,7 @@ package view.window.shop
 		private var _type:int; // dang chon xem cai j`
 		
 		private var scrollView:ScrollViewYun;
+		private var windowLayer:WindowLayer = WindowLayer.getInstance();
 		
 		public function Shop_Coffer_Item_Window() 
 		{
@@ -29,8 +37,7 @@ package view.window.shop
 			myContent = new Shop_Coffer_Item_Mc();
 			addChild(myContent);
 			
-			_arrBtnInTab = [myContent.tabMc.chooseGameBtn, myContent.tabMc.standingBtn, myContent.tabMc.addMoneyBtn,
-							myContent.tabMc.shopBtn, myContent.tabMc.cofferBtn];
+			
 						//chon game, bang xep hang, nap tien, shop, hom do
 			_arrHeaderTab = [myContent.chooseInStandingMc, myContent.chooseInAddMoneyMc, myContent.chooseInShopMc,
 							myContent.chooseInCofferMc];
@@ -43,13 +50,26 @@ package view.window.shop
 			scrollView.distanceInColumn = 25;
 			scrollView.distanceInRow = 10;
 			scrollView.columnNumber = 2;
+			scrollView.isScrollVertical = true;
 			myContent.addChild(scrollView);
-			scrollView.x = myContent.containerItemMc.x;
-			scrollView.y = myContent.containerItemMc.y;
+			
+			//scrollView.visible = false;
+			
+			
+			var i:int;
+			var j:int;
+			for (i = 0; i < _arrHeaderTab.length; i++) 
+			{
+				for (j = 0; j < _arrHeaderTab[i].numChildren; j++) 
+				{
+					_arrHeaderTab[i].getChildAt(j).stop();
+				}
+			}
+			
 			
 			tabOn(3);
 			headerOn(2);
-			boardOn(2);
+			boardOn(3);
 			loadItem(0);
 			
 			
@@ -58,22 +78,24 @@ package view.window.shop
 		/**
 		 * type(0: chon game, 1:xep hang, 2:nap the, 3:shop, 4:hom do)
 		 */
-		private function tabOn(type:int):void 
+		public function tabOn(type:int):void 
 		{
 			_type = type;
-			var i:int;
+			/*var i:int;
 			for (i = 0; i < _arrBtnInTab.length; i++) 
 			{
 				myContent.tabMc.setChildIndex(_arrBtnInTab[i], myContent.tabMc.numChildren - 1);
 			}
 			
-			myContent.tabMc.setChildIndex(_arrBtnInTab[type], myContent.tabMc.numChildren - 1);
+			myContent.tabMc.setChildIndex(_arrBtnInTab[type], myContent.tabMc.numChildren - 1);*/
+			
+			
 		}
 		
 		/**
 		 * type(0:xep hang, 1:nap the, 2:shop, 3:hom do)
 		 */
-		private function headerOn(type:int):void 
+		public function headerOn(type:int):void 
 		{
 			var i:int;
 			for (i = 0; i < _arrHeaderTab.length; i++) 
@@ -87,7 +109,7 @@ package view.window.shop
 		/**
 		 * type(0: xep hang, 1: nap sms, 2: nap the, 3:chua item)
 		 */
-		private function boardOn(type:int):void 
+		public function boardOn(type:int):void 
 		{
 			var i:int;
 			for (i = 0; i < _arrBoard.length; i++) 
@@ -101,7 +123,7 @@ package view.window.shop
 		/**
 		 * type(0: avatar, 1:gold, 2:item, 3:tour, 4:gift)
 		 */
-		private function loadItem(type:int):void 
+		public function loadItem(type:int):void 
 		{
 			var method:String = "post";
 			var url:String;
@@ -129,6 +151,8 @@ package view.window.shop
 		private function loadAvatarSuccess(obj:Object):void 
 		{
 			var arrData:Array = obj.Data;
+			var countX:int;
+			var countY:int;
 			for (var i:int = 0; i < arrData.length; i++ ) 
 			{
 				var nameAvatar:String = arrData[i]['avt_name'];
@@ -140,10 +164,63 @@ package view.window.shop
 				var idAvt:String = arrData[i]['avt_id'];
 				
 				var contentAvatar:ContentAvatar = new ContentAvatar();
+				
+				contentAvatar.x = 10 + countX * 440;
+				contentAvatar.y = 5 + countY * 135;
+				
+				if (countX < 2) 
+				{
+					countX++;
+				}
+				else 
+				{
+					countY++;
+					countX = 0;
+				}
+				
+				
 				contentAvatar.addInfo(idAvt, nameAvatar, chipAvatar, goldAvatar, linkAvatar, expireAvatar);
-				scrollView.addChild(contentAvatar);
+				//scrollView.addChild(contentAvatar);
+				_arrBoard[3].addChild(contentAvatar);
+				
+				contentAvatar.addEventListener(ConstTlmn.BUY_AVATAR, onBuyAvatar);
 			}
 		}
+		
+		private function onBuyAvatar(e:Event):void 
+		{
+			var avatar:ContentAvatar = e.currentTarget as ContentAvatar;
+			var myInfo:MyInfo = new MyInfo();
+			var url:String = "http://wss.test.azgame.us/Service02/OnplayShopExt.asmx/BuyAvatarFromClientSide";
+			var obj:Object = new Object();
+			var mainData:MainData = MainData.getInstance();
+			obj["access_token"] = mainData.loginData["AccessToken"];
+			obj["game_code"] = avatar._goldAvt;
+			obj["payment_type"] = "1";
+			obj["nk_nm_receiver"] = mainData.loginData["Id"];
+			obj["item_id"] = avatar._idAvt;
+			obj["item_quantity"] = "1";
+			obj["client_hash"] = MD5.hash(obj["access_token"] + obj["game_code"]
+			 + obj["payment_type"] + obj["nk_nm_receiver"] + obj["item_id"] +
+			 obj["item_quantity"]);
+			
+			trace("link mua avatar: ", obj["access_token"])
+			var httpReq:HTTPRequest = new HTTPRequest();
+			httpReq.sendRequest("POST", url, obj, buyAvatarRespone, true);
+		}
+		
+		private function buyAvatarRespone(obj:Object):void 
+		{
+			trace(obj)
+			if (obj["Msg"] = "Cập nhật thành công") 
+			{
+				var buyAvatarWindow:ConfirmWindow = new ConfirmWindow();
+				buyAvatarWindow.setNotice("Bạn đã mua thành công vật phẩm này!");
+				
+				windowLayer.openWindow(buyAvatarWindow);
+			}
+		}
+		
 	}
 
 }

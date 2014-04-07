@@ -1,5 +1,6 @@
 package control 
 {
+	import control.electroServerCommand.ElectroServerCommandTlmn;
 	import control.electroServerCommand.ElectroServerCommandMauBinh;
 	import control.getInfoCommand.GetInfoCommand;
 	import control.initCommand.InitCommand;
@@ -30,6 +31,9 @@ package control
 			{
 				case MainData.MAUBINH:
 					electroServerCommand = new ElectroServerCommandMauBinh();
+				break;
+				case MainData.TLMN:
+					electroServerCommand = new ElectroServerCommandTlmn();
 				break;
 				default:
 			}

@@ -4,6 +4,7 @@ package view.window.shop
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import view.userInfo.avatar.Avatar;
 	
 	/**
 	 * ...
@@ -13,6 +14,8 @@ package view.window.shop
 	{
 		private var content:MovieClip;
 		public var _idAvt:String;
+		public var _goldAvt:String;
+		public var _chipAvt:String;
 		public function ContentAvatar() 
 		{
 			super();
@@ -49,16 +52,17 @@ package view.window.shop
 		public function addInfo(idAvt:String, nameAvt:String, chip:String, gold:String, linkAvt:String, expire:String):void 
 		{
 			_idAvt = idAvt;
-			
+			_goldAvt = gold;
+			_chipAvt = chip;
 			
 			content.itemNameTxt.text = nameAvt;
-			content.itemGoldTxt.text = nameAvt;
-			content.itemChipTxt.text = nameAvt;
-			content.itemLimitTxt.text = nameAvt;
+			content.itemGoldTxt.text = gold;
+			content.itemChipTxt.text = chip;
+			content.itemLimitTxt.text = expire;
 			
-			var image:ImageItem = new ImageItem();
+			var image:Avatar = new Avatar();
 			content.containerImg.addChild(image);
-			
+			image.addImg(linkAvt);
 			
 		}
 	}

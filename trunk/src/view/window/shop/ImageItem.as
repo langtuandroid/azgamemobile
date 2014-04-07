@@ -34,8 +34,8 @@ package view.window.shop
 			
 			trace("link avatar: " , linkAvatar, "=====================")
 			
-			Security.allowDomain("*");
-			Security.allowInsecureDomain("*");
+			//Security.allowDomain("*");
+			//Security.allowInsecureDomain("*");
 			var context:LoaderContext = new LoaderContext();
 			context.checkPolicyFile = true;
 			context.allowCodeImport = true;

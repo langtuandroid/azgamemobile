@@ -12,6 +12,7 @@ package view
 	import model.MainData;
 	import request.MainRequest;
 	import view.window.BaseWindow;
+	import view.window.shop.Shop_Coffer_Item_Window;
 	import view.window.windowLayer.WindowLayer;
 	
 	/**
@@ -44,6 +45,10 @@ package view
 		private var addMoneyTabDisable:MovieClip;
 		private var shopTabDisable:MovieClip;
 		private var inventoryTabDisable:MovieClip;
+		
+		private var shopLayer:Sprite;
+		private var _shopWindow:Shop_Coffer_Item_Window;
+		private var windowLayer:WindowLayer = WindowLayer.getInstance();
 		
 		public function SelectGameWindow() 
 		{
@@ -81,6 +86,11 @@ package view
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+			
+			shopLayer = new Sprite();
+			content.addChild(shopLayer);
+			
+			
 		}
 		
 		private function onTabClick(e:MouseEvent):void 
@@ -137,6 +147,11 @@ package view
 				case 4:
 					shopTabEnable.visible = false;
 					shopTabDisable.visible = true;
+					
+					_shopWindow = new Shop_Coffer_Item_Window();
+					windowLayer.openWindow(_shopWindow);
+					_shopWindow.x = 0;
+					_shopWindow.y = 0;
 				break;
 				case 5:
 					inventoryTabEnable.visible = false;
@@ -182,7 +197,9 @@ package view
 			switch (gameId) 
 			{
 				case 3:
-					
+					mainData.gameType = MainData.TLMN;
+					mainData.minBetRate = 10;
+					mainData.electroInfo.port = 5501;
 				break;
 				case 2:
 					mainData.gameType = MainData.PHOM;

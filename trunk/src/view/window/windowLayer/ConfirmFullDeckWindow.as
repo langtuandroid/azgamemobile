@@ -1,6 +1,6 @@
 package view.window.windowLayer 
 {
-	import control.electroServerCommand.ElectroServerCommand;
+	import control.electroServerCommand.ElectroServerCommandTlmn;
 	import control.MainCommand;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -25,7 +25,7 @@ package view.window.windowLayer
 		private var isFilterDown:Boolean;
 		private var filterNumber:Number = 0;
 		private var mainCommand:MainCommand = MainCommand.getInstance();
-		private var electroServerCommand:ElectroServerCommand = mainCommand.electroServerCommand;
+		private var electroServerCommand:ElectroServerCommandTlmn = mainCommand.electroServerCommand;
 		
 		public function ConfirmFullDeckWindow() 
 		{

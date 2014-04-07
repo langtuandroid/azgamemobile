@@ -54,17 +54,20 @@ package control.getInfoCommand
 		{
 			var tempRequest:MainRequest = new MainRequest();
 			var url:String;
+			var object:Object;
 			switch (mainData.gameType) 
 			{
 				case MainData.TLMN:
-					
+					url = /*mainData.basepath + */mainData.init.requestLink.getChannelLink.@url;
+					object = new Object();
+					object.game_id = 'AZGB_TLMN';
 				break;
 				case MainData.PHOM:
 					url = "http://" + mainData.gameIp + "/javajson/Getgamegroup2/2";
 				break;
 				case MainData.MAUBINH:
 					url = /*mainData.basepath + */mainData.init.requestLink.getChannelLink.@url;
-					var object:Object = new Object();
+					object = new Object();
 					object.game_id = 'AZGB_BINH';
 				break;
 				case MainData.XITO:

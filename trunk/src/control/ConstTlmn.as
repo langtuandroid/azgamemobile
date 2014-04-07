@@ -83,6 +83,7 @@ package control
 		
 		public static var ADD_FRIEND_SUCCESS:String = "success";
 		public static var WEB_UPDATE:String = "webUpdate";
+		public static var BUY_AVATAR:String = "buyAvatar";
 		
 		/**
 		 * type: CONG = 1, 2_DEN = 2, 2_DO = 3, 3_BICH = 4, 4_QUY = 5, 4_DOI_THONG = 6, 3_DOI_THONG = 7
@@ -166,8 +167,6 @@ package control
 		public static var TU_QUY_3:int = 6;
 		public static var BA_DOI_THONG_3_BICH:int = 7;
 		public static var BON_DOI_THONG_3_BICH:int = 8;
-		
-		public static var BUY_AVATAR:String = "buyAvt";
 		
 		public static var INPUT_PASS:String = "inputPass";
 		

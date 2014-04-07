@@ -62,6 +62,17 @@ package event
 		public static const HAVE_USER_OPEN_CARD:String = "haveUserOpenCard";
 		public static var END_ROUND:String = "endRound";
 		
+		
+		public static const UPDATE_MONEY_SPECIAL:String = "updateMoney_special";
+		
+		public static const LIST_BEFORE_START:String = "resetNewGame";
+		
+		public static const NEXTTURN:String = "nextturn";
+		static public const UPDATE_ALL_INFO_LOBBY:String = "updateAllInfoLobby";
+		static public const GET_MONEY:String = "getMoney";
+		public static const HAVE_UPDATE_CURRENT_TURN:String = "updateCurrentTurn";
+		public static const HAVE_UPDATE_MASTER:String = "updateRoomMaster";
+		
 		public var data:Object;
 		
 		public function ElectroServerEvent(eventName:String, _data:Object = null, bubbles:Boolean = false, cancelable:Boolean = false)

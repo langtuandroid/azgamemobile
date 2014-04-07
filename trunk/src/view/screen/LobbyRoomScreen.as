@@ -98,8 +98,6 @@ package view.screen
 		private var selectGameWindow:SelectGameWindow;
 		private var timerToGetInfo:Timer;
 		private var getInfoTime:int = 5;
-		private var buttonMenu:Sprite;
-		private var smallButtonMenu:Sprite;
 		
 		public function LobbyRoomScreen() 
 		{
@@ -157,6 +155,7 @@ package view.screen
 			windowLayer.openWindow(loginWindow);
 			
 			selectGameButton.addEventListener(MouseEvent.CLICK, onSelectGameButtonClick);
+			
 		}
 		
 		private function onSelectGameButtonClick(e:MouseEvent):void 
@@ -220,17 +219,12 @@ package view.screen
 			
 			var loginWindow:LoginWindow = new LoginWindow();
 			windowLayer.openWindow(loginWindow);
+			
+			
 		}
 		
 		private function addChannelButton():void 
 		{
-			buttonMenu = content["buttonMenu"];
-			smallButtonMenu = content["smallButtonMenu"];
-			addChild(buttonMenu);
-			buttonMenu.visible = false;
-			buttonMenu.addEventListener(MouseEvent.CLICK, onButtonMenuClick);
-			smallButtonMenu.addEventListener(MouseEvent.CLICK, onSmallButtonMenuClick);
-			
 			channelButtonArray = new Array();
 			channelButtonStartYArray = new Array();
 			for (var i:int = 0; i < 4; i++) 
@@ -239,19 +233,6 @@ package view.screen
 				channelButtonStartYArray.push(content["buttonMenu"]["channelButton" + String(i + 1)].y);
 				content["buttonMenu"]["channelButton" + String(i + 1)].addEventListener(MouseEvent.CLICK, onChannelButtonClick);
 			}
-		}
-		
-		private function onButtonMenuClick(e:MouseEvent):void 
-		{
-			e.stopImmediatePropagation();
-		}
-		
-		private function onSmallButtonMenuClick(e:MouseEvent):void 
-		{
-			smallButtonMenu.visible = false;
-			buttonMenu.visible = true;
-			addChild(buttonMenu);
-			e.stopImmediatePropagation();
 		}
 		
 		private function addOtherButton():void 
@@ -506,8 +487,6 @@ package view.screen
 		
 		private function onStageClick(e:MouseEvent):void 
 		{
-			buttonMenu.visible = false;
-			smallButtonMenu.visible = true;
 			if (!channelList)
 				return;
 			reArrageChannelButton( -1, true);

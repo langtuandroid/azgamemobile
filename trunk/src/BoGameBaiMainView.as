@@ -1,12 +1,15 @@
 package 
 {
+	import control.ConstTlmn;
 	import flash.desktop.NativeApplication;
 	import flash.display.MovieClip;
 	import flash.display.StageScaleMode;
+	import flash.events.IOErrorEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.TimerEvent;
 	import flash.external.ExternalInterface;
 	import flash.geom.Rectangle;
+	import flash.media.Sound;
 	import flash.net.SharedObject;
 	import flash.system.Security;
 	import control.MainCommand;
@@ -40,6 +43,7 @@ package
 	import view.effectLayer.EffectLayer;
 	import view.screen.LoadingScreen;
 	import view.screen.LobbyRoomScreen;
+	import view.screen.PlayGameScreenTlmn;
 	import view.screen.PlayingScreen;
 	import view.screen.PlayingScreenMauBinh;
 	import view.screen.PlayingScreenPhom;
@@ -159,6 +163,8 @@ package
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			
+			addSound();
+			
 			mainData.main = this;
 			
 			// add background
@@ -187,6 +193,296 @@ package
 			
 			// Lắng nghe sự kiện join phòng game
 			mainData.playingData.addEventListener(PlayingData.JOIN_GAME_ROOM_SUCCESS, onJoinGameRoomSuccess);
+		}
+		
+		private function addSound():void 
+		{
+			var arrSoundName:Array = ["GameSound1", "GameSound2", "GameSound3", ConstTlmn.SOUND_POPUP, 
+			ConstTlmn.SOUND_DEAL_DISCARD, ConstTlmn.SOUND_OVERTIME, ConstTlmn.SOUND_SORTCARD, 
+			ConstTlmn.SOUND_READY, ConstTlmn.SOUND_OUTROOM, ConstTlmn.SOUND_TURN, ConstTlmn.SOUND_WIN,
+			ConstTlmn.SOUND_LOSE, ConstTlmn.SOUND_CLICK, ConstTlmn.SOUND_JOINROOM, ConstTlmn.SOUND_WHITEWIN, 
+			
+			ConstTlmn.SOUND_BOY_HELLO_1, ConstTlmn.SOUND_BOY_HELLO_2,
+			ConstTlmn.SOUND_BOY_BYE_1, ConstTlmn.SOUND_BOY_BYE_2, ConstTlmn.SOUND_BOY_BYE_3, ConstTlmn.SOUND_BOY_BYE_4,
+			ConstTlmn.SOUND_BOY_BYE_5, ConstTlmn.SOUND_BOY_JOINGAME_1, ConstTlmn.SOUND_BOY_JOINGAME_2, 
+			ConstTlmn.SOUND_BOY_JOINGAME_3, ConstTlmn.SOUND_BOY_JOINGAME_4, ConstTlmn.SOUND_BOY_JOINGAME_5,
+			ConstTlmn.SOUND_BOY_USER_OUTROOM_1, ConstTlmn.SOUND_BOY_USER_OUTROOM_2, ConstTlmn.SOUND_BOY_USER_OUTROOM_3,
+			ConstTlmn.SOUND_BOY_USER_OUTROOM_4, ConstTlmn.SOUND_BOY_USER_OUTROOM_5, ConstTlmn.SOUND_BOY_STARTGAME_1,
+			ConstTlmn.SOUND_BOY_STARTGAME_2, ConstTlmn.SOUND_BOY_STARTGAME_3, ConstTlmn.SOUND_BOY_STARTGAME_4,
+			ConstTlmn.SOUND_BOY_STARTGAME_5, ConstTlmn.SOUND_BOY_OVERTIME_1, ConstTlmn.SOUND_BOY_OVERTIME_2,
+			ConstTlmn.SOUND_BOY_OVERTIME_3, ConstTlmn.SOUND_BOY_OVERTIME_4, ConstTlmn.SOUND_BOY_OVERTIME_5,
+			ConstTlmn.SOUND_BOY_DISCARD1CARD_1, ConstTlmn.SOUND_BOY_DISCARD1CARD_2, ConstTlmn.SOUND_BOY_DISCARD1CARD_3,
+			ConstTlmn.SOUND_BOY_DISCARD1CARD_4, ConstTlmn.SOUND_BOY_DISCARD1CARD_5, ConstTlmn.SOUND_BOY_CHATDE1CARD_1,
+			ConstTlmn.SOUND_BOY_CHATDE1CARD_2, ConstTlmn.SOUND_BOY_CHATDE1CARD_3, ConstTlmn.SOUND_BOY_CHATDE1CARD_4,
+			ConstTlmn.SOUND_BOY_CHATDE1CARD_5, ConstTlmn.SOUND_BOY_CHATDE1CARD_6, ConstTlmn.SOUND_BOY_CHATDE1CARD_6,
+			ConstTlmn.SOUND_BOY_CHATDE1CARD_8, ConstTlmn.SOUND_BOY_CHATDE1CARD_9, ConstTlmn.SOUND_BOY_CHATDE1CARD_10,
+			ConstTlmn.SOUND_BOY_DANH2_1, ConstTlmn.SOUND_BOY_DANH2_2, ConstTlmn.SOUND_BOY_DANH2_3, 
+			ConstTlmn.SOUND_BOY_DANH2_4, ConstTlmn.SOUND_BOY_DANH2_5, ConstTlmn.SOUND_BOY_DISCARD2CARD_1, 
+			ConstTlmn.SOUND_BOY_DISCARD2CARD_2, ConstTlmn.SOUND_BOY_DISCARD2CARD_3, ConstTlmn.SOUND_BOY_DISCARD2CARD_4, 
+			ConstTlmn.SOUND_BOY_DISCARD2CARD_5, ConstTlmn.SOUND_BOY_CHATDE2CARD_1, ConstTlmn.SOUND_BOY_CHATDE2CARD_2,
+			ConstTlmn.SOUND_BOY_CHATDE2CARD_3, ConstTlmn.SOUND_BOY_CHATDE2CARD_4, ConstTlmn.SOUND_BOY_CHATDE2CARD_5,
+			ConstTlmn.SOUND_BOY_DISCARD3CARD_1, ConstTlmn.SOUND_BOY_DISCARD3CARD_2, ConstTlmn.SOUND_BOY_DISCARD3CARD_3,
+			ConstTlmn.SOUND_BOY_DISCARD3CARD_4, ConstTlmn.SOUND_BOY_DISCARD3CARD_5, ConstTlmn.SOUND_BOY_CHATDE3CARD_1,
+			ConstTlmn.SOUND_BOY_CHATDE3CARD_2, ConstTlmn.SOUND_BOY_CHATDE3CARD_3, ConstTlmn.SOUND_BOY_CHATDE3CARD_4,
+			ConstTlmn.SOUND_BOY_CHATDE3CARD_5, ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_1, ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_2,
+			ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_3, ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_4, ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_5,
+			ConstTlmn.SOUND_BOY_PASSTURN_1, ConstTlmn.SOUND_BOY_PASSTURN_2, ConstTlmn.SOUND_BOY_PASSTURN_3,
+			ConstTlmn.SOUND_BOY_PASSTURN_4, ConstTlmn.SOUND_BOY_PASSTURN_5, ConstTlmn.SOUND_BOY_WIN_1,
+			ConstTlmn.SOUND_BOY_WIN_2, ConstTlmn.SOUND_BOY_WIN_3, ConstTlmn.SOUND_BOY_WIN_4,
+			ConstTlmn.SOUND_BOY_WIN_5, ConstTlmn.SOUND_BOY_LOSE_1, ConstTlmn.SOUND_BOY_LOSE_2,
+			ConstTlmn.SOUND_BOY_LOSE_3, ConstTlmn.SOUND_BOY_LOSE_4, ConstTlmn.SOUND_BOY_LOSE_5,
+			ConstTlmn.SOUND_BOY_OVERMONEY_1, ConstTlmn.SOUND_BOY_OVERMONEY_2, ConstTlmn.SOUND_BOY_OVERMONEY_3,
+			ConstTlmn.SOUND_BOY_OVERMONEY_4, ConstTlmn.SOUND_BOY_OVERMONEY_5, 
+			
+			ConstTlmn.SOUND_GIRL_HELLO_1, ConstTlmn.SOUND_GIRL_HELLO_2,
+			ConstTlmn.SOUND_GIRL_BYE_1, ConstTlmn.SOUND_GIRL_BYE_2, ConstTlmn.SOUND_GIRL_BYE_3, ConstTlmn.SOUND_GIRL_BYE_4,
+			ConstTlmn.SOUND_GIRL_BYE_5, ConstTlmn.SOUND_GIRL_JOINGAME_1, ConstTlmn.SOUND_GIRL_JOINGAME_2, 
+			ConstTlmn.SOUND_GIRL_JOINGAME_3, ConstTlmn.SOUND_GIRL_JOINGAME_4, ConstTlmn.SOUND_GIRL_JOINGAME_5,
+			ConstTlmn.SOUND_GIRL_USER_OUTROOM_1, ConstTlmn.SOUND_GIRL_USER_OUTROOM_2, ConstTlmn.SOUND_GIRL_USER_OUTROOM_3,
+			ConstTlmn.SOUND_GIRL_USER_OUTROOM_4, ConstTlmn.SOUND_GIRL_USER_OUTROOM_5, ConstTlmn.SOUND_GIRL_STARTGAME_1,
+			ConstTlmn.SOUND_GIRL_STARTGAME_2, ConstTlmn.SOUND_GIRL_STARTGAME_3, ConstTlmn.SOUND_GIRL_STARTGAME_4,
+			ConstTlmn.SOUND_GIRL_STARTGAME_5, ConstTlmn.SOUND_GIRL_OVERTIME_1, ConstTlmn.SOUND_GIRL_OVERTIME_2,
+			ConstTlmn.SOUND_GIRL_OVERTIME_3, ConstTlmn.SOUND_GIRL_OVERTIME_4, ConstTlmn.SOUND_GIRL_OVERTIME_5,
+			ConstTlmn.SOUND_GIRL_DISCARD1CARD_1, ConstTlmn.SOUND_GIRL_DISCARD1CARD_2, ConstTlmn.SOUND_GIRL_DISCARD1CARD_3,
+			ConstTlmn.SOUND_GIRL_DISCARD1CARD_4, ConstTlmn.SOUND_GIRL_DISCARD1CARD_5, ConstTlmn.SOUND_GIRL_CHATDE1CARD_1,
+			ConstTlmn.SOUND_GIRL_CHATDE1CARD_2, ConstTlmn.SOUND_GIRL_CHATDE1CARD_3, ConstTlmn.SOUND_GIRL_CHATDE1CARD_4,
+			ConstTlmn.SOUND_GIRL_CHATDE1CARD_5, ConstTlmn.SOUND_GIRL_CHATDE1CARD_6, ConstTlmn.SOUND_GIRL_CHATDE1CARD_6,
+			ConstTlmn.SOUND_GIRL_CHATDE1CARD_8, ConstTlmn.SOUND_GIRL_CHATDE1CARD_9, ConstTlmn.SOUND_GIRL_CHATDE1CARD_10,
+			ConstTlmn.SOUND_GIRL_DANH2_1, ConstTlmn.SOUND_GIRL_DANH2_2, ConstTlmn.SOUND_GIRL_DANH2_3, 
+			ConstTlmn.SOUND_GIRL_DANH2_4, ConstTlmn.SOUND_GIRL_DANH2_5, ConstTlmn.SOUND_GIRL_DISCARD2CARD_1, 
+			ConstTlmn.SOUND_GIRL_DISCARD2CARD_2, ConstTlmn.SOUND_GIRL_DISCARD2CARD_3, ConstTlmn.SOUND_GIRL_DISCARD2CARD_4, 
+			ConstTlmn.SOUND_GIRL_DISCARD2CARD_5, ConstTlmn.SOUND_GIRL_CHATDE2CARD_1, ConstTlmn.SOUND_GIRL_CHATDE2CARD_2,
+			ConstTlmn.SOUND_GIRL_CHATDE2CARD_3, ConstTlmn.SOUND_GIRL_CHATDE2CARD_4, ConstTlmn.SOUND_GIRL_CHATDE2CARD_5,
+			ConstTlmn.SOUND_GIRL_DISCARD3CARD_1, ConstTlmn.SOUND_GIRL_DISCARD3CARD_2, ConstTlmn.SOUND_GIRL_DISCARD3CARD_3,
+			ConstTlmn.SOUND_GIRL_DISCARD3CARD_4, ConstTlmn.SOUND_GIRL_DISCARD3CARD_5, ConstTlmn.SOUND_GIRL_CHATDE3CARD_1,
+			ConstTlmn.SOUND_GIRL_CHATDE3CARD_2, ConstTlmn.SOUND_GIRL_CHATDE3CARD_3, ConstTlmn.SOUND_GIRL_CHATDE3CARD_4,
+			ConstTlmn.SOUND_GIRL_CHATDE3CARD_5, ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_1, ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_2,
+			ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_3, ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_4, ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_5,
+			ConstTlmn.SOUND_GIRL_PASSTURN_1, ConstTlmn.SOUND_GIRL_PASSTURN_2, ConstTlmn.SOUND_GIRL_PASSTURN_3,
+			ConstTlmn.SOUND_GIRL_PASSTURN_4, ConstTlmn.SOUND_GIRL_PASSTURN_5, ConstTlmn.SOUND_GIRL_WIN_1,
+			ConstTlmn.SOUND_GIRL_WIN_2, ConstTlmn.SOUND_GIRL_WIN_3, ConstTlmn.SOUND_GIRL_WIN_4,
+			ConstTlmn.SOUND_GIRL_WIN_5, ConstTlmn.SOUND_GIRL_LOSE_1, ConstTlmn.SOUND_GIRL_LOSE_2,
+			ConstTlmn.SOUND_GIRL_LOSE_3, ConstTlmn.SOUND_GIRL_LOSE_4, ConstTlmn.SOUND_GIRL_LOSE_5,
+			ConstTlmn.SOUND_GIRL_OVERMONEY_1, ConstTlmn.SOUND_GIRL_OVERMONEY_2, ConstTlmn.SOUND_GIRL_OVERMONEY_3,
+			ConstTlmn.SOUND_GIRL_OVERMONEY_4, ConstTlmn.SOUND_GIRL_OVERMONEY_5, 
+			
+			];
+			//"Ready", , "Bichat"
+			var arrSound:Array = ["http://183.91.14.52/gamebai/bimkute/sound/AZgamebai_Sound_effect/GB001(1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/AZgamebai_Sound_effect/GB001(2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/AZgamebai_Sound_effect/GB001(3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/AZgamebai_Sound_effect/GB003.az",
+									"http://183.91.14.52/gamebai/bimkute/sound/AZgamebai_Sound_effect/GB005.az",
+									"http://183.91.14.52/gamebai/bimkute/sound/AZgamebai_Sound_effect/GB013.az",
+									"http://183.91.14.52/gamebai/bimkute/sound/AZgamebai_Sound_effect/GB007.az",
+									"http://183.91.14.52/gamebai/bimkute/sound/AZgamebai_Sound_effect/GB008.az",
+									"http://183.91.14.52/gamebai/bimkute/sound/AZgamebai_Sound_effect/GB009.az",
+									"http://183.91.14.52/gamebai/bimkute/sound/AZgamebai_Sound_effect/GB006.az",
+									"http://183.91.14.52/gamebai/bimkute/sound/AZgamebai_Sound_effect/GB011.az",
+									"http://183.91.14.52/gamebai/bimkute/sound/AZgamebai_Sound_effect/GB012.az",
+									"http://183.91.14.52/gamebai/bimkute/sound/AZgamebai_Sound_effect/GB002.az",
+									"http://183.91.14.52/gamebai/bimkute/sound/AZgamebai_Sound_effect/GB004.az",
+									"http://183.91.14.52/gamebai/bimkute/sound/AZgamebai_Sound_effect/GB017.az",
+									
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M001 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M001 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M002 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M002 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M002 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M002 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M002 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M003 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M003 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M003 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M003 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M003 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M004 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M004 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M004 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M004 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M004 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M005 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M005 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M005 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M005 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M005 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M006 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M006 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M006 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M006 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M006 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M007 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M007 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M007 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M007 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M007 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M008 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M008 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M008 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M008 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M008 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M008 (6).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M008 (7).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M008 (8).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M008 (9).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M008 (10).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M009 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M009 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M009 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M009 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M009 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M010 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M010 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M010 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M010 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M010 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M011 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M011 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M011 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M011 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M011 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M012 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M012 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M012 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M012 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M012 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M013 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M013 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M013 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M013 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M013 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M014 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M014 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M014 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M014 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M014 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M015 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M015 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M015 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M015 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M015 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M016 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M016 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M016 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M016 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M016 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M017 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M017 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M017 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M017 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M017 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M018 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M018 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M018 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M018 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Male/TL.M018 (5).az",
+									
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F001 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F001 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F002 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F002 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F002 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F002 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F002 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F003 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F003 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F003 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F003 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F003 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F004 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F004 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F004 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F004 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F004 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F005 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F005 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F005 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F005 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F005 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F006 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F006 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F006 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F006 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F006 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F007 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F007 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F007 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F007 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F007 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F008 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F008 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F008 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F008 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F008 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F008 (6).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F008 (7).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F008 (8).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F008 (9).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F008 (10).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F009 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F009 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F009 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F009 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F009 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F010 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F010 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F010 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F010 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F010 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F011 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F011 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F011 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F011 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F011 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F012 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F012 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F012 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F012 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F012 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F013 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F013 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F013 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F013 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F013 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F014 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F014 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F014 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F014 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F014 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F015 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F015 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F015 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F015 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F015 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F016 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F016 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F016 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F016 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F016 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F017 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F017 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F017 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F017 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F017 (5).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F018 (1).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F018 (2).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F018 (3).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F018 (4).az",
+									"http://183.91.14.52/gamebai/bimkute/sound/TL.Female/TL.F018 (5).az"
+								];
+			for (var i:int = 0; i < arrSoundName.length; i++) 
+			{
+				
+				var mySound:Sound = new Sound();
+				mySound.load(new URLRequest(arrSound[i]));
+				mySound.addEventListener(IOErrorEvent.IO_ERROR, onErrorLoadSound);
+				SoundManager.getInstance().registerSound(arrSoundName[i], mySound);
+			}
+		}
+		
+		private function onErrorLoadSound(e:IOErrorEvent):void 
+		{
+			trace(e.currentTarget)
 		}
 		
 		private function onLogOutClick(e:Event):void 
@@ -351,6 +647,9 @@ package
 				break;
 				case MainData.XITO:
 					playingScreen = new PlayingScreenXito();
+				break;
+				case MainData.TLMN:
+					playingScreen = new PlayGameScreenTlmn();
 				break;
 				default:
 					playingScreen = new PlayingScreenMauBinh();
