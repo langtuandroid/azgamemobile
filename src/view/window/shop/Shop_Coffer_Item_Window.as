@@ -3,6 +3,7 @@ package view.window.shop
 	import com.adobe.crypto.MD5;
 	import control.ConstTlmn;
 	import flash.display.MovieClip;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import model.chooseChannelData.MyInfo;
 	import model.MainData;
@@ -16,7 +17,7 @@ package view.window.shop
 	 * ...
 	 * @author bimkute
 	 */
-	public class Shop_Coffer_Item_Window extends BaseWindow 
+	public class Shop_Coffer_Item_Window extends Sprite 
 	{
 		private var myContent:MovieClip;
 		private var _arrBtnInTab:Array;
@@ -165,8 +166,8 @@ package view.window.shop
 				
 				var contentAvatar:ContentAvatar = new ContentAvatar();
 				
-				contentAvatar.x = 10 + countX * 440;
-				contentAvatar.y = 5 + countY * 135;
+				//contentAvatar.x = 10 + countX * 440;
+				//contentAvatar.y = 5 + countY * 135;
 				
 				if (countX < 2) 
 				{
@@ -180,8 +181,8 @@ package view.window.shop
 				
 				
 				contentAvatar.addInfo(idAvt, nameAvatar, chipAvatar, goldAvatar, linkAvatar, expireAvatar);
-				//scrollView.addChild(contentAvatar);
-				_arrBoard[3].addChild(contentAvatar);
+				scrollView.addRow(contentAvatar);
+				//_arrBoard[3].addChild(contentAvatar);
 				
 				contentAvatar.addEventListener(ConstTlmn.BUY_AVATAR, onBuyAvatar);
 			}

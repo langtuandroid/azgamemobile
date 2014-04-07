@@ -64,7 +64,7 @@ package control.getInfoCommand
 				break;
 				case MainData.PHOM:
 					url = /*mainData.basepath + */mainData.init.requestLink.getChannelLink.@url;
-					var object:Object = new Object();
+					object = new Object();
 					object.game_id = 'AZGB_PHOM';
 				break;
 				case MainData.MAUBINH:
