@@ -42,7 +42,7 @@ package control
 				case MainData.PHOM:
 					electroServerCommand = electroServerCommandPhom;
 				break;
-				case MainData.PHOM:
+				case MainData.TLMN:
 					electroServerCommand = electroServerCommandTlmn;
 				break;
 				default:
