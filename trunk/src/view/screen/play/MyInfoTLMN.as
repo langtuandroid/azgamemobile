@@ -58,7 +58,7 @@ package view.screen.play
 		
 		private var _indexCardChoose:int;//index trong content
 		
-		private var _distance:int = 30;//khoang cach cac quan bai
+		private var _distance:int = 50;//khoang cach cac quan bai
 		
 		private var isMove:Boolean = false;
 		private var isHit:Boolean = false;
@@ -73,8 +73,8 @@ package view.screen.play
 		private var _clock:Clock;
 		private var _glowFilter:TextFormat = new TextFormat(); 
 		
-		private var _distanceConstan:int = 32;
-		private var _distanceConstanY:int = 100;
+		private var _distanceConstan:int = 0;
+		private var _distanceConstanY:int = 0;
 		private var _arrStar:Array = [];
 		
 		public var _isPlaying:Boolean = false;
@@ -103,8 +103,8 @@ package view.screen.play
 			{
 				_clock = new Clock();
 				content.addChild(_clock);
-				_clock.x = 17.5;
-				_clock.y = 3;
+				_clock.x = 23;
+				_clock.y = 13;
 				_clock.addEventListener(Clock.COUNT_TIME_FINISH, onOverTimer);
 				
 				_clock.visible = false;
@@ -128,7 +128,7 @@ package view.screen.play
 			content.confirmReady.visible = false;
 			content.resultGame.visible = false;
 			
-			content.nextturn.x = 128;
+			content.nextturn.x = 535;
 			content.nextturn.y = -84;
 			
 			content.autoReadyBtn.gotoAndStop(1);
@@ -531,6 +531,8 @@ package view.screen.play
 		
 		public function nextturn():void 
 		{
+			var myDate:Date = new Date();
+			trace("minh click bo luot: ", myDate.minutes, myDate.seconds);
 			_isPassTurn = true;
 			content.nextturn.visible = true;
 			hideButton();
@@ -798,6 +800,7 @@ package view.screen.play
 		{
 			_userName = userName;
 			
+			trace("cac thogn tin ve minh: ", userName, money, isMaster)
 			_clock.setParent(MyDataTLMN.getInstance().sex);
 			if (isPlaying) 
 			{

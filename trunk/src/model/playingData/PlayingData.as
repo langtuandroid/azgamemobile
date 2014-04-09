@@ -1,6 +1,7 @@
 package model.playingData 
 {
 	import event.PlayingScreenEvent;
+	import event.PlayingScreenEventTlmn;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	/**
@@ -60,7 +61,7 @@ package model.playingData
 		public function set playingScreenAction(value:Object):void 
 		{
 			_playingScreenAction = value;
-			dispatchEvent(new PlayingScreenEvent(UPDATE_PLAYING_SCREEN, value));
+			dispatchEvent(new PlayingScreenEventTlmn(UPDATE_PLAYING_SCREEN, value));
 		}
 		
 		// Danh sách user trong phòng chờ

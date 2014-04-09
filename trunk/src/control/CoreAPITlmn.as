@@ -255,7 +255,8 @@ package control
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.START_GAME_SUCCESS,startGameObject));
 				break;
 				case CommandTlmn.NEXTTURN://bo luot
-					
+						
+					trace("co thang bo luot public: ", e.esObject.getString("playerName"))
 					var playerNextTurn:String = e.esObject.getString("playerName");
 					var objNextturn:Object = new Object();
 					objNextturn["user"] = playerNextTurn;
@@ -530,13 +531,6 @@ package control
 					GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_MASTER] = e.parameters.getString("roomMaster");
 					GameDataTLMN.getInstance().master = e.parameters.getString("roomMaster");
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.JOIN_GAME_ROOM_SUCCESS, GameDataTLMN.getInstance().gameRoomInfo));
-				break;
-				case CommandTlmn.NEXTTURN://bo luot
-					
-					var playerNextTurn:String = e.parameters.getString("playerName");
-					var objNextturn:Object = new Object();
-					objNextturn["user"] = playerNextTurn;
-					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.NEXTTURN, objNextturn));
 				break;
 				
 				case CommandTlmn.ENDROUND:
@@ -1066,9 +1060,8 @@ package control
 			var zoneId:int = e.zoneId;
 			var roomId:int = e.roomId;
 			var zone:Zone = electroServer.managerHelper.zoneManager.zoneById(zoneId);
+			GameDataTLMN.getInstance().zoneId = zoneId;
 			myData.zoneId = zoneId;
-			
-			
 			GameDataTLMN.getInstance().zoneId = e.zoneId;
 			GameDataTLMN.getInstance().roomId = e.roomId;
 			
@@ -1076,30 +1069,68 @@ package control
 			
 			if (e.action == UserUpdateAction.AddUser) // Tình huống có user vừa join vào room 
 			{
-				if (e.roomId == myData.lobbyRoomId) // join vào lobby
+				if (e.roomId == GameDataTLMN.getInstance().lobbyRoomId) // join vào lobby
 				{
-					
+					if (!GameDataTLMN.getInstance().userList[e.userName])
+					{
+						GameDataTLMN.getInstance().userList[e.userName] = new Object();
+						GameDataTLMN.getInstance().userList[e.userName][DataField.ROOM_ID] = GameDataTLMN.getInstance().lobbyRoomId;
+						GameDataTLMN.getInstance().userList[e.userName][DataField.USER_NAME] = e.userName;
+						getUserInfo(e.userName);
+					}
+					else
+					{
+						if (e.userName != MyDataTLMN.getInstance().myName) 
+						{
+							GameDataTLMN.getInstance().userList[e.userName][DataField.ROOM_ID] = GameDataTLMN.getInstance().lobbyRoomId;
+							GameDataTLMN.getInstance().userList[e.userName][DataField.USER_NAME] = e.userName;
+						}
+						
+					}
+					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST, GameDataTLMN.getInstance().userList));
 				}
 				else // join vào game
 				{
-					// Lấy uservariable của user đó để gửi đi
-					userRecentlyJoinRoom = e.userName;
-					getUserInfo(userRecentlyJoinRoom);
+					
+					/*userRecentlyJoinRoom = e.userName;
+					var userJoinRoom:EsObject = UserVariable(e.userVariables[2]).value;
+					var userRecentlyJoinRoomObject:Object = new Object();
+					userRecentlyJoinRoomObject[DataField.USER_NAME] = userRecentlyJoinRoom;
+					userRecentlyJoinRoomObject[DataField.LEVEL] = userJoinRoom.getString(DataField.LEVEL);
+					userRecentlyJoinRoomObject[DataField.MONEY] = userJoinRoom.getString(DataField.MONEY);
+					//userRecentlyJoinRoomObject[DataField.CASH] = object[DataField.CASH];
+					userRecentlyJoinRoomObject[DataField.AVATAR] = userJoinRoom.getString(DataField.AVATAR);
+					userRecentlyJoinRoomObject[DataField.DISPLAY_NAME] = userJoinRoom.getString(DataField.DISPLAY_NAME);
+					//userRecentlyJoinRoomObject[DataField.LOGO] = object[DataField.LOGO];
+					//userRecentlyJoinRoomObject[DataField.DEVICE] = object[DataField.DEVICE];
+					userRecentlyJoinRoom = "";
+					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.HAVE_USER_JOIN_ROOM, userRecentlyJoinRoomObject));*/
+					
+					// Gửi pluginRequest lên lấy thông tin các user trong phòng chơi
+					var pluginMessage:EsObject = new EsObject();
+					pluginMessage.setString("command", CommandTlmn.GET_PLAYING_INFO);
+					sendPluginRequest(GameDataTLMN.getInstance().zoneId, e.roomId, GameDataTLMN.getInstance().gameType, pluginMessage);
+					
+					
 				}
 			}
 			else if (e.action == UserUpdateAction.DeleteUser)  // Có user out
 			{
-				if (e.roomId == myData.lobbyRoomId) // Tình huống có user vừa out ra khỏi lobby room 
+				if (e.roomId == GameDataTLMN.getInstance().lobbyRoomId) // Tình huống có user vừa out ra khỏi lobby room 
 				{
-					
+					delete GameDataTLMN.getInstance().userList[e.userName];
+					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST, GameDataTLMN.getInstance().userList));
 				}
 				else // Tình huống có user vừa out ra khỏi game
 				{
 					var object:Object = new Object();
-					object[DataFieldMauBinh.USER_NAME] = e.userName;
+					object[DataField.USER_NAME] = e.userName;
+					
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.HAVE_USER_OUT_ROOM, object));
 				}
 			}
+			
+			
 		}
 		
 		// sự kiện update userVarialbe
@@ -1299,10 +1330,10 @@ package control
 		{
 			leaveRoom();
 			var quickJoinGameRequest:QuickJoinGameRequest = new QuickJoinGameRequest();
-			quickJoinGameRequest.zoneName = myData.gameType + "_" + String(myData.channelId);
-			quickJoinGameRequest.gameType = myData.gameType;
+			quickJoinGameRequest.zoneName = GameDataTLMN.getInstance().gameType + "_" + "-1";
+			quickJoinGameRequest.gameType = GameDataTLMN.getInstance().gameType;
 			var searchCriteria:SearchCriteria = new SearchCriteria();
-			searchCriteria.gameType = myData.gameType;
+			searchCriteria.gameType = GameDataTLMN.getInstance().gameType;
 			quickJoinGameRequest.criteria = searchCriteria;
 			var gameDetails:EsObject = new EsObject();
 			gameDetails.setString(DataFieldMauBinh.ROOM_NAME, "Vào làm một ván nào");
@@ -1534,7 +1565,7 @@ package control
 		 */		
 		public function getUserInRoom(roomId:int):void
 		{
-			var zoneName:String = GameDataTLMN.getInstance().gameType + "_" + GameDataTLMN.getInstance().channelId;
+			var zoneName:String = GameDataTLMN.getInstance().gameType + "_" + "-1";
 			var zoneId: int = electroServer.managerHelper.zoneManager.zoneByName(zoneName).id;
 			var getUsersInRoomRequest:GetUsersInRoomRequest = new GetUsersInRoomRequest();
 			getUsersInRoomRequest.roomId = roomId;

@@ -97,6 +97,15 @@ package
 			zCardManagerPhom;
 			zTimeBar_1_Phom;
 			
+			
+			MyInfoTlmnMc;
+			MyClock;
+			PlayerInfoTlmnMc;
+			PlayScreenTlmnMc;
+			MyAvatar;
+			MyCard;
+			MyCardDeck;
+			
 			Shop_Coffer_Item_Mc;
 			ContentAvatarMc;
 			ContentGiftMc;

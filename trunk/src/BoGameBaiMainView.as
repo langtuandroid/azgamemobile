@@ -552,7 +552,7 @@ package
 		
 		private function onErrorLoadSound(e:IOErrorEvent):void 
 		{
-			trace(e.currentTarget)
+			
 		}
 		
 		
@@ -707,9 +707,7 @@ package
 			removePlayingScreen();
 			switch (mainData.gameType) 
 			{
-				case MainData.TLMN:
-					
-				break;
+				
 				case MainData.PHOM:
 					playingScreen = new PlayingScreenPhom();
 				break;
