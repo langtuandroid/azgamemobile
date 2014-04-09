@@ -70,7 +70,7 @@ package view.screen
 		private var electroServerCommand:ElectroServerCommandTlmn = mainCommand.electroServerCommand;
 		private var mainData:MainData = MainData.getInstance();
 		private var windowLayer:WindowLayer = WindowLayer.getInstance(); // windowLayer để mở cửa sổ bất kỳ
-		private var _chatBox:ChatBox;
+		private var _chatBox:ChatBoxPhom;;
 		//private var _smallButton:SmallButton;
 		///private var _bigButton:BigButton;
 		private var _myInfo:MyInfoTLMN;
@@ -101,7 +101,6 @@ package view.screen
 		private var _settingWindow:Setting;
 		
 		private var _resultWindow:ResultWindowTlmn;
-		private var _invitePlayWindow:InvitePlayWindow;
 		
 		private var _glowFilter:TextFormat = new TextFormat(); 
 		
@@ -132,6 +131,8 @@ package view.screen
 		
 		private var heartbeart:Timer;
 		
+		private var chatLayer:Sprite;
+		private var gameLayer:Sprite;
 		
 		public function PlayGameScreenTlmn() 
 		{
@@ -143,8 +144,13 @@ package view.screen
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddToStage);
 			
-			content = new PlayScreen();
-			addChild(content);
+			gameLayer = new Sprite();
+			addChild(gameLayer);
+			chatLayer = new Sprite();
+			addChild(chatLayer);
+			
+			content = new PlayScreenTlmnMc();
+			gameLayer.addChild(content);
 			
 			
 			
@@ -218,6 +224,17 @@ package view.screen
 			heartbeart.addEventListener(TimerEvent.TIMER_COMPLETE, onSendHeartBeat);
 			
 			heartbeart.start();
+		}
+		
+		
+		public function effectOpen():void
+		{
+			
+		}
+		
+		public function effectClose():void
+		{
+			
 		}
 		
 		private function onSendHeartBeat(e:TimerEvent):void 
@@ -301,7 +318,7 @@ package view.screen
 				break;
 				case PlayingScreenActionTlmn.UPDATE_MONEY: // update tiền
 					//listenUpdateMoneyUser(e.data[ModelFieldTLMN.DATA]);
-					listenUpdateMoney(e.data[ModelFieldTLMN.DATA]);
+					listenUpdateMoneyUser(e.data[ModelFieldTLMN.DATA]);
 				break;
 				
 				case PlayingScreenActionTlmn.UPDATE_MONEY_SPECIAL: // update tiền
@@ -553,6 +570,7 @@ package view.screen
 				_myInfo.nextturn();
 			}
 			
+			trace("sua khi thay bo luot da het vong hay chua: ", GameDataTLMN.getInstance().finishRound)
 			if (GameDataTLMN.getInstance().finishRound) 
 			{
 				content.specialCard.visible = false;
@@ -926,7 +944,7 @@ package view.screen
 			}
 			else 
 			{
-				_myInfo.nextturn();
+				//_myInfo.nextturn();
 				onClickNextTurn(null);
 			}
 			
@@ -1351,7 +1369,7 @@ package view.screen
 			
 			if (GameDataTLMN.getInstance().master == MyDataTLMN.getInstance().myId) 
 			{
-				content.startGame.visible = false;
+				content.startGame.visible = true;
 				GameDataTLMN.getInstance().autoReady = false;
 			}
 			else 
@@ -1404,7 +1422,7 @@ package view.screen
 			if (GameDataTLMN.getInstance().master == _myInfo._userName) 
 			{
 				
-				content.startGame.visible = false;
+				content.startGame.visible = true;
 				//content.startGame.addEventListener(MouseEvent.CLICK, onClickStartGame);
 			}
 			
@@ -1471,7 +1489,7 @@ package view.screen
 		{
 			
 			var arr:Array = [];
-			content.setChildIndex(_chatBox, content.numChildren - 1);
+			
 			trace("1 lan vao thang chia bai")
 			for (var j:int = dealcard; j < _arrUserInfo.length; j++) 
 			{
@@ -2969,6 +2987,7 @@ package view.screen
 				var angel:int = int(Math.random() * 15);
 				var card:CardTlmn = new CardTlmn(arr[i]);
 				//card.rotation = angel;
+				card.scaleX = card.scaleY = .75;
 				_containCard.addChild(card);
 				_arrCardDiscard.push(card);
 				card.x = 30 * i;
@@ -2983,11 +3002,6 @@ package view.screen
 			timer.start();*/
 			
 			showEffect();
-			if (_invitePlayWindow) 
-			{
-				content.setChildIndex(_invitePlayWindow, content.numChildren - 1);
-			}
-		
 			
 			for (i = 0; i < _arrUserInfo.length; i++) 
 			{
@@ -3015,7 +3029,7 @@ package view.screen
 		private function showEffect():void 
 		{
 			//TweenMax.to(_containCard, 1, { x:(this.width - _containCard.width) / 2, y:(this.height = _containCard.height) / 2 } );
-			TweenMax.to(_containCard, .5, { x:(1024 - _containCard.width) / 2 + 30, y:350} );
+			TweenMax.to(_containCard, .5, { x:(1024 - _containCard.width) / 2 + 30, y:250} );
 			//_containCard.x = (this.width - _containCard.width) / 2;
 			//_containCard.y = (this.height - _containCard.height) / 2;
 		}
@@ -3106,9 +3120,6 @@ package view.screen
 				
 			}
 			
-			
-			content.setChildIndex(_chatBox, content.numChildren - 1);
-			
 		}
 		
 		public function removeAllEvent():void 
@@ -3147,13 +3158,8 @@ package view.screen
 			_chatBox.removeAllChat();
 			GameDataTLMN.getInstance().removeEventListener(ConstTlmn.HAVE_CHAT, onUpdatePublicChat);
 			_chatBox.removeEventListener(ChatBox.HAVE_CHAT, onHaveChat);
-			
-			if (_invitePlayWindow) 
-			{
-				_invitePlayWindow.removeEventListener("Invitive", onInvitePlayer);
-				_invitePlayWindow.removeEventListener("Close", onCloseInviteWindow);
-			}
-			
+			_chatBox.removeEventListener(ChatBox.BACK_BUTTON_CLICK, onChatBoxBackButtonClick);
+			chatLayer.removeChild(_chatBox);
 			
 			GameDataTLMN.getInstance().playingData.removeEventListener(PlayingData.UPDATE_PLAYING_SCREEN, onUpdatePlayingScreen);
 			
@@ -3219,19 +3225,20 @@ package view.screen
 			
 			content.txtNotice.text = "";
 			
-			_chatBox = new ChatBox();
+			_chatBox = new ChatBoxPhom();
 			
 			//_chatBox.width = 235;
 			//_chatBox.setHeight(275);
 			GameDataTLMN.getInstance().addEventListener(ConstTlmn.HAVE_CHAT, onUpdatePublicChat);
 			_chatBox.addEventListener(ChatBox.HAVE_CHAT, onHaveChat);
-			_chatBox.x = 10;
-			_chatBox.y = 425;
+			_chatBox.addEventListener(ChatBox.BACK_BUTTON_CLICK, onChatBoxBackButtonClick);
+			_chatBox.x = 0;
+			_chatBox.y = 0;
 			
 			//_chatBox.loadEmo("http://183.91.14.52/gamebai/bimkute/phom/emoticon.swf");
 			
-			content.addChild(_chatBox);
-			
+			chatLayer.addChild(_chatBox);
+			_chatBox.visible = false;
 			
 			//_waitToPlay = content["waitToPlay"]; = _waitToPlay.visible
 			_waitToReady = content["waitToReady"];
@@ -3291,6 +3298,12 @@ package view.screen
 			
 			content.startGame.visible = false;
 			
+		}
+		
+		private function onChatBoxBackButtonClick(e:Event):void 
+		{
+			_chatBox.visible = false;
+			//chatButton.visible = true;
 		}
 		
 		private function onOrderCard(e:MouseEvent):void 
@@ -3395,12 +3408,14 @@ package view.screen
 		{
 			GameDataTLMN.getInstance().removeEventListener(ConstTlmn.HAVE_CHAT, onUpdatePublicChat);
 			_chatBox.removeEventListener(ChatBox.HAVE_CHAT, onHaveChat);
+			_chatBox.removeEventListener(ChatBox.BACK_BUTTON_CLICK, onChatBoxBackButtonClick);
 		}
 		public function addEventChat():void 
 		{
 			
 			GameDataTLMN.getInstance().addEventListener(ConstTlmn.HAVE_CHAT, onUpdatePublicChat);
 			_chatBox.addEventListener(ChatBox.HAVE_CHAT, onHaveChat);
+			_chatBox.addEventListener(ChatBox.BACK_BUTTON_CLICK, onChatBoxBackButtonClick);
 		}
 		
 		
@@ -3458,35 +3473,18 @@ package view.screen
 			{
 				SoundManager.getInstance().playSound(ConstTlmn.SOUND_CLICK);
 			}
-			_invitePlayWindow = new InvitePlayWindow();
-			_invitePlayWindow.x = (1024 - _invitePlayWindow.width) / 2;
-			_invitePlayWindow.y = (600 - _invitePlayWindow.height) / 2;
-			content.addChild(_invitePlayWindow);
-			
-			_invitePlayWindow.visible = true;
-			content.setChildIndex(_invitePlayWindow, content.numChildren - 1);
-			//_invitePlayWindow.getUserInlobby();
-			_invitePlayWindow.addEventListener("Invitive", onInvitePlayer);
-			_invitePlayWindow.addEventListener("Close", onCloseInviteWindow);
+			var invitePlayWindow:InvitePlayWindow = new InvitePlayWindow();
+			windowLayer.openWindow(invitePlayWindow);
 		}
 		
 		private function onInvitePlayer(e:Event):void 
 		{
-			if (_invitePlayWindow) 
-			{
-				content.setChildIndex(_invitePlayWindow, 0);
-				_invitePlayWindow.visible = false;
-			}
+			
 		}
 		
 		private function onCloseInviteWindow(e:Event):void 
 		{
-			if (_invitePlayWindow) 
-			{
-				content.setChildIndex(_invitePlayWindow, 0);
-				_invitePlayWindow.visible = false;
-				
-			}
+			
 		}
 		
 		private function removeAllDisCard():void 
@@ -3571,12 +3569,7 @@ package view.screen
 		
 		public function destroy():void 
 		{
-			
-		}
-		
-		public function effectClose():void 
-		{
-			
+			removeAllEvent();
 		}
 		
 		public function okOut():void 
@@ -3792,7 +3785,7 @@ package view.screen
 										+ String(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_ID]) + " - Cược "
 										+ format(int(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]));
 				
-				content.startGame.visible = false;
+				content.startGame.visible = true;
 				//content.ruleDescription.y = content.channelNameAndRoomId.y;
 			}
 			else 
@@ -3885,8 +3878,8 @@ package view.screen
 		{
 			_myInfo = new MyInfoTLMN(this);
 			content.addChild(_myInfo);
-			_myInfo.x = 245;
-			_myInfo.y = 425;
+			_myInfo.x = 60;
+			_myInfo.y = 372;
 			_myInfo.addEventListener("next turn", onClickNextTurn);
 			_myInfo.addEventListener("hit card", onClickHitCard);
 			_myInfo.addEventListener(ConstTlmn.READY, onClickReady);
@@ -3902,16 +3895,16 @@ package view.screen
 				switch (i) 
 				{
 					case 0:
-						_userInfo.x = 910;
-						_userInfo.y = 200;
+						_userInfo.x = 840;
+						_userInfo.y = 145;
 					break;
 					case 1:
-						_userInfo.x = 597;
-						_userInfo.y = 27;
+						_userInfo.x = 592;
+						_userInfo.y = 48;
 					break;
 					case 2:
-						_userInfo.x = 5;
-						_userInfo.y = 200;
+						_userInfo.x = 0;
+						_userInfo.y = 145;
 					break;
 					default:
 				}
@@ -3958,14 +3951,16 @@ package view.screen
 		{
 			var i:int;
 			var checkEvent:Boolean = false;
-			
+			MyDataTLMN.getInstance().myId = _arrUserList[0].userName;
+			MyDataTLMN.getInstance().myDisplayName = _arrUserList[0].displayName;
+			MyDataTLMN.getInstance().myMoney[0] = _arrUserList[0].money;
 			trace("master in adduserinfo: ", GameDataTLMN.getInstance().master , MyDataTLMN.getInstance().myId)
+			trace("master in adduserinfo: ", _arrUserList[0].userName , _arrUserList[0].displayName)
 			
 			if (GameDataTLMN.getInstance().master == MyDataTLMN.getInstance().myId) 
 			{
 				_arrUserList[0].isMaster = true;
-				
-				content.startGame.visible = false;
+				content.startGame.visible = true;
 			}
 			else 
 			{
@@ -4033,15 +4028,7 @@ package view.screen
 			{
 				content.boardEvent.visible = false;
 			}
-			content.setChildIndex(_chatBox, content.numChildren - 1);
-			/*for (i = _arrUserList.length - 1; i < 3; i++) 
-			{
-				if (_arrUserInfo[i]) 
-				{
-					_arrUserInfo[i].visible = false;
-				}
-				
-			}*/
+			
 		}
 		
 		/**

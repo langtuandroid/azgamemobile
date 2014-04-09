@@ -815,6 +815,7 @@ package control.electroServerCommand
 		
 		private function haveUserNextTurn(e:ElectroServerEventTlmn):void 
 		{
+			trace("nghe thay 2 lan bo luot lien")
 			callPlayingScreenAction(PlayingScreenActionTlmn.NEXTTURN, e.data);
 		}
 		

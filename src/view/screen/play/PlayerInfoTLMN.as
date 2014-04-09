@@ -55,6 +55,8 @@ package view.screen.play
 		
 		public var _sex:Boolean = true;
 		
+		private var distance:int = 20;
+		
 		public function PlayerInfoTLMN(pos:int) 
 		{
 			
@@ -66,8 +68,8 @@ package view.screen.play
 			{
 				_clock = new Clock();
 				addChild(_clock);
-				_clock.x = 17.5;
-				_clock.y = 3;
+				_clock.x = 23;
+				_clock.y = 13;
 				_clock.addEventListener(Clock.COUNT_TIME_FINISH, onOverTimer);
 			}
 			if (!_avatar) 
@@ -82,43 +84,45 @@ package view.screen.play
 			if (_pos == 2) 
 			{
 				
-				content.nextturn.x = 125;
-				content.nextturn.y = 45;
-				content.chatde.x = 125;
-				content.chatde.y = 35;
+				content.nextturn.x = 127;
+				content.nextturn.y = 30;
+				content.chatde.x = 135;
+				content.chatde.y = 50;
 				content.effectMoney.y = 170;
 				content.level.x = 105;
 				content.iconMaster.x = 0;
 				content.effectMoneySpecial.y = 100;
-				content.numCardRemainTxt.x = 155;
-				content.numCardRemainTxt.y = 130;
+				content.numCardRemainTxt.x = 168;
+				content.numCardRemainTxt.y = 177;
+				distance = 19.5;
 			}
 			else if (_pos == 1) 
 			{
 				
-				content.nextturn.x = -111;
-				content.nextturn.y = 47;
-				content.chatde.x = -111;
-				content.chatde.y = 47;
+				content.nextturn.x = -125;
+				content.nextturn.y = -1;
+				content.chatde.x = -115;
+				content.chatde.y = 17;
 				content.effectMoney.y = 170;
-				content.level.x = 1;
-				content.iconMaster.x = 90;
+				content.level.x = 105;
+				content.iconMaster.x = 0;
 				content.effectMoneySpecial.y = 100;
-				content.numCardRemainTxt.x = -44;
-				content.numCardRemainTxt.y = 85;
+				content.numCardRemainTxt.x = -37;
+				content.numCardRemainTxt.y = 52;
 			}
 			else
 			{
-				content.nextturn.x = -77;
-				content.nextturn.y = 45;
-				content.chatde.x = -77;
-				content.chatde.y = 45;
+				content.nextturn.x = -81;
+				content.nextturn.y = 30;
+				content.chatde.x = -81;
+				content.chatde.y = 50;
 				content.effectMoney.y = 170;
 				content.level.x = 1;
 				content.iconMaster.x = 90;
 				content.effectMoneySpecial.y = 100;
-				content.numCardRemainTxt.x = -50;
-				content.numCardRemainTxt.y = 130;
+				content.numCardRemainTxt.x = -37;
+				content.numCardRemainTxt.y = 177;
+				distance = 19.5;
 			}
 			
 			content.iconMobile.visible = false;
@@ -365,6 +369,8 @@ package view.screen.play
 		
 		public function nextturn():void 
 		{
+			var myDate:Date = new Date();
+			trace("thang user nao do bo luot: ", myDate.minutes, myDate.seconds);
 			content.nextturn.visible = true;
 			content.setChildIndex(content.nextturn, content.numChildren - 1);
 			var rd:int = int(Math.random() * 5);
@@ -716,12 +722,12 @@ package view.screen.play
 			for (i = 0; i < remainingCard; i++) 
 			{
 				_cardDeck = new CardDeck();
-				_cardDeck.scaleX = _cardDeck.scaleY = .60;
+				_cardDeck.scaleX = _cardDeck.scaleY = .35;
 				
 				if (_pos == 2) 
 				{
-					_cardDeck.x = 190;
-					_cardDeck.y = -20 + 10 * i;
+					_cardDeck.x = 200;
+					_cardDeck.y = -96 + distance * i;
 					_cardDeck.rotation = 90;
 				}
 				else 
@@ -730,14 +736,14 @@ package view.screen.play
 					if (_pos == 1) 
 					{
 						
-						_cardDeck.x = -190 + 10 * i;
-						_cardDeck.y = 48;
+						_cardDeck.x = -305 + distance * i;
+						_cardDeck.y = 15;
 					}
 					else 
 					{
 						_cardDeck.rotation = 90;
-						_cardDeck.x = -13;
-						_cardDeck.y = -20 + 10 * i;
+						_cardDeck.x = -5;
+						_cardDeck.y = -96 + distance * i;
 					}
 					
 					
@@ -898,14 +904,14 @@ package view.screen.play
 			if (numCard < 0) 
 			{
 				var cardDeck:CardDeck = new CardDeck();
-				cardDeck.scaleX = cardDeck.scaleY = .60;
+				cardDeck.scaleX = cardDeck.scaleY = .35;
 				_remainingCard++;
 				
 				if (_pos == 2) 
 				{
 					//trace("chia bai cho cac info, vị trí là: 2  ", _pos)
-					cardDeck.x = 485;
-					cardDeck.y = 63;
+					cardDeck.x = 537
+					cardDeck.y = 107;
 					cardDeck.rotation = 90;
 					/*cardDeck.x = 0;
 						cardDeck.y = 0;*/
@@ -917,8 +923,8 @@ package view.screen.play
 					if (_pos == 1) 
 					{
 						//trace("chia bai cho cac info, vị trí là: 1 ", _pos)
-						cardDeck.x = -107;
-						cardDeck.y = 240;
+						cardDeck.x = -112;
+						cardDeck.y = 216;
 						/*cardDeck.x = 0;
 						cardDeck.y = 0;*/
 					}
@@ -926,8 +932,8 @@ package view.screen.play
 					{
 						cardDeck.rotation = 90;
 						//trace("chia bai cho cac info, vị trí là:3  ", _pos)
-						cardDeck.x = -419;
-						cardDeck.y = 70;
+						cardDeck.x = -303;
+						cardDeck.y = 108;
 						/*cardDeck.x = 0;
 						cardDeck.y = 0;*/
 					}
@@ -996,7 +1002,7 @@ package view.screen.play
 				if (_pos == 2) 
 				{
 					
-					TweenMax.to(card, .1, { bezierThrough:[ { x: -30 - 20 * _count, y:content.numCard.y - 3} ], 
+					TweenMax.to(card, .1, { bezierThrough:[ { x: -30 - distance * _count, y:content.numCard.y - 3} ], 
 								ease:Back.easeOut, onComplete:onComleteDealCard } ); 
 					//TweenMax.to(_arrCardDeck[type], 1, { x:0 * type, y:0} ); 
 					////trace("di chuyen den con , vị trí là:  ", _pos)
@@ -1005,13 +1011,13 @@ package view.screen.play
 				{
 					if (_pos == 1) 
 					{
-						TweenMax.to(card, .1, { bezierThrough:[ { x: 65 - 20 * _count, y: -80 } ], 
+						TweenMax.to(card, .1, { bezierThrough:[ { x: 65 - distance * _count, y: -80 } ], 
 								ease:Back.easeOut, onComplete:onComleteDealCard } ); 
 						
 					}
 					else 
 					{
-						TweenMax.to(card, .1, { bezierThrough:[ { x: 325 - 20 * _count, y: 220 } ], 
+						TweenMax.to(card, .1, { bezierThrough:[ { x: 325 - distance * _count, y: 220 } ], 
 								ease:Back.easeOut, onComplete:onComleteDealCard } ); 
 						trace("toa do thang nay: ", card.x, card.y)
 					}
@@ -1033,7 +1039,7 @@ package view.screen.play
 				if (_pos == 2) 
 				{
 					
-					TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: 190, y:-20 + 10 * _remainingCard} ], 
+					TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: 200, y:-96 + distance * _remainingCard} ], 
 								ease:Back.easeOut, onComplete:onComleteDeal } ); 
 					//TweenMax.to(_arrCardDeck[type], 1, { x:0 * type, y:0} ); 
 					////trace("di chuyen den con , vị trí là:  ", _pos)
@@ -1042,13 +1048,13 @@ package view.screen.play
 				{
 					if (_pos == 1) 
 					{
-						TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: -190 + 10 * _remainingCard, y:48} ], 
+						TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: -305 + distance * _remainingCard, y:15} ], 
 								ease:Back.easeOut, onComplete:onComleteDeal } ); 
 						
 					}
 					else 
 					{
-						TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: -13, y: -20 + 10 * _remainingCard} ], 
+						TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: -5, y: -96 + distance * _remainingCard} ], 
 								ease:Back.easeOut, onComplete:onComleteDeal} ); 
 						
 					}
