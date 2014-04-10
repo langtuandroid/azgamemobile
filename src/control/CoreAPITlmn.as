@@ -1693,74 +1693,87 @@ package control
 		{
 			var varArr: Array = new Array();
 			var i:int;
-			var object:Object = convertEsObject(e.userVariables[DataFieldMauBinh.USER_INFO]);
+			var userName:String;
+			//var object:Object = convertEsObject(e.getUserVariableByName(DataField.USER_INFO).getValue());
+			var object:Object = convertEsObject(e.userVariables[DataField.USER_INFO]);
 			
-			if (!object[DataFieldMauBinh.SEX])
-				object[DataFieldMauBinh.SEX] = 'M';
-			var userName:String = object[DataFieldMauBinh.USER_NAME];
 			
-			// trường hợp đang trong phòng game, cần lấy danh sách user trong lobby
-			if (myData.roomId != myData.lobbyRoomId)
-			{
-				if (myData.userListOfLobby)
+				// trường hợp đang trong phòng game, cần lấy danh sách user trong lobby
+				if (GameDataTLMN.getInstance().roomId != GameDataTLMN.getInstance().lobbyRoomId)
 				{
-					userName = object[DataFieldMauBinh.USER_NAME];
-					if (myData.userListOfLobby[userName])
+					if (GameDataTLMN.getInstance().userListOfLobby)
 					{
-						myData.userListOfLobby[userName][DataFieldMauBinh.DISPLAY_NAME] = object[DataFieldMauBinh.DISPLAY_NAME];
-						myData.userListOfLobby[userName][DataFieldMauBinh.MONEY] = object[DataFieldMauBinh.MONEY];
-						myData.userListOfLobby[userName][DataFieldMauBinh.AVATAR] = object[DataFieldMauBinh.AVATAR];
-						myData.userListOfLobby[userName][DataFieldMauBinh.LEVEL] = object[DataFieldMauBinh.LEVEL];
-						var isUpdateUserListOfLobby:Boolean = true;
-						for (userName in myData.userListOfLobby)
+						userName = object[DataField.USER_NAME];
+						if (GameDataTLMN.getInstance().userListOfLobby[userName])
 						{
-							if (!myData.userListOfLobby[userName][DataFieldMauBinh.DISPLAY_NAME])
-								isUpdateUserListOfLobby = false;
+							GameDataTLMN.getInstance().userListOfLobby[userName][DataField.DISPLAY_NAME] = object[DataField.DISPLAY_NAME];
+							GameDataTLMN.getInstance().userListOfLobby[userName][DataField.MONEY] = object[DataField.MONEY];
+							//GameDataTLMN.getInstance().userListOfLobby[userName][DataField.CASH] = object[DataField.CASH];
+							GameDataTLMN.getInstance().userListOfLobby[userName][DataField.AVATAR] = object[DataField.AVATAR];
+							var isUpdateUserListOfLobby:Boolean = true;
+							for (userName in GameDataTLMN.getInstance().userListOfLobby)
+							{
+								if (!GameDataTLMN.getInstance().userListOfLobby[userName][DataField.DISPLAY_NAME])
+									isUpdateUserListOfLobby = false;
+							}
+							if(isUpdateUserListOfLobby)
+								dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST_OF_LOBBY, GameDataTLMN.getInstance().userListOfLobby));
 						}
-						if(isUpdateUserListOfLobby)
-							dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST_OF_LOBBY, myData.userListOfLobby));
 					}
 				}
-			}
-			
-			if (object[DataFieldMauBinh.USER_NAME] == userRecentlyJoinRoom && myData.roomId != myData.lobbyRoomId) // Tình huống vừa có user join vào phòng game của mình và lấy userVariable của nó
-			{
-				var userRecentlyJoinRoomObject:Object = new Object();
-				userRecentlyJoinRoomObject[DataFieldMauBinh.USER_NAME] = userRecentlyJoinRoom;
-				userRecentlyJoinRoomObject[DataFieldMauBinh.LEVEL] = object[DataFieldMauBinh.LEVEL];
-				userRecentlyJoinRoomObject[DataFieldMauBinh.MONEY] = object[DataFieldMauBinh.MONEY];
-				userRecentlyJoinRoomObject[DataFieldMauBinh.AVATAR] = object[DataFieldMauBinh.AVATAR];
-				userRecentlyJoinRoomObject[DataFieldMauBinh.IP] = object[DataFieldMauBinh.IP];
-				if (object[DataFieldMauBinh.SEX])
-					userRecentlyJoinRoomObject[DataFieldMauBinh.SEX] = object[DataFieldMauBinh.SEX];
-				else
-					userRecentlyJoinRoomObject[DataFieldMauBinh.SEX] = 'M';
-				userRecentlyJoinRoomObject[DataFieldMauBinh.DISPLAY_NAME] = object[DataFieldMauBinh.DISPLAY_NAME];
-				userRecentlyJoinRoomObject[DataFieldMauBinh.LOGO] = object[DataFieldMauBinh.LOGO];
-				userRecentlyJoinRoom = "";
-				dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.HAVE_USER_JOIN_ROOM, userRecentlyJoinRoomObject));
-			}
-			else if (myData.roomId == myData.lobbyRoomId)
-			{
-				myData.userList[userName][DataFieldMauBinh.USER_INFO] = object;
-				if (!myData.saveUserList[userName])
-					myData.saveUserList[userName] = new Object();
-				myData.saveUserList[userName][DataFieldMauBinh.USER_INFO] = object;
-				var totalUser:int = 0;
-				for (userName in myData.userList)
-				{
-					totalUser++;
-				}
-				var countUser:int = 0;
-				for (userName in myData.userList)
-				{
-					if (myData.userList[userName][DataFieldMauBinh.USER_INFO])
-						countUser++;
-				}
 				
-				if (countUser == totalUser) // lấy đầy đủ thông tin user khi ở lobby
-					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST, myData.userList));
-			}
+				if (GameDataTLMN.getInstance().isFirstLoad)
+				{
+					var totalUser:int = 0;
+					for (userName in GameDataTLMN.getInstance().userList)
+					{
+						totalUser++;
+						if (object[DataField.USER_NAME] == userName)
+						{
+							GameDataTLMN.getInstance().userList[userName][DataField.USER_INFO] = object;
+						}
+					}
+					var countUser:int = 0;
+					for (userName in GameDataTLMN.getInstance().userList)
+					{
+						if (GameDataTLMN.getInstance().userList[userName][DataField.USER_INFO])
+							countUser++;
+					}
+					if (countUser == totalUser) // lấy đầy đủ thông tin user trong lần vào lobby đầu tiên
+					{
+						GameDataTLMN.getInstance().isFirstLoad = false;
+						dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST, GameDataTLMN.getInstance().userList));
+						GameDataTLMN.getInstance().isFirstLoadGame = true;
+						//findGame(); // sau khi lấy thông tin của các user đầy đủ thì mới lấy thông tin các phòng game
+					}
+				}
+				else
+				{
+					if (object[DataField.USER_NAME] == userRecentlyJoinRoom) // Tình huống vừa có user join vào phòng game của mình và lấy userVariable của nó
+					{
+						var userRecentlyJoinRoomObject:Object = new Object();
+						userRecentlyJoinRoomObject[DataField.USER_NAME] = userRecentlyJoinRoom;
+						userRecentlyJoinRoomObject[DataField.LEVEL] = object[DataField.LEVEL];
+						userRecentlyJoinRoomObject[DataField.MONEY] = object[DataField.MONEY];
+						//userRecentlyJoinRoomObject[DataField.CASH] = object[DataField.CASH];
+						userRecentlyJoinRoomObject[DataField.AVATAR] = object[DataField.AVATAR];
+						userRecentlyJoinRoomObject[DataField.DISPLAY_NAME] = object[DataField.DISPLAY_NAME];
+						//userRecentlyJoinRoomObject[DataField.LOGO] = object[DataField.LOGO];
+						//userRecentlyJoinRoomObject[DataField.DEVICE] = object[DataField.DEVICE];
+						userRecentlyJoinRoom = "";
+						dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.HAVE_USER_JOIN_ROOM, userRecentlyJoinRoomObject));
+					}
+					else
+					{
+						if (GameDataTLMN.getInstance().roomId != GameDataTLMN.getInstance().lobbyRoomId) // Nếu đang trong phòng chơi thì bỏ qua
+							return;
+						userName = object[DataField.USER_NAME];
+						if (!GameDataTLMN.getInstance().userList[userName])
+							return;
+						GameDataTLMN.getInstance().userList[userName][DataField.USER_INFO] = object;
+						dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST, GameDataTLMN.getInstance().userList));
+					}
+				}
 		}
 		
 		private function leaveRoom(): void

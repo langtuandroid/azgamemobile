@@ -145,18 +145,22 @@ package view.window.shop
 			var method:String = "POST";
 			var url:String;
 			var httpRequest:HTTPRequest = new HTTPRequest();
-			var obj:Object = new Object();
+			var obj:Object;
 			
 			switch (type) 
 			{
 				case 0:
-					url = "http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/GetListAvatarOfBuyer";
-					obj.mb_id = MainData.getInstance().chooseChannelData.myInfo.id + "&rowStart=0&rowEnd=10";
+					url = "http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/GetListAvatarOfBuyer?nick_name=" + 
+						MainData.getInstance().chooseChannelData.myInfo.name + "&rowStart=0&rowEnd=10";
+						
+					obj = new Object();
+					trace("xem avâtr cua minh: ", url);
 					httpRequest.sendRequest(method, url, obj, loadMyAvatarSuccess, true);
 				break;
 				case 1:
 					url = "http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
 									"?rowStart=0&rowEnd=10";
+					obj = new Object();
 					obj.it_group_id = String(1);
 					obj.it_type = String(1);
 					httpRequest.sendRequest(method, url, obj, loadMyItemSuccess, true);
@@ -173,6 +177,82 @@ package view.window.shop
 		private function loadMyAvatarSuccess(obj:Object):void 
 		{
 			trace(obj)
+			if (obj["Msg"] = "Cập nhật thành công") 
+			{
+				var i:int;
+				var arrData:Array = obj.Data;
+				var countX:int;
+				var countY:int;
+
+				for (i = 0; i < _arrMyAvatar.length; i++ ) 
+				{
+					_arrMyAvatar[i].removeEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
+					
+				}
+				scrollView.removeAll();
+				_arrMyAvatar = [];
+				
+				for (i = 0; i < arrData.length; i++ ) 
+				{
+					var nameAvatar:String = arrData[i]['avt_name'];
+					
+					var linkAvatar:String = arrData[i]['avt_dir_path'];
+					var expireAvatar:String = arrData[i]['avt_sell_expire_dt'];
+					var sellRelease:String = arrData[i]['avt_sell_release_dt'];
+					var idAvt:String = arrData[i]['avt_id'];
+					var idListAvt:String = arrData[i]['avt_lst_id'];
+					
+					var contentAvatar:ContentMyAvatar = new ContentMyAvatar();
+					_arrAvatar.push(contentAvatar);
+					//contentAvatar.x = 10 + countX * 440;
+					//contentAvatar.y = 5 + countY * 135;
+					
+					if (countX < 2) 
+					{
+						countX++;
+					}
+					else 
+					{
+						countY++;
+						countX = 0;
+					}
+					
+					
+					contentAvatar.addInfo(idAvt, idListAvt, nameAvatar, sellRelease, linkAvatar, expireAvatar);
+					scrollView.addRow(contentAvatar);
+					//_arrBoard[3].addChild(contentAvatar);
+					
+					contentAvatar.addEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
+				}
+			}
+		}
+		
+		private function onUseAvatar(e:Event):void 
+		{
+			var avatar:ContentMyAvatar = e.currentTarget as ContentMyAvatar;
+			var myInfo:MyInfo = new MyInfo();
+			var url:String = "http://wss.test.azgame.us/Service02/OnplayShopExt.asmx/DressAvatarFromClientSide";
+			var obj:Object = new Object();
+			var mainData:MainData = MainData.getInstance();
+			obj["access_token"] = mainData.loginData["AccessToken"];
+			obj["item_id"] = avatar._idAvt;
+			obj["avt_lst_id"] = avatar._idListAvt;
+			obj["client_hash"] = MD5.hash(obj["access_token"] + obj["avt_lst_id"]);
+			
+			trace("link mua item: ", obj["access_token"])
+			var httpReq:HTTPRequest = new HTTPRequest();
+			httpReq.sendRequest("POST", url, obj, useItemRespone, true);
+		}
+		
+		private function useItemRespone(obj:Object):void 
+		{
+			if (obj["Msg"] = "Cập nhật thành công") 
+			{
+				var buyAvatarWindow:ConfirmWindow = new ConfirmWindow();
+				buyAvatarWindow.setNotice("Bạn đã đổi thành công avatar này!");
+				
+				windowLayer.openWindow(buyAvatarWindow);
+			}
 		}
 		
 		private function onClickShowMyAvatar(e:MouseEvent):void 
@@ -268,19 +348,21 @@ package view.window.shop
 			var method:String = "POST";
 			var url:String;
 			var httpRequest:HTTPRequest = new HTTPRequest();
-			var obj:Object = new Object();
+			var obj:Object;
 			
 			switch (type) 
 			{
 				case 0:
 					url = "http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/GetListTwav00" + String(1)
 									+ "?rowStart=0&rowEnd=10";
-					obj.avt_group_id = String(1);
+					obj = new Object();
+					obj.avt_group_id = String(0);
 					httpRequest.sendRequest(method, url, obj, loadAvatarSuccess, true);
 				break;
 				case 1:
 					url = "http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
 									"?rowStart=0&rowEnd=10";
+					obj = new Object();
 					obj.it_group_id = String(1);
 					obj.it_type = String(1);
 					httpRequest.sendRequest(method, url, obj, loadItemSuccess, true);
@@ -386,6 +468,7 @@ package view.window.shop
 			var arrData:Array = obj.Data;
 			var countX:int;
 			var countY:int;
+
 			for (i = 0; i < _arrAvatar.length; i++ ) 
 			{
 				_arrAvatar[i].removeEventListener(ConstTlmn.BUY_AVATAR, onBuyAvatar);
