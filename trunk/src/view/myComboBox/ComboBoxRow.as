@@ -17,7 +17,7 @@ package view.myComboBox
 		private var valueTxt:TextField;
 		private var _value:Object;
 		private var _description:String;
-		public var standardHeight:int = 29;
+		public var standardHeight:int = 43;
 		
 		public function ComboBoxRow() 
 		{

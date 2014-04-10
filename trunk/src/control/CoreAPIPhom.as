@@ -94,7 +94,8 @@ package control
 			myData.lobbyName = "CiaoCoreGame";
 			myData.lobbyPluginName = "LobbyHandle";
 			
-			electroServer = mainData.electroServer;
+			if (!electroServer)
+				electroServer = new ElectroServer();
 			
 			electroServer.engine.addEventListener(MessageType.UserUpdateEvent.name, onUserListUpdateEvent);
 			electroServer.engine.addEventListener(MessageType.LeaveRoomEvent.name, onLeaveRoomEvent);

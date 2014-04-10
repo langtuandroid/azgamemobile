@@ -93,7 +93,8 @@ package control
 			myData.lobbyName = "LobbyMauBinh";
 			myData.lobbyPluginName = "LobbyMauBinhPlugin";
 		
-			electroServer = mainData.electroServer;
+			if (!electroServer)
+				electroServer = new ElectroServer();
 			
 			electroServer.engine.addEventListener(MessageType.UserUpdateEvent.name, onUserListUpdateEvent);
 			electroServer.engine.addEventListener(MessageType.LeaveRoomEvent.name, onLeaveRoomEvent);

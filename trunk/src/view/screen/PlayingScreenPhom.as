@@ -23,6 +23,7 @@ package view.screen
 	import flash.net.SharedObject;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
+	import flash.utils.Dictionary;
 	import flash.utils.Timer;
 	import logic.PhomLogic;
 	import logic.PlayingLogic;
@@ -116,6 +117,8 @@ package view.screen
 		private var playingLayer:Sprite;
 		private var chatboxLayer:Sprite;
 		private var chatButton:SimpleButton;
+		
+		private var _giveUpPlayerArray:Array;
 		
 		public function PlayingScreenPhom() 
 		{
@@ -236,7 +239,17 @@ package view.screen
 				if (allPlayerArray[i])
 				{
 					TextField(ipBoard["displayNameTxt" + String(ipIndex + 1)]).text = PlayerInfoPhom(allPlayerArray[i]).displayName;
-					TextField(ipBoard["ipTxt" + String(ipIndex + 1)]).text = PlayerInfoPhom(allPlayerArray[i]).ip;
+					var ipString:String = String(PlayerInfoPhom(allPlayerArray[i]).ip);
+					var countDot:int = 0;
+					var postfixString:String = '';
+					for (var j:int = 0; j < ipString.length; j++) 
+					{
+						if (ipString.charAt(j) == '.')
+							countDot++;
+						if (countDot > 1)
+							postfixString += ipString.charAt(j);
+					}
+					TextField(ipBoard["ipTxt" + String(ipIndex + 1)]).text = "***.***" + postfixString;
 					ipIndex++;
 				}
 			}
@@ -674,6 +687,17 @@ package view.screen
 			}
 			
 			checkConflictIp();
+			
+			for (i = 0; i < giveUpPlayerArray.length ; i++) 
+			{
+				var giveUpObject:Dictionary = giveUpPlayerArray[i];
+				if (giveUpObject[DataFieldPhom.POSITION] == indexEmpty)
+				{
+					PlayerInfoPhom(giveUpObject[DataFieldPhom.PLAYER]).destroy();
+					giveUpPlayerArray.splice(i, 1);
+					break;
+				}
+			}
 		}
 		
 		private function listenHaveUserOutRoom(data:Object):void 
@@ -716,7 +740,10 @@ package view.screen
 								if (nextTurn == belowUserInfo.userName && PlayerInfoPhom(allPlayerArray[i]).isPlaying) 
 									belowUserInfo.stealCardButton.enable = false;
 							}
-							removeOnePlayer(i);
+							if (outPlayer.isPlaying)
+								removeOnePlayer(i, true);
+							else
+								removeOnePlayer(i);
 						}
 					}
 					for (j = 0; j < allPlayerArray.length; j++) 
@@ -873,6 +900,8 @@ package view.screen
 		private function listenDealCard(data:Object):void 
 		{
 			//isHaveUserReady = false;
+			giveUpPlayerArray = new Array();
+			giveUpPlayerArray = new Array();
 			stealedPlayerObject = new Object();
 			stealPlayerObject = new Object();
 			hideReadyButton();
@@ -961,8 +990,8 @@ package view.screen
 			nextTurn = data[DataFieldPhom.NEXT_TURN];
 			var playerDisCard:PlayerInfoPhom;
 			// Nếu người đánh bài không phải là mình thì xử lý đánh bài
-			if (data[DataFieldPhom.USER_NAME] != belowUserInfo.userName)
-			{
+			//if (data[DataFieldPhom.USER_NAME] != belowUserInfo.userName)
+			//{
 				for (i = 0; i < playingPlayerArray.length; i++) // Tìm user server vừa gửi về để gọi lệnh đánh bài của user đó
 				{
 					if (PlayerInfoPhom(playingPlayerArray[i]).userName == data[DataFieldPhom.USER_NAME])
@@ -976,11 +1005,11 @@ package view.screen
 						i = playingPlayerArray.length;
 					}
 				}
-			}
-			else
-			{
-				playerDisCard = belowUserInfo;
-			}
+			//}
+			//else
+			//{
+				//playerDisCard = belowUserInfo;
+			//}
 			
 			var isBolt:Boolean;
 			for (i = 0; i < playingPlayerArray.length; i++)
@@ -1820,7 +1849,7 @@ package view.screen
 			}
 		}
 		
-		public function removeOnePlayer(position:int):void // xóa một người chơi
+		public function removeOnePlayer(position:int, isGiveUp:Boolean = false):void // xóa một người chơi
 		{
 			for (var i:int = 0; i < allPlayerArray.length; i++) 
 			{
@@ -1834,6 +1863,21 @@ package view.screen
 							{
 								if (PlayerInfoPhom(allPlayerArray[i]) == PlayerInfoPhom(playingPlayerArray[j]))
 								{
+									if (isGiveUp)
+									{
+										PlayerInfoPhom(allPlayerArray[i]).isGiveUp = true;
+										var giveUpObject:Dictionary = new Dictionary();
+										giveUpObject[DataFieldPhom.PLAYER] = allPlayerArray[i];
+										giveUpObject[DataFieldPhom.POSITION] = position;
+										
+										var timerToRemoveGiveUpPlayer:Timer = new Timer(5000, 1);
+										timerToRemoveGiveUpPlayer.addEventListener(TimerEvent.TIMER_COMPLETE, onRemoveGiveUpPlayer);
+										timerToRemoveGiveUpPlayer.start();
+										
+										giveUpObject[DataFieldPhom.TIME] = timerToRemoveGiveUpPlayer;
+										
+										giveUpPlayerArray.push(giveUpObject);
+									}
 									playingPlayerArray.splice(j, 1);
 									j = playingPlayerArray.length + 1;
 								}
@@ -1854,24 +1898,44 @@ package view.screen
 			if (countPlayer < 2)
 				hideReadyButton();
 				
-			switch (position) 
+			if (!isGiveUp)
 			{
-				case 0:
-					PlayerInfoPhom(this[PlayerInfoPhom.BELOW_USER]).destroy();
-				break;
-				case 1:
-					PlayerInfoPhom(this[PlayerInfoPhom.RIGHT_USER]).destroy();
-				break;
-				case 2:
-					PlayerInfoPhom(this[PlayerInfoPhom.ABOVE_USER]).destroy();
-				break;
-				case 3:
-					PlayerInfoPhom(this[PlayerInfoPhom.LEFT_USER]).destroy();
-				break;
+				switch (position) 
+				{
+					case 0:
+						PlayerInfoPhom(this[PlayerInfoPhom.BELOW_USER]).destroy();
+					break;
+					case 1:
+						PlayerInfoPhom(this[PlayerInfoPhom.RIGHT_USER]).destroy();
+					break;
+					case 2:
+						PlayerInfoPhom(this[PlayerInfoPhom.ABOVE_USER]).destroy();
+					break;
+					case 3:
+						PlayerInfoPhom(this[PlayerInfoPhom.LEFT_USER]).destroy();
+					break;
+				}
+				
+				if (position != 0)
+					invitePlayButtonArray[position - 1].visible = true;
 			}
+		}
+		
+		private function onRemoveGiveUpPlayer(e:TimerEvent):void 
+		{
+			if (!stage)
+				return;
 			
-			if (position != 0)
-				invitePlayButtonArray[position - 1].visible = true;
+			var giveUpObject:Dictionary = giveUpPlayerArray[giveUpPlayerArray.length - 1];
+			if (!giveUpObject)
+				return;
+			if (giveUpObject[DataFieldPhom.TIME] == e.currentTarget)
+			{
+				if (giveUpObject[DataFieldPhom.POSITION] != 0)
+					invitePlayButtonArray[giveUpObject[DataFieldPhom.POSITION] - 1].visible = true;
+				PlayerInfoPhom(giveUpObject[DataFieldPhom.PLAYER]).destroy();
+				giveUpPlayerArray.pop();
+			}
 		}
 		
 		private function addPlayerByType(playerType:String, position:int, isCardInteractive:Boolean = false):void
@@ -2170,6 +2234,18 @@ package view.screen
 		public function set isPlaying(value:Boolean):void 
 		{
 			_isPlaying = value;
+		}
+		
+		public function get giveUpPlayerArray():Array 
+		{
+			if (!_giveUpPlayerArray)
+				_giveUpPlayerArray = new Array();
+			return _giveUpPlayerArray;
+		}
+		
+		public function set giveUpPlayerArray(value:Array):void 
+		{
+			_giveUpPlayerArray = value;
 		}
 	}
 

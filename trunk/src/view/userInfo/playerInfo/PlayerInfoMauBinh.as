@@ -107,6 +107,7 @@ package view.userInfo.playerInfo
 		public var levelNumber:Number;
 		public var groupStatus:MovieClip;
 		public var winLoseIcon:MovieClip;
+		public var giveUpIcon:MovieClip;
 		
 		public var cardInfoArray:Array;
 		
@@ -903,6 +904,10 @@ package view.userInfo.playerInfo
 			addChild(winLoseIcon);
 			winLoseIcon.visible = false;
 			winLoseIcon.stop();
+			
+			giveUpIcon = content["giveUpIcon"];
+			if (giveUpIcon)
+				giveUpIcon.visible = false;
 		}
 		
 		public function setStatus(type:String):void
@@ -1535,6 +1540,22 @@ package view.userInfo.playerInfo
 		private var isIncreaseArrange:Boolean;
 		private var backupUnleaveCardPosition:Array;
 		public var isFirstClick:Boolean = true;
+		
+		private var _isGiveUp:Boolean;
+		public function get isGiveUp():Boolean 
+		{
+			return _isGiveUp;
+		}
+		
+		public function set isGiveUp(value:Boolean):void 
+		{
+			_isGiveUp = value;
+			if (value)
+			{
+				giveUpIcon.visible = true;
+				addChild(giveUpIcon);
+			}
+		}
 	}
 
 }

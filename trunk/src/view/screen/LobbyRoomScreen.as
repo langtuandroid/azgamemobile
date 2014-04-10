@@ -85,6 +85,8 @@ package view.screen
 		private var selectGameButton:SimpleButton;
 		private var channelList:ChannelList;
 		
+		private var chatButton:SimpleButton;
+		private var messageButton:SimpleButton;
 		private var exitButton:SimpleButton;
 		private var helpButton:SimpleButton;
 		private var soundOnButton:SimpleButton;
@@ -114,6 +116,7 @@ package view.screen
 			channelInfoTxt.selectable = false;
 			channelInfoTxt.mouseEnabled = false;
 			channelInfoTxt.text = '';
+			channelInfoTxt.visible = false;
 			
 			lobbyBtn = content["lobbyBtn"];
 			friendBtn = content["friendBtn"];
@@ -121,10 +124,8 @@ package view.screen
 			addChild(friendBtn);
 			
 			chatBox = new ChatBoxLobby();
-			chatBox.x = 765;
-			chatBox.y = 399;
-			addChild(chatBox);
 			chatBox.addEventListener(ChatBox.HAVE_CHAT, onHaveChat);
+			chatBox.addEventListener(ChatBox.BACK_BUTTON_CLICK, onCloseChatBox);
 			
 			lobbyBtn.addEventListener(MouseEvent.CLICK, onChangeUserListButtonClick);
 			friendBtn.addEventListener(MouseEvent.CLICK, onChangeUserListButtonClick);
@@ -253,6 +254,8 @@ package view.screen
 			selectGameButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
 			
 			
+			chatButton = content["chatButton"];
+			messageButton = content["messageButton"];
 			exitButton = content["exitButton"];
 			helpButton = content["helpButton"];
 			soundOnButton = content["soundOnButton"];
@@ -265,6 +268,8 @@ package view.screen
 			addChild(soundOffButton);
 			addChild(musicOnButton);
 			addChild(musicOffButton);
+			addChild(chatButton);
+			addChild(messageButton);
 			
 			sharedObject = SharedObject.getLocal("soundConfig");
 			
@@ -283,12 +288,29 @@ package view.screen
 				musicOffButton.visible = false;
 			}
 			
+			chatButton.addEventListener(MouseEvent.CLICK, onChatButtonClick);
+			messageButton.addEventListener(MouseEvent.CLICK, onMessageButtonClick);
 			exitButton.addEventListener(MouseEvent.CLICK, onExitButtonClick);
 			helpButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
 			soundOnButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
 			soundOffButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
 			musicOnButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
 			musicOffButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
+		}
+		
+		private function onChatButtonClick(e:MouseEvent):void 
+		{
+			addChild(chatBox);
+		}
+		
+		private function onCloseChatBox(e:Event):void 
+		{
+			removeChild(chatBox);
+		}
+		
+		private function onMessageButtonClick(e:MouseEvent):void 
+		{
+			
 		}
 		
 		private function onExitButtonClick(e:MouseEvent):void 

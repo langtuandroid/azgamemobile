@@ -126,10 +126,10 @@ package
 				NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, handleDeactivate, false, 0, true);
 			}
 			
-			loadSoundMauBinh();
-			loadSoundChung();
-			
-			loadBackgroundMusic();
+			//loadSoundMauBinh();
+			//loadSoundChung();
+			//
+			//loadBackgroundMusic();
 		}
 		
 		private function loadBackgroundMusic():void 
@@ -558,7 +558,8 @@ package
 		
 		private function onLogOutClick(e:Event):void 
 		{
-			mainCommand.electroServerCommand.closeConnection();
+			if (mainCommand.electroServerCommand)
+				mainCommand.electroServerCommand.closeConnection();
 			lobbyRoomScreen.showLoginWindow();
 		}
 		

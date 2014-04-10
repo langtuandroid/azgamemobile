@@ -131,6 +131,7 @@ package view.userInfo.playerInfo
 		private var level:TextField;
 		private var money:TextField;
 		private var homeIcon:Sprite;
+		private var giveUpIcon:Sprite;
 		private var readyIcon:Sprite;
 		public var moneyNumber:Number;
 		
@@ -949,21 +950,30 @@ package view.userInfo.playerInfo
 		{
 			if (formName != PlayerInfoPhom.BELOW_USER)
 				return;
+				
+			var checkArray:Array = new Array;
+			var j:int;
+			for (j = 0; j < unLeaveCards.length; j++)
+			{
+				if (CardPhom(unLeaveCards[j]).isChoose)
+					checkArray.push(unLeaveCards[j]);
+			}
+			
+			playCardButton.enable = false;
+			if (checkArray.length == 1)
+			{
+				currentSelectedCard = checkArray[0];
+				playCardButton.enable = true;
+			}
+				
 			if (myStatus == DOWN_CARD) // trường hợp đang hạ bài
 			{
 				checkDownCard();
 				return;
 			}
 			
-			if (myStatus == SEND_CARD) // trường hợp đang hạ bài
+			if (myStatus == SEND_CARD) // trường hợp đang gửi bài
 			{
-				var checkArray:Array = new Array;
-				var j:int;
-				for (j = 0; j < unLeaveCards.length; j++)
-				{
-					if (CardPhom(unLeaveCards[j]).isChoose)
-						checkArray.push(unLeaveCards[j]);
-				}
 				var sendArray:Array = checkSendCard(checkArray);
 				if (sendArray && sendArray.length == checkArray.length)
 					sendCardButton.enable = true;
@@ -1115,12 +1125,37 @@ package view.userInfo.playerInfo
 		
 		private function onCardIsDeSelected(e:Event):void // bỏ chọn bài
 		{
-			if (myStatus == DOWN_CARD)
+			var checkArray:Array = new Array;
+			var j:int;
+			for (j = 0; j < unLeaveCards.length; j++)
+			{
+				if (CardPhom(unLeaveCards[j]).isChoose)
+					checkArray.push(unLeaveCards[j]);
+			}
+			
+			playCardButton.enable = false;
+			if (checkArray.length == 1)
+			{
+				currentSelectedCard = checkArray[0];
+				playCardButton.enable = true;
+			}
+			
+			if (myStatus == SEND_CARD)
+			{
+				var sendArray:Array = checkSendCard(checkArray);
+				if (sendArray && sendArray.length == checkArray.length)
+					sendCardButton.enable = true;
+				else if (checkArray.length != 0)
+					sendCardButton.enable = false;
+			}
+			else if (myStatus == DOWN_CARD)
+			{
 				checkDownCard();
-			if (myStatus == PLAY_CARD)
+			}
+			else if (myStatus == PLAY_CARD)
 			{
 				currentSelectedCard = null;
-				for (var j:int = 0; j < unLeaveCards.length; j++) // Kiểm tra xem đang có lá bài nào được chọn để gán lại currentSelectedCard
+				for (j = 0; j < unLeaveCards.length; j++) // Kiểm tra xem đang có lá bài nào được chọn để gán lại currentSelectedCard
 				{
 					if (CardPhom(unLeaveCards[j]).isChoose)
 						currentSelectedCard = unLeaveCards[j];
@@ -1136,20 +1171,6 @@ package view.userInfo.playerInfo
 					addChild(reSelectButton);
 					playCardButton.enable = reSelectButton.enable = true;
 				}
-			}
-			if (myStatus == SEND_CARD)
-			{
-				var checkArray:Array = new Array;
-				for (j = 0; j < unLeaveCards.length; j++)
-				{
-					if (CardPhom(unLeaveCards[j]).isChoose)
-						checkArray.push(unLeaveCards[j]);
-				}
-				var sendArray:Array = checkSendCard(checkArray);
-				if (sendArray && sendArray.length == checkArray.length)
-					sendCardButton.enable = true;
-				else if (checkArray.length != 0)
-					sendCardButton.enable = false;
 			}
 		}
 		
@@ -1351,6 +1372,10 @@ package view.userInfo.playerInfo
 			addChild(winLoseIcon);
 			winLoseIcon.visible = false;
 			winLoseIcon.stop();
+			
+			giveUpIcon = content["giveUpIcon"];
+			if (giveUpIcon)
+				giveUpIcon.visible = false;
 		}
 		
 		public function setStatus(type:String):void
@@ -1429,7 +1454,7 @@ package view.userInfo.playerInfo
 					setMyTurn(DO_NOTHING);
 				break;
 				case DOWN_CARD:
-					autoDownCard();
+					autoDownCardWhenTimeOut();
 				break;
 				case SEND_CARD:
 					electroServerCommand.sendCardFinish(userName);
@@ -1471,6 +1496,29 @@ package view.userInfo.playerInfo
 			{
 				electroServerCommand.downOneDeck(userName, deckIdArray[j]);
 			}
+		}
+		
+		private function autoDownCardWhenTimeOut():void 
+		{
+			var deckArray:Array = phomLogic.getDeckToAutoDownCardWhenTimeOut(unLeaveCards);
+			var deckIdArray:Array = new Array();
+			var j:int;
+			for (j = 0; j < deckArray.length; j++) 
+			{
+				var tempArray:Array = new Array();
+				deckIdArray.push(tempArray);
+				for (var k:int = 0; k < deckArray[j].length; k++) 
+				{
+					tempArray[k] = CardPhom(deckArray[j][k]).id;
+				}
+			}
+			totalDeck = deckArray.length;
+			for (j = 0; j < deckIdArray.length; j++)
+			{
+				electroServerCommand.downOneDeck(userName, deckIdArray[j]);
+			}
+			if (totalDeck == 0)
+				electroServerCommand.downCardFinish(userName);
 		}
 		
 		public function countTime(time:Number):void
@@ -1795,13 +1843,22 @@ package view.userInfo.playerInfo
 				switch (e.currentTarget) 
 				{
 					case playCardButton:
+						if (myStatus == DOWN_CARD)
+						{
+							electroServerCommand.downCardFinish(userName);
+							electroServerCommand.sendCardFinish(userName);
+						}
+						if (myStatus == SEND_CARD)
+						{
+							electroServerCommand.sendCardFinish(userName);
+						}
 						if (currentSelectedCard)
 						{
 							if (phomLogic.checkPlayCard(currentSelectedCard, unLeaveCards)) // Lá bài đánh hợp lệ
 							{
 								setMyTurn(DO_NOTHING);
 								electroServerCommand.playOneCard(currentSelectedCard.id, getNextPlayer().userName);
-								playOneCard(currentSelectedCard.id);
+								//playOneCard(currentSelectedCard.id);
 								currentSelectedCard = null;
 							}
 						}
@@ -2161,6 +2218,22 @@ package view.userInfo.playerInfo
 				isNoPlay = false;
 			else
 				countArrangeCard = 0;
+		}
+		
+		private var _isGiveUp:Boolean;
+		public function get isGiveUp():Boolean 
+		{
+			return _isGiveUp;
+		}
+		
+		public function set isGiveUp(value:Boolean):void 
+		{
+			_isGiveUp = value;
+			if (value)
+			{
+				giveUpIcon.visible = true;
+				addChild(giveUpIcon);
+			}
 		}
 	}
 

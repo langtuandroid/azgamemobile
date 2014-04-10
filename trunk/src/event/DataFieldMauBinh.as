@@ -6,6 +6,7 @@ package event
 	 */
 	public class DataFieldMauBinh 
 	{
+		public static const PLAYER: String = "player";
 		public static const USER_ID: String = "userId";
 		public static const USER_INFO: String = "userInfo";
 		public static const OTHER_INFO: String = "otherInfo";

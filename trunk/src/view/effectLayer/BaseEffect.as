@@ -16,6 +16,7 @@ package view.effectLayer
 	public class BaseEffect extends Sprite 
 	{
 		public static const SCALE_INCREASE:String = "scaleIncrease"; // effect to dần lên
+		public static const BIG_SCALE_INCREASE:String = "smallScaleIncrease"; // effect to dần lên
 		public static const SMALL_SCALE_INCREASE:String = "smallScaleIncrease"; // effect to dần lên
 		public static const MOVING_TRANSPARENT:String = "movingTransparent"; // di chuyển từ điểm nào đó và alpha đậm dần lên
 		
@@ -66,7 +67,13 @@ package view.effectLayer
 				case SMALL_SCALE_INCREASE:
 					content.scaleX = content.scaleY = 0;
 					content.visible = true;
-					movingTween = new GTween(content, movingTime, { scaleX:0.8, scaleY:0.8 }, { ease:Back.easeOut });
+					movingTween = new GTween(content, movingTime, { scaleX:0.92, scaleY:0.92 }, { ease:Back.easeOut });
+					movingTween.addEventListener(Event.COMPLETE, movingComplete);
+				break;
+				case BIG_SCALE_INCREASE:
+					content.scaleX = content.scaleY = 0;
+					content.visible = true;
+					movingTween = new GTween(content, movingTime, { scaleX:1.35, scaleY:1.35 }, { ease:Back.easeOut });
 					movingTween.addEventListener(Event.COMPLETE, movingComplete);
 				break;
 				case MOVING_TRANSPARENT:

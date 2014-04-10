@@ -10,6 +10,7 @@ package view.myComboBox
 	import flash.text.TextFormat;
 	import logic.PlayingLogic;
 	import view.BaseView;
+	import view.ScrollView.ScrollViewYun;
 	
 	/**
 	 * ...
@@ -25,6 +26,8 @@ package view.myComboBox
 		private var rowContainer:Sprite;
 		private var _mainTextFormat:TextFormat;
 		private var _rowTextFormat:TextFormat;
+		private var scrollView:ScrollViewYun;
+		private var isRecentClickRow:Boolean;
 		
 		public function MyComboBox() 
 		{
@@ -33,34 +36,56 @@ package view.myComboBox
 			downButton.addEventListener(MouseEvent.CLICK, onDownButtonClick);
 			currentValueTxt = content["txt"];
 			
+			if (!rowContainer)
+			{
+				rowContainer = content["rowContainer"];
+				//rowContainer.width = (new ComboBoxRow()).width;
+				//rowContainer.height = (new ComboBoxRow()).standardHeight * 4;
+				//rowContainer.y = (new ComboBoxRow()).standardHeight;
+				//addChild(rowContainer);
+				
+				scrollView = new ScrollViewYun();
+				scrollView.visible = false;
+				scrollView.setData(rowContainer);
+				addChild(scrollView);
+			}
+			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		}
 		
 		private function onAddedToStage(e:Event):void 
 		{
-			stage.addEventListener(MouseEvent.CLICK, onStageClick);
+			stage.addEventListener(MouseEvent.MOUSE_UP, onStageClick);
 		}
 		
 		private function onRemovedFromStage(e:Event):void 
 		{
-			stage.removeEventListener(MouseEvent.CLICK, onStageClick);
+			stage.removeEventListener(MouseEvent.MOUSE_UP, onStageClick);
 		}
 		
 		private function onStageClick(e:MouseEvent):void 
 		{
 			if (e.target == downButton)
+			{
+				isRecentClickRow = false;
 				return;
-			if (rowContainer)
-				rowContainer.visible = false;
+			}
+			if (isRecentClickRow)
+			{
+				isRecentClickRow = false;
+				return;
+			}
+			isRecentClickRow = false;
+			if (scrollView)
+				scrollView.visible = false;
 		}
 		
 		private function onDownButtonClick(e:MouseEvent):void 
 		{
 			if (!rowContainer)
 				return;
-			rowContainer.visible = !rowContainer.visible;
-			//e.stopImmediatePropagation();
+			scrollView.visible = !scrollView.visible;
 		}
 		
 		public function get currentValue():Object 
@@ -93,25 +118,24 @@ package view.myComboBox
 		public function set valueArray(value:Array):void 
 		{
 			_valueArray = value;
-			if (!rowContainer)
-			{
-				rowContainer = new Sprite();
-				rowContainer.y = (new ComboBoxRow()).standardHeight;
-				addChild(rowContainer);
-			}
+			scrollView.visible = false;
 			var i:int;
-			for (i = rowContainer.numChildren - 1; i >= 0; i--)
-			{
-				rowContainer.removeChildAt(i);
-			}
+			//for (i = rowContainer.numChildren - 1; i >= 0; i--)
+			//{
+				//rowContainer.removeChildAt(i);
+			//}
+			scrollView.removeAll();
 			for (i = 0; i < value.length; i++) 
 			{
 				var comboBoxRow:ComboBoxRow = new ComboBoxRow();
 				comboBoxRow.value = value[i];
-				comboBoxRow.addEventListener(MouseEvent.CLICK, onRowClick);
-				comboBoxRow.y = rowContainer.numChildren * comboBoxRow.standardHeight;
-				rowContainer.addChild(comboBoxRow);
+				comboBoxRow.addEventListener(MouseEvent.MOUSE_UP, onRowClick);
+				//comboBoxRow.y = rowContainer.numChildren * comboBoxRow.standardHeight;
+				//rowContainer.addChild(comboBoxRow);
+				scrollView.addRow(comboBoxRow);
 			}
+			scrollView.updateScroll();
+			scrollView.recheckTopAndBottom();
 		}
 		
 		public function set mainTextFormat(value:TextFormat):void 
@@ -129,9 +153,11 @@ package view.myComboBox
 		
 		private function onRowClick(e:MouseEvent):void 
 		{
-			e.stopImmediatePropagation();
+			isRecentClickRow = true;
+			if (scrollView.isRecentMoving)
+				return;
 			currentValue = ComboBoxRow(e.currentTarget).value;
-			rowContainer.visible = false;
+			scrollView.visible = false;
 		}
 		
 	}
