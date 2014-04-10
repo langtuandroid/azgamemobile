@@ -41,6 +41,7 @@ package view.screen
 	import view.effectLayer.TextEffect_1;
 	import view.groupNameBar.GroupNameBar;
 	import view.userInfo.playerInfo.PlayerInfoMauBinh;
+	import view.userInfo.playerInfo.PlayerInfoPhom;
 	import view.window.AccuseWindow;
 	import view.window.AlertWindow;
 	import view.window.BaseWindow;

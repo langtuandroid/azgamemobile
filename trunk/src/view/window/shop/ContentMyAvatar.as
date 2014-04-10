@@ -14,11 +14,11 @@ package view.window.shop
 	{
 		private var content:MovieClip;
 		public var _idAvt:String;
-		public var _goldAvt:String;
-		public var _chipAvt:String;
-		public function ContenMytAvatar() 
+		public var _idListAvt:String;
+		
+		public function ContentMyAvatar() 
 		{
-			super();
+			
 			content = new ContentMyAvatarMc();
 			addChild(content);
 			addEventListener(Event.ADDED_TO_STAGE, onAddToStage);
@@ -31,7 +31,7 @@ package view.window.shop
 			
 			
 			
-			content.buyAvatarBtn.addEventListener(MouseEvent.MOUSE_UP, onUseAvatar);
+			content.useItemMc.addEventListener(MouseEvent.MOUSE_UP, onUseAvatar);
 			
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 		}
@@ -40,7 +40,7 @@ package view.window.shop
 		{
 			removeEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 			
-			content.buyAvatarBtn.removeEventListener(MouseEvent.MOUSE_UP, onBuyAvatar);
+			content.useItemMc.removeEventListener(MouseEvent.MOUSE_UP, onUseAvatar);
 			
 		}
 		
@@ -49,11 +49,10 @@ package view.window.shop
 			dispatchEvent(new Event(ConstTlmn.USE_AVATAR));
 		}
 		
-		public function addInfo(idAvt:String, nameAvt:String, timeUse:String, linkAvt:String, expire:String):void 
+		public function addInfo(idAvt:String, idListAvt:String, nameAvt:String, timeUse:String, linkAvt:String, expire:String):void 
 		{
 			_idAvt = idAvt;
-			_goldAvt = gold;
-			_chipAvt = chip;
+			_idListAvt = idListAvt;
 			
 			content.itemNameTxt.text = nameAvt;
 			
