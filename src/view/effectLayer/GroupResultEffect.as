@@ -20,6 +20,8 @@ package view.effectLayer
 		{
 			if (value == 1)
 				effectType = BaseEffect.SMALL_SCALE_INCREASE;
+			else
+				effectType = BaseEffect.BIG_SCALE_INCREASE;
 				
 			switch (type) 
 			{

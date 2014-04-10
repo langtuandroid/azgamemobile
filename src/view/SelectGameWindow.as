@@ -9,8 +9,12 @@ package view
 	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
+	import flash.text.TextField;
+	import logic.PlayingLogic;
+	import model.chooseChannelData.ChooseChannelData;
 	import model.MainData;
 	import request.MainRequest;
+	import view.userInfo.avatar.Avatar;
 	import view.window.BaseWindow;
 	import view.window.shop.Shop_Coffer_Item_Window;
 	import view.window.windowLayer.WindowLayer;
@@ -49,6 +53,13 @@ package view
 		private var shopLayer:Sprite;
 		private var _shopWindow:Shop_Coffer_Item_Window;
 		private var windowLayer:WindowLayer = WindowLayer.getInstance();
+		
+		private var avatar:Avatar;
+		private var exitButton:SimpleButton;
+		private var displayNameTxt:TextField;
+		private var levelTxt:TextField;
+		private var money1Txt:TextField;
+		private var money2Txt:TextField;
 		
 		public function SelectGameWindow() 
 		{
@@ -90,7 +101,24 @@ package view
 			shopLayer = new Sprite();
 			content.addChild(shopLayer);
 			
+			avatar = new Avatar();
+			avatar.setForm(Avatar.MY_AVATAR);
+			avatar.x = 166.5;
+			avatar.y = -276;
+			addChild(avatar);
 			
+			exitButton = content["exitButton"];
+			displayNameTxt = content["displayNameTxt"];
+			levelTxt = content["levelTxt"];
+			money1Txt = content["money1Txt"];
+			money2Txt = content["money2Txt"];
+			
+			exitButton.addEventListener(MouseEvent.CLICK, onExitButtonClick);
+		}
+		
+		private function onExitButtonClick(e:MouseEvent):void 
+		{
+			mainData.isLogOut = true;
 		}
 		
 		private function onTabClick(e:MouseEvent):void 
@@ -184,11 +212,32 @@ package view
 		private function onAddedToStage(e:Event):void 
 		{
 			mainData.isOnSelectGameWindow = true;
+			
+			if (mainData.chooseChannelData.myInfo)
+			{
+				displayNameTxt.text = mainData.chooseChannelData.myInfo.name;
+				levelTxt.text = mainData.chooseChannelData.myInfo.level;
+				money1Txt.text = PlayingLogic.format(mainData.chooseChannelData.myInfo.money, 1);
+				money2Txt.text = PlayingLogic.format(mainData.chooseChannelData.myInfo.cash, 1);
+				avatar.addImg(mainData.chooseChannelData.myInfo.avatar);
+			}
+			
+			mainData.chooseChannelData.addEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
 		}
 		
 		private function onRemovedFromStage(e:Event):void 
 		{
 			mainData.isOnSelectGameWindow = false;
+			mainData.chooseChannelData.removeEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
+		}
+		
+		private function onUpdateMyInfo(e:Event):void 
+		{
+			displayNameTxt.text = mainData.chooseChannelData.myInfo.name;
+			levelTxt.text = mainData.chooseChannelData.myInfo.level;
+			money1Txt.text = PlayingLogic.format(mainData.chooseChannelData.myInfo.money, 1);
+			money2Txt.text = PlayingLogic.format(mainData.chooseChannelData.myInfo.cash, 1);
+			avatar.addImg(mainData.chooseChannelData.myInfo.avatar);
 		}
 		
 		private function onSelectGame(e:MouseEvent):void 

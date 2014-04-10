@@ -364,19 +364,6 @@ package model
 			_tracker = value;
 		}
 		
-		private var _electroServer:ElectroServer;
-		public function get electroServer():ElectroServer 
-		{
-			if (!_electroServer)
-				_electroServer = new ElectroServer();
-			return _electroServer;
-		}
-		
-		public function set electroServer(value:ElectroServer):void 
-		{
-			_electroServer = value;
-		}
-		
 		public var isFirstPlay:Boolean; // Biến để check xem mình có phải người đầu tiên đánh bài của ván bài ko
 		
 		public var isEndRound:Boolean; // Biến để check xem mình có phải vừa kết thúc 1 vòng đánh bài ko
@@ -458,6 +445,7 @@ package model
 		public var client_secret:String = "71fbf6e77e1ccb779c5f51c38a4e795c";
 		public var portNumber:int = 9899;
 		public var isFirstJoinLobby:Boolean;
+		public var electroServer:ElectroServer;
 	}
 
 }

@@ -54,6 +54,7 @@ package event
 		public static const USER_LIST: String = "userList";
 		public static const PLAYER_LIST: String = "playerList";
 		public static const PLAYER_CARDS: String = "playerCards";
+		public static const PLAYER: String = "player";
 		public static const POSITION: String = "position";
 		public static const POINT: String = "point";
 		public static const IS_BINH_LUNG: String = "isBinhLung";

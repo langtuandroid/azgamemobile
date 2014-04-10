@@ -1077,6 +1077,144 @@ package logic
 			return selectedDeckArray;
 		}
 		
+		// Tìm phỏm để tự động hạ khi hết thời gian
+		public function getDeckToAutoDownCardWhenTimeOut(cardArray:Array):Array
+		{
+			var tempCardArray:Array = cardArray.concat();
+			var deckArray:Array = countDeck(tempCardArray);
+			
+			var isHaveOneDeck:Boolean;
+			var isHaveTwoDeck:Boolean;
+			var deck_1:Array;
+			var deck_2:Array;
+			var i:int;
+			var j:int;
+			var k:int;
+			var selectedDeckArray:Array = new Array();
+			var stealCardNumber:int = 0;
+			var countStealCard:int;
+			
+			// Đếm số lá bài ăn
+			for (i = 0; i < tempCardArray.length; i++)
+			{
+				if (CardPhom(tempCardArray[i]).isStealCard)
+					stealCardNumber++;
+			}
+			
+			if (deckArray.length > 0) // trường hợp chỉ có 1 phỏm
+			{
+				if (stealCardNumber > 0 ) // Nếu có con bài ăn thì ưu tiên phỏm có con bài ăn
+				{
+					for (i = 0; i < deckArray.length; i++)
+					{
+						countStealCard = 0;
+						for (k = 0; k < deckArray[i].length; k++)
+						{
+							if (CardPhom(deckArray[i][k]).isStealCard)
+								countStealCard++;
+						}
+						if (countStealCard > 0)
+						{
+							selectedDeckArray.push(deckArray[i]);
+							i = deckArray.length + 1;
+						}
+					}
+				}
+				else // Nếu không có con bài ăn
+				{
+					selectedDeckArray.push(deckArray[0]);
+				}
+			}
+				
+			for (i = 0; i < deckArray.length - 1; i++) // trường hợp có 2 phỏm
+			{
+				for (j = i + 1; j < deckArray.length; j++)
+				{
+					if (!compareTwoDeck(deckArray[i], deckArray[j])) // Tìm ra 2 phỏm khác nhau
+					{
+						var twoDeckIsTrue:Boolean;
+						switch (stealCardNumber) 
+						{
+							case 0: // Nếu có một lá bài ăn thì kiểm tra xem 2 phỏm đó có một phỏm phải chứa lá bài ăn
+								twoDeckIsTrue = true;
+							break;
+							case 1: // Nếu có một lá bài ăn thì kiểm tra xem 2 phỏm đó có một phỏm phải chứa lá bài ăn
+								countStealCard = 0;
+								for (k = 0; k < deckArray[i].length; k++)
+								{
+									if (CardPhom(deckArray[i][k]).isStealCard)
+										countStealCard++;
+									if (CardPhom(deckArray[j][k]).isStealCard)
+										countStealCard++;
+								}
+								if (countStealCard > 0)
+									twoDeckIsTrue = true;
+							break;
+							case 2: // Nếu có hai lá bài ăn thì cả 2 phỏm đều phải có chứa lá bài ăn
+								countStealCard = 0;
+								for (k = 0; k < deckArray[i].length; k++)
+								{
+									if (CardPhom(deckArray[i][k]).isStealCard)
+										countStealCard++;
+									if (CardPhom(deckArray[j][k]).isStealCard)
+										countStealCard++;
+								}
+								if (countStealCard == 2)
+									twoDeckIsTrue = true;
+							break;
+						}
+						if (twoDeckIsTrue)
+						{
+							selectedDeckArray = new Array();
+							selectedDeckArray.push(deckArray[i]);
+							selectedDeckArray.push(deckArray[j]);
+							i = deckArray.length + 1;
+							j = deckArray.length + 1
+						}
+					}
+				}
+			}
+			
+			var newCardArray:Array = new Array();
+			
+			for (i = 0; i < selectedDeckArray.length; i++)
+			{
+				for (j = 0; j < selectedDeckArray[i].length; j++)
+				{
+					for (k = 0; k < tempCardArray.length; k++)
+					{
+						if (tempCardArray[k] == selectedDeckArray[i][j])
+						{
+							newCardArray.push(tempCardArray[k]);
+							tempCardArray.splice(k, 1);
+							k = tempCardArray.length + 1;
+						}
+					}
+				}
+			}
+			
+			for (i = 0; i < selectedDeckArray.length; i++)
+			{
+				findFullDeck(selectedDeckArray[i], tempCardArray);
+			}
+			
+			for (i = selectedDeckArray.length - 1; i >= 0; i--) 
+			{
+				var isStealDeck:Boolean;
+				for (j = 0; j < selectedDeckArray[i].length; j++)
+				{
+					if (CardPhom(selectedDeckArray[i][j]).isStealCard)
+					{
+						isStealDeck = true;
+					}
+				}
+				if (!isStealDeck)
+					selectedDeckArray.splice(i, 1);
+			}
+			
+			return selectedDeckArray;
+		}
+		
 		public function getDeckWhenFullDeck(cardArray:Array):Array
 		{
 			var deckArray:Array = countDeck(cardArray);

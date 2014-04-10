@@ -22,6 +22,7 @@ package view.screen
 	import flash.net.URLRequest;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
+	import flash.utils.Dictionary;
 	import flash.utils.Timer;
 	import logic.MauBinhLogic;
 	import logic.PlayingLogic;
@@ -134,6 +135,9 @@ package view.screen
 		private var chatboxLayer:Sprite;
 		private var chatButton:SimpleButton;
 		
+		private var _giveUpPlayerArray:Array;
+		private var isGameOver:Boolean = true;
+		
 		public function PlayingScreenMauBinh() 
 		{
 			mainData.isAutoReady = false;
@@ -234,8 +238,18 @@ package view.screen
 			{
 				if (allPlayerArray[i])
 				{
-					TextField(ipBoard["displayNameTxt" + String(ipIndex + 1)]).text = PlayerInfoMauBinh(allPlayerArray[i]).displayName;
-					TextField(ipBoard["ipTxt" + String(ipIndex + 1)]).text = PlayerInfoMauBinh(allPlayerArray[i]).ip;
+					TextField(ipBoard["displayNameTxt" + String(ipIndex + 1)]).text = PlayerInfoPhom(allPlayerArray[i]).displayName;
+					var ipString:String = String(PlayerInfoMauBinh(allPlayerArray[i]).ip);
+					var countDot:int = 0;
+					var postfixString:String = '';
+					for (var j:int = 0; j < ipString.length; j++) 
+					{
+						if (ipString.charAt(j) == '.')
+							countDot++;
+						if (countDot > 1)
+							postfixString += ipString.charAt(j);
+					}
+					TextField(ipBoard["ipTxt" + String(ipIndex + 1)]).text = "***.***" + postfixString;
 					ipIndex++;
 				}
 			}
@@ -711,6 +725,17 @@ package view.screen
 			playingLayer.addChild(groupNameBar);
 			
 			checkConflictIp();
+			
+			for (i = 0; i < giveUpPlayerArray.length ; i++) 
+			{
+				var giveUpObject:Dictionary = giveUpPlayerArray[i];
+				if (giveUpObject[DataFieldMauBinh.POSITION] == indexEmpty)
+				{
+					PlayerInfoMauBinh(giveUpObject[DataFieldMauBinh.PLAYER]).destroy();
+					giveUpPlayerArray.splice(i, 1);
+					break;
+				}
+			}
 		}
 		
 		private function listenHaveUserRequestTimeClock(data:Object):void
@@ -723,15 +748,7 @@ package view.screen
 		private function listenHaveUserRequestIsCompareGroup(data:Object):void
 		{
 			var esObject:EsObject = new EsObject();
-			if (!belowUserInfo.unLeaveCards)
-				esObject.setBoolean(DataFieldMauBinh.IS_COMPARE_GROUP, false);
-			if (belowUserInfo.unLeaveCards)
-			{
-				if (belowUserInfo.unLeaveCards.length > 0)
-					esObject.setBoolean(DataFieldMauBinh.IS_COMPARE_GROUP, true);
-				else
-					esObject.setBoolean(DataFieldMauBinh.IS_COMPARE_GROUP, false);
-			}
+			esObject.setBoolean(DataFieldMauBinh.IS_COMPARE_GROUP, !isGameOver);
 			electroServerCommand.sendPrivateMessage([data[DataFieldMauBinh.USER_NAME]], Command.RESPOND_IS_COMPARE_GROUP, esObject);
 		}
 		
@@ -750,6 +767,7 @@ package view.screen
 		{
 			var i:int;
 			var j:int;
+			var outPlayer:PlayerInfoMauBinh;
 			
 			for (i = 0; i < playingPlayerArray.length; i++) 
 			{
@@ -774,7 +792,11 @@ package view.screen
 						if (PlayerInfoMauBinh(allPlayerArray[i]).userName == data[DataFieldMauBinh.USER_NAME])
 						{
 							chatBox.addChatSentence(PlayerInfoMauBinh(allPlayerArray[i]).displayName + " " + mainData.init.gameDescription.playingScreen.userLeaveRoom, "Thông báo", false, true);
-							removeOnePlayer(i);
+							outPlayer = allPlayerArray[i];
+							if (outPlayer.isPlaying)
+								removeOnePlayer(i, true);
+							else
+								removeOnePlayer(i);
 						}
 					}
 					for (j = 0; j < allPlayerArray.length; j++) 
@@ -796,6 +818,7 @@ package view.screen
 						if (PlayerInfoMauBinh(allPlayerArray[i]).userName == data[DataFieldMauBinh.USER_NAME])
 						{
 							chatBox.addChatSentence(PlayerInfoMauBinh(allPlayerArray[i]).displayName + " " + mainData.init.gameDescription.playingScreen.userLeaveRoom, "Thông báo", false, true);
+							outPlayer = allPlayerArray[i];
 							removeOnePlayer(i);
 						}
 					}
@@ -826,6 +849,8 @@ package view.screen
 						waitToPlay.visible = true;
 				}
 			}
+			
+			SoundManager.getInstance().soundManagerMauBinh.playOtherExitGamePlayerSound(outPlayer.sex);
 		}
 		
 		private function listenJoinRoom(data:Object):void 
@@ -978,6 +1003,8 @@ package view.screen
 		
 		private function listenDealCard(data:Object):void 
 		{
+			isGameOver = false;
+			giveUpPlayerArray = new Array();
 			isEnableKickOut = false;
 			hideStartButton();
 			hideReadyButton();
@@ -1172,6 +1199,7 @@ package view.screen
 		{
 			compareGroupData = data;
 			countBinhLungAndMauBinh = 0;
+			isGameOver = true;
 			
 			if (belowUserInfo)
 			{
@@ -1190,7 +1218,9 @@ package view.screen
 			
 			//windowLayer.openWindow(resultWindow);
 			//resetMatch();
-			isPlaying = false;
+			var timerToResetPlayingStatus:Timer = new Timer(1000, 1);
+			timerToResetPlayingStatus.addEventListener(TimerEvent.TIMER_COMPLETE, onResetPlayingStatus);
+			timerToResetPlayingStatus.start();
 			
 			for (var i:int = 0; i < playerList.length; i++) 
 			{
@@ -1272,6 +1302,13 @@ package view.screen
 				timerToHightlineGroupTwo.addEventListener(TimerEvent.TIMER_COMPLETE, onHightlineGroupTwo);
 				timerToHightlineGroupTwo.start();
 			}
+		}
+		
+		private function onResetPlayingStatus(e:TimerEvent):void 
+		{
+			if (!stage)
+				return;
+			isPlaying = false;
 		}
 		
 		// DungNT4 - show số chi người chơi ăn thua qua từng chi
@@ -2073,7 +2110,7 @@ package view.screen
 			}
 		}
 		
-		public function removeOnePlayer(position:int):void // xóa một người chơi
+		public function removeOnePlayer(position:int, isGiveUp:Boolean = false):void // xóa một người chơi
 		{
 			for (var i:int = 0; i < allPlayerArray.length; i++) 
 			{
@@ -2107,29 +2144,78 @@ package view.screen
 			if (countPlayer < 2)
 				hideReadyButton();
 				
-			switch (position) 
+			if (!isGiveUp)
 			{
-				case 0:
-					PlayerInfoMauBinh(this[PlayerInfoMauBinh.BELOW_USER]).removeEventListener(PlayerInfoMauBinh.AVATAR_CLICK, onShowContextMenu);
-					PlayerInfoMauBinh(this[PlayerInfoMauBinh.BELOW_USER]).removeEventListener(PlayerInfoMauBinh.UPDATE_THREE_GROUP, onUpdateThreeGroup);
-					PlayerInfoMauBinh(this[PlayerInfoMauBinh.BELOW_USER]).destroy();
-				break;
-				case 1:
-					PlayerInfoMauBinh(this[PlayerInfoMauBinh.RIGHT_USER]).removeEventListener(PlayerInfoMauBinh.AVATAR_CLICK, onShowContextMenu);
-					PlayerInfoMauBinh(this[PlayerInfoMauBinh.RIGHT_USER]).destroy();
-				break;
-				case 2:
-					PlayerInfoMauBinh(this[PlayerInfoMauBinh.ABOVE_USER]).removeEventListener(PlayerInfoMauBinh.AVATAR_CLICK, onShowContextMenu);
-					PlayerInfoMauBinh(this[PlayerInfoMauBinh.ABOVE_USER]).destroy();
-				break;
-				case 3:
-					PlayerInfoMauBinh(this[PlayerInfoMauBinh.LEFT_USER]).removeEventListener(PlayerInfoMauBinh.AVATAR_CLICK, onShowContextMenu);
-					PlayerInfoMauBinh(this[PlayerInfoMauBinh.LEFT_USER]).destroy();
-				break;
+				switch (position) 
+				{
+					case 0:
+						PlayerInfoMauBinh(this[PlayerInfoMauBinh.BELOW_USER]).removeEventListener(PlayerInfoMauBinh.AVATAR_CLICK, onShowContextMenu);
+						PlayerInfoMauBinh(this[PlayerInfoMauBinh.BELOW_USER]).removeEventListener(PlayerInfoMauBinh.UPDATE_THREE_GROUP, onUpdateThreeGroup);
+						PlayerInfoMauBinh(this[PlayerInfoMauBinh.BELOW_USER]).destroy();
+					break;
+					case 1:
+						PlayerInfoMauBinh(this[PlayerInfoMauBinh.RIGHT_USER]).removeEventListener(PlayerInfoMauBinh.AVATAR_CLICK, onShowContextMenu);
+						PlayerInfoMauBinh(this[PlayerInfoMauBinh.RIGHT_USER]).destroy();
+					break;
+					case 2:
+						PlayerInfoMauBinh(this[PlayerInfoMauBinh.ABOVE_USER]).removeEventListener(PlayerInfoMauBinh.AVATAR_CLICK, onShowContextMenu);
+						PlayerInfoMauBinh(this[PlayerInfoMauBinh.ABOVE_USER]).destroy();
+					break;
+					case 3:
+						PlayerInfoMauBinh(this[PlayerInfoMauBinh.LEFT_USER]).removeEventListener(PlayerInfoMauBinh.AVATAR_CLICK, onShowContextMenu);
+						PlayerInfoMauBinh(this[PlayerInfoMauBinh.LEFT_USER]).destroy();
+					break;
+				}
+				
+				if (position != 0)
+					invitePlayButtonArray[position - 1].visible = true;
 			}
+			else if (isPlaying)
+			{
+				var giveUpPlayer:PlayerInfoMauBinh;
+				switch (position) 
+				{
+					case 1:
+						giveUpPlayer = rightUserInfo;
+					break;
+					case 2:
+						giveUpPlayer = aboveUserInfo;
+					break;
+					case 3:
+						giveUpPlayer = leftUserInfo;
+					break;
+				}
+				
+				giveUpPlayer.isGiveUp = true;
+				var giveUpObject:Dictionary = new Dictionary();
+				giveUpObject[DataFieldMauBinh.PLAYER] = giveUpPlayer
+				giveUpObject[DataFieldMauBinh.POSITION] = position;
+				
+				var timerToRemoveGiveUpPlayer:Timer = new Timer(5000, 1);
+				timerToRemoveGiveUpPlayer.addEventListener(TimerEvent.TIMER_COMPLETE, onRemoveGiveUpPlayer);
+				timerToRemoveGiveUpPlayer.start();
+				
+				giveUpObject[DataFieldMauBinh.TIME] = timerToRemoveGiveUpPlayer;
+				
+				giveUpPlayerArray.push(giveUpObject);
+			}
+		}
+		
+		private function onRemoveGiveUpPlayer(e:TimerEvent):void 
+		{
+			if (!stage)
+				return;
 			
-			if (position != 0)
-				invitePlayButtonArray[position - 1].visible = true;
+			var giveUpObject:Dictionary = giveUpPlayerArray[giveUpPlayerArray.length - 1];
+			if (!giveUpObject)
+				return;
+			if (giveUpObject[DataFieldMauBinh.TIME] == e.currentTarget)
+			{
+				if (giveUpObject[DataFieldMauBinh.POSITION] != 0)
+					invitePlayButtonArray[giveUpObject[DataFieldMauBinh.POSITION] - 1].visible = true;
+				PlayerInfoMauBinh(giveUpObject[DataFieldMauBinh.PLAYER]).destroy();
+				giveUpPlayerArray.pop();
+			}
 		}
 		
 		private function addPlayerByType(playerType:String, position:int, isCardInteractive:Boolean = false):void
@@ -2423,6 +2509,18 @@ package view.screen
 			
 			if (parent)
 				parent.removeChild(this);
+		}
+		
+		public function get giveUpPlayerArray():Array 
+		{
+			if (!_giveUpPlayerArray)
+				_giveUpPlayerArray = new Array();
+			return _giveUpPlayerArray;
+		}
+		
+		public function set giveUpPlayerArray(value:Array):void 
+		{
+			_giveUpPlayerArray = value;
 		}
 	}
 
