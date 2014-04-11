@@ -177,7 +177,7 @@ package view.window.shop
 		private function loadMyAvatarSuccess(obj:Object):void 
 		{
 			trace(obj)
-			if (obj["Msg"] = "Cập nhật thành công") 
+			if (obj["Msg"] == "Cập nhật thành công") 
 			{
 				var i:int;
 				var arrData:Array = obj.Data;
@@ -246,7 +246,7 @@ package view.window.shop
 		
 		private function useItemRespone(obj:Object):void 
 		{
-			if (obj["Msg"] = "Cập nhật thành công") 
+			if (obj["Msg"] == "Cập nhật thành công") 
 			{
 				var buyAvatarWindow:ConfirmWindow = new ConfirmWindow();
 				buyAvatarWindow.setNotice("Bạn đã đổi thành công avatar này!");
@@ -453,7 +453,7 @@ package view.window.shop
 		private function buyItemRespone(obj:Object):void 
 		{
 			trace(obj)
-			if (obj["Msg"] = "Cập nhật thành công") 
+			if (obj["Msg"] == "Cập nhật thành công") 
 			{
 				var buyAvatarWindow:ConfirmWindow = new ConfirmWindow();
 				buyAvatarWindow.setNotice("Bạn đã mua thành công vật phẩm này!");
@@ -536,7 +536,7 @@ package view.window.shop
 		private function buyAvatarRespone(obj:Object):void 
 		{
 			trace(obj)
-			if (obj["Msg"] = "Cập nhật thành công") 
+			if (obj["Msg"] == "Cập nhật thành công") 
 			{
 				var buyAvatarWindow:ConfirmWindow = new ConfirmWindow();
 				buyAvatarWindow.setNotice("Bạn đã mua thành công vật phẩm này!");
