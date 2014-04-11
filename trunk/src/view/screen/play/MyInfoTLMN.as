@@ -113,7 +113,7 @@ package view.screen.play
 			{
 				_avatar = new Avatar();
 				content.specialAvatar.addChild(_avatar);
-				_avatar.x = -10;
+				//_avatar.x = -10;
 				//content.setChildIndex(_avatar, 0);
 			}
 			_posCardX = 80;
