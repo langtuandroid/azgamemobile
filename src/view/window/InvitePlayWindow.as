@@ -1,6 +1,8 @@
 package view.window 
 {
+	import event.DataField;
 	import flash.display.SimpleButton;
+	import model.GameDataTLMN;
 	
 	import control.MainCommand;
 	import event.DataFieldMauBinh;
@@ -103,9 +105,9 @@ package view.window
 			var infoObject:Object = new Object();
 			infoObject[DataFieldMauBinh.DISPLAY_NAME] = mainData.chooseChannelData.myInfo.name;
 			infoObject[DataFieldMauBinh.USER_NAME] = mainData.chooseChannelData.myInfo.uId;
-			infoObject[DataFieldMauBinh.ROOM_PASSWORD] = mainData.playingData.gameRoomData.roomPassword;
+			infoObject[DataFieldMauBinh.ROOM_PASSWORD] = GameDataTLMN.getInstance().gameRoomInfo[DataField.PASSWORD];
 			infoObject[DataFieldMauBinh.AVATAR] = mainData.chooseChannelData.myInfo.avatar;
-			infoObject[DataFieldMauBinh.ROOM_BET] = mainData.playingData.gameRoomData.roomBet;
+			infoObject[DataFieldMauBinh.ROOM_BET] = GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET];
 			infoObject[DataFieldMauBinh.MONEY] = mainData.chooseChannelData.myInfo.money;
 			infoObject[DataFieldMauBinh.SEX] = mainData.chooseChannelData.myInfo.sex;
 			infoObject[DataFieldMauBinh.MESSAGE] = "";
