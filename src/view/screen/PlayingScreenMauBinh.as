@@ -239,7 +239,7 @@ package view.screen
 			{
 				if (allPlayerArray[i])
 				{
-					TextField(ipBoard["displayNameTxt" + String(ipIndex + 1)]).text = PlayerInfoPhom(allPlayerArray[i]).displayName;
+					TextField(ipBoard["displayNameTxt" + String(ipIndex + 1)]).text = PlayerInfoMauBinh(allPlayerArray[i]).displayName;
 					var ipString:String = String(PlayerInfoMauBinh(allPlayerArray[i]).ip);
 					var countDot:int = 0;
 					var postfixString:String = '';
