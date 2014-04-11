@@ -707,6 +707,7 @@ package control.electroServerCommand
 		private function onUpdateUserListOfLobby(e:ElectroServerEventTlmn):void 
 		{
 			GameDataTLMN.getInstance().playingData.userListOfLobby = e.data;
+			mainData.playingData.userListOfLobby = e.data;
 			//mainData.playingData.userListOfLobby = 
 		}
 		

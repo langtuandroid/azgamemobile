@@ -1256,6 +1256,7 @@ package control
 		public function getUserInLobby():void
 		{
 			myData.userListOfLobby = new Object();
+			GameDataTLMN.getInstance().userListOfLobby = new Object();
 			getUserInRoom(myData.lobbyRoomId);
 		}
 		
@@ -1587,6 +1588,7 @@ package control
 					userName = user.userName;
 					if (!myData.userListOfLobby[userName])
 						myData.userListOfLobby[userName] = new Object();
+						GameDataTLMN.getInstance().userListOfLobby[userName] = new Object();
 					getUserInfo(userName);
 				}
 				return;
@@ -1685,7 +1687,7 @@ package control
 			var getUserVariableRequest:GetUserVariablesRequest
 			getUserVariableRequest = new GetUserVariablesRequest();
 			getUserVariableRequest.userName = userName;
-			getUserVariableRequest.userVariableNames.add(DataFieldMauBinh.USER_INFO);
+			//getUserVariableRequest.userVariableNames.add(DataFieldMauBinh.USER_INFO);
 			electroServer.engine.send(getUserVariableRequest);
 		}
 		
@@ -1708,7 +1710,7 @@ package control
 						{
 							GameDataTLMN.getInstance().userListOfLobby[userName][DataField.DISPLAY_NAME] = object[DataField.DISPLAY_NAME];
 							GameDataTLMN.getInstance().userListOfLobby[userName][DataField.MONEY] = object[DataField.MONEY];
-							//GameDataTLMN.getInstance().userListOfLobby[userName][DataField.CASH] = object[DataField.CASH];
+							GameDataTLMN.getInstance().userListOfLobby[userName][DataField.LEVEL] = object[DataField.LEVEL];
 							GameDataTLMN.getInstance().userListOfLobby[userName][DataField.AVATAR] = object[DataField.AVATAR];
 							var isUpdateUserListOfLobby:Boolean = true;
 							for (userName in GameDataTLMN.getInstance().userListOfLobby)
