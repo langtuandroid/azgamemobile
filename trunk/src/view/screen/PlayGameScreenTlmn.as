@@ -59,6 +59,8 @@ package view.screen
 	//import view.screen.play.SmallButton;
 	import view.window.InvitePlayWindow;
 	import view.window.ResultWindow;
+	
+	
 	/**
 	 * ...
 	 * @author Bim kute
@@ -168,27 +170,28 @@ package view.screen
 			trace("xem the nao: ", SoundManager.getInstance().isSoundOn, SoundManager.getInstance().isMusicOn)
 			if (SoundManager.getInstance().isSoundOn) 
 			{
-				content.onSoundEffect.visible = true;
+				content.settingBoard.onSoundEffect.visible = true;
 			}
 			else 
 			{
-				content.onSoundEffect.visible = false;
+				content.settingBoard.onSoundEffect.visible = false;
 			}
 			
 			if (SoundManager.getInstance().isMusicOn) 
 			{
-				content.onMusic.visible = true;
+				content.settingBoard.onMusic.visible = true;
 			}
 			else 
 			{
-				content.onMusic.visible = false;
+				content.settingBoard.onMusic.visible = false;
 			}
 			//content.backGround.gotoAndStop(2);
 			
 			
 			_glowFilter.color = 0x663311;
-			addComponent();
+			
 			addPlayerInfo();
+			addComponent();
 			
 			var sp:Sprite = new Sprite();
 			sp.graphics.beginFill(0x123456, 1);
@@ -3124,16 +3127,16 @@ package view.screen
 		
 		public function removeAllEvent():void 
 		{
-			content.onSoundEffect.removeEventListener(MouseEvent.CLICK, onClickOnOffSoundEffect);
-			content.offSoundEffect.removeEventListener(MouseEvent.CLICK, onClickOnOffSoundEffect);
-			content.onMusic.removeEventListener(MouseEvent.CLICK, onClickOnOffMusic);
-			content.offMusic.removeEventListener(MouseEvent.CLICK, onClickOnOffMusic);
+			content.settingBoard.onSoundEffect.removeEventListener(MouseEvent.CLICK, onClickOnOffSoundEffect);
+			content.settingBoard.offSoundEffect.removeEventListener(MouseEvent.CLICK, onClickOnOffSoundEffect);
+			content.settingBoard.onMusic.removeEventListener(MouseEvent.CLICK, onClickOnOffMusic);
+			content.settingBoard.offMusic.removeEventListener(MouseEvent.CLICK, onClickOnOffMusic);
 			
 			
 			content.signOutBtn.removeEventListener(MouseEvent.CLICK, onClickSignOutGame);
-			content.fullBtn.removeEventListener(MouseEvent.CLICK, onClickFullGame);
-			content.ipBtn.removeEventListener(MouseEvent.CLICK, onClickIPGame);
-			content.guideBtn.removeEventListener(MouseEvent.CLICK, onClickGuidGame);
+			content.settingBoard.fullBtn.removeEventListener(MouseEvent.CLICK, onClickFullGame);
+			content.settingBoard.ipBtn.removeEventListener(MouseEvent.CLICK, onClickIPGame);
+			content.settingBoard.guideBtn.removeEventListener(MouseEvent.CLICK, onClickGuidGame);
 			
 			content.startGame.removeEventListener(MouseEvent.CLICK, onClickStartGame);
 			
@@ -3266,38 +3269,62 @@ package view.screen
 			
 			if (SoundManager.getInstance().isSoundOn) 
 			{
-				content.onSoundEffect.visible = false;
+				content.settingBoard.onSoundEffect.visible = false;
 			}
 			else 
 			{
-				content.onSoundEffect.visible = true;
+				content.settingBoard.onSoundEffect.visible = true;
 			}
 			
 			if (SoundManager.getInstance().isMusicOn) 
 			{
-				content.onMusic.visible = false;
+				content.settingBoard.onMusic.visible = false;
 			}
 			else 
 			{
-				content.onMusic.visible = true;
+				content.settingBoard.onMusic.visible = true;
 			}
 			
-			content.onSoundEffect.addEventListener(MouseEvent.CLICK, onClickOnOffSoundEffect);
-			content.offSoundEffect.addEventListener(MouseEvent.CLICK, onClickOnOffSoundEffect);
-			content.onMusic.addEventListener(MouseEvent.CLICK, onClickOnOffMusic);
-			content.offMusic.addEventListener(MouseEvent.CLICK, onClickOnOffMusic);
+			content.settingBoard.visible = false;
+			content.setChildIndex(content.settingBoard, content.numChildren - 1);
+			content.settingBtn.addEventListener(MouseEvent.CLICK, onShowSettingBoard);
 			
+			content.settingBoard.onSoundEffect.addEventListener(MouseEvent.CLICK, onClickOnOffSoundEffect);
+			content.settingBoard.offSoundEffect.addEventListener(MouseEvent.CLICK, onClickOnOffSoundEffect);
+			content.settingBoard.onMusic.addEventListener(MouseEvent.CLICK, onClickOnOffMusic);
+			content.settingBoard.offMusic.addEventListener(MouseEvent.CLICK, onClickOnOffMusic);
 			
+			content.settingBoard.fullBtn.visible = false;
 			content.signOutBtn.addEventListener(MouseEvent.CLICK, onClickSignOutGame);
-			content.fullBtn.addEventListener(MouseEvent.CLICK, onClickFullGame);
-			content.ipBtn.addEventListener(MouseEvent.CLICK, onClickIPGame);
-			content.guideBtn.addEventListener(MouseEvent.CLICK, onClickGuidGame);
+			content.settingBoard.fullBtn.addEventListener(MouseEvent.CLICK, onClickFullGame);
+			content.settingBoard.ipBtn.addEventListener(MouseEvent.CLICK, onClickIPGame);
+			content.settingBoard.guideBtn.addEventListener(MouseEvent.CLICK, onClickGuidGame);
 			
 			content.startGame.addEventListener(MouseEvent.CLICK, onClickStartGame);
 			content.orderCard.addEventListener(MouseEvent.CLICK, onOrderCard);
 			
 			content.startGame.visible = false;
 			
+			content.chatBtn.addEventListener(MouseEvent.CLICK, onChatButtonClick);
+			
+		}
+		
+		private function onShowSettingBoard(e:MouseEvent):void 
+		{
+			if (content.settingBoard.visible) 
+			{
+				content.settingBoard.visible = false;
+			}
+			else 
+			{
+				content.settingBoard.visible = true;
+			}
+			
+		}
+		
+		private function onChatButtonClick(e:MouseEvent):void 
+		{
+			_chatBox.visible = true;
 		}
 		
 		private function onChatBoxBackButtonClick(e:Event):void 
@@ -3332,13 +3359,13 @@ package view.screen
 			if (SoundManager.getInstance().isSoundOn) 
 			{
 				GameDataTLMN.getInstance().playSound = false;
-				content.onSoundEffect.visible = true;
+				content.settingBoard.onSoundEffect.visible = true;
 				SoundManager.getInstance().isSoundOn = false;
 			}
 			else 
 			{
 				GameDataTLMN.getInstance().playSound = true;
-				content.onSoundEffect.visible = false;
+				content.settingBoard.onSoundEffect.visible = false;
 				SoundManager.getInstance().isSoundOn = true;
 			}
 		}
@@ -3352,14 +3379,14 @@ package view.screen
 			if (SoundManager.getInstance().isMusicOn) 
 			{
 				GameDataTLMN.getInstance().playGameBackGroud = false;
-				content.onMusic.visible = true;
+				content.settingBoard.onMusic.visible = true;
 				SoundManager.getInstance().isMusicOn = false;
 				SoundManager.getInstance().stopMusic(ConstTlmn.MUSIC_BG);
 			}
 			else 
 			{
 				GameDataTLMN.getInstance().playGameBackGroud = true;
-				content.onMusic.visible = false;
+				content.settingBoard.onMusic.visible = false;
 				
 				var rd:int = int(Math.random() * 3);
 				if (rd == 0 ) 
