@@ -76,7 +76,7 @@ package view.clock
 				
 			}
 			
-			var rd:int = int(Math.random() * 5);
+			/*var rd:int = int(Math.random() * 5);
 			if (_parentSex) 
 			{
 				if (SoundManager.getInstance().isSoundOn) 
@@ -92,7 +92,7 @@ package view.clock
 					SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_OVERTIME_ + String(rd + 1) );
 					
 				}
-			}
+			}*/
 		}
 		
 		private function onCompleteCountTimer():void 

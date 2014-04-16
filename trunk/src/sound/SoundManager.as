@@ -68,13 +68,13 @@
 					switch (randomIndex) 
 					{
 						case 0:
-							playMusic(SoundLibChung.BACKGROUND_SOUND_1, 1000);
+							playMusic("GameSound1", 1000);
 						break;
 						case 1:
-							playMusic(SoundLibChung.BACKGROUND_SOUND_2, 1000);
+							playMusic("GameSound2", 1000);
 						break;
 						case 2:
-							playMusic(SoundLibChung.BACKGROUND_SOUND_3, 1000);
+							playMusic("GameSound3", 1000);
 						break;
 						default:
 					}

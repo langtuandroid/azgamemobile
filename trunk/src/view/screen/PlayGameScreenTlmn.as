@@ -663,6 +663,8 @@ package view.screen
 			//trace(obj)
 			var i:int;
 			var j:int;
+			var rd:int;
+			
 			if (SoundManager.getInstance().isSoundOn) 
 			{
 				SoundManager.getInstance().playSound(ConstTlmn.SOUND_WHITEWIN);
@@ -685,6 +687,48 @@ package view.screen
 				timerDealcardForme.stop();
 			}
 			
+			if (obj["winner"] == MyDataTLMN.getInstance().myId) 
+			{
+				if (MyDataTLMN.getInstance().sex) 
+				{
+					if (SoundManager.getInstance().isSoundOn) 
+					{
+						rd = int(Math.random() * 5);
+						if (_arrUserInfo[j]._sex) 
+						{
+							SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_WIN_ + String(rd + 1) );
+						}
+						else 
+						{
+							SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_WIN_ + String(rd + 1) );
+						}
+					}
+				}
+			}
+			else 
+			{
+				for (j = 0; j < _arrUserInfo.length; j++) 
+				{
+					
+					if (obj["winner"] == _arrUserInfo[j]._userName)
+					{
+						if (SoundManager.getInstance().isSoundOn) 
+						{
+							rd = int(Math.random() * 5);
+							if (_arrUserInfo[j]._sex) 
+							{
+								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_WIN_ + String(rd + 1) );
+							}
+							else 
+							{
+								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_WIN_ + String(rd + 1) );
+							}
+						}
+						
+						break;
+					}
+				}
+			}
 			
 			for (i = 0; i < _arrUserInfo.length; i++) 
 			{
@@ -749,7 +793,7 @@ package view.screen
 			content.setChildIndex(content.whiteWin, content.numChildren - 1);
 			
 			
-			
+			var outGame:Boolean = false;
 			var objResult:Object;
 			for (i = 0; i < obj[ConstTlmn.PLAYER_LIST].length; i++) 
 			{
@@ -758,7 +802,13 @@ package view.screen
 					objResult = new Object();
 					objResult[ConstTlmn.MONEY] = obj[ConstTlmn.PLAYER_LIST][i][ConstTlmn.MONEY];
 					
-					_myInfo.showEffectGameOver(objResult);
+					MyDataTLMN.getInstance().myMoney[0] = int(MyDataTLMN.getInstance().myMoney[0]) + int(objResult[ConstTlmn.MONEY]);
+					if (MyDataTLMN.getInstance().myMoney[0] < int(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet) 
+					{
+						outGame = true;
+					}
+					_myInfo.showEffectGameOver(objResult, outGame);
+					
 				}
 				else 
 				{
@@ -812,8 +862,6 @@ package view.screen
 			if (int(MyDataTLMN.getInstance().myMoney[0]) < int(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet) 
 			{
 				EffectLayer.getInstance().removeAllEffect();
-				dispatchEvent(new Event(ConstTlmn.OUT_ROOM, true));
-				electroServerCommand.joinLobbyRoom();
 				
 				GameDataTLMN.getInstance().notEnoughMoney = true;
 				
@@ -1005,6 +1053,8 @@ package view.screen
 			//thtem vao bang ket qua choi game sau
 			//trace(obj);
 			var i:int;
+			var rd:int;
+			
 			timerShowResult = new Timer(3000, 1);
 			timerShowResult.addEventListener(TimerEvent.TIMER_COMPLETE, onShowResult);
 			timerShowResult.start();
@@ -1039,16 +1089,60 @@ package view.screen
 				trace(i, "check cac thang dc add card: ", arrResult[i][ConstTlmn.PLAYER_NAME] , MyDataTLMN.getInstance().myId)
 				
 				userResult = arrResult[i][ConstTlmn.PLAYER_NAME];
+				if (arrResult[i][ConstTlmn.SUB_MONEY] > 0) 
+				{
+					for (j = 0; j < _arrUserInfo.length; j++) 
+					{
+						
+						if (userResult == _arrUserInfo[j]._userName)
+						{
+							if (SoundManager.getInstance().isSoundOn) 
+							{
+								rd = int(Math.random() * 5);
+								if (_arrUserInfo[j]._sex) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_WIN_ + String(rd + 1) );
+								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_WIN_ + String(rd + 1) );
+								}
+							}
+							
+							break;
+						}
+					}
+				}
+				
 				var objResult:Object;
+				var outGame:Boolean = false;
 				trace("check cac thang dc add card: ", userResult , MyDataTLMN.getInstance().myId)
 				if (userResult == MyDataTLMN.getInstance().myId) 
 				{
 					objResult = new Object();
 					objResult[ConstTlmn.MONEY] = arrResult[i][ConstTlmn.SUB_MONEY];
-					_myInfo.showEffectGameOver(objResult);
-					result = int(MyDataTLMN.getInstance().myMoney[0]) + int(arrResult[i][ConstTlmn.SUB_MONEY]);
+					MyDataTLMN.getInstance().myMoney[0] = int(MyDataTLMN.getInstance().myMoney[0]) + int(arrResult[i][ConstTlmn.SUB_MONEY]);
+					if (MyDataTLMN.getInstance().myMoney[0] < int(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet) 
+					{
+						outGame = true;
+					}
+					_myInfo.showEffectGameOver(objResult, outGame);
 					
-					
+					if (arrResult[i][ConstTlmn.SUB_MONEY] > 0) 
+					{
+						if (SoundManager.getInstance().isSoundOn) 
+						{
+							rd = int(Math.random() * 5);
+							if (MyDataTLMN.getInstance().sex) 
+							{
+								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_WIN_ + String(rd + 1) );
+							}
+							else 
+							{
+								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_WIN_ + String(rd + 1) );
+							}
+						}
+					}
 				}
 				else 
 				{
@@ -1059,6 +1153,22 @@ package view.screen
 						
 						if (userResult == _arrUserInfo[j]._userName)
 						{
+							if (arrResult[i][ConstTlmn.SUB_MONEY] > 0) 
+							{
+								if (SoundManager.getInstance().isSoundOn) 
+								{
+									rd = int(Math.random() * 5);
+									if (_arrUserInfo[j]._sex) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_WIN_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_WIN_ + String(rd + 1) );
+									}
+								}
+							}
+							
 							_arrUserInfo[j]._isPlaying = true;
 							objResult = new Object();
 							trace("user nay co bao nhieu tien: ", arrResult[i][ConstTlmn.SUB_MONEY])
@@ -1075,196 +1185,6 @@ package view.screen
 			}
 			
 			
-			/*var arr:Array = MainData.getInstance().arrEmoticonPlay;
-			var myClass:Class;
-			var mc:MovieClip;
-			var loader:Loader;
-			trace("thang trang: ", whiteWin)
-			//whiteWin = true;
-			var randoms:int;
-			
-			if (str == MainData.getInstance().myName) 
-			{
-				trace("co 1 thang chien thang la minh ====================")
-				
-				if (whiteWin) 
-				{
-					loader = arr["WhiteWin"][0];
-					myClass = loader.contentLoaderInfo.applicationDomain.getDefinition("WhiteWin") as Class;
-					mc = new myClass();
-					_containerWinLose.addChild(mc);
-					mc.scaleX = mc.scaleY = 3;
-					mc.x = _myInfo.x + 360;
-					mc.y = _myInfo.y - 158;
-				}
-				else 
-				{
-					randoms = int(Math.random() * 3);
-					loader = arr[arrWin[randoms]][0];
-					myClass = loader.contentLoaderInfo.applicationDomain.getDefinition(arrWin[randoms]) as Class;
-					mc = new myClass();
-					_containerWinLose.addChild(mc);
-					mc.x = 300;
-					mc.y = 475;
-				}
-				
-				
-				/*for (i = 0; i < _arrUserInfo.length; i++) 
-				{
-					randoms = int(Math.random() * 3);
-					loader = arr[arrLose[randoms]][0];
-					if (arrLose[randoms] == "LoseDiChan") 
-					{
-						//trace("++", arr[arrLose[randoms]][0], arrLose[randoms])
-					}
-					
-					myClass = loader.contentLoaderInfo.applicationDomain.getDefinition(arrLose[randoms]) as Class;
-					mc = new myClass();
-					_containerWinLose.addChild(mc);
-					//mc.x = _arrUserInfo[i].x + 40;
-					//mc.y = _arrUserInfo[i].y + 40;
-					trace("co 1 thang thua la ai ====================", _arrUserInfo[i]._isPlaying)
-					switch (i) 
-					{
-						case 0:
-							mc.x = 855;
-							mc.y = 345;
-						break;
-						case 1:
-							mc.x = 500;
-							mc.y = 85;
-						break;
-						case 2:
-							mc.x = 80;
-							mc.y = 150;
-						break;
-						default:
-					}
-					if (!_arrUserInfo[i]._isPlaying) 
-					{
-						mc.visible = false;
-						trace("bao nhieu thang ko hien ra", _arrUserInfo[i]._userName)
-					}
-					
-				}
-			}
-			else 
-			{
-				
-				if (_myInfo.isPlaying) 
-				{
-					randoms = int(Math.random() * 3);
-					loader = arr[arrLose[randoms]][0];
-					
-					myClass = loader.contentLoaderInfo.applicationDomain.getDefinition(arrLose[randoms]) as Class;
-					mc = new myClass();
-					_containerWinLose.addChild(mc);
-					mc.x = 300;
-					mc.y = 475;
-					trace("co 1 thang thua la minh ====================")
-				}
-				
-				for (i = 0; i < _arrUserInfo.length; i++) 
-				{
-					if (str == _arrUserInfo[i]._userName) 
-					{
-						if (whiteWin) 
-						{
-							loader = arr["WhiteWin"][0];
-							myClass = loader.contentLoaderInfo.applicationDomain.getDefinition("WhiteWin") as Class;
-							mc = new myClass();
-							
-							_containerWinLose.addChild(mc);
-							mc.scaleX = mc.scaleY = 3;
-						}
-						else 
-						{
-							randoms = int(Math.random() * 3);
-							loader = arr[arrWin[randoms]][0];
-							myClass = loader.contentLoaderInfo.applicationDomain.getDefinition(arrWin[randoms]) as Class;
-							mc = new myClass();
-							
-							_containerWinLose.addChild(mc);
-							
-						}
-						
-						trace("co 1 thang chien thang la ai ====================", _arrUserInfo[i]._userName)
-					}
-					else 
-					{
-						trace("co may thang thua ====================", _arrUserInfo[i]._userName)
-						randoms = int(Math.random() * 3);
-						loader = arr[arrLose[randoms]][0];
-						if (arrLose[randoms] == "LoseDiChan") 
-						{
-							//trace("++", arr[arrLose[randoms]][0], arrLose[randoms])
-						}
-						myClass = loader.contentLoaderInfo.applicationDomain.getDefinition(arrLose[randoms]) as Class;
-						mc = new myClass();
-						_containerWinLose.addChild(mc);
-					}
-					//mc.x = _arrUserInfo[i].x + 40;
-					//mc.y = _arrUserInfo[i].y + 10;
-					switch (i) 
-					{
-						case 0:
-							if (whiteWin && str == _arrUserInfo[i]._userName) 
-							{
-								mc.x = _arrUserInfo[0].x + 337;
-								mc.y = _arrUserInfo[0].y - 128;
-							}
-							else 
-							{
-								mc.x = 855;
-								mc.y = 345;
-							}
-							
-						break;
-						case 1:
-							if (whiteWin && str == _arrUserInfo[i]._userName) 
-							{
-								mc.x = _arrUserInfo[1].x + 337;
-								mc.y = _arrUserInfo[1].y - 128;
-							}
-							else 
-							{
-								mc.x = 500;
-								mc.y = 85;
-							}
-							
-						break;
-						case 2:
-							if (whiteWin && str == _arrUserInfo[i]._userName) 
-							{
-								mc.x = _arrUserInfo[2].x + 337;
-								mc.y = _arrUserInfo[2].y - 128;
-							}
-							else 
-							{
-								mc.x = 80;
-								mc.y = 150;
-							}
-							
-						break;
-						default:
-					}
-					trace("co duoc hien ra ko", _arrUserInfo[i]._isPlaying)
-					if (!_arrUserInfo[i]._isPlaying) 
-					{
-						trace("co may thang thua ko hien ra ====================", _arrUserInfo[i]._userName)
-						mc.visible = false;
-					}
-				}
-			}*/
-			
-			/*if (_timerShowSpecial) 
-			{
-				_timerShowSpecial.stop();
-				_timerShowSpecial.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteShowWinLose);
-			}
-			_timerShowSpecial = new Timer(1000, 5);
-			_timerShowSpecial.addEventListener(TimerEvent.TIMER_COMPLETE, onCompleteShowWinLose);
-			_timerShowSpecial.start();*/
 			
 		}
 		
@@ -1322,8 +1242,7 @@ package view.screen
 			if (int(MyDataTLMN.getInstance().myMoney[0]) < int(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet) 
 			{
 				EffectLayer.getInstance().removeAllEffect();
-				dispatchEvent(new Event(ConstTlmn.OUT_ROOM, true));
-				electroServerCommand.joinLobbyRoom();
+				
 				
 				GameDataTLMN.getInstance().notEnoughMoney = true;
 				//okOut();
@@ -1349,6 +1268,15 @@ package view.screen
 				}
 				
 			}
+			
+			if (GameDataTLMN.getInstance().notEnoughMoney) 
+			{
+				electroServerCommand.joinLobbyRoom();
+				dispatchEvent(new Event(ConstTlmn.OUT_ROOM, true));
+			}
+			
+			GameDataTLMN.getInstance().notEnoughMoney = false;
+			
 			_resultWindow.removeEventListener("close", onCloseResultWindow);
 			_resultWindow.removeEventListener("out game", onOutGame);
 				
@@ -1599,24 +1527,43 @@ package view.screen
 						{
 							if (ihit) 
 							{
-								if (MyDataTLMN.getInstance().sex) 
+								/*if (MyDataTLMN.getInstance().sex) 
 								{
 									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_ + String(rd + 1) );
 								}
 								else 
 								{
 									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_ + String(rd + 1) );
+								}*/
+								
+								if (MyDataTLMN.getInstance().sex) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DANH2_ + String(rd + 1) );
 								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DANH2_ + String(rd + 1) );
+								}
+							
 							}
 							else 
 							{
-								if (userSexhit) 
+								/*if (userSexhit) 
 								{
 									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_ + String(rd + 1) );
 								}
 								else 
 								{
 									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE1CARD_ + String(rd + 1) );
+								}*/
+								
+								if (userSexhit) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DANH2_ + String(rd + 1) );
+								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DANH2_ + String(rd + 1) );
 								}
 							}
 							
@@ -3388,7 +3335,7 @@ package view.screen
 				GameDataTLMN.getInstance().playGameBackGroud = true;
 				content.settingBoard.onMusic.visible = false;
 				
-				var rd:int = int(Math.random() * 3);
+				/*var rd:int = int(Math.random() * 3);
 				if (rd == 0 ) 
 				{
 					ConstTlmn.MUSIC_BG = "GameSound1";
@@ -3401,7 +3348,7 @@ package view.screen
 				{
 					ConstTlmn.MUSIC_BG = "GameSound3";
 				}
-				SoundManager.getInstance().playMusic(ConstTlmn.MUSIC_BG, 100000);
+				SoundManager.getInstance().playMusic(ConstTlmn.MUSIC_BG, 100000);*/
 				
 				SoundManager.getInstance().isMusicOn = true;
 			}
@@ -3538,6 +3485,8 @@ package view.screen
 		
 		private function onClickSignOutGame(e:MouseEvent):void 
 		{
+			var rd:int;
+			
 			if (SoundManager.getInstance().isSoundOn) 
 			{
 				SoundManager.getInstance().playSound(ConstTlmn.SOUND_CLICK);
@@ -3546,9 +3495,17 @@ package view.screen
 			{
 				if (_myInfo._isPlaying) 
 				{
+					
+					confirmExitWindow = new ConfirmWindow();
+					confirmExitWindow.setNotice(mainData.init.gameDescription.playingScreen.confirmExit);
+					confirmExitWindow.addEventListener(ConfirmWindow.CONFIRM, onConfirmWindow);
+					windowLayer.openWindow(confirmExitWindow);
+				}
+				else 
+				{
 					if (SoundManager.getInstance().isSoundOn) 
 					{
-						var rd:int = int(Math.random() * 5);
+						rd = int(Math.random() * 5);
 						if (MyDataTLMN.getInstance().sex) 
 						{
 							SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_BYE_ + String(rd + 1) );
@@ -3559,13 +3516,7 @@ package view.screen
 						}
 						
 					}
-					confirmExitWindow = new ConfirmWindow();
-					confirmExitWindow.setNotice(mainData.init.gameDescription.playingScreen.confirmExit);
-					confirmExitWindow.addEventListener(ConfirmWindow.CONFIRM, onConfirmWindow);
-					windowLayer.openWindow(confirmExitWindow);
-				}
-				else 
-				{
+					
 					dispatchEvent(new Event(ConstTlmn.OUT_ROOM, true));
 					electroServerCommand.joinLobbyRoom();
 					
@@ -3585,7 +3536,19 @@ package view.screen
 				//if (mainData.chooseChannelData.myInfo.money < 0)
 				//	mainData.chooseChannelData.myInfo.money = 0;
 					
-				
+				if (SoundManager.getInstance().isSoundOn) 
+				{
+					var rd:int = int(Math.random() * 5);
+					if (MyDataTLMN.getInstance().sex) 
+					{
+						SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_BYE_ + String(rd + 1) );
+					}
+					else 
+					{
+						SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_BYE_ + String(rd + 1) );
+					}
+					
+				}
 				dispatchEvent(new Event(ConstTlmn.OUT_ROOM, true));
 				electroServerCommand.joinLobbyRoom();
 				
@@ -3995,7 +3958,8 @@ package view.screen
 				content.startGame.visible = false;
 			}
 			
-			trace("master là mình: ", _arrUserList[0].isMaster, _arrUserList)
+			trace("master là mình: ", _arrUserList[0].isMaster, _arrUserList);
+			MyDataTLMN.getInstance().sex = _arrUserList[0].sex;
 			_myInfo.addInfoForMe(_arrUserList[0].userName, _arrUserList[0].money, _arrUserList[0].avatar, 
 									_arrUserList[0].remaningCard,
 									_arrUserList[0].isMaster, _isPlaying, _arrUserList[0].displayName, _arrUserList[0].ready);
