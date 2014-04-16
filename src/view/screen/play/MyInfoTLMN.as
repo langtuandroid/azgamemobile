@@ -2,6 +2,7 @@ package view.screen.play
 {
 	import com.greensock.TweenMax;
 	import control.ConstTlmn;
+	import event.DataField;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Loader;
@@ -88,6 +89,7 @@ package view.screen.play
 		private var _timerShowChatde:Timer;
 		
 		private var _win:Boolean = false;
+		private var _timerVoiceLose:Timer;
 		
 		public function MyInfoTLMN(playgame:PlayGameScreenTlmn) 
 		{
@@ -211,7 +213,7 @@ package view.screen.play
 			}
 		}
 		
-		public function showEffectGameOver(obj:Object):void 
+		public function showEffectGameOver(obj:Object, outGame:Boolean):void 
 		{
 			var rd:int;
 			if (int(obj[ConstTlmn.MONEY]) > 0) 
@@ -221,7 +223,7 @@ package view.screen.play
 				
 				
 				_win = true;
-				if (SoundManager.getInstance().isSoundOn) 
+				/*if (SoundManager.getInstance().isSoundOn) 
 				{
 					rd = int(Math.random() * 5);
 					if (MyDataTLMN.getInstance().sex) 
@@ -232,24 +234,25 @@ package view.screen.play
 					{
 						SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_WIN_ + String(rd + 1) );
 					}
-				}
+				}*/
 			}
 			else 
 			{
 				_win = false;
-				
-				if (SoundManager.getInstance().isSoundOn) 
+				if (_timerVoiceLose) 
 				{
-					rd = int(Math.random() * 5);
-					if (MyDataTLMN.getInstance().sex) 
-					{
-						SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_LOSE_ + String(rd + 1) );
-					}
-					else 
-					{
-						SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_LOSE_ + String(rd + 1) );
-					}
+					_timerVoiceLose.stop();
+					_timerVoiceLose.removeEventListener(TimerEvent.TIMER_COMPLETE, onShowVoiceLose);
 				}
+				
+				if (!outGame) 
+				{
+					_timerVoiceLose = new Timer(500, 3);
+					_timerVoiceLose.addEventListener(TimerEvent.TIMER_COMPLETE, onShowVoiceLose);
+					_timerVoiceLose.start();
+				}
+				
+				
 				content.resultGame.gotoAndStop(2);
 				TextField(content.effectMoneySpecial).defaultTextFormat = _textformatLose;
 			}
@@ -262,6 +265,26 @@ package view.screen.play
 			trace("xem lai tien cua minh: ", MyDataTLMN.getInstance().myMoney[0], obj[ConstTlmn.MONEY])
 			MyDataTLMN.getInstance().myMoney[0] = int(MyDataTLMN.getInstance().myMoney[0]) + int(obj[ConstTlmn.MONEY]);
 			TweenMax.to(content.effectMoneySpecial, 3, { y:content.effectMoneySpecial.y - 130, onComplete:onCompleteShowMoney } );
+		}
+		
+		private function onShowVoiceLose(e:TimerEvent):void 
+		{
+			if (int(MyDataTLMN.getInstance().myMoney[0]) < int(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet)
+			{
+				if (SoundManager.getInstance().isSoundOn) 
+				{
+					var rd:int = int(Math.random() * 5);
+					if (MyDataTLMN.getInstance().sex) 
+					{
+						SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_LOSE_ + String(rd + 1) );
+					}
+					else 
+					{
+						SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_LOSE_ + String(rd + 1) );
+					}
+				}
+			}
+			
 		}
 		
 		public function visibleResultGame():void 
@@ -431,6 +454,13 @@ package view.screen.play
 				_timerShowChatde.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteShowChatde);
 				_timerShowChatde.stop();
 			}
+			
+			if (_timerVoiceLose) 
+			{
+				_timerVoiceLose.stop();
+				_timerVoiceLose.removeEventListener(TimerEvent.TIMER_COMPLETE, onShowVoiceLose);
+			}
+				
 		}
 		
 		private function buttonForMe():void 
