@@ -611,7 +611,7 @@ package view.screen
 			
 			if (arrPlus[0] == MyDataTLMN.getInstance().myId) 
 			{
-				_myInfo.addMoney(arrPlus[1]);
+				_myInfo.addMoneySpecial(arrPlus[1]);
 				//_myInfo.chatde(true);
 				
 			}
@@ -630,7 +630,7 @@ package view.screen
 			
 			if (arrSub[0] == _myInfo._userName) 
 			{
-				_myInfo.addMoney(arrSub[1]);
+				_myInfo.addMoneySpecial(arrSub[1]);
 				//_myInfo.chatde(false);
 			}
 			else 
