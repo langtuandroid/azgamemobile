@@ -792,7 +792,7 @@ package view.screen
 			
 			content.setChildIndex(content.whiteWin, content.numChildren - 1);
 			
-			
+			var result:int;
 			var outGame:Boolean = false;
 			var objResult:Object;
 			for (i = 0; i < obj[ConstTlmn.PLAYER_LIST].length; i++) 
@@ -802,8 +802,8 @@ package view.screen
 					objResult = new Object();
 					objResult[ConstTlmn.MONEY] = obj[ConstTlmn.PLAYER_LIST][i][ConstTlmn.MONEY];
 					
-					MyDataTLMN.getInstance().myMoney[0] = int(MyDataTLMN.getInstance().myMoney[0]) + int(objResult[ConstTlmn.MONEY]);
-					if (MyDataTLMN.getInstance().myMoney[0] < int(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet) 
+					result = int(MyDataTLMN.getInstance().myMoney[0]) + int(objResult[ConstTlmn.MONEY]);
+					if (result < int(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet) 
 					{
 						outGame = true;
 					}
@@ -1121,8 +1121,8 @@ package view.screen
 				{
 					objResult = new Object();
 					objResult[ConstTlmn.MONEY] = arrResult[i][ConstTlmn.SUB_MONEY];
-					MyDataTLMN.getInstance().myMoney[0] = int(MyDataTLMN.getInstance().myMoney[0]) + int(arrResult[i][ConstTlmn.SUB_MONEY]);
-					if (MyDataTLMN.getInstance().myMoney[0] < int(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet) 
+					result = int(MyDataTLMN.getInstance().myMoney[0]) + int(arrResult[i][ConstTlmn.SUB_MONEY]);
+					if (result < int(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet) 
 					{
 						outGame = true;
 					}
