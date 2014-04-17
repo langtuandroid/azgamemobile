@@ -237,7 +237,7 @@ package view.window.shop
 			obj["access_token"] = mainData.loginData["AccessToken"];
 			obj["item_id"] = avatar._idAvt;
 			obj["avt_lst_id"] = avatar._idListAvt;
-			obj["client_hash"] = MD5.hash(obj["access_token"] + obj["avt_lst_id"]);
+			obj["client_hash"] = MD5.hash(obj["access_token"] + mainData.client_secret + obj["avt_lst_id"]);
 			
 			trace("link mua item: ", obj["access_token"])
 			var httpReq:HTTPRequest = new HTTPRequest();
@@ -441,7 +441,7 @@ package view.window.shop
 			obj["nk_nm_receiver"] = mainData.loginData["Id"];
 			obj["item_id"] = avatar._idAvt;
 			obj["item_quantity"] = "1";
-			obj["client_hash"] = MD5.hash(obj["access_token"] + obj["game_code"]
+			obj["client_hash"] = MD5.hash(obj["access_token"] + mainData.client_secret + obj["game_code"]
 			 + obj["payment_type"] + obj["nk_nm_receiver"] + obj["item_id"] +
 			 obj["item_quantity"]);
 			
@@ -524,7 +524,7 @@ package view.window.shop
 			obj["nk_nm_receiver"] = mainData.loginData["Id"];
 			obj["item_id"] = avatar._idAvt;
 			obj["item_quantity"] = "1";
-			obj["client_hash"] = MD5.hash(obj["access_token"] + obj["game_code"]
+			obj["client_hash"] = MD5.hash(obj["access_token"] + mainData.client_secret + obj["game_code"]
 			 + obj["payment_type"] + obj["nk_nm_receiver"] + obj["item_id"] +
 			 obj["item_quantity"]);
 			
