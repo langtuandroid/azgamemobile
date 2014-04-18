@@ -4,6 +4,7 @@ package model.playingData
 	import event.PlayingScreenEventTlmn;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import model.MainData;
 	/**
 	 * ...
 	 * @author Yun
@@ -61,7 +62,14 @@ package model.playingData
 		public function set playingScreenAction(value:Object):void 
 		{
 			_playingScreenAction = value;
-			dispatchEvent(new PlayingScreenEventTlmn(UPDATE_PLAYING_SCREEN, value));
+			if (MainData.getInstance().gameType == MainData.TLMN) 
+			{
+				dispatchEvent(new PlayingScreenEventTlmn(UPDATE_PLAYING_SCREEN, value));
+			}
+			else 
+			{
+				dispatchEvent(new PlayingScreenEvent(UPDATE_PLAYING_SCREEN, value));
+			}
 		}
 		
 		// Danh sách user trong phòng chờ
