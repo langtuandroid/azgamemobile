@@ -571,6 +571,7 @@ package control.electroServerCommand
 				else
 					roomData.rules = mainData.init.gameDescription.lobbyRoomScreen.notSendCard;
 				roomData.ruleToggle = false;
+				roomData.male = roomList[roomId][DataFieldPhom.MALE];
 				roomData.betting = roomList[roomId][DataFieldPhom.ROOM_BET];
 				roomData.channelId = mainData.playingData.gameRoomData.channelId;
 				roomData.hasPassword = roomList[roomId][DataFieldPhom.HAS_PASSWORD];
@@ -669,7 +670,7 @@ package control.electroServerCommand
 			{
 				userData = new UserDataULC();
 				userData.isOnline = true;
-				userData.gameId = MainData.MAUBINH_ID;
+				userData.gameId = MainData.PHOM_ID;
 				userData.isJoinRoom = true;
 				userData.isViewPersonalInfo = true;
 				userData.isMakeFriend = true;
@@ -718,7 +719,7 @@ package control.electroServerCommand
 					userData.levelName = "unKnown";
 					isHaveUnknownUser = true;
 				}
-				if (allUserList[userName][DataFieldPhom.ROOM_ID] == 0)
+				if (allUserList[userName][DataFieldPhom.ROOM_ID] == mainData.lobbyRoomId)
 				{
 					userData.isJoinRoom = false;
 					userData.description = "Phòng chờ";
@@ -727,7 +728,7 @@ package control.electroServerCommand
 				{
 					userData.description = "Phòng " + allUserList[userName][DataFieldPhom.ROOM_ID];
 				}
-				if (userData.userName != mainData.chooseChannelData.myInfo.uId)
+				if (userData.userName != mainData.chooseChannelData.myInfo.uId && userData.roomID == mainData.lobbyRoomId)
 					tempUserList.push(userData);
 			}
 			

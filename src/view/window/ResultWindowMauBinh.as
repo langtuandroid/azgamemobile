@@ -89,6 +89,7 @@ package view.window
 			exitButton = content["exitButton"];
 			exitButton.addEventListener(MouseEvent.CLICK, onExitButtonClick);
 			closeButton2 = content["closeButton"];
+			closeButton2.visible = false;
 			closeButton2.addEventListener(MouseEvent.CLICK, onCloseButtonClick);
 			timeCountDownToClose = content["timeCountDownToClose"];
 			playerName = new Array();

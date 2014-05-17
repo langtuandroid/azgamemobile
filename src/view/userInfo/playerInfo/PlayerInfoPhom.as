@@ -319,6 +319,9 @@ package view.userInfo.playerInfo
 		
 		public function removeAllCards():void
 		{
+			if (!content)
+				return;
+			
 			removeCardsArray(unLeaveCards);
 			removeCardsArray(leavedCards);
 			removeCardsArray(downCards_1);
@@ -402,6 +405,12 @@ package view.userInfo.playerInfo
 		
 		public function playOneCard(cardId:int):void
 		{
+			if (formName == BELOW_USER)
+			{
+				addChild(arrangeCardButton);
+				arrangeCardButton.enable = true;
+			}
+			
 			SoundManager.getInstance().playSound(SoundLibChung.CARD_SOUND);
 			
 			var tempPoint:Point;
@@ -421,7 +430,8 @@ package view.userInfo.playerInfo
 			
 			moveUnleaveToLeavedCard(cardId);
 			
-			reArrangeDownCard();
+			if (formName != ABOVE_USER)
+				reArrangeDownCard();
 			
 			if (deckNumber == 0 && leavedCards.length == 4)
 			{
@@ -489,6 +499,14 @@ package view.userInfo.playerInfo
 			reArrangeUnleaveCard();
 			reAddUnleaveCard();
 			
+			if (formName == ABOVE_USER)
+			{
+				for (j = 0; j < leavedCards.length; j++) 
+				{
+					leavedCards[j].parent.addChild(leavedCards[j]);
+				}
+			}
+			
 			if (formName == BELOW_USER && totalDeck == deckNumber)
 				electroServerCommand.downCardFinish(userName);
 		}
@@ -527,6 +545,14 @@ package view.userInfo.playerInfo
 			}*/
 			totalDownCard++;
 			reArrangeDownCard();
+			
+			if (formName == ABOVE_USER)
+			{
+				for (var j:int = 0; j < leavedCards.length; j++) 
+				{
+					leavedCards[j].parent.addChild(leavedCards[j]);
+				}
+			}
 		}
 		
 		// Xét đến lượt mình đánh
@@ -657,7 +683,7 @@ package view.userInfo.playerInfo
 			if (unLeaveCards.length == 10)
 			{
 				var i:int;
-				var fullDeckArray:Array = phomLogic.getDeckWhenFullDeck(unLeaveCards);
+				var fullDeckArray:Array = phomLogic.checkFullDeck(unLeaveCards);
 				for (i = 0; i < fullDeckArray.length; i++)
 				{
 					var deckArray:Array = new Array();
@@ -772,7 +798,8 @@ package view.userInfo.playerInfo
 				return;
 			if (unLeaveCards.length == 10)
 			{
-				if (phomLogic.checkFullDeck(unLeaveCards))
+				var tempArray:Array = phomLogic.checkFullDeck(unLeaveCards);
+				if (tempArray.length != 0)
 				{
 					addChild(noticeFullDeckButton);
 					noticeFullDeckButton.enable = true;
@@ -1038,41 +1065,45 @@ package view.userInfo.playerInfo
 			{
 				for (j = 0; j < deckArray.length; j++)
 				{
-					if (phomLogic.checkSendCard([checkArray[i]], deckArray[j][DataFieldPhom.CARDS]))
+					if (checkArray[i])
 					{
-						CardPhom(checkArray[i]).sendObject = deckArray[j];
-						sendArray.push(checkArray[i]);
-						// Nếu là phỏm dây thì tìm xem còn lá bài nào trong checkArray có thể ghép dây tiếp ko
-						if (phomLogic.convertIdToSuit(checkArray[i].id) == phomLogic.convertIdToSuit(deckArray[j][DataFieldPhom.CARDS][0].id))
+						if (phomLogic.checkSendCard([checkArray[i]], deckArray[j][DataFieldPhom.CARDS]))
 						{
-							var tempArray:Array = (deckArray[j][DataFieldPhom.CARDS] as Array).concat();
-							tempArray.push(checkArray[i]);
-							checkArray.splice(i, 1);
-							var isEmptyCard:Boolean = false;
-							while (!isEmptyCard) 
+							CardPhom(checkArray[i]).sendObject = deckArray[j];
+							sendArray.push(checkArray[i]);
+							// Nếu là phỏm dây thì tìm xem còn lá bài nào trong checkArray có thể ghép dây tiếp ko
+							if (phomLogic.convertIdToSuit(checkArray[i].id) == phomLogic.convertIdToSuit(deckArray[j][DataFieldPhom.CARDS][0].id))
 							{
-								isEmptyCard = true;
-								for (var k:int = 0; k < checkArray.length; k++) 
+								var tempArray:Array = (deckArray[j][DataFieldPhom.CARDS] as Array).concat();
+								tempArray.push(checkArray[i]);
+								checkArray.splice(i, 1);
+								var isEmptyCard:Boolean = false;
+								while (!isEmptyCard) 
 								{
-									var tempArray2:Array = tempArray.concat();
-									tempArray2.push(checkArray[k]);
-									if (phomLogic.checkCardDeck(tempArray2))
+									isEmptyCard = true;
+									for (var k:int = 0; k < checkArray.length; k++) 
 									{
-										CardPhom(checkArray[k]).sendObject = deckArray[j];
-										sendArray.push(checkArray[k]);
-										checkArray.splice(k, 1);
-										isEmptyCard = false;
-										tempArray = tempArray2;
-										break;
+										var tempArray2:Array = tempArray.concat();
+										tempArray2.push(checkArray[k]);
+										if (phomLogic.checkCardDeck(tempArray2))
+										{
+											CardPhom(checkArray[k]).sendObject = deckArray[j];
+											sendArray.push(checkArray[k]);
+											checkArray.splice(k, 1);
+											isEmptyCard = false;
+											tempArray = tempArray2;
+											break;
+										}
 									}
 								}
 							}
-						}
-						else
-						{
-							checkArray.splice(i, 1);
+							else
+							{
+								checkArray.splice(i, 1);
+							}
 						}
 					}
+					
 					if (checkArray.length == 0)
 					{
 						if(sendArray.length == 0)
@@ -1172,6 +1203,11 @@ package view.userInfo.playerInfo
 					playCardButton.enable = reSelectButton.enable = true;
 				}
 			}
+			else
+			{
+				addChild(arrangeCardButton);
+				arrangeCardButton.enable = true;
+			}
 		}
 		
 		public function deleteOneUnleaveCard(card:CardPhom):void
@@ -1183,16 +1219,7 @@ package view.userInfo.playerInfo
 					unLeaveCards.splice(i, 1);
 					if (formName == PlayerInfoPhom.BELOW_USER)
 					{
-						if (checkSendCard(unLeaveCards)) // check xem có bài để gửi không
-						{
-							setMyTurn(SEND_CARD);
-						}
-						else // nếu không có bài gửi thì bỏ qua luôn phần gửi
-						{
-							if(formName == PlayerInfoPhom.BELOW_USER)
-								electroServerCommand.sendCardFinish(userName);
-							setMyTurn(PLAY_CARD);
-						}
+						setMyTurn(PLAY_CARD);
 					}
 					reArrangeUnleaveCard();
 					return;

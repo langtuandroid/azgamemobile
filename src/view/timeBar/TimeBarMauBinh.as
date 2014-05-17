@@ -99,6 +99,8 @@ package view.timeBar
 				ticker.stop();
 			}
 			timeBar.stop();
+			
+			SoundManager.getInstance().stopSound(SoundLibChung.PREPARE_TIME_OUT_SOUND);
 		}
 		
 		private function onCountTime(e:Event):void 
@@ -117,7 +119,7 @@ package view.timeBar
 					isPrepareTimeOut = true;
 					
 					SoundManager.getInstance().playSound(SoundLibChung.PREPARE_TIME_OUT_SOUND, 1000);
-					SoundManager.getInstance().soundManagerMauBinh.playTimeOutPlayerSound(mainData.chooseChannelData.myInfo.sex);
+					//SoundManager.getInstance().soundManagerMauBinh.playTimeOutPlayerSound(mainData.chooseChannelData.myInfo.sex);
 				}
 				if (isFilterDown)
 				{
@@ -151,6 +153,8 @@ package view.timeBar
 					ticker.stop();
 				}
 				timeBar.stop();
+				
+				SoundManager.getInstance().stopSound(SoundLibChung.PREPARE_TIME_OUT_SOUND);
 				dispatchEvent(new Event(COUNT_TIME_FINISH));
 			}
 		}

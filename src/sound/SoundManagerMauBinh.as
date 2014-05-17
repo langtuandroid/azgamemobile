@@ -394,7 +394,7 @@ package sound
 			}
 		}
 		
-		public function playSpecialPlayerSound(sex:String, mauBinhIndex:String, groupResult:String):void
+		public function playSpecialPlayerSound(sex:String, mauBinhIndex:String):void
 		{
 			trace("soundManagerMauBinh playSpecialPlayerSound");
 			if (sex == 'M')
@@ -414,16 +414,16 @@ package sound
 						SoundManager.getInstance().playSound(SoundLibMauBinh.NAM_DOI_MOT_SAM_SOUND_MALE);
 					break;
 					case '34':
-						
+						SoundManager.getInstance().playSound(SoundLibMauBinh.SANH_RONG_SOUND_MALE);
 					break;
 					case '35':
-						
+						SoundManager.getInstance().playSound(SoundLibMauBinh.SANH_RONG_SOUND_MALE);
 					break;
 					case '36':
-						
+						SoundManager.getInstance().playSound(SoundLibMauBinh.SANH_RONG_SOUND_MALE);
 					break;
 					case '37':
-						
+						SoundManager.getInstance().playSound(SoundLibMauBinh.SANH_RONG_SOUND_MALE);
 					break;
 					case '38':
 						SoundManager.getInstance().playSound(SoundLibMauBinh.SANH_RONG_SOUND_MALE);
@@ -436,7 +436,7 @@ package sound
 			}
 			else
 			{
-				switch (groupResult) 
+				switch (mauBinhIndex) 
 				{
 					case '30':
 						SoundManager.getInstance().playSound(SoundLibMauBinh.BA_SANH_SOUND_FEMALE);
@@ -451,16 +451,16 @@ package sound
 						SoundManager.getInstance().playSound(SoundLibMauBinh.NAM_DOI_MOT_SAM_SOUND_FEMALE);
 					break;
 					case '34':
-						
+						SoundManager.getInstance().playSound(SoundLibMauBinh.SANH_RONG_SOUND_FEMALE);
 					break;
 					case '35':
-						
+						SoundManager.getInstance().playSound(SoundLibMauBinh.SANH_RONG_SOUND_FEMALE);
 					break;
 					case '36':
-						
+						SoundManager.getInstance().playSound(SoundLibMauBinh.SANH_RONG_SOUND_FEMALE);
 					break;
 					case '37':
-						
+						SoundManager.getInstance().playSound(SoundLibMauBinh.SANH_RONG_SOUND_FEMALE);
 					break;
 					case '38':
 						SoundManager.getInstance().playSound(SoundLibMauBinh.SANH_RONG_SOUND_FEMALE);
@@ -592,9 +592,6 @@ package sound
 					break;
 					case '2':
 						SoundManager.getInstance().playSound(SoundLibMauBinh.DOI_SOUND_MALE);
-					break;
-					case '-4':
-						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_4_SOUND_MALE);
 					break;
 					case '-5':
 						SoundManager.getInstance().playSound(SoundLibMauBinh.MAU_THAU_5_SOUND_MALE);

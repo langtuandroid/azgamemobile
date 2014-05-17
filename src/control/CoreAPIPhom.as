@@ -609,7 +609,7 @@ package control
 						userData.isOnline = EsObject(friendList[i]).getBoolean(DataFieldPhom.ONLINE);
 						if (userData.isOnline)
 						{
-							userData.roomID = EsObject(friendList[i]).getInteger("room_id");
+							userData.roomID = int(EsObject(friendList[i]).getString("room_id"));
 							
 							switch (EsObject(friendList[i]).getString("game_id")) 
 							{
@@ -670,6 +670,7 @@ package control
 						myData.roomList[roomId][DataFieldPhom.GAME_ID] = EsObject(roomList[i]).getInteger(DataFieldPhom.GAME_ID);
 						myData.roomList[roomId][DataFieldPhom.HAS_PASSWORD] = EsObject(roomList[i]).getBoolean(DataFieldPhom.HAS_PASSWORD);
 						myData.roomList[roomId][DataFieldPhom.USERS_NUMBER] = EsObject(roomList[i]).getEsObjectArray(DataFieldPhom.USER_LIST).length;
+						myData.roomList[roomId][DataFieldPhom.MALE] = 0;
 						myData.roomList[roomId][DataFieldPhom.MAX_PLAYER] = gameDetails.getInteger(DataFieldPhom.MAX_PLAYER);
 						userList = EsObject(roomList[i]).getEsObjectArray(DataFieldPhom.USER_LIST);
 						for (j = 0; j < userList.length; j++) 
@@ -677,6 +678,8 @@ package control
 							userName = EsObject(userList[j]).getString(DataFieldPhom.USER_NAME);
 							myData.userList[userName] = new Object();
 							object = convertEsObject(EsObject(userList[j]).getEsObject(DataFieldPhom.USER_INFO));
+							if (object[DataFieldPhom.SEX] == 'M')
+								myData.roomList[roomId][DataFieldPhom.MALE]++;
 							myData.userList[userName][DataFieldPhom.USER_INFO] = object;
 							myData.userList[userName][DataFieldPhom.ROOM_ID] = roomId;
 						}
@@ -700,7 +703,7 @@ package control
 							}
 						}
 						myData.userList[userName] = new Object();
-						myData.userList[userName][DataFieldPhom.ROOM_ID] = 0;
+						myData.userList[userName][DataFieldPhom.ROOM_ID] = mainData.lobbyRoomId;
 						myData.userList[userName][DataFieldPhom.USER_INFO] = object;
 						if (!object[DataFieldPhom.LOSE])
 							object[DataFieldPhom.LOSE] = 0;
@@ -1057,7 +1060,7 @@ package control
 			//var createGameRequest:CreateGameRequest = new CreateGameRequest();
 			var createGameRequest:QuickJoinGameRequest = new QuickJoinGameRequest();
 			createGameRequest.gameType = myData.gameType;
-			createGameRequest.zoneName = myData.gameType + "_" + String(myData.channelId);
+			createGameRequest.zoneName = mainData.game_id + "_" + String(myData.channelId);
 			createGameRequest.gameDetails = gameDetails;
 			createGameRequest.createOnly = true;
 			createGameRequest.password = password;
@@ -1096,7 +1099,7 @@ package control
 		{
 			leaveRoom();
 			var quickJoinGameRequest:QuickJoinGameRequest = new QuickJoinGameRequest();
-			quickJoinGameRequest.zoneName = myData.gameType + "_" + String(myData.channelId);
+			quickJoinGameRequest.zoneName = mainData.game_id + "_" + String(myData.channelId);
 			quickJoinGameRequest.gameType = myData.gameType;
 			var searchCriteria:SearchCriteria = new SearchCriteria();
 			searchCriteria.gameType = myData.gameType;
@@ -1294,16 +1297,21 @@ package control
 				leaveRoom();
 				
 			var createRoomRequest:CreateRoomRequest = new CreateRoomRequest();
-			createRoomRequest.zoneName = myData.gameType + "_" + String(myData.channelId);
+			createRoomRequest.zoneName = mainData.game_id + "_" + String(myData.channelId);
 			createRoomRequest.roomName = roomName;
 			createRoomRequest.roomDescription = roomDescription;
 			createRoomRequest.capacity = roomCapacity;
 			createRoomRequest.password = roomPassword;
 			
-			if(roomName == myData.lobbyName)
+			if (roomName == myData.lobbyName)
+			{
+				createRoomRequest.roomName = "Lobby";
 				createRoomRequest.persistent = true; // dù không có người chơi phòng này vẫn tồn tại
+			}
 			else
+			{
 				createRoomRequest.persistent = false; // không có người chơi thì phòng này không tồn tại
+			}
 			
 			var plugin:PluginListEntry = new PluginListEntry();
 			plugin.extensionName = myData.lobbyName;
@@ -1326,7 +1334,7 @@ package control
 		 */		
 		public function getUserInRoom(roomId:int):void
 		{
-			var zoneName:String = myData.gameType + "_" + myData.channelId;
+			var zoneName:String = mainData.game_id + "_" + myData.channelId;
 			var zoneId: int = electroServer.managerHelper.zoneManager.zoneByName(zoneName).id;
 			var getUsersInRoomRequest:GetUsersInRoomRequest = new GetUsersInRoomRequest();
 			getUsersInRoomRequest.roomId = roomId;

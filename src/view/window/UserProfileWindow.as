@@ -71,20 +71,21 @@ package view.window
 			switch (e.currentTarget) 
 			{
 				case addFriendButton:
-					electroServerCommand.addFriend(userName, DataFieldMauBinh.IN_LOBBY);
+					electroServerCommand.addFriend(userName, DataFieldMauBinh.IN_GAME_ROOM);
 					close();
-					electroServerCommand.getRoomList();
+					electroServerCommand.getFriendList();
 				break;
 				case removeFriendButton:
-					electroServerCommand.removeFriend(userName, DataFieldMauBinh.IN_LOBBY);
+					electroServerCommand.removeFriend(userName, DataFieldMauBinh.IN_GAME_ROOM);
 					close();
-					electroServerCommand.getRoomList();
+					electroServerCommand.getFriendList();
 				break;
 				case kickoutButton:
 					var confirmKickOutWindow:ConfirmWindow = new ConfirmWindow();
 					confirmKickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.confirmKickOut + " " + displayName);
 					confirmKickOutWindow.addEventListener(ConfirmWindow.CONFIRM, onConfirmKickOut);
 					WindowLayer.getInstance().openWindow(confirmKickOutWindow);
+					close();
 				break;
 				case closeButton:
 					close();

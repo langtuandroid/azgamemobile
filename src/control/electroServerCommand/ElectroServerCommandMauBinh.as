@@ -571,6 +571,7 @@ package control.electroServerCommand
 				else
 					roomData.rules = mainData.init.gameDescription.lobbyRoomScreen.notSendCard;
 				roomData.ruleToggle = false;
+				roomData.male = roomList[roomId][DataFieldMauBinh.MALE];
 				roomData.betting = roomList[roomId][DataFieldMauBinh.ROOM_BET];
 				roomData.channelId = mainData.playingData.gameRoomData.channelId;
 				roomData.hasPassword = roomList[roomId][DataFieldMauBinh.HAS_PASSWORD];
@@ -675,6 +676,7 @@ package control.electroServerCommand
 				userData.isMakeFriend = true;
 				if (allUserList[userName][DataFieldMauBinh.USER_INFO])
 				{
+					userData.roomID = allUserList[userName][DataFieldMauBinh.ROOM_ID];
 					userData.moneyLogoUrl = allUserList[userName][DataFieldMauBinh.USER_INFO][DataFieldMauBinh.LOGO];
 					userData.displayName = allUserList[userName][DataFieldMauBinh.USER_INFO][ModelField.DISPLAY_NAME];
 					userData.win = allUserList[userName][DataFieldMauBinh.USER_INFO][DataFieldMauBinh.WIN];
@@ -682,7 +684,6 @@ package control.electroServerCommand
 					userData.levelName = allUserList[userName][DataFieldMauBinh.USER_INFO].level;
 					userData.userID = userName;
 					userData.userName = userName;
-					userData.roomID = allUserList[userName][DataFieldMauBinh.ROOM_ID];
 					userData.money = allUserList[userName][DataFieldMauBinh.USER_INFO][ModelField.MONEY];
 					
 					userData.avatar = allUserList[userName][DataFieldMauBinh.USER_INFO][ModelField.AVATAR];
@@ -718,7 +719,7 @@ package control.electroServerCommand
 					userData.levelName = "unKnown";
 					isHaveUnknownUser = true;
 				}
-				if (allUserList[userName][DataFieldMauBinh.ROOM_ID] == 0)
+				if (allUserList[userName][DataFieldMauBinh.ROOM_ID] == mainData.lobbyRoomId)
 				{
 					userData.isJoinRoom = false;
 					userData.description = "Phòng chờ";
@@ -727,7 +728,7 @@ package control.electroServerCommand
 				{
 					userData.description = "Phòng " + allUserList[userName][DataFieldMauBinh.ROOM_ID];
 				}
-				if (userData.userName != mainData.chooseChannelData.myInfo.uId)
+				if (userData.userName != mainData.chooseChannelData.myInfo.uId && userData.roomID == mainData.lobbyRoomId)
 					tempUserList.push(userData);
 			}
 			

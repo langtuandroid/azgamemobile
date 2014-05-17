@@ -33,6 +33,7 @@ package
 	import flash.utils.Timer;
 	import logic.PlayingLogic;
 	import logic.TLMNLogic;
+	import model.chooseChannelData.ChooseChannelData;
 	import model.EsConfiguration;
 	import model.loadingData.LoadingData;
 	import model.lobbyRoomData.LobbyRoomData;
@@ -126,10 +127,7 @@ package
 				NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, handleDeactivate, false, 0, true);
 			}
 			
-			//loadSoundMauBinh();
-			//loadSoundChung();
-			//
-			//loadBackgroundMusic();
+			loadBackgroundMusic();
 		}
 		
 		private function loadBackgroundMusic():void 
@@ -221,6 +219,7 @@ package
 			mainData.addEventListener(MainData.CLOSE_CONNECTION, onCloseConnection); // Đứt kết nối với server
 			mainData.addEventListener(MainData.SERVER_KICK_OUT, onServerKickOut); // Lý do bị server kick
 			mainData.addEventListener(MainData.LOG_OUT_CLICK, onLogOutClick); // Nguoi choi click log out
+			mainData.chooseChannelData.addEventListener(ChooseChannelData.UPDATE_CHANNEL_INFO, onUpdateChannelInfo);
 			//mainCommand.initCommand.loadInit(); // Load file init.xml
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
@@ -256,6 +255,15 @@ package
 			
 			// Lắng nghe sự kiện join phòng game
 			mainData.playingData.addEventListener(PlayingData.JOIN_GAME_ROOM_SUCCESS, onJoinGameRoomSuccess);
+		}
+		
+		private function onUpdateChannelInfo(e:Event):void 
+		{
+			if (mainData.isFirstJoinLobby)
+			{
+				loadSoundMauBinh();
+				loadSoundChung();
+			}
 		}
 		
 		private function onStageClick(e:MouseEvent):void 

@@ -11,6 +11,8 @@ package view.effectLayer
 	public class EffectLayer extends Sprite 
 	{
 		public static const FULL_DECK_EFFECT:String = "fullDeckEffect"; // Hiệu ứng ù
+		public static const AIR_FULL_DECK_EFFECT:String = "airFullDeckEffect"; // Hiệu ứng ù thiên
+		public static const FINISH_FULL_DECK_EFFECT:String = "finishFullDeckEffect"; // Hiệu ứng ù tròn
 		public static const NO_DECK_EFFECT:String = "noDeckEffect"; // Hiệu ứng móm
 		public static const COMPENSATE_ALL_EFFECT:String = "compensateAllEffect"; // Hiệu ứng ù đền
 		public static const WIN_EFFECT:String = "winEffect"; // Hiệu ứng thắng

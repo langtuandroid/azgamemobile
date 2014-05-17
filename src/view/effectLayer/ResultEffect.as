@@ -32,6 +32,12 @@ package view.effectLayer
 				case EffectLayer.WIN_EFFECT:
 					addContent("zWinEffect");
 				break;
+				case EffectLayer.FINISH_FULL_DECK_EFFECT:
+					addContent("zFinishFullDeckEffect");
+				break;
+				case EffectLayer.AIR_FULL_DECK_EFFECT:
+					addContent("zAirFullDeckEffect");
+				break;
 				case EffectLayer.NO_RELATIONSHIP_EFFECT:
 					addContent("zNoRelationshipEffect");
 				break;

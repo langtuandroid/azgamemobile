@@ -108,8 +108,8 @@ package view.window
 			addChild(betInputText);
 			
 			itemComboBox = new MyComboBox();
-			var tempTextFormat:TextFormat = new TextFormat("Tahoma", 12, null, true);
-			itemComboBox.mainTextFormat = tempTextFormat;
+			//var tempTextFormat:TextFormat = new TextFormat("Tahoma", 12, null, true);
+			//itemComboBox.mainTextFormat = tempTextFormat;
 			itemComboBox.x = content["itemPosition"].x;
 			itemComboBox.y = content["itemPosition"].y;
 			
@@ -170,7 +170,7 @@ package view.window
 			mainData.playingData.gameRoomData.roomPassword = passInputText.text;
 			var gameOption:Object = new Object();
 			gameOption[DataFieldMauBinh.ROOM_NAME] = '';
-			gameOption[DataFieldMauBinh.ROOM_BET] = betInputText.currentValue[DataFieldMauBinh.VALUE];
+			gameOption[DataFieldMauBinh.ROOM_BET] = Number(betInputText.currentValue[DataFieldMauBinh.VALUE]);
 			gameOption[DataFieldMauBinh.IS_SEND_CARD] = true;
 			gameOption[DataFieldMauBinh.MAX_PLAYER] = playerNumberComboBox.currentValue[DataFieldMauBinh.VALUE];;
 			

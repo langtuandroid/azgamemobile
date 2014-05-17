@@ -148,6 +148,7 @@ package event
 		public static const LEVEL_MIN:String = "lvl_min";
 		public static const USERS_ONLINE:String = "user_onlines";
 		public static const IP:String = "ip";
+		public static const BETS: String = "bets";
 		
 		public function DataFieldMauBinh() 
 		{

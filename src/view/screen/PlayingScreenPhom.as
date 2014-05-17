@@ -297,6 +297,7 @@ package view.screen
 		private var stealPlayerObject:Object;
 		private var playerCompensateAll:PlayerInfoPhom;
 		private var playerWin:PlayerInfoPhom;
+		private var timerToResetMatch:Timer;
 		private function setupButton():void 
 		{
 			chatButton = content["chatButton"];
@@ -976,7 +977,7 @@ package view.screen
 		
 		private function onCountTimeForStartPlayer(e:TimerEvent):void 
 		{
-			if (!stage)
+			if (!stage || !startPlayer.isPlaying)
 				return;
 			if (startPlayer == belowUserInfo)
 				SoundManager.getInstance().playSound(SoundLibChung.MY_TURN_SOUND);
@@ -1012,6 +1013,7 @@ package view.screen
 			//}
 			
 			var isBolt:Boolean;
+			var isEndPlayer:Boolean;
 			for (i = 0; i < playingPlayerArray.length; i++)
 			{
 				if (data[DataFieldPhom.NEXT_TURN] == PlayerInfoPhom(playingPlayerArray[i]).userName) 
@@ -1038,11 +1040,12 @@ package view.screen
 					{
 						belowUserInfo.setMyTurn(PlayerInfoPhom.DO_NOTHING);
 						belowUserInfo.arrangeCardButton.enable = false;
+						isEndPlayer = true;
 					}
 				}
 			}
 			
-			if (!isBolt)
+			if (!isBolt && !isEndPlayer)
 			{
 				if (stealedPlayerObject[playerDisCard.userName] == 2)
 					SoundManager.getInstance().soundManagerPhom.playRiskDiscardPlayerSound(playerDisCard.sex);
@@ -1119,7 +1122,8 @@ package view.screen
 			{
 				if (data[DataFieldPhom.USER_NAME] == PlayerInfoPhom(playingPlayerArray[i]).userName)
 				{
-					PlayerInfoPhom(playingPlayerArray[i]).countTime(mainData.init.playTime.playCardTime);
+					if (PlayerInfoPhom(playingPlayerArray[i]).leavedCards.length < 4)
+						PlayerInfoPhom(playingPlayerArray[i]).countTime(mainData.init.playTime.playCardTime);
 					return;
 				}
 			}
@@ -1191,14 +1195,20 @@ package view.screen
 		{
 			if (data[DataFieldPhom.USER_NAME] == belowUserInfo.userName) // Nếu người bị kick là mình
 			{
-				var kickOutWindow:AlertWindow = new AlertWindow();
-				kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.roomMasterKick);
-				windowLayer.openWindow(kickOutWindow);
-				
 				dispatchEvent(new Event(PlayerInfoPhom.EXIT));
 				windowLayer.isNoCloseAll = true;
 				electroServerCommand.joinLobbyRoom(true);
+				
+				var kickOutWindow:AlertWindow = new AlertWindow();
+				kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
+				kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.roomMasterKick);
+				windowLayer.openWindow(kickOutWindow);
 			}
+		}
+		
+		private function onKickOutWindowCloseComplete(e:Event):void 
+		{
+			windowLayer.closeAllWindow();
 		}
 		
 		private function listenUpdateMoney(data:Object):void // update tiền
@@ -1215,17 +1225,18 @@ package view.screen
 						{
 							// Nếu không đủ tiền để chơi ván mới
 							if (mainData.chooseChannelData.myInfo.money < Number(mainData.playingData.gameRoomData.roomBet))
-							{
-								if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
-								{
-									var kickOutWindow:AlertWindow = new AlertWindow();
-									kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
-									windowLayer.openWindow(kickOutWindow);
-								}
-								
+							{	
 								dispatchEvent(new Event(PlayerInfoPhom.EXIT));
 								windowLayer.isNoCloseAll = true;
 								electroServerCommand.joinLobbyRoom();
+								
+								if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
+								{
+									var kickOutWindow:AlertWindow = new AlertWindow();
+									kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
+									kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
+									windowLayer.openWindow(kickOutWindow);
+								}
 								
 								EffectLayer.getInstance().removeAllEffect();
 							}
@@ -1285,12 +1296,12 @@ package view.screen
 						if (playerList[i][DataFieldPhom.RESULT_POSITION] != 0)
 						{
 							//PlayerInfoPhom(playingPlayerArray[j]).updateMoney(playerList[i][DataFieldPhom.MONEY] * -1);
-							effectLayer.addEffect(EffectLayer.MONEY_EFFECT, moneyEffectPosition, time, playerList[i][DataFieldPhom.MONEY] * -1);
+							//effectLayer.addEffect(EffectLayer.MONEY_EFFECT, moneyEffectPosition, time, playerList[i][DataFieldPhom.MONEY] * -1);
 						}
 						else
 						{
 							//PlayerInfoPhom(playingPlayerArray[j]).updateMoney(playerList[i][DataFieldPhom.MONEY]);
-							effectLayer.addEffect(EffectLayer.MONEY_EFFECT, moneyEffectPosition, time, playerList[i][DataFieldPhom.MONEY]);
+							//effectLayer.addEffect(EffectLayer.MONEY_EFFECT, moneyEffectPosition, time, playerList[i][DataFieldPhom.MONEY]);
 							playerWin = playingPlayerArray[j];
 						}
 							
@@ -1310,7 +1321,23 @@ package view.screen
 							else if (playerList[i][DataFieldPhom.POINT] == -5) // Ù khan
 							{
 								playerFullDeck = PlayerInfoPhom(playingPlayerArray[j]);
-								effectLayer.addEffect(EffectLayer.NO_RELATIONSHIP_EFFECT, resultEffectPosition, time);
+								PlayerInfoPhom(playingPlayerArray[j]).setStatus("fullDeck");
+								SoundManager.getInstance().playSound(SoundLibChung.SPECIAL_SOUND);
+								effectLayer.addEffect(EffectLayer.FULL_DECK_EFFECT, resultEffectPosition, time);
+							}
+							else if (playerList[i][DataFieldPhom.POINT] == -6) // Ù tròn
+							{
+								playerFullDeck = PlayerInfoPhom(playingPlayerArray[j]);
+								PlayerInfoPhom(playingPlayerArray[j]).setStatus("fullDeck");
+								SoundManager.getInstance().playSound(SoundLibChung.SPECIAL_SOUND);
+								effectLayer.addEffect(EffectLayer.FULL_DECK_EFFECT, resultEffectPosition, time);
+							}
+							else if (playerList[i][DataFieldPhom.POINT] == -7) // Ù thiên
+							{
+								playerFullDeck = PlayerInfoPhom(playingPlayerArray[j]);
+								PlayerInfoPhom(playingPlayerArray[j]).setStatus("fullDeck");
+								SoundManager.getInstance().playSound(SoundLibChung.SPECIAL_SOUND);
+								effectLayer.addEffect(EffectLayer.FULL_DECK_EFFECT, resultEffectPosition, time);
 							}
 							else
 							{
@@ -1330,6 +1357,10 @@ package view.screen
 								PlayerInfoPhom(playingPlayerArray[j]).setStatus("compensateAll");
 								playerCompensateAll = PlayerInfoPhom(playingPlayerArray[j]);
 								//effectLayer.addEffect(EffectLayer.COMPENSATE_ALL_EFFECT, resultEffectPosition, time);
+								
+								var timerToAlertCompensateAll:Timer = new Timer(2000, 1)
+								timerToAlertCompensateAll.addEventListener(TimerEvent.TIMER_COMPLETE, onAlertCompensateAll);
+								timerToAlertCompensateAll.start();
 							}
 							else
 							{
@@ -1348,19 +1379,15 @@ package view.screen
 						PlayerInfoPhom(playingPlayerArray[j]).openAllCard();
 					}
 				}
-				
-				if (playerFullDeck && !playerCompensateAll)
-				{
-					SoundManager.getInstance().soundManagerPhom.playFullDeckPlayerSound(playerFullDeck.sex);
-				}
-				else if (playerFullDeck && playerCompensateAll)
-				{
-					SoundManager.getInstance().soundManagerPhom.playFullDeckAndCompensateAllPlayerSound(playerFullDeck.sex);
-					
-					var timerToAlertCompensateAll:Timer = new Timer(2000, 1)
-					timerToAlertCompensateAll.addEventListener(TimerEvent.TIMER_COMPLETE, onAlertCompensateAll);
-					timerToAlertCompensateAll.start();
-				}
+			}
+			
+			if (playerFullDeck && !playerCompensateAll)
+			{
+				SoundManager.getInstance().soundManagerPhom.playFullDeckPlayerSound(playerFullDeck.sex);
+			}
+			else if (playerFullDeck && playerCompensateAll)
+			{
+				SoundManager.getInstance().soundManagerPhom.playFullDeckAndCompensateAllPlayerSound(playerFullDeck.sex);
 			}
 			
 			if (!playerFullDeck)
@@ -1397,8 +1424,7 @@ package view.screen
 		private function onExitButtonClick(e:Event):void 
 		{
 			dispatchEvent(new Event(PlayerInfoPhom.EXIT));
-			windowLayer.isNoCloseAll = true;
-			electroServerCommand.joinLobbyRoom(true);
+			electroServerCommand.joinLobbyRoom();
 		}
 		
 		private function onAlertWin(e:TimerEvent):void 
@@ -1426,7 +1452,12 @@ package view.screen
 			
 			isPlaying = false;
 			
-			var timerToResetMatch:Timer = new Timer(mainData.resetMatchTime * 1000, 1);
+			if (timerToResetMatch)
+			{
+				timerToResetMatch.removeEventListener(TimerEvent.TIMER_COMPLETE, onResetMatch);
+				timerToResetMatch.stop();
+			}
+			timerToResetMatch = new Timer(mainData.resetMatchTime * 1000, 1);
 			timerToResetMatch.addEventListener(TimerEvent.TIMER_COMPLETE, onResetMatch);
 			timerToResetMatch.start();
 		}
@@ -1440,24 +1471,18 @@ package view.screen
 			if (mainData.chooseChannelData.myInfo.money < Number(mainData.playingData.gameRoomData.roomBet))
 			{
 				SoundManager.getInstance().soundManagerPhom.playLoseAllPlayerSound(mainData.chooseChannelData.myInfo.sex);
+				
+				dispatchEvent(new Event(PlayerInfoPhom.EXIT));
+				windowLayer.isNoCloseAll = true;
+				electroServerCommand.joinLobbyRoom();
+				
 				if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
 				{
 					var kickOutWindow:AlertWindow = new AlertWindow();
+					kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
 					kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
 					windowLayer.openWindow(kickOutWindow);
 				}
-				
-				/*if (mainData.chooseChannelData.myInfo.money < mainData.playingData.gameRoomData.betting[0])
-				{
-					dispatchEvent(new Event(BACK_TO_CHOOSE_CHANNEL_SCREEN));
-					electroServerCommand.closeConnection();
-				}
-				else
-				{*/
-					dispatchEvent(new Event(PlayerInfoPhom.EXIT));
-					windowLayer.isNoCloseAll = true;
-					electroServerCommand.joinLobbyRoom();
-				/*}*/
 				
 				EffectLayer.getInstance().removeAllEffect();
 				return;
@@ -1466,23 +1491,16 @@ package view.screen
 			SoundManager.getInstance().soundManagerPhom.playStartGamePlayerSound(mainData.chooseChannelData.myInfo.sex);
 			
 			resetMatch();
-			
-			if (belowUserInfo.isReadyPlay && !belowUserInfo.isRoomMaster)
-				waitToStart.visible = true;
-				
-			for (var i:int = 0; i < allPlayerArray.length; i++) 
-			{
-				if (allPlayerArray[i])
-				{
-					PlayerInfoPhom(allPlayerArray[i]).setStatus("");
-					if (PlayerInfoPhom(allPlayerArray[i]).isReadyPlay)
-						PlayerInfoPhom(allPlayerArray[i]).isReadyPlay = true;
-				}
-			}
 		}
 		
 		private function resetMatch():void // reset ván bài
 		{
+			if (timerToResetMatch)
+			{
+				timerToResetMatch.removeEventListener(TimerEvent.TIMER_COMPLETE, onResetMatch);
+				timerToResetMatch.stop();
+			}
+			
 			for (var i:int = 0; i < playingPlayerArray.length; i++) 
 			{
 				PlayerInfoPhom(playingPlayerArray[i]).removeAllCards();
@@ -1523,6 +1541,19 @@ package view.screen
 				waitToStart.visible = false;
 			}
 			removeCardManager();
+			
+			if (belowUserInfo.isReadyPlay && !belowUserInfo.isRoomMaster)
+				waitToStart.visible = true;
+				
+			for (i = 0; i < allPlayerArray.length; i++) 
+			{
+				if (allPlayerArray[i])
+				{
+					PlayerInfoPhom(allPlayerArray[i]).setStatus("");
+					if (PlayerInfoPhom(allPlayerArray[i]).isReadyPlay)
+						PlayerInfoPhom(allPlayerArray[i]).isReadyPlay = true;
+				}
+			}
 		}
 		
 		private function listenHaveUserStealCard(data:Object):void // có user ăn bài
@@ -2081,6 +2112,7 @@ package view.screen
 					SoundManager.getInstance().playSound(SoundLibChung.CLICK_SOUND);
 				break;
 				case startButton.content["child"]:
+					resetMatch();
 					if (timerToAutoStart)
 					{
 						timerToAutoStart.removeEventListener(TimerEvent.TIMER, onTimerToAutoStart);
