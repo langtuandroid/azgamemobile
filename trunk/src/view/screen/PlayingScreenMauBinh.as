@@ -109,6 +109,7 @@ package view.screen
 		private var effectLayer:EffectLayer = EffectLayer.getInstance();
 		private var resultWindow:ResultWindowMauBinh;
 		private var isPlaying:Boolean;
+		private var isResetDone:Boolean = true;
 		private var nextTurn:String; // Biến để lưu userName của thằng đánh ở turn kế tiếp
 		//private var isHaveUserReady:Boolean;
 		private var timerToPing:Timer;
@@ -281,34 +282,31 @@ package view.screen
 			{
 				case 0:
 					compareGroup1.visible = true;
-					playingLayer.addChild(compareGroup1);
-					SoundManager.getInstance().soundManagerMauBinh.playDoChiPlayerSound(mainData.chooseChannelData.myInfo.sex, 1);
+					addChild(compareGroup1);
 				break;
 				case 1:
 					compareGroup2.visible = true;
-					playingLayer.addChild(compareGroup2);
-					SoundManager.getInstance().soundManagerMauBinh.playDoChiPlayerSound(mainData.chooseChannelData.myInfo.sex, 2);
+					addChild(compareGroup2);
 				break;
 				case 2:
 					compareGroup3.visible = true;
-					playingLayer.addChild(compareGroup3);
-					SoundManager.getInstance().soundManagerMauBinh.playDoChiPlayerSound(mainData.chooseChannelData.myInfo.sex, 3);
+					addChild(compareGroup3);
 				break;
 				case 3:
 					sapham.visible = true;
-					playingLayer.addChild(sapham);
+					addChild(sapham);
 				break;
 				case 4:
 					saplang.visible = true;
-					playingLayer.addChild(saplang);
+					addChild(saplang);
 				break;
 				case 5:
 					batsaplang.visible = true;
-					playingLayer.addChild(batsaplang);
+					addChild(batsaplang);
 				break;
 				case 6:
 					soAt.visible = true;
-					playingLayer.addChild(soAt);
+					addChild(soAt);
 				break;
 				default:
 			}
@@ -316,9 +314,11 @@ package view.screen
 		
 		private var sharedObject:SharedObject;
 		private var countBinhLungAndMauBinh:int;
-		private var playerMauBinhSex:String;
+		private var playerMauBinh:PlayerInfoMauBinh;
 		private var timerToHideIpBoard:Timer;
 		private var timerToCheckTime:Timer;
+		private var bestResult:String;
+		private var haveMauBinh:Boolean;
 		private function setupButton():void 
 		{
 			chatButton = content["chatButton"];
@@ -332,6 +332,7 @@ package view.screen
 			musicOnButton = settingBoard["musicOnButton"];
 			musicOffButton = settingBoard["musicOffButton"];
 			orderCardButton = content["orderCardButton"];
+			orderCardButton.visible = false;
 			
 			sharedObject = SharedObject.getLocal("soundConfig");
 			
@@ -717,7 +718,7 @@ package view.screen
 				if (allPlayerArray[i])
 					countPlayer++;
 			}
-			if (!isPlaying && countPlayer == 2)
+			if (isResetDone && countPlayer == 2)
 			{
 				removeCardManager();
 				waitToPlay.visible = true;
@@ -776,7 +777,6 @@ package view.screen
 				{
 					if (PlayerInfoMauBinh(playingPlayerArray[i]).userName == data[DataFieldMauBinh.USER_NAME])
 					{
-						SoundManager.getInstance().soundManagerMauBinh.playOtherExitGamePlayerSound(playingPlayerArray[i].sex)
 						playingPlayerArray.splice(i, 1);
 					}
 				}
@@ -945,6 +945,7 @@ package view.screen
 				esObject.setString(DataFieldMauBinh.USER_NAME, mainData.chooseChannelData.myInfo.uId);
 				electroServerCommand.sendPrivateMessage([PlayerInfoMauBinh(playingPlayerArray[0]).userName], Command.REQUEST_TIME_CLOCK, esObject);
 				isPlaying = true;
+				isResetDone = false;
 				cardManager.playerArray = playingPlayerArray;
 			}
 			
@@ -1005,6 +1006,7 @@ package view.screen
 		private function listenDealCard(data:Object):void 
 		{
 			isGameOver = false;
+			haveMauBinh = false;
 			giveUpPlayerArray = new Array();
 			isEnableKickOut = false;
 			hideStartButton();
@@ -1013,6 +1015,7 @@ package view.screen
 			waitToStart.visible = false;
 			var i:int;
 			isPlaying = true;
+			isResetDone = false;
 			playingPlayerArray = new Array();
 			for (i = 0; i < allPlayerArray.length; i++)
 			{
@@ -1074,7 +1077,7 @@ package view.screen
 					}
 				}
 			}
-			if (!isPlaying)
+			if (isResetDone)
 			{
 				if (belowUserInfo.isRoomMaster)
 				{
@@ -1119,14 +1122,20 @@ package view.screen
 		{
 			if (data[DataFieldMauBinh.USER_NAME] == belowUserInfo.userName) // Nếu người bị kick là mình
 			{
-				var kickOutWindow:AlertWindow = new AlertWindow();
-				kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.roomMasterKick);
-				windowLayer.openWindow(kickOutWindow);
-				
-				dispatchEvent(new Event(PlayerInfoMauBinh.EXIT));
+				dispatchEvent(new Event(PlayerInfoPhom.EXIT));
 				windowLayer.isNoCloseAll = true;
 				electroServerCommand.joinLobbyRoom(true);
+				
+				var kickOutWindow:AlertWindow = new AlertWindow();
+				kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
+				kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.roomMasterKick);
+				windowLayer.openWindow(kickOutWindow);
 			}
+		}
+		
+		private function onKickOutWindowCloseComplete(e:Event):void 
+		{
+			windowLayer.closeAllWindow();
 		}
 		
 		private function listenHaveUserSortCard(data:Object):void // Có người xếp bài xong hoặc bỏ xếp bài xong
@@ -1176,17 +1185,18 @@ package view.screen
 						{
 							// Nếu không đủ tiền để chơi ván mới
 							if (mainData.chooseChannelData.myInfo.money < Number(mainData.playingData.gameRoomData.roomBet))
-							{
-								if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
-								{
-									var kickOutWindow:AlertWindow = new AlertWindow();
-									kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
-									windowLayer.openWindow(kickOutWindow);
-								}
-								
+							{	
 								dispatchEvent(new Event(PlayerInfoMauBinh.EXIT));
 								windowLayer.isNoCloseAll = true;
 								electroServerCommand.joinLobbyRoom();
+								
+								if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
+								{
+									var kickOutWindow:AlertWindow = new AlertWindow();
+									kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
+									kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
+									windowLayer.openWindow(kickOutWindow);
+								}
 								
 								EffectLayer.getInstance().removeAllEffect();
 							}
@@ -1318,10 +1328,8 @@ package view.screen
 			var resultArray:Array = compareGroupData[DataFieldMauBinh.PLAYER_LIST];
 			var p1:Point;
 			var p2:Point;
-			var haveMauBinh:Boolean;
 			var time:int = mainData.init.gameDescription.playingScreen.showGroupTime;
 			var bestScore:int = 0;
-			var bestResult:String;
 			
 			setCompareGroupStatus(groupIndex - 1);
 			
@@ -1362,7 +1370,7 @@ package view.screen
 							{
 								if(groupResult == '1')
 									groupResult = MauBinhLogic.getInstance().checkMauThau(idArray);
-								effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT_MAU_BINH, p1, time, groupNumber, PlayerInfoMauBinh.BELOW_USER);
+								effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT, p1, time, groupNumber, PlayerInfoMauBinh.BELOW_USER);
 								if (countBinhLungAndMauBinh < playingPlayerArray.length - 1)
 									effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, p2, time, 0, groupResult);
 							}
@@ -1371,7 +1379,7 @@ package view.screen
 								if(groupResult == '1')
 									groupResult = MauBinhLogic.getInstance().checkMauThau(idArray);
 								p1.y = p1.y + (3 - groupIndex) * 39;
-								effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT_MAU_BINH, p1, time, groupNumber);
+								effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT, p1, time, groupNumber);
 								if (countBinhLungAndMauBinh < playingPlayerArray.length - 1)
 									effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, p2,time, 1, groupResult);
 							}
@@ -1391,31 +1399,33 @@ package view.screen
 							if (resultArray[i][DataFieldMauBinh.IS_BINH_LUNG])
 							{
 								if (PlayerInfoMauBinh(playingPlayerArray[j]) == belowUserInfo)
+								{
 									SoundManager.getInstance().soundManagerMauBinh.playBinhLungPlayerSound(mainData.chooseChannelData.myInfo.sex);
+								}
 								if (countBinhLungAndMauBinh < playingPlayerArray.length - 1)
 								{
 									effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, p2, time * 3, 0, '-19');
-									effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT_MAU_BINH, p1, time * 3, groupNumber, PlayerInfoMauBinh.BELOW_USER);
+									effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT, p1, time * 3, groupNumber, PlayerInfoMauBinh.BELOW_USER);
 								}
 								else
 								{
 									effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, p2, time, 0, '-19');
-									effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT_MAU_BINH, p1, time, groupNumber, PlayerInfoMauBinh.BELOW_USER);
+									effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT, p1, time, groupNumber, PlayerInfoMauBinh.BELOW_USER);
 								}
 							}
 							else if (PlayerInfoMauBinh(playingPlayerArray[j]) == belowUserInfo)
 							{
 								haveMauBinh = true;
 								var mauBinhIndex:String = groupResult;
-								playerMauBinhSex = PlayerInfoMauBinh(playingPlayerArray[j]).sex;
+								playerMauBinh = PlayerInfoMauBinh(playingPlayerArray[j]);
 								if (countBinhLungAndMauBinh < playingPlayerArray.length - 1)
 								{
-									effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT_MAU_BINH, p1, time * 3, groupNumber, PlayerInfoMauBinh.BELOW_USER);
+									effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT, p1, time * 3, groupNumber, PlayerInfoMauBinh.BELOW_USER);
 									effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, p2, time * 3, 0, groupResult);
 								}
 								else
 								{
-									effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT_MAU_BINH, p1, time, groupNumber, PlayerInfoMauBinh.BELOW_USER);
+									effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT, p1, time, groupNumber, PlayerInfoMauBinh.BELOW_USER);
 									effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, p2, time, 0, groupResult);
 								}
 							}
@@ -1423,16 +1433,16 @@ package view.screen
 							{
 								haveMauBinh = true;
 								mauBinhIndex = groupResult;
-								playerMauBinhSex = PlayerInfoMauBinh(playingPlayerArray[j]).sex;
+								playerMauBinh = PlayerInfoMauBinh(playingPlayerArray[j]);
 								p1.y = p1.y + (3 - groupIndex) * 39;
 								if (countBinhLungAndMauBinh < playingPlayerArray.length - 1)
 								{
-									effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT_MAU_BINH, p1, time * 3, groupNumber);
+									effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT, p1, time * 3, groupNumber);
 									effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, p2,time * 3, 1, groupResult);
 								}
 								else
 								{
-									effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT_MAU_BINH, p1, time, groupNumber);
+									effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT, p1, time, groupNumber);
 									effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, p2,time, 1, groupResult);
 								}
 							}
@@ -1441,13 +1451,38 @@ package view.screen
 						{
 							bestScore = groupNumber;
 							bestResult = groupResult;
+							
+							var timerToPlayNormalPlayerSound:Timer = new Timer(3000, 1);
+							timerToPlayNormalPlayerSound.addEventListener(TimerEvent.TIMER_COMPLETE, onPlayNormalPlayerSound)
+							timerToPlayNormalPlayerSound.start();
 						}
 					}
 				}
 			}
 			
 			if (countBinhLungAndMauBinh >= playingPlayerArray.length - 1)
+			{
 				compareGroup1.visible = false;
+			}
+			else
+			{
+				if (!haveMauBinh)
+				{
+					switch (groupIndex - 1) 
+					{
+						case 0:
+							SoundManager.getInstance().soundManagerMauBinh.playDoChiPlayerSound(mainData.chooseChannelData.myInfo.sex, 1);
+						break;
+						case 1:
+							SoundManager.getInstance().soundManagerMauBinh.playDoChiPlayerSound(mainData.chooseChannelData.myInfo.sex, 2);
+						break;
+						case 2:
+							SoundManager.getInstance().soundManagerMauBinh.playDoChiPlayerSound(mainData.chooseChannelData.myInfo.sex, 3);
+						break;
+						default:
+					}
+				}
+			}
 				
 			if (haveMauBinh)
 			{
@@ -1459,13 +1494,18 @@ package view.screen
 				timerToHideMauBinh.start();
 				maubinh.visible = true;
 				
-				SoundManager.getInstance().soundManagerMauBinh.playSpecialPlayerSound(mainData.chooseChannelData.myInfo.sex, mauBinhIndex, groupResult);
+				SoundManager.getInstance().soundManagerMauBinh.playSpecialPlayerSound(mainData.chooseChannelData.myInfo.sex, mauBinhIndex);
 				
 				var timerToPlaySoundMauBinh:Timer = new Timer(3000, 1);
 				timerToPlaySoundMauBinh.addEventListener(TimerEvent.TIMER_COMPLETE, onPlaySoundMaubinh)
 				timerToPlaySoundMauBinh.start();
 			}
-			
+		}
+		
+		private function onPlayNormalPlayerSound(e:TimerEvent):void 
+		{
+			if (countBinhLungAndMauBinh >= playingPlayerArray.length - 1)
+				return;
 			SoundManager.getInstance().soundManagerMauBinh.playNormalPlayerSound(mainData.chooseChannelData.myInfo.sex, bestResult);
 		}
 		
@@ -1473,7 +1513,7 @@ package view.screen
 		{
 			if (!stage)
 				return;
-			SoundManager.getInstance().soundManagerMauBinh.playMauBinhPlayerSound(playerMauBinhSex);
+			SoundManager.getInstance().soundManagerMauBinh.playMauBinhPlayerSound(playerMauBinh.sex);
 			
 			var timerToPlaySoundMauBinhLose:Timer = new Timer(3000, 1);
 			timerToPlaySoundMauBinhLose.addEventListener(TimerEvent.TIMER_COMPLETE, onPlaySoundMaubinhLose)
@@ -1484,7 +1524,8 @@ package view.screen
 		{
 			if (!stage)
 				return;
-			SoundManager.getInstance().soundManagerMauBinh.playMauBinhLosePlayerSound(mainData.chooseChannelData.myInfo.sex);
+			if (playerMauBinh != belowUserInfo)
+				SoundManager.getInstance().soundManagerMauBinh.playMauBinhLosePlayerSound(mainData.chooseChannelData.myInfo.sex);
 		}
 		
 		private function onHideMauBinh(e:TimerEvent):void 
@@ -1588,6 +1629,12 @@ package view.screen
 				var timerToShowSapLang:Timer = new Timer(time * 1000, 1);
 				timerToShowSapLang.addEventListener(TimerEvent.TIMER_COMPLETE, onShowSapLang);
 				timerToShowSapLang.start();
+			}
+			else if (compareGroupData[DataFieldMauBinh.IS_BAT_SAP_LANG])
+			{
+				var timerToShowBatSapLang:Timer = new Timer(time * 1000, 1);
+				timerToShowBatSapLang.addEventListener(TimerEvent.TIMER_COMPLETE, onShowBatSapLang);
+				timerToShowBatSapLang.start();
 			}
 			else if (compareGroupData[DataFieldMauBinh.IS_SO_AT])
 			{
@@ -1860,16 +1907,17 @@ package view.screen
 			// Nếu không đủ tiền để chơi ván mới
 			if (mainData.chooseChannelData.myInfo.money < Number(mainData.playingData.gameRoomData.roomBet))
 			{
-				if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
-				{
-					var kickOutWindow:AlertWindow = new AlertWindow();
-					kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
-					windowLayer.openWindow(kickOutWindow);
-				}
-				
 				dispatchEvent(new Event(PlayerInfoMauBinh.EXIT));
 				windowLayer.isNoCloseAll = true;
 				electroServerCommand.joinLobbyRoom();
+				
+				if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
+				{
+					var kickOutWindow:AlertWindow = new AlertWindow();
+					kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
+					kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
+					windowLayer.openWindow(kickOutWindow);
+				}
 				
 				EffectLayer.getInstance().removeAllEffect();
 				return;
@@ -1881,14 +1929,13 @@ package view.screen
 		private function onExitButtonClick(e:Event):void 
 		{
 			dispatchEvent(new Event(PlayerInfoMauBinh.EXIT));
-			windowLayer.isNoCloseAll = true;
-			electroServerCommand.joinLobbyRoom(true);
+			electroServerCommand.joinLobbyRoom();
 		}
 		
 		private function resetMatch():void // reset ván bài
 		{
 			SoundManager.getInstance().soundManagerMauBinh.playStartGamePlayerSound(mainData.chooseChannelData.myInfo.sex);
-			
+			isResetDone = true;
 			setCompareGroupStatus();
 			for (var i:int = 0; i < allPlayerArray.length; i++) 
 			{
@@ -2407,7 +2454,7 @@ package view.screen
 		
 		private function listenReadySuccess(data:Object):void 
 		{
-			if (belowUserInfo.isRoomMaster && !isPlaying)
+			if (belowUserInfo.isRoomMaster && isResetDone)
 			{
 				waitToPlay.visible = false;
 				showStartButton();

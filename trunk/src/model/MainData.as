@@ -33,7 +33,7 @@ package model
 		public var stageHeight:Number = 600;
 		public var maxPlayer:Number = 4; // số người chơi tối đa
 		public var cardNumberToDown:Number = 3; // số lá bài đã đánh thì phải hạ
-		public var resetMatchTime:Number = 6.5; // Thời gian chờ sau khi kết thúc ván
+		public var resetMatchTime:Number = 8; // Thời gian chờ sau khi kết thúc ván
 		
 		public function MainData() 
 		{
@@ -394,6 +394,7 @@ package model
 		
 		public var gameIp:String = "123.30.210.59";
 		public var electroInfo:Object;
+		public var game_id:String = '';
 		
 		public var phone1:String = "7739";
 		public var phone2:String = "5678";
@@ -411,7 +412,7 @@ package model
 		
 		public var topMenu:TopMenu;
 		
-		public var showFullTable:int = 0;
+		public var showFullTable:int = 1;
 		public var showBusyUser:int = 0;
 		
 		public var showBubbleChatTime:Number = 4;
@@ -446,6 +447,8 @@ package model
 		public var portNumber:int = 9899;
 		public var isFirstJoinLobby:Boolean;
 		public var electroServer:ElectroServer;
+		public var lobbyRoomId:int = -1;
+		public var currentChannelId:int = 0;
 	}
 
 }

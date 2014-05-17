@@ -99,8 +99,9 @@ package view.screen
 		private var currentChannelButton:*;
 		
 		private var selectGameWindow:SelectGameWindow;
-		private var timerToGetInfo:Timer;
-		private var getInfoTime:int = 5;
+		private var timerToGetChannelInfo:Timer;
+		private var smallButtonMenu:Sprite;
+		private var buttonMenu:Sprite;
 		
 		public function LobbyRoomScreen() 
 		{
@@ -162,6 +163,7 @@ package view.screen
 		
 		private function onSelectGameButtonClick(e:MouseEvent):void 
 		{
+			mainCommand.electroServerCommand.closeConnection();
 			if (!selectGameWindow)
 			{	
 				selectGameWindow = new SelectGameWindow();
@@ -172,6 +174,8 @@ package view.screen
 				selectGameWindow.visible = true;
 			}
 			addChild(selectGameWindow);
+			smallButtonMenu.visible = true;
+			buttonMenu.visible = false;
 		}
 		
 		private function onSelectGame(e:Event):void 
@@ -184,19 +188,18 @@ package view.screen
 			
 			mainCommand.getInfoCommand.getChannelInfo();
 			
-			if (timerToGetInfo)
+			if (timerToGetChannelInfo)
 			{
-				timerToGetInfo.removeEventListener(TimerEvent.TIMER, onGetInfoCommand);
-				timerToGetInfo.stop();
+				timerToGetChannelInfo.removeEventListener(TimerEvent.TIMER, onTimerToGetChannelInfo);
+				timerToGetChannelInfo.start();
 			}
-			timerToGetInfo = new Timer(getInfoTime * 1000);
-			timerToGetInfo.addEventListener(TimerEvent.TIMER, onGetInfoCommand);
-			timerToGetInfo.start();
+			timerToGetChannelInfo = new Timer(4000)
+			timerToGetChannelInfo.addEventListener(TimerEvent.TIMER, onTimerToGetChannelInfo);
+			timerToGetChannelInfo.start();
 		}
 		
-		private function onGetInfoCommand(e:TimerEvent):void 
+		private function onTimerToGetChannelInfo(e:TimerEvent):void 
 		{
-			// lấy thông tin về các kênh
 			mainCommand.getInfoCommand.getChannelInfo();
 		}
 		
@@ -227,24 +230,37 @@ package view.screen
 		
 		private function addChannelButton():void 
 		{
+			smallButtonMenu = content["smallButtonMenu"];
+			smallButtonMenu.addEventListener(MouseEvent.CLICK, onSmallButtonMenuClick);
+			buttonMenu = content["buttonMenu"];
+			buttonMenu.visible = false;
+			
 			channelButtonArray = new Array();
 			channelButtonStartYArray = new Array();
 			for (var i:int = 0; i < 4; i++) 
 			{
-				channelButtonArray.push(content["buttonMenu"]["channelButton" + String(i + 1)]);
-				channelButtonStartYArray.push(content["buttonMenu"]["channelButton" + String(i + 1)].y);
-				content["buttonMenu"]["channelButton" + String(i + 1)].addEventListener(MouseEvent.CLICK, onChannelButtonClick);
+				channelButtonArray.push(buttonMenu["channelButton" + String(i + 1)]);
+				channelButtonStartYArray.push(buttonMenu["channelButton" + String(i + 1)].y);
+				buttonMenu["channelButton" + String(i + 1)].addEventListener(MouseEvent.CLICK, onChannelButtonClick);
 			}
+		}
+		
+		private function onSmallButtonMenuClick(e:MouseEvent):void 
+		{
+			smallButtonMenu.visible = false;
+			buttonMenu.visible = true;
+			addChild(buttonMenu);
+			e.stopImmediatePropagation();
 		}
 		
 		private function addOtherButton():void 
 		{
-			addMoneyButton = content["buttonMenu"]["addMoneyButton"];
-			shopButton = content["buttonMenu"]["shopButton"];
-			inventoryButton = content["buttonMenu"]["inventoryButton"];
-			eventButton = content["buttonMenu"]["eventButton"];
-			fanPageButton = content["buttonMenu"]["fanPageButton"];
-			selectGameButton = content["buttonMenu"]["selectGameButton"];
+			addMoneyButton = buttonMenu["addMoneyButton"];
+			shopButton = buttonMenu["shopButton"];
+			inventoryButton = buttonMenu["inventoryButton"];
+			eventButton = buttonMenu["eventButton"];
+			fanPageButton = buttonMenu["fanPageButton"];
+			selectGameButton = buttonMenu["selectGameButton"];
 			
 			addMoneyButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
 			shopButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
@@ -387,6 +403,11 @@ package view.screen
 					channelList.parent.removeChild(channelList);
 				return;
 			}
+			if (e.currentTarget is MovieClip)
+			{
+				if (MovieClip(e.currentTarget).currentLabel == "disable")
+					return;
+			}
 			for (var i:int = 0; i < channelButtonArray.length; i++) 
 			{
 				if (e.currentTarget == channelButtonArray[i])
@@ -416,7 +437,7 @@ package view.screen
 						channelList = new ChannelList();
 						channelList.addEventListener(ChannelList.CHANNEL_CLICK, onChannelClick);
 					}
-					content["buttonMenu"].addChild(channelList);
+					buttonMenu.addChild(channelList);
 					channelList.list = dataList;
 					reArrageChannelButton( -1, true);
 					reArrageChannelButton(i, false);
@@ -496,17 +517,16 @@ package view.screen
 					lobbyBtn.buttonMode = lobbyBtn.mouseChildren = lobbyBtn.mouseEnabled = false;
 					lobbyBtn.gotoAndStop("selected");
 					mainData.userListState = 1;
+					renderUserList();
 				break;
 				case friendBtn:
 					friendBtn.buttonMode = friendBtn.mouseChildren = friendBtn.mouseEnabled = false;
 					friendBtn.gotoAndStop("selected");
 					mainData.userListState = 2;
-					//mainCommand.electroServerCommand.getFriendList();
+					mainCommand.electroServerCommand.getFriendList();
 				break;
 				default:
 			}
-			
-			renderUserList();
 		}
 		
 		private function renderUserList():void 
@@ -548,6 +568,8 @@ package view.screen
 		
 		private function onStageClick(e:MouseEvent):void 
 		{
+			buttonMenu.visible = false;
+			smallButtonMenu.visible = true;
 			if (!channelList)
 				return;
 			reArrageChannelButton( -1, true);
@@ -566,10 +588,10 @@ package view.screen
 			if (mainData.isOnAndroid)
 				NativeApplication.nativeApplication.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown, false);
 				
-			if (timerToGetInfo)
+			if (timerToGetChannelInfo)
 			{
-				timerToGetInfo.removeEventListener(TimerEvent.TIMER, onGetInfoCommand);
-				timerToGetInfo.stop();
+				timerToGetChannelInfo.removeEventListener(TimerEvent.TIMER, onTimerToGetChannelInfo);
+				timerToGetChannelInfo.start();
 			}
 		}
 		
@@ -618,10 +640,7 @@ package view.screen
 				mainCommand.electroServerCommand.startConnect("", channelObject[DataFieldMauBinh.CHANNEL_NUM]);
 				channelInfoTxt.text = mainData.gameName + " - " + channelObject[DataFieldMauBinh.CHANNEL_NAME];
 				mainData.playingData.gameRoomData.channelName = channelObject[DataFieldMauBinh.CHANNEL_NAME];
-			}
-			
-			if (mainData.isFirstJoinLobby)
-			{
+				
 				switch (mainData.gameType) 
 				{
 					case MainData.MAUBINH:
@@ -633,15 +652,33 @@ package view.screen
 					default:
 				}
 			}
+			
+			var i:int;
+			var j:int;
+			if (mainData.currentChannelId == 0)
+			{
+				channelObject = mainData.chooseChannelData.channelInfoArray[0];
+			}
+			else
+			{
+				for (i = 0; i < mainData.chooseChannelData.channelInfoArray.length; i++)
+				{
+					channelObject = mainData.chooseChannelData.channelInfoArray[i];
+					if (int(channelObject[DataFieldMauBinh.CHANNEL_NUM]) == mainData.currentChannelId)
+						break;
+				}
+			}
+			mainData.playingData.gameRoomData.betting = String(channelObject[DataFieldMauBinh.BETS]).split(',');
+			
 			mainData.isFirstJoinLobby = false;
 			
-			for (var i:int = 0; i < channelButtonArray.length; i++) 
+			for (i = 0; i < channelButtonArray.length; i++) 
 			{
 				if (i != 3)
 				{
 					var onlinePlayer:int = 0;
 					var minLevel:int = 0;
-					for (var j:int = 0; j < mainData.chooseChannelData.channelInfoArray.length; j++) 
+					for (j = 0; j < mainData.chooseChannelData.channelInfoArray.length; j++) 
 					{
 						channelObject = mainData.chooseChannelData.channelInfoArray[j];
 						var channelFirstIndex:String = String(i + 1);
@@ -651,6 +688,9 @@ package view.screen
 							minLevel = channelObject[DataFieldMauBinh.LEVEL_MIN];
 							channelButtonArray[i]["playerNumberTxt"].text = PlayingLogic.format(onlinePlayer, 1);
 							channelButtonArray[i]["levelTxt"].text = String(minLevel);
+							
+							if (int(mainData.chooseChannelData.myInfo.level) < minLevel)
+								MovieClip(channelButtonArray[i]).gotoAndStop("disable");
 						}
 					}
 				}
@@ -878,8 +918,7 @@ package view.screen
 		{
 			var currentTime:Number = (new Date()).getTime();
 			
-			mainData.playingData.gameRoomData.betting = ["1000", "2000", "5000", "10000", "20000", "50000", "150000", "400000"];
-			roomList.betting = mainData.playingData.gameRoomData.betting;
+			//roomList.betting = mainData.playingData.gameRoomData.betting;
 			mainData.lobbyRoomData.addEventListener(LobbyRoomData.UPDATE_USER_LIST, onUpdateUserList);
 			mainData.lobbyRoomData.addEventListener(LobbyRoomData.UPDATE_FRIEND_LIST, onUpdateFriendList);
 			mainData.lobbyRoomData.addEventListener(LobbyRoomData.UPDATE_ROOM_LIST, onUpdateRoomList);

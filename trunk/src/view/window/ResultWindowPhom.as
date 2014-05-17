@@ -88,6 +88,7 @@ package view.window
 			exitButton = content["exitButton"];
 			exitButton.addEventListener(MouseEvent.CLICK, onExitButtonClick);
 			closeButton2 = content["closeButton"];
+			closeButton2.visible = false;
 			closeButton2.addEventListener(MouseEvent.CLICK, onCloseButtonClick);
 			timeCountDownToClose = content["timeCountDownToClose"];
 			playerName = new Array();
@@ -239,6 +240,10 @@ package view.window
 					}
 					else if(playerList[i][DataFieldPhom.POINT] == -5) // Ù khan
 						TextField(note[i]).text = "Ù khan";
+					else if(playerList[i][DataFieldPhom.POINT] == -6) // Ù tròn
+						TextField(note[i]).text = "Ù tròn";
+					else if(playerList[i][DataFieldPhom.POINT] == -7) // Ù thiên
+						TextField(note[i]).text = "Ù thiên";
 					else if(playerList[i][DataFieldPhom.POINT] == -1) // Móm nhưng thắng
 						TextField(note[i]).text = "Móm hạ trước";
 					else if(playerList[i][DataFieldPhom.POINT] == -4) // Thắng

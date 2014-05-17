@@ -344,7 +344,7 @@ package view.window.loginWindow
 			data.password = zLoginWindow(content).pass.text;
 			data.client_id = mainData.client_id;
 			zLoginWindow(content).loadingLayer.visible = true;
-			mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileLogin", data, onLoginValidateRespond, true);
+			mainRequest.sendRequest_Post("http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileLogin", data, onLoginValidateRespond, true);
 			
 			if (zLoginWindow(content).savePassword["check"].visible)
 			{
@@ -373,7 +373,7 @@ package view.window.loginWindow
 			data.client_id = mainData.client_id;
             data.client_hash = MD5.encrypt(mainData.client_id + mainData.client_secret + value.Data.Code);
             data.code = value.Data.Code;
-			mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileGetUserInfo", data, onLoginRespond, true);
+			mainRequest.sendRequest_Post("http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileGetUserInfo", data, onLoginRespond, true);
 		}
 		
 		private function onLoginRespond(value:Object):void 
@@ -407,7 +407,7 @@ package view.window.loginWindow
 			myInfo.avatar = value.Data["Avatar"];
 			myInfo.money = value.Data["Money"];
 			myInfo.cash = value.Data["Cash"];
-			myInfo.level = '1';
+			myInfo.level = value.Data["Level"];
 			myInfo.name = value.Data["Displayname"];
 			myInfo.hash = '';
 			myInfo.token = '';

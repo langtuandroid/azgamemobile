@@ -348,7 +348,7 @@ package logic
 			return true;
 		}
 		
-		public function checkFullDeck(cardArray:Array):Boolean
+		public function checkFullDeck(cardArray:Array):Array
 		{
 			var deckArray:Array = countDeck(cardArray);
 			var i:int;
@@ -357,6 +357,8 @@ package logic
 			var l:int;
 			var m:int;
 			
+			var niceFullDeckArray:Array = new Array(); // Ù 9 lá
+			var tenFullDeckArray:Array; // Ù 10 lá
 			for (i = 0; i < deckArray.length - 2; i++) // Tìm 3 phỏm khác nhau
 			{
 				for (j = i + 1; j < deckArray.length - 1; j++)
@@ -377,9 +379,47 @@ package logic
 									if (deckArray[k][l] == cardArray[m])
 										isDifferentCard = false;
 								}
-								// Tránh trường hợp còn thứ 10 không thuộc 3 phỏm là con bài ăn
+								// Tránh trường hợp con thứ 10 không thuộc 3 phỏm là con bài ăn
 								if (isDifferentCard && !CardPhom(cardArray[m]).isStealCard)
-									return true;
+								{
+									var tempArray:Array = deckArray[i].concat();
+									tempArray.push(cardArray[m])
+									if (checkCardDeck(tempArray))
+									{
+										tenFullDeckArray = new Array();
+										tenFullDeckArray.push(tempArray);
+										tenFullDeckArray.push(deckArray[j]);
+										tenFullDeckArray.push(deckArray[k]);
+										return tenFullDeckArray;
+									}
+									tempArray = deckArray[j].concat();
+									tempArray.push(cardArray[m])
+									if (checkCardDeck(tempArray))
+									{
+										tenFullDeckArray = new Array();
+										tenFullDeckArray.push(tempArray);
+										tenFullDeckArray.push(deckArray[i]);
+										tenFullDeckArray.push(deckArray[k]);
+										return tenFullDeckArray;
+									}
+									tempArray = deckArray[k].concat();
+									tempArray.push(cardArray[m])
+									if (checkCardDeck(tempArray))
+									{
+										tenFullDeckArray = new Array();
+										tenFullDeckArray.push(tempArray);
+										tenFullDeckArray.push(deckArray[i]);
+										tenFullDeckArray.push(deckArray[j]);
+										return tenFullDeckArray;
+									}
+									if (deckArray[i].length + deckArray[j].length + deckArray[k].length == 9)
+									{
+										niceFullDeckArray = new Array();
+										niceFullDeckArray.push(deckArray[i].concat());
+										niceFullDeckArray.push(deckArray[j].concat());
+										niceFullDeckArray.push(deckArray[k].concat());
+									}
+								}
 							}
 						}
 					}
@@ -420,15 +460,24 @@ package logic
 						if (deckArray[i].length + deckArray[j].length >= 9)
 						{
 							if (newArray.length == 0)
-								return true;
+							{
+								tenFullDeckArray = new Array();
+								tenFullDeckArray.push(deckArray[i]);
+								tenFullDeckArray.push(deckArray[j]);
+								return tenFullDeckArray;
+							}
 							else if (!CardPhom(newArray[0]).isStealCard) // Tránh trường hợp con bài còn lại không thuộc 2 phỏm là con bài ăn
-								return true;
+							{
+								niceFullDeckArray = new Array();
+								niceFullDeckArray.push(deckArray[i]);
+								niceFullDeckArray.push(deckArray[j]);
+							}
 						}
 					}
 				}
 			}
 			
-			return false;
+			return niceFullDeckArray;
 		}
 		
 		// sắp xếp phỏm theo thứ tự tăng dần

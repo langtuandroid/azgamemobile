@@ -250,16 +250,21 @@ package view
 			{
 				case tlmnIcon:
 					gameId = 3;
+					mainData.minBetRate = 1;
 				break;
 				case phomIcon:
 					gameId = 2;
 					mainData.gameName = 'PHỎM';
+					mainData.game_id = 'AZGB_PHOM';
 					mainData.portNumber = 5301;
+					mainData.minBetRate = 1;
 				break;
 				case maubinhIcon:
 					gameId = 6;
 					mainData.gameName = 'BINH';
+					mainData.game_id = 'AZGB_BINH';
 					mainData.portNumber = 5201;
+					mainData.minBetRate = 10;
 				break;
 				default:
 			}

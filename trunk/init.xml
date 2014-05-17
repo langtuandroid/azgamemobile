@@ -19,11 +19,22 @@
 		<swfFile src="lib/swfList/faceIcon.swf" />
 	</swfList>
 	
-	<requestLink> <!--danh sách các link request lên server PHP-->
+	<!--<requestLink>
+		<getMessageInfoLink url="http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/GetListChatMessage" />
+		<getAccessTokenLink url="http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/GetAccessTokenDirectly" />
+		<reNewAccessTokenLink url="http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/GetAccessToken" />
+		<sendMessageLink url="http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/SendChatMessage" />
 		<getPersonalInfoLink url="/javajson/user_info/" />
 		<getChannelLink url="http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetServerInfo" />
-		<moneyIcon url="http://123.30.210.55/public/game/ciao88_icon.png" />
-		<convertImg url="http://cdn.ciao66.com/photos/resized/w150/h150/" />
+	</requestLink>-->
+	
+	<requestLink> <!--danh sách các link request lên server PHP-->
+		<getMessageInfoLink url="http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetListChatMessage" />
+		<getAccessTokenLink url="http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetAccessTokenDirectly" />
+		<reNewAccessTokenLink url="http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetAccessToken" />
+		<sendMessageLink url="http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/SendChatMessage" />
+		<getPersonalInfoLink url="/javajson/user_info/" />
+		<getChannelLink url="http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetServerInfo" />
 	</requestLink>
 	
 	<gameDescription> <!--Các đoạn text thể hiện nội dung của game, ví dụ tên các button....-->
@@ -148,7 +159,7 @@
 			<sendCard>Hãy chọn quân bài để gửi, gửi từng quân bài một</sendCard>
 			<kickOutReady>Bạn đã bị đẩy ra khỏi phòng do không ấn sẵn sàng</kickOutReady>
 			<kickOutMoney>Bạn đã bị đẩy ra khỏi phòng do không đủ tiền cược để chơi tiếp</kickOutMoney>
-			<roomMasterKick>Bạn đã bị chủ phòng đẩy ra</roomMasterKick>
+			<roomMasterKick>Bạn đã bị chủ bàn đuổi ra</roomMasterKick>
 			<userLeaveRoom>đã thoát ra khỏi phòng chơi</userLeaveRoom>
 			<userJoinRoom>vừa vào phòng chơi</userJoinRoom>
 			<roomNameDefault>

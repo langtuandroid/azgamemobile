@@ -1,7 +1,6 @@
 package view.window 
 {
 	import control.MainCommand;
-	import event.DataFieldMauBinh;
 	import flash.display.SimpleButton;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -65,10 +64,14 @@ package view.window
 			
 			avatar = new Avatar();
 			avatar.setForm(Avatar.MY_AVATAR);
-			avatar.x = -127;
-			avatar.y = -52;
-			avatar.width = avatar.height = 90;
+			avatar.x = content["avatarPosition"].x;
+			avatar.y = content["avatarPosition"].y;
+			avatar.width = avatar.height = content["avatarPosition"].width;
+			content["avatarPosition"].visible = false;
 			addChild(avatar);
+			
+			addChild(content["levelIcon"]);
+			addChild(levelTxt);
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
@@ -77,6 +80,7 @@ package view.window
 		private function onAddedToStage(e:Event):void 
 		{
 			mainData.lobbyRoomData.addEventListener(LobbyRoomData.UPDATE_FRIEND_LIST, onUpdateFriendList);
+			electroServerCommand.getFriendList();
 		}
 		
 		private function onRemovedFromStage(e:Event):void 
@@ -92,14 +96,19 @@ package view.window
 				{
 					if (UserDataULC(mainData.lobbyRoomData.friendList[i]).isOnline)
 					{
+						content["statusIcon"].visible = true;
+						removeFriendButton.visible = true;
 						switch (UserDataULC(mainData.lobbyRoomData.friendList[i]).gameId) 
 						{
 							case MainData.MAUBINH_ID:
 								gameTxt.text = "BINH";
 							break;
+							case MainData.PHOM_ID:
+								gameTxt.text = "PHỎM";
+							break;
 							default:
 						}
-						if (UserDataULC(mainData.lobbyRoomData.friendList[i]).roomID == -1)
+						if (UserDataULC(mainData.lobbyRoomData.friendList[i]).roomID == mainData.lobbyRoomId)
 							roomTxt.text = "Phòng chờ";
 						else
 							roomTxt.text = "Bàn số " + String(UserDataULC(mainData.lobbyRoomData.friendList[i]).roomID);
@@ -114,16 +123,19 @@ package view.window
 			switch (e.currentTarget) 
 			{
 				case addFriendButton:
-					electroServerCommand.addFriend(userName, DataFieldMauBinh.IN_LOBBY);
+					electroServerCommand.addFriend(userName, "inLobby");
 					electroServerCommand.getFriendList();
 					addFriendButton.visible = false;
+					content["statusIcon"].visible = true;
 				break;
 				case removeFriendButton:
-					electroServerCommand.removeFriend(userName, DataFieldMauBinh.IN_LOBBY);
+					electroServerCommand.removeFriend(userName, "inLobby");
 					electroServerCommand.getFriendList();
 					removeFriendButton.visible = false;
+					addFriendButton.visible = true;
 					gameTxt.text = '';
 					roomTxt.text = '';
+					content["statusIcon"].visible = false;
 				break;
 				case closeButton:
 					close();
@@ -207,6 +219,7 @@ package view.window
 			
 			if (isFriend)
 			{
+				content["statusIcon"].visible = true;
 				if (data.isOnline)
 				{
 					switch (data.gameId) 
@@ -214,13 +227,20 @@ package view.window
 						case MainData.MAUBINH_ID:
 							gameTxt.text = "BINH";
 						break;
+						case MainData.PHOM_ID:
+							gameTxt.text = "PHỎM";
+						break;
 						default:
 					}
-					if (data.roomID == -1)
+					if (data.roomID == mainData.lobbyRoomId)
 						roomTxt.text = "Phòng chờ";
 					else
 						roomTxt.text = "Bàn số " + String(data.roomID);
 				}
+			}
+			else
+			{
+				content["statusIcon"].visible = false;
 			}
 		}
 		
