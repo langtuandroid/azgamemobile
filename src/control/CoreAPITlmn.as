@@ -1292,7 +1292,7 @@ package control
 			//var createGameRequest:CreateGameRequest = new CreateGameRequest();
 			var createGameRequest:QuickJoinGameRequest = new QuickJoinGameRequest();
 			createGameRequest.gameType = myData.gameType;
-			createGameRequest.zoneName = myData.gameType + "_-1";
+			createGameRequest.zoneName = mainData.game_id + "_" + myData.channelId;
 			createGameRequest.gameDetails = gameDetails;
 			createGameRequest.createOnly = true;
 			createGameRequest.password = password;
@@ -1331,7 +1331,7 @@ package control
 		{
 			leaveRoom();
 			var quickJoinGameRequest:QuickJoinGameRequest = new QuickJoinGameRequest();
-			quickJoinGameRequest.zoneName = GameDataTLMN.getInstance().gameType + "_" + "-1";
+			quickJoinGameRequest.zoneName = mainData.game_id + "_" + myData.channelId;
 			quickJoinGameRequest.gameType = GameDataTLMN.getInstance().gameType;
 			var searchCriteria:SearchCriteria = new SearchCriteria();
 			searchCriteria.gameType = GameDataTLMN.getInstance().gameType;
@@ -1533,16 +1533,22 @@ package control
 				leaveRoom();
 				
 			var createRoomRequest:CreateRoomRequest = new CreateRoomRequest();
-			createRoomRequest.zoneName = GameDataTLMN.getInstance().gameType + "_" + String(-1);
+			createRoomRequest.zoneName = mainData.game_id + "_" + myData.channelId;
 			createRoomRequest.roomName = roomName;
 			createRoomRequest.roomDescription = roomDescription;
 			createRoomRequest.capacity = roomCapacity;
 			createRoomRequest.password = roomPassword;
 			
-			if(roomName == GameDataTLMN.getInstance().lobbyName)
+			if (roomName == GameDataTLMN.getInstance().lobbyName)
+			{
+				createRoomRequest.roomName = "Lobby";
 				createRoomRequest.persistent = true; // dù không có người chơi phòng này vẫn tồn tại
+			}
 			else
+			{
+				
 				createRoomRequest.persistent = false; // không có người chơi thì phòng này không tồn tại
+			}
 			
 			var plugin:PluginListEntry = new PluginListEntry();
 			plugin.extensionName = GameDataTLMN.getInstance().lobbyName;
@@ -1566,7 +1572,7 @@ package control
 		 */		
 		public function getUserInRoom(roomId:int):void
 		{
-			var zoneName:String = GameDataTLMN.getInstance().gameType + "_" + "-1";
+			var zoneName:String = mainData.game_id + "_" + myData.channelId;
 			var zoneId: int = electroServer.managerHelper.zoneManager.zoneByName(zoneName).id;
 			var getUsersInRoomRequest:GetUsersInRoomRequest = new GetUsersInRoomRequest();
 			getUsersInRoomRequest.roomId = roomId;
