@@ -7,6 +7,8 @@ package view.screen
 	import control.ConstTlmn;
 	import control.electroServerCommand.ElectroServerCommandTlmn;
 	import control.electroServerCommand.ElectroServerCommandTlmn;
+	import flash.net.SharedObject;
+	import sound.SoundLib;
 	
 	import logic.CardsTlmn;
 	import model.MainData;
@@ -135,6 +137,24 @@ package view.screen
 		
 		private var chatLayer:Sprite;
 		private var gameLayer:Sprite;
+		
+		private var _containerChatEmo:Sprite;
+		private var timerShow:Timer;
+		private var confirmExitWindow:ConfirmWindow;
+		private var _numUser:int;
+		private var sharedObject:SharedObject;
+		private var isMeJoinRoom:Boolean;
+		//private var _containerWhiteWin:Sprite;
+		//private var arrChat:Array = [];
+		
+		private var dealcard:int = 0;
+		private var timerDealCard:Timer;
+		
+		private var _containerSpecial:Sprite;
+		private var _timerShowSpecial:Timer;
+		//private var _containerWinLose:Sprite;
+		//private var arrCardSpecial:Array = [];
+		private var _contanierCardOutUser:Sprite;
 		
 		public function PlayGameScreenTlmn() 
 		{
@@ -453,18 +473,12 @@ package view.screen
 			trace("thang ready: ", obj[DataField.USER_NAME] , MyDataTLMN.getInstance().myId)
 			if (SoundManager.getInstance().isSoundOn) 
 			{
-				SoundManager.getInstance().playSound(ConstTlmn.SOUND_READY);
+				SoundManager.getInstance().playSound(SoundLib.READY_SOUND);
 			}
 			
 			trace("nut bat dau: ", _isPlaying, GameDataTLMN.getInstance().master , MyDataTLMN.getInstance().myId)
-			if (!_isPlaying && GameDataTLMN.getInstance().master == MyDataTLMN.getInstance().myId) 
-			{
-				content.startGame.visible = true;
-			}
-			else 
-			{
-				content.startGame.visible = false;
-			}
+			
+			checkShowTextNotice();
 			
 			if (obj[DataField.USER_NAME] == MyDataTLMN.getInstance().myId) 
 			{
@@ -510,14 +524,7 @@ package view.screen
 						
 					}
 					
-					if (check) 
-					{
-						content.startGame.visible = true;
-					}
-					else 
-					{
-						content.startGame.visible = false;
-					}
+					checkShowTextNotice();
 					
 					
 					_myInfo.changeMaster(true);
@@ -667,7 +674,7 @@ package view.screen
 			
 			if (SoundManager.getInstance().isSoundOn) 
 			{
-				SoundManager.getInstance().playSound(ConstTlmn.SOUND_WHITEWIN);
+				SoundManager.getInstance().playSound(SoundLib.WHITE_WIN_SOUND);
 			}
 			
 			_myInfo.killAllTween();
@@ -1025,7 +1032,6 @@ package view.screen
 			
 		}
 		
-		//private var _containerWinLose:Sprite;
 		private function listenGameOver(obj:Object):void 
 		{
 			_isPlaying = false;
@@ -1039,21 +1045,12 @@ package view.screen
 			
 			var str:String;
 			content.userTurn.visible = false;
-			/*if (!_containerWinLose) 
-			{
-				_containerWinLose = new Sprite();
-				addChild(_containerWinLose);
-			}
-			else 
-			{
-				_containerWinLose.visible = true;
-			}*/
-			//var arrLose:Array = ["LoseDiChan", "LoseLiecDeu", "LoseCaNgao"];
-			//var arrWin:Array = ["Win2Hand", "WinNhechMep", "WinThoiKen"];
-			//thtem vao bang ket qua choi game sau
-			//trace(obj);
+			
 			var i:int;
+			var j:int;
 			var rd:int;
+			
+			canExitGame = true;
 			
 			timerShowResult = new Timer(3000, 1);
 			timerShowResult.addEventListener(TimerEvent.TIMER_COMPLETE, onShowResult);
@@ -1089,38 +1086,15 @@ package view.screen
 				trace(i, "check cac thang dc add card: ", arrResult[i][ConstTlmn.PLAYER_NAME] , MyDataTLMN.getInstance().myId)
 				
 				userResult = arrResult[i][ConstTlmn.PLAYER_NAME];
-				if (arrResult[i][ConstTlmn.SUB_MONEY] > 0) 
-				{
-					for (j = 0; j < _arrUserInfo.length; j++) 
-					{
-						
-						if (userResult == _arrUserInfo[j]._userName)
-						{
-							if (SoundManager.getInstance().isSoundOn) 
-							{
-								rd = int(Math.random() * 5);
-								if (_arrUserInfo[j]._sex) 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_WIN_ + String(rd + 1) );
-								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_WIN_ + String(rd + 1) );
-								}
-							}
-							
-							break;
-						}
-					}
-				}
 				
-				var objResult:Object;
 				var outGame:Boolean = false;
+				var objResult:Object;
 				trace("check cac thang dc add card: ", userResult , MyDataTLMN.getInstance().myId)
 				if (userResult == MyDataTLMN.getInstance().myId) 
 				{
 					objResult = new Object();
 					objResult[ConstTlmn.MONEY] = arrResult[i][ConstTlmn.SUB_MONEY];
+					
 					result = int(MyDataTLMN.getInstance().myMoney[0]) + int(arrResult[i][ConstTlmn.SUB_MONEY]);
 					if (result < int(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet) 
 					{
@@ -1147,7 +1121,7 @@ package view.screen
 				else 
 				{
 					trace("tien su may; ", userResult )
-					for (var j:int = 0; j < _arrUserInfo.length; j++) 
+					for (j = 0; j < _arrUserInfo.length; j++) 
 					{
 						trace(i, "thang nao dc add card; ", userResult , _arrUserInfo[j]._userName)
 						
@@ -1168,7 +1142,7 @@ package view.screen
 									}
 								}
 							}
-							
+				
 							_arrUserInfo[j]._isPlaying = true;
 							objResult = new Object();
 							trace("user nay co bao nhieu tien: ", arrResult[i][ConstTlmn.SUB_MONEY])
@@ -1183,8 +1157,6 @@ package view.screen
 					}
 				}
 			}
-			
-			
 			
 		}
 		
@@ -1300,12 +1272,12 @@ package view.screen
 			
 			if (GameDataTLMN.getInstance().master == MyDataTLMN.getInstance().myId) 
 			{
-				content.startGame.visible = true;
+				checkShowTextNotice();
 				GameDataTLMN.getInstance().autoReady = false;
 			}
 			else 
 			{
-				content.startGame.visible = false;
+				checkShowTextNotice();
 				
 				_myInfo.waitNewGame();
 			}
@@ -1353,7 +1325,7 @@ package view.screen
 			if (GameDataTLMN.getInstance().master == _myInfo._userName) 
 			{
 				
-				content.startGame.visible = true;
+				checkShowTextNotice();
 				//content.startGame.addEventListener(MouseEvent.CLICK, onClickStartGame);
 			}
 			
@@ -1369,7 +1341,7 @@ package view.screen
 			trace("click bat dau: ")
 			if (SoundManager.getInstance().isSoundOn) 
 			{
-				SoundManager.getInstance().playSound(ConstTlmn.SOUND_CLICK);
+				SoundManager.getInstance().playSound(SoundLib.CLICK_BUTTON_SOUND);
 			}
 			if (_arrUserList) 
 			{
@@ -1387,8 +1359,6 @@ package view.screen
 			
 		}
 		
-		private var dealcard:int = 0;
-		private var timerDealCard:Timer;
 		private function listenStartGameSuccess(obj:Object):void 
 		{
 			if (_contanierCardOutUser) 
@@ -1402,7 +1372,7 @@ package view.screen
 				content.removeChild(_containerSpecial);
 				_containerSpecial = null;
 			}
-			content.startGame.visible = false;
+			checkShowTextNotice();
 			
 			dealcard = 0;
 			
@@ -1480,7 +1450,7 @@ package view.screen
 		}
 		
 		//danh quan bai noa
-		//private var arrCardSpecial:Array = [];
+		
 		private function listenHaveCard(obj:Object):void 
 		{
 			//trace(obj)
@@ -2804,8 +2774,7 @@ package view.screen
 			
 		}
 		
-		private var _containerSpecial:Sprite;
-		private var _timerShowSpecial:Timer;
+		
 		private function showAnimationSpecial(str:String):void 
 		{
 			if (GameDataTLMN.getInstance().playSound) 
@@ -2984,15 +2953,82 @@ package view.screen
 			//_containCard.y = (this.height - _containCard.height) / 2;
 		}
 		
-		private var _contanierCardOutUser:Sprite;
+		private function checkShowTextNotice():void 
+		{
+			_waitToReady.visible = false;
+			_waitToStart.visible = false;
+			if (_isPlaying) 
+			{
+				if (_myInfo._isPlaying) 
+				{
+					content.noticeForUserTxt.text = "";
+				}
+				else 
+				{
+					content.noticeForUserTxt.text = "";// "BÀN CHƠI ĐANG DIỄN RA, XIN VUI LÒNG ĐỢI GIÂY LÁT!";
+				}
+				
+				content.startGame.visible = false;
+			}
+			else 
+			{
+				if (_numUser > 1) 
+				{
+					if (GameDataTLMN.getInstance().master == MyDataTLMN.getInstance().myId) 
+					{
+						var count:int = 0;
+						for (var i:int = 0; i < _arrUserInfo.length; i++) 
+						{
+							if (_arrUserInfo[i].ready) 
+							{
+								count++;
+							}
+						}
+						if (count > 0) 
+						{
+							content.noticeForUserTxt.text = "";//"ĐÃ CÓ THỂ BẮT ĐẦU VÁN CHƠI!";
+							content.startGame.visible = true;
+						}
+						else 
+						{
+							_waitToReady.visible = true;
+							content.noticeForUserTxt.text = "";// "ĐỢI NGƯỜI CHƠI KHÁC SẴN SÀNG!";
+							content.startGame.visible = false;
+						}
+					}
+					else 
+					{
+						if (_myInfo._ready) 
+						{
+							_waitToStart.visible = true;
+							content.noticeForUserTxt.text = "";// "ĐỢI CHỦ BÀN BẮT ĐẦU!";
+						}
+						else 
+						{
+							content.noticeForUserTxt.text = "";// "HÃY SẴN SÀNG ĐỂ BẮT ĐẦU CHƠI GAME!";
+						}
+					}
+				}
+				else 
+				{
+					content.startGame.visible = false;
+					content.noticeForUserTxt.text = "";// "HÃY ĐỢI THÊM NGƯỜI THAM GIA ĐỂ CHƠI GAME!";
+				}
+				
+			}
+		}
+		
+		
 		private function listenHaveUserOutRoom(data:Object):void 
 		{
 			if (SoundManager.getInstance().isSoundOn) 
 			{
-				SoundManager.getInstance().playSound(ConstTlmn.SOUND_OUTROOM);
+				SoundManager.getInstance().playSound(SoundLib.OUT_ROOM_SOUND);
 				
 			}
 			
+			_numUser--;
+			checkShowTextNotice();
 			var i:int;
 			var outArr:Array = [];
 			if (!_contanierCardOutUser) 
@@ -3001,6 +3037,7 @@ package view.screen
 				content.addChild(_contanierCardOutUser);
 			}
 			trace("co user out room: ", _arrUserList)
+			
 			for (i = 0; i < _arrUserList.length; i++) 
 			{
 				if (_arrUserList[i])
@@ -3027,11 +3064,11 @@ package view.screen
 				
 				if (check) 
 				{
-					content.startGame.visible = true;
+					checkShowTextNotice();
 				}
 				else 
 				{
-					content.startGame.visible = false;
+					checkShowTextNotice();
 				}
 			}
 			
@@ -3041,8 +3078,16 @@ package view.screen
 				{
 					if ((_arrUserInfo[i])._userName == data[DataField.USER_NAME])
 					{
-						
+						if (_chatBox) 
+						{
+							var str:String = (_arrUserInfo[i])._displayName + " vừa thoát bàn chơi!";
+							_chatBox.addChatSentence(str, "Thông báo", false, false);
+						}
 						_arrUserInfo[i].outRoom();
+						if (!_isPlaying) 
+						{
+							_arrUserInfo[i].waitNewGame();
+						}
 						var rd:int = int(Math.random() * 5);
 						if (_arrUserInfo[i]._sex) 
 						{
@@ -3250,7 +3295,7 @@ package view.screen
 			content.startGame.addEventListener(MouseEvent.CLICK, onClickStartGame);
 			content.orderCard.addEventListener(MouseEvent.CLICK, onOrderCard);
 			
-			content.startGame.visible = false;
+			checkShowTextNotice();
 			
 			content.chatBtn.addEventListener(MouseEvent.CLICK, onChatButtonClick);
 			
@@ -3299,21 +3344,27 @@ package view.screen
 		
 		private function onClickOnOffSoundEffect(e:MouseEvent):void 
 		{
+			sharedObject = SharedObject.getLocal("soundConfig");
+			
+			trace(sharedObject.data.isSoundOff, sharedObject.data.isMusicOff)
 			if (SoundManager.getInstance().isSoundOn) 
 			{
-				SoundManager.getInstance().playSound(ConstTlmn.SOUND_CLICK);
+				SoundManager.getInstance().playSound(SoundLib.CLICK_BUTTON_SOUND);
+				
 			}
 			if (SoundManager.getInstance().isSoundOn) 
 			{
 				GameDataTLMN.getInstance().playSound = false;
-				content.settingBoard.onSoundEffect.visible = true;
+				content.onSoundEffect.visible = true;
 				SoundManager.getInstance().isSoundOn = false;
+				sharedObject.data.isSoundOff = true;
 			}
 			else 
 			{
 				GameDataTLMN.getInstance().playSound = true;
-				content.settingBoard.onSoundEffect.visible = false;
+				content.onSoundEffect.visible = false;
 				SoundManager.getInstance().isSoundOn = true;
+				sharedObject.data.isSoundOff = false;
 			}
 		}
 		
@@ -3358,7 +3409,7 @@ package view.screen
 		{
 			if (SoundManager.getInstance().isSoundOn) 
 			{
-				SoundManager.getInstance().playSound(ConstTlmn.SOUND_CLICK);
+				SoundManager.getInstance().playSound(SoundLib.CLICK_BUTTON_SOUND);
 			}
 		}
 		
@@ -3366,7 +3417,7 @@ package view.screen
 		{
 			if (SoundManager.getInstance().isSoundOn) 
 			{
-				SoundManager.getInstance().playSound(ConstTlmn.SOUND_CLICK);
+				SoundManager.getInstance().playSound(SoundLib.CLICK_BUTTON_SOUND);
 			}
 		}
 		
@@ -3374,7 +3425,7 @@ package view.screen
 		{
 			if (SoundManager.getInstance().isSoundOn) 
 			{
-				SoundManager.getInstance().playSound(ConstTlmn.SOUND_CLICK);
+				SoundManager.getInstance().playSound(SoundLib.CLICK_BUTTON_SOUND);
 			}
 		}
 		
@@ -3445,7 +3496,7 @@ package view.screen
 		{
 			if (SoundManager.getInstance().isSoundOn) 
 			{
-				SoundManager.getInstance().playSound(ConstTlmn.SOUND_CLICK);
+				SoundManager.getInstance().playSound(SoundLib.CLICK_BUTTON_SOUND);
 			}
 			var invitePlayWindow:InvitePlayWindow = new InvitePlayWindow();
 			windowLayer.openWindow(invitePlayWindow);
@@ -3489,7 +3540,7 @@ package view.screen
 			
 			if (SoundManager.getInstance().isSoundOn) 
 			{
-				SoundManager.getInstance().playSound(ConstTlmn.SOUND_CLICK);
+				SoundManager.getInstance().playSound(SoundLib.CLICK_BUTTON_SOUND);
 			}
 			if (canExitGame) 
 			{
@@ -3503,7 +3554,7 @@ package view.screen
 				}
 				else 
 				{
-					if (SoundManager.getInstance().isSoundOn) 
+					/*if (SoundManager.getInstance().isSoundOn) 
 					{
 						rd = int(Math.random() * 5);
 						if (MyDataTLMN.getInstance().sex) 
@@ -3516,7 +3567,7 @@ package view.screen
 						}
 						
 					}
-					
+					*/
 					dispatchEvent(new Event(ConstTlmn.OUT_ROOM, true));
 					electroServerCommand.joinLobbyRoom();
 					
@@ -3536,7 +3587,7 @@ package view.screen
 				//if (mainData.chooseChannelData.myInfo.money < 0)
 				//	mainData.chooseChannelData.myInfo.money = 0;
 					
-				if (SoundManager.getInstance().isSoundOn) 
+				/*if (SoundManager.getInstance().isSoundOn) 
 				{
 					var rd:int = int(Math.random() * 5);
 					if (MyDataTLMN.getInstance().sex) 
@@ -3548,7 +3599,7 @@ package view.screen
 						SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_BYE_ + String(rd + 1) );
 					}
 					
-				}
+				}*/
 				dispatchEvent(new Event(ConstTlmn.OUT_ROOM, true));
 				electroServerCommand.joinLobbyRoom();
 				
@@ -3602,7 +3653,7 @@ package view.screen
 		
 		private function masterUnVisible():void 
 		{
-			content.startGame.visible = false;
+			checkShowTextNotice();
 			GameDataTLMN.getInstance().master = "";
 		}
 		
@@ -3643,11 +3694,7 @@ package view.screen
 			
 		}
 		
-		private var _containerChatEmo:Sprite;
-		private var timerShow:Timer;
-		private var confirmExitWindow:ConfirmWindow;
-		//private var _containerWhiteWin:Sprite;
-		//private var arrChat:Array = [];
+		
 		private function showEmo(str:String, userChat:String, isMe:Boolean):void 
 		{
 			/*if (!_containerChatEmo) 
@@ -3725,7 +3772,37 @@ package view.screen
 		
 		private function listenHaveUserJoinRoom(obj:Object):void 
 		{
-			//addPlayer(obj);
+			_numUser++;
+			checkShowTextNotice();
+			for (var i:int = 0; i < _arrUserInfo.length; i++) 
+			{
+				if (_arrUserInfo[i]._userName == "") 
+				{
+					if (_chatBox) 
+					{
+						var str:String = obj[DataField.DISPLAY_NAME] + " vừa vào bàn chơi!";
+						_chatBox.addChatSentence(str, "Thông báo", false, false);
+					}
+					_arrUserInfo[i].getInfoPlayer(i + 1, obj[DataField.USER_NAME], obj[DataField.MONEY], obj[DataField.AVATAR], 
+					0, String(obj[DataField.LEVEL]), false, _isPlaying, false,
+					obj[DataField.DISPLAY_NAME], obj[DataField.SEX], obj[DataField.IP]);
+					
+					var objUser:Object = new Object();
+					objUser[DataField.USER_NAME] = obj[DataField.USER_NAME];
+					objUser[DataField.POSITION] = i + 1;
+					objUser[DataField.MONEY] = obj[DataField.MONEY];
+					objUser[DataField.AVATAR] = obj[DataField.AVATAR];
+					objUser[DataField.NUM_CARD] = obj[DataField.NUM_CARD];
+					objUser[DataField.LEVEL] = obj[DataField.LEVEL];
+					objUser[DataField.READY] = false;
+					
+					objUser["isMaster"] = false;
+					objUser[DataField.DISPLAY_NAME] = obj[DataField.DISPLAY_NAME];
+					objUser[DataField.SEX] = obj[DataField.SEX];
+					_arrUserList[i + 1] = objUser;
+					break;
+				}
+			}
 		}
 		
 		private function addPlayer(obj:Object):void 
@@ -3762,7 +3839,7 @@ package view.screen
 					}
 				}
 				
-				
+				_numUser = obj.userList.length;
 				_arrUserList = converArrAgain(count, obj.userList);
 				addUsersInfo();
 				
@@ -3775,7 +3852,7 @@ package view.screen
 										+ String(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_ID]) + " - Cược "
 										+ format(int(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]));
 				
-				content.startGame.visible = true;
+				checkShowTextNotice();
 				//content.ruleDescription.y = content.channelNameAndRoomId.y;
 			}
 			else 
@@ -3939,31 +4016,57 @@ package view.screen
 		 */
 		private function addUsersInfo(startGame:Boolean = false):void 
 		{
-			var i:int;
-			var checkEvent:Boolean = false;
+			
 			MyDataTLMN.getInstance().myId = _arrUserList[0].userName;
 			MyDataTLMN.getInstance().myDisplayName = _arrUserList[0].displayName;
 			MyDataTLMN.getInstance().myMoney[0] = _arrUserList[0].money;
 			trace("master in adduserinfo: ", GameDataTLMN.getInstance().master , MyDataTLMN.getInstance().myId)
 			trace("master in adduserinfo: ", _arrUserList[0].userName , _arrUserList[0].displayName)
+			var i:int;
+			var checkEvent:Boolean = false;
+			
+			trace("master in adduserinfo: ", GameDataTLMN.getInstance().master , MyDataTLMN.getInstance().myId)
 			
 			if (GameDataTLMN.getInstance().master == MyDataTLMN.getInstance().myId) 
 			{
 				_arrUserList[0].isMaster = true;
-				content.startGame.visible = true;
+				
+				checkShowTextNotice();
 			}
 			else 
 			{
 				_arrUserList[0].isMaster = false;
-				content.startGame.visible = false;
+				checkShowTextNotice();
 			}
-			
-			trace("master là mình: ", _arrUserList[0].isMaster, _arrUserList);
-			MyDataTLMN.getInstance().sex = _arrUserList[0].sex;
+			var rd:int;
+			trace("minh join room: ", _myInfo._userName )
+			if (_myInfo._userName == "") 
+			{
+				isMeJoinRoom = true;
+				
+				if (isMeJoinRoom && _numUser > 1) 
+				{
+					if (SoundManager.getInstance().isSoundOn) 
+					{
+						rd = int(Math.random() * 5);
+						
+						if (MyDataTLMN.getInstance().sex) 
+						{
+							SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_JOINGAME_ + String(rd + 1) );
+						}
+						else 
+						{
+							SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_JOINGAME_ + String(rd + 1) );
+						}
+					}
+				}
+			}
+			trace("master là mình: ", _arrUserList[0].isMaster, _arrUserList)
 			_myInfo.addInfoForMe(_arrUserList[0].userName, _arrUserList[0].money, _arrUserList[0].avatar, 
-									_arrUserList[0].remaningCard,
-									_arrUserList[0].isMaster, _isPlaying, _arrUserList[0].displayName, _arrUserList[0].ready);
-			
+									_arrUserList[0].remaningCard, _arrUserList[0].level,
+									_arrUserList[0].isMaster, _isPlaying, _arrUserList[0].displayName, _arrUserList[0].ready,
+									_arrUserList[0].ip);
+			//
 			MyDataTLMN.getInstance().myMoney[0] = String(_arrUserList[0].money);
 			if (_arrUserList[0].isMonster) 
 			{
@@ -3988,28 +4091,32 @@ package view.screen
 					
 					_arrUserInfo[i - 1].getInfoPlayer(_arrUserList[i]["position"], _arrUserList[i].userName, 
 														_arrUserList[i].money, _arrUserList[i].avatar,
-													_arrUserList[i].remaningCard, _arrUserList[i].ready, _isPlaying, 
-													_arrUserList[i].isMaster, _arrUserList[i].displayName, _arrUserList[i].sex
+													_arrUserList[i].numCard, String(_arrUserList[i].level), _arrUserList[i].ready, _isPlaying, 
+													_arrUserList[i].isMaster, _arrUserList[i].displayName, _arrUserList[i].sex, _arrUserList[i].ip
 													);
 					//checkPosClock();
-					if (SoundManager.getInstance().isSoundOn) 
+					if (!isMeJoinRoom) 
 					{
-						var rd:int = int(Math.random() * 5);
-						
-						if (_arrUserList[i].sex) 
+						if (SoundManager.getInstance().isSoundOn) 
 						{
-							SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_JOINGAME_ + String(rd + 1) );
-						}
-						else 
-						{
-							SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_JOINGAME_ + String(rd + 1) );
+							rd = int(Math.random() * 5);
+							
+							if (_arrUserList[i].sex) 
+							{
+								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_JOINGAME_ + String(rd + 1) );
+							}
+							else 
+							{
+								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_JOINGAME_ + String(rd + 1) );
+							}
 						}
 					}
+					
 				}
 				
 			}
 			startGame = false;
-			
+			isMeJoinRoom = false;
 			
 			if (checkEvent) 
 			{
