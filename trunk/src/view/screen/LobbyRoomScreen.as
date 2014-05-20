@@ -131,7 +131,6 @@ package view.screen
 			
 			messageBox = new ChatBoxLobby();
 			messageBox.addEventListener(ChatBox.BACK_BUTTON_CLICK, onCloseMessageBox);
-			addChild(messageBox);
 			messageBox.enable = false;
 			messageBox.inputText.visible = false;
 			
