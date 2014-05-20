@@ -141,6 +141,8 @@ package event
 		public static const POT_LEVEL: String = "potLevel";
 		public static const TIME: String = "time";
 		public static const PASSWORD: String = "password";
+		public static const IP: String = "ip";
+		
 		
 		public function DataField() 
 		{

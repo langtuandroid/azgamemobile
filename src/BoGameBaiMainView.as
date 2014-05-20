@@ -399,7 +399,8 @@ package
 			}
 			playingScreenLayer.addChild(playingScreen);
 			playingScreen.effectOpen();
-			playingScreen.addEventListener(PlayerInfo.EXIT, onExitPlayingScreen);
+			playingScreen.addEventListener(ConstTlmn.OUT_ROOM, onExitPlayingScreen);
+			
 			playingScreen.addEventListener(PlayingScreen.CLOSE_COMPLETE, onRemoveScreen);
 		}
 		
@@ -467,6 +468,7 @@ package
 		private function onExitPlayingScreen(e:Event):void 
 		{
 			playingScreen.effectClose();
+			removePlayingScreen();
 			addLobbyRoomScreen();
 			switch (mainData.gameType) 
 			{
@@ -474,6 +476,9 @@ package
 					SoundManager.getInstance().soundManagerPhom.playOtherExitGamePlayerSound(mainData.chooseChannelData.myInfo.sex);
 				break;
 				case MainData.MAUBINH:
+					SoundManager.getInstance().soundManagerMauBinh.playOtherExitGamePlayerSound(mainData.chooseChannelData.myInfo.sex);
+				break;
+				case MainData.TLMN:
 					SoundManager.getInstance().soundManagerMauBinh.playOtherExitGamePlayerSound(mainData.chooseChannelData.myInfo.sex);
 				break;
 				default:

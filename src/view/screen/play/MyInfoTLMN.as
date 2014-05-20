@@ -49,10 +49,10 @@ package view.screen.play
 		public var _arrCardChoose:Array =[];
 		
 		//private var _posCardY:Number;
-		private var _posCardX:Number;
+		private var _posCardX:Number = 0;
 		
-		private var _posLastMouseX:Number;
-		private var _posNewMouseX:Number;
+		private var _posLastMouseX:Number = 0;
+		private var _posNewMouseX:Number = 0;
 		
 		private var _indexOfCard:int;//index trong mang image
 		private var _indexLastOfCard:int;
@@ -67,7 +67,7 @@ package view.screen.play
 		
 		public var _isMyTurn:Boolean = false;
 		private var _sortToIdCard:Boolean = true; // mặc định khi ấn xếp bài lần đầu thì xếp theo các bộ bài, đôi, 3
-		public var _userName:String;
+		public var _userName:String = "";
 		private var _checkSort:Boolean = false;
 		private var _moneyEffect:MoneyEffect;
 		public var _isPassTurn:Boolean = false;
@@ -80,6 +80,7 @@ package view.screen.play
 		
 		public var _isPlaying:Boolean = false;
 		public var _cheater:Boolean = false;
+		public var _ready:Boolean;
 		
 		private var _linkAvatar:String = "";
 		private var _linkBg:String = "";
@@ -90,6 +91,7 @@ package view.screen.play
 		
 		private var _win:Boolean = false;
 		private var _timerVoiceLose:Timer;
+		private var myIp:String = "";
 		
 		public function MyInfoTLMN(playgame:PlayGameScreenTlmn) 
 		{
@@ -859,21 +861,25 @@ package view.screen.play
 		 * ten
 		 * so bai con lai
 		 */
-		public function addInfoForMe(userName:String, money:String, linkAvatar:String, remainingCard:int, 
-										isMaster:Boolean, isPlaying:Boolean, displayName:String, ready:Boolean):void 
+		public function addInfoForMe(userName:String, money:String, linkAvatar:String, remainingCard:int, level:String,
+										isMaster:Boolean, isPlaying:Boolean, displayName:String, ready:Boolean, ip:String):void 
 		{
 			_userName = userName;
+			myIp = ip;
 			
-			trace("cac thogn tin ve minh: ", userName, money, isMaster)
 			_clock.setParent(MyDataTLMN.getInstance().sex);
+			_ready = ready;
+			_isPlaying = isPlaying;
 			if (isPlaying) 
 			{
-				if (isMaster) 
+				
+				if (GameDataTLMN.getInstance().master == userName) 
 				{
 					content.iconMaster.visible = true;
 					content.autoReadyBtn.visible = false;
 					content.readyBtn.visible = false;
 					content.confirmReady.visible = false;
+					
 				}
 				else 
 				{
@@ -881,13 +887,14 @@ package view.screen.play
 					content.autoReadyBtn.visible = true;
 					content.readyBtn.visible = false;
 					content.confirmReady.visible = false;
+					
 				}
 				
 			}
 			else 
 			{
 				
-				if (isMaster) 
+				if (GameDataTLMN.getInstance().master == userName) 
 				{
 					content.iconMaster.visible = true;
 					content.autoReadyBtn.visible = false;
@@ -938,6 +945,8 @@ package view.screen.play
 			
 			content.userName.text = displayName;
 			content.userMoney.text = format(int(money));
+			
+			content.level.txt.text = level;
 			
 			content.setChildIndex(content.iconMaster, content.numChildren - 1);
 		}

@@ -15,6 +15,7 @@ package view.screen.play
 	import flash.net.URLRequest;
 	import flash.text.TextField;
 	import flash.utils.Timer;
+	import model.GameDataTLMN;
 	import sound.SoundManager;
 	import view.Base;
 	import view.card.CardTlmn;
@@ -54,8 +55,11 @@ package view.screen.play
 		private var _timerShowChatde:Timer;
 		
 		public var _sex:Boolean = true;
+		public var userIp:String = "";
 		
 		private var distance:int = 20;
+		private var _level:String = "";
+		public var _displayName:String = "";
 		
 		public function PlayerInfoTLMN(pos:int) 
 		{
@@ -573,25 +577,28 @@ package view.screen.play
 		 * ten
 		 * so bia con lai
 		 */
-		public function getInfoPlayer(pos:int, userName:String, money:String, linkAvatar:String, remainingCard:int,
+		public function getInfoPlayer(pos:int, userName:String, money:String, linkAvatar:String, remainingCard:int, level:String,
 										userPlaying:Boolean, gamePlaying:Boolean, isMaster:Boolean, displayName:String,
-										sex:Boolean):void 
+										sex:Boolean, ip:String):void 
 		{
 			//_pos = pos;
 			_sex = sex;
+			userIp = ip;
 			content.inviteBtn.visible = false;
 			_isPlaying = userPlaying;
 			ready = userPlaying;
-			trace("thang nao la chu phong: ", isMaster, _isPlaying)
+			trace("thang nao la chu phong: ", isMaster, _isPlaying, remainingCard)
 			
 			content.level.visible = true;
+			content.level.txt.text = level;
+			_level = level;
 			
 			_money = int(money);
 			
 			content.txtName.visible = true;
 			content.txtMoney.visible = true;
 			
-			if (isMaster) 
+			if (GameDataTLMN.getInstance().master == userName) 
 			{
 				content.iconMaster.visible = true;
 			}
@@ -600,15 +607,9 @@ package view.screen.play
 				content.iconMaster.visible = false;
 			}
 			
-			/*var str:String = userName.substr(userName.length - 3, 3);
-			if (str == "|fb") 
-			{
-				userName = userName.replace("|fb", "");
-				userName = com.giantflyingsaucer.Base64.decode(userName);
-			}*/
 			_userName = userName;
 			_clock.setParent(sex);
-			
+			_displayName = displayName;
 			content.txtName.text = displayName;
 			content.txtMoney.text = format(int(money));
 			
@@ -637,7 +638,7 @@ package view.screen.play
 				
 				content.confirmReady.visible = false;
 				
-				if (remainingCard > 0 && userPlaying) 
+				if (remainingCard > 0) 
 				{
 					content.numCardRemainTxt.visible = true;
 					content.numCardRemainTxt.text = String(remainingCard);
@@ -662,6 +663,7 @@ package view.screen.play
 			}
 			
 			_remainingCard = remainingCard;
+			
 			
 			
 		}
