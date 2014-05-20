@@ -349,12 +349,26 @@ package model
 				dispatchEvent(new Event(LOGIN_FACEBOOK_FAIL));
 		}
 		
+		public static const UPDATE_MESSAGE_LIST:String = "updateMessageList";
+		private var _messageObject:Object;
+		
+		public function get messageObject():Object 
+		{
+			return _messageObject;
+		}
+		
+		public function set messageObject(value:Object):void 
+		{
+			_messageObject = value;
+			dispatchEvent(new Event(UPDATE_MESSAGE_LIST));
+		}
+		
 		private var _tracker:AnalyticsTracker;
 		
 		public function get tracker():AnalyticsTracker 
 		{
 			if (!_tracker) {
-				_tracker = new GATracker( _main, "UA-18569083-1", "AS3", false);
+				_tracker = new GATracker( _main, "123", "AS3", false);
 			}
 			return _tracker;
 		}

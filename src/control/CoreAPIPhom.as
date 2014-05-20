@@ -54,6 +54,7 @@ package control
 	import com.electrotank.electroserver5.zone.Room;
 	import com.electrotank.electroserver5.zone.Zone;
 	import event.Command;
+	import event.DataFieldMauBinh;
 	import event.DataFieldPhom;
 	import event.ElectroServerEvent;
 	import flash.events.Event;
@@ -162,6 +163,9 @@ package control
 			{
 				case Command.PRIVATE_CHAT:
 					//trace("private chat");
+				break;
+				case DataFieldMauBinh.SEND_MESSAGE: // có user gửi message bằng web service cho mình
+					MainCommand.getInstance().getInfoCommand.getMessageInfo();
 				break;
 				case Command.INVITE_PLAY:
 					var invitePlayObject:Object = new Object();

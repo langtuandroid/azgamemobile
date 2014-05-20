@@ -1746,7 +1746,7 @@ package view.screen
 						else
 						{
 							effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT_MAU_BINH, p1, time, groupNumber);
-							if (resultArray[i][DataFieldMauBinh.HE_SO_BAT_SAP_LANG] < 0)
+							if (resultArray[i][DataFieldMauBinh.HE_SO_BAT_SAP_LANG] > 0)
 								effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, p2, time, 1, '-18');
 						}
 					}

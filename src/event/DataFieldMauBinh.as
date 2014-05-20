@@ -13,6 +13,8 @@ package event
 		public static const USER_NAME: String = "userName";
 		public static const ONLINE: String = "online";
 		public static const TIME: String = "time";
+		public static const SENDER: String = "sender";
+		public static const SEND_MESSAGE: String = "sendMessage";
 		public static const OTHER_USER_QUIT: String = "otherUserQuit";
 		public static const COMPARE_ARRAYS: String = "compareArrays";
 		public static const NUMBER_SAP: String = "numberSap";
@@ -149,6 +151,8 @@ package event
 		public static const USERS_ONLINE:String = "user_onlines";
 		public static const IP:String = "ip";
 		public static const BETS: String = "bets";
+		public static const MESSAGE_LIST:String = "messageList";
+		public static const UNREAD_MESSAGE:String = "unreadMessage";
 		
 		public function DataFieldMauBinh() 
 		{

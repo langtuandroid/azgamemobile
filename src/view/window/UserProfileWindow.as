@@ -60,9 +60,10 @@ package view.window
 			
 			avatar = new Avatar();
 			avatar.setForm(Avatar.MY_AVATAR);
-			avatar.x = -124;
-			avatar.y = -37;
-			avatar.width = avatar.height = 90;
+			avatar.x = content["avatarPosition"].x;
+			avatar.y = content["avatarPosition"].y;
+			content["avatarPosition"].visible = false;
+			avatar.width = avatar.height = content["avatarPosition"].width;
 			addChild(avatar);
 		}
 		
