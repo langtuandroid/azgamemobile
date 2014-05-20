@@ -161,6 +161,9 @@ package control
 				case Command.PRIVATE_CHAT:
 					//trace("private chat");
 				break;
+				case DataFieldMauBinh.SEND_MESSAGE: // có user gửi message bằng web service cho mình
+					MainCommand.getInstance().getInfoCommand.getMessageInfo();
+				break;
 				case Command.INVITE_PLAY:
 					var invitePlayObject:Object = new Object();
 					invitePlayObject[DataFieldMauBinh.DISPLAY_NAME] = e.esObject.getString(DataFieldMauBinh.DISPLAY_NAME);

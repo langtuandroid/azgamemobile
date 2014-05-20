@@ -19,6 +19,7 @@ package model.chooseChannelData
 		public var siteId:int;
 		public var vipPoint:int;
 		public var sex:String;
+		public var tokenTime:Number = 0;
 		
 		public function MyInfo() 
 		{

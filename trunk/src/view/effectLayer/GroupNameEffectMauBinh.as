@@ -43,6 +43,7 @@ package view.effectLayer
 				else
 				{
 					greenTxt.x = content["chiMc"].x + (35 - greenTxt.width);
+					content["chiMc"].x = 15;
 				}
 				greenTxt.visible = true;
 			}
@@ -58,6 +59,7 @@ package view.effectLayer
 				{
 					trace("aaaaaaaaaaaaaaaa",content["chiMc"].width);
 					redTxt.x = content["chiMc"].x + (35 - redTxt.width);
+					content["chiMc"].x = 15;
 				}
 				redTxt.visible = true;
 			}

@@ -68,8 +68,8 @@ package view.timeBar
 		{
 			SoundManager.getInstance().stopSound(SoundLibChung.PREPARE_TIME_OUT_SOUND);
 			isPrepareTimeOut = false;
-			if(type == 3)
-				filters = null;
+			filters = null;
+				
 			timeNumber = _timeNumber;
 			startNumber = _timeNumber;
 			countNumber = 0;
@@ -90,8 +90,8 @@ package view.timeBar
 		public function stopCountTime():void
 		{
 			setPercent(0);
-			if(type == 3)
-				filters = null;
+			filters = null;
+				
 			//removeEventListener(Event.ENTER_FRAME, onCountTime);
 			if (ticker)
 			{

@@ -29,6 +29,7 @@
 	</requestLink>-->
 	
 	<requestLink> <!--danh sách các link request lên server PHP-->
+		<addMoneyLink url="http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/Azgamebai_ChargeGoldFree" />
 		<getMessageInfoLink url="http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetListChatMessage" />
 		<getAccessTokenLink url="http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetAccessTokenDirectly" />
 		<reNewAccessTokenLink url="http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetAccessToken" />
@@ -638,6 +639,242 @@
 		<child>B.F044 (4)</child>
 		<child>B.F044 (5)</child>
 	</soundMauBinhList>
+	
+	<soundPhomList>
+		<child>P.M001 (1)</child>
+		<child>P.M001 (2)</child>
+		
+		<child>P.F001 (1)</child>
+		<child>P.F001 (2)</child>
+		
+		<!--<child>P.M002 (1)</child>
+		<child>P.M002 (2)</child>
+		<child>P.M002 (3)</child>
+		<child>P.M002 (4)</child>
+		<child>P.M002 (5)</child>
+		
+		<child>P.F002 (1)</child>
+		<child>P.F002 (2)</child>
+		<child>P.F002 (3)</child>
+		<child>P.F002 (4)</child>
+		<child>P.F002 (5)</child>-->
+		
+		<child>P.M003 (1)</child>
+		<child>P.M003 (2)</child>
+		<child>P.M003 (3)</child>
+		<child>P.M003 (4)</child>
+		<child>P.M003 (5)</child>
+		
+		<child>P.F003 (1)</child>
+		<child>P.F003 (2)</child>
+		<child>P.F003 (3)</child>
+		<child>P.F003 (4)</child>
+		<child>P.F003 (5)</child>
+		
+		<child>P.M004 (1)</child>
+		<child>P.M004 (2)</child>
+		<child>P.M004 (3)</child>
+		<child>P.M004 (4)</child>
+		<child>P.M004 (5)</child>
+		
+		<child>P.F004 (1)</child>
+		<child>P.F004 (2)</child>
+		<child>P.F004 (3)</child>
+		<child>P.F004 (4)</child>
+		<child>P.F004 (5)</child>
+		
+		<child>P.M005 (1)</child>
+		<child>P.M005 (2)</child>
+		<child>P.M005 (3)</child>
+		<child>P.M005 (4)</child>
+		<child>P.M005 (5)</child>
+		
+		<child>P.F005 (1)</child>
+		<child>P.F005 (2)</child>
+		<child>P.F005 (3)</child>
+		<child>P.F005 (4)</child>
+		<child>P.F005 (5)</child>
+		
+		<child>P.M006 (1)</child>
+		<child>P.M006 (2)</child>
+		<child>P.M006 (3)</child>
+		<child>P.M006 (4)</child>
+		<child>P.M006 (5)</child>
+		
+		<child>P.F006 (1)</child>
+		<child>P.F006 (2)</child>
+		<child>P.F006 (3)</child>
+		<child>P.F006 (4)</child>
+		<child>P.F006 (5)</child>
+		
+		<child>P.M007 (1)</child>
+		<child>P.M007 (2)</child>
+		<child>P.M007 (3)</child>
+		<child>P.M007 (4)</child>
+		<child>P.M007 (5)</child>
+		
+		<child>P.F007 (1)</child>
+		<child>P.F007 (2)</child>
+		<child>P.F007 (3)</child>
+		<child>P.F007 (4)</child>
+		<child>P.F007 (5)</child>
+		
+		<child>P.M008 (1)</child>
+		<child>P.M008 (2)</child>
+		<child>P.M008 (3)</child>
+		<child>P.M008 (4)</child>
+		<child>P.M008 (5)</child>
+		
+		<child>P.F008 (1)</child>
+		<child>P.F008 (2)</child>
+		<child>P.F008 (3)</child>
+		<child>P.F008 (4)</child>
+		<child>P.F008 (5)</child>
+		
+		<child>P.M009 (1)</child>
+		<child>P.M009 (2)</child>
+		<child>P.M009 (3)</child>
+		<child>P.M009 (4)</child>
+		<child>P.M009 (5)</child>
+		
+		<child>P.F009 (1)</child>
+		<child>P.F009 (2)</child>
+		<child>P.F009 (3)</child>
+		<child>P.F009 (4)</child>
+		<child>P.F009 (5)</child>
+		
+		<child>P.M010 (1)</child>
+		<child>P.M010 (2)</child>
+		<child>P.M010 (3)</child>
+		<child>P.M010 (4)</child>
+		<child>P.M010 (5)</child>
+		
+		<child>P.F010 (1)</child>
+		<child>P.F010 (2)</child>
+		<child>P.F010 (3)</child>
+		<child>P.F010 (4)</child>
+		<child>P.F010 (5)</child>
+		
+		<child>P.M011 (1)</child>
+		<child>P.M011 (2)</child>
+		<child>P.M011 (3)</child>
+		<child>P.M011 (4)</child>
+		<child>P.M011 (5)</child>
+		
+		<child>P.F011 (1)</child>
+		<child>P.F011 (2)</child>
+		<child>P.F011 (3)</child>
+		<child>P.F011 (4)</child>
+		<child>P.F011 (5)</child>
+		
+		<child>P.M012 (1)</child>
+		<child>P.M012 (2)</child>
+		<child>P.M012 (3)</child>
+		<child>P.M012 (4)</child>
+		<child>P.M012 (5)</child>
+		
+		<child>P.F012 (1)</child>
+		<child>P.F012 (2)</child>
+		<child>P.F012 (3)</child>
+		<child>P.F012 (4)</child>
+		<child>P.F012 (5)</child>
+		
+		<child>P.M013 (1)</child>
+		<child>P.M013 (2)</child>
+		<child>P.M013 (3)</child>
+		<child>P.M013 (4)</child>
+		<child>P.M013 (5)</child>
+		
+		<child>P.F013 (1)</child>
+		<child>P.F013 (2)</child>
+		<child>P.F013 (3)</child>
+		<child>P.F013 (4)</child>
+		<child>P.F013 (5)</child>
+		
+		<child>P.M014 (1)</child>
+		<child>P.M014 (2)</child>
+		<child>P.M014 (3)</child>
+		<child>P.M014 (4)</child>
+		<child>P.M014 (5)</child>
+		
+		<child>P.F014 (1)</child>
+		<child>P.F014 (2)</child>
+		<child>P.F014 (3)</child>
+		<child>P.F014 (4)</child>
+		<child>P.F014 (5)</child>
+		
+		<child>P.M015 (1)</child>
+		<child>P.M015 (2)</child>
+		<child>P.M015 (3)</child>
+		<child>P.M015 (4)</child>
+		<child>P.M015 (5)</child>
+		
+		<child>P.F015 (1)</child>
+		<child>P.F015 (2)</child>
+		<child>P.F015 (3)</child>
+		<child>P.F015 (4)</child>
+		<child>P.F015 (5)</child>
+		
+		<child>P.M016 (1)</child>
+		<child>P.M016 (2)</child>
+		<child>P.M016 (3)</child>
+		<child>P.M016 (4)</child>
+		<child>P.M016 (5)</child>
+		
+		<child>P.F016 (1)</child>
+		<child>P.F016 (2)</child>
+		<child>P.F016 (3)</child>
+		<child>P.F016 (4)</child>
+		<child>P.F016 (5)</child>
+		
+		<child>P.M017 (1)</child>
+		<child>P.M017 (2)</child>
+		<child>P.M017 (3)</child>
+		<child>P.M017 (4)</child>
+		<child>P.M017 (5)</child>
+		
+		<child>P.F017 (1)</child>
+		<child>P.F017 (2)</child>
+		<child>P.F017 (3)</child>
+		<child>P.F017 (4)</child>
+		<child>P.F017 (5)</child>
+		
+		<child>P.M018 (1)</child>
+		<child>P.M018 (2)</child>
+		<child>P.M018 (3)</child>
+		<child>P.M018 (4)</child>
+		<child>P.M018 (5)</child>
+		
+		<child>P.F018 (1)</child>
+		<child>P.F018 (2)</child>
+		<child>P.F018 (3)</child>
+		<child>P.F018 (4)</child>
+		<child>P.F018 (5)</child>
+		
+		<child>P.M019 (1)</child>
+		<child>P.M019 (2)</child>
+		<child>P.M019 (3)</child>
+		<child>P.M019 (4)</child>
+		<child>P.M019 (5)</child>
+		
+		<child>P.F019 (1)</child>
+		<child>P.F019 (2)</child>
+		<child>P.F019 (3)</child>
+		<child>P.F019 (4)</child>
+		<child>P.F019 (5)</child>
+		
+		<!--<child>P.M020 (1)</child>
+		<child>P.M020 (2)</child>
+		<child>P.M020 (3)</child>
+		<child>P.M020 (4)</child>
+		<child>P.M020 (5)</child>
+		
+		<child>P.F020 (1)</child>
+		<child>P.F020 (2)</child>
+		<child>P.F020 (3)</child>
+		<child>P.F020 (4)</child>
+		<child>P.F020 (5)</child>-->
+	</soundPhomList>
 	
 	<soundChungList>
 		<child>GB002</child>

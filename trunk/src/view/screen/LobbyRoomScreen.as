@@ -60,6 +60,7 @@ package view.screen
 		private var roomList:RoomListComponent;
 		private var userList:UserListComponent;
 		private var chatBox:ChatBoxLobby;
+		private var messageBox:ChatBoxLobby;
 		
 		private var background:Sprite;
 		
@@ -85,8 +86,8 @@ package view.screen
 		private var selectGameButton:SimpleButton;
 		private var channelList:ChannelList;
 		
-		private var chatButton:SimpleButton;
-		private var messageButton:SimpleButton;
+		private var chatButton:Sprite;
+		private var messageButton:MovieClip;
 		private var exitButton:SimpleButton;
 		private var helpButton:SimpleButton;
 		private var soundOnButton:SimpleButton;
@@ -128,6 +129,12 @@ package view.screen
 			chatBox.addEventListener(ChatBox.HAVE_CHAT, onHaveChat);
 			chatBox.addEventListener(ChatBox.BACK_BUTTON_CLICK, onCloseChatBox);
 			
+			messageBox = new ChatBoxLobby();
+			messageBox.addEventListener(ChatBox.BACK_BUTTON_CLICK, onCloseMessageBox);
+			addChild(messageBox);
+			messageBox.enable = false;
+			messageBox.inputText.visible = false;
+			
 			lobbyBtn.addEventListener(MouseEvent.CLICK, onChangeUserListButtonClick);
 			friendBtn.addEventListener(MouseEvent.CLICK, onChangeUserListButtonClick);
 			lobbyBtn.addEventListener(MouseEvent.MOUSE_DOWN, onButtonMouseDown);
@@ -161,6 +168,11 @@ package view.screen
 			
 		}
 		
+		private function onCloseMessageBox(e:Event):void 
+		{
+			removeChild(messageBox);
+		}
+		
 		private function onSelectGameButtonClick(e:MouseEvent):void 
 		{
 			mainCommand.electroServerCommand.closeConnection();
@@ -187,6 +199,7 @@ package view.screen
 			}
 			
 			mainCommand.getInfoCommand.getChannelInfo();
+			mainCommand.getInfoCommand.getMessageInfo();
 			
 			if (timerToGetChannelInfo)
 			{
@@ -326,7 +339,7 @@ package view.screen
 		
 		private function onMessageButtonClick(e:MouseEvent):void 
 		{
-			
+			addChild(messageBox);
 		}
 		
 		private function onExitButtonClick(e:MouseEvent):void 
@@ -561,6 +574,7 @@ package view.screen
 			mainData.chooseChannelData.addEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
 			mainData.chooseChannelData.addEventListener(ChooseChannelData.UPDATE_CHANNEL_INFO, onUpdateChannelInfo);
 			mainData.addEventListener(MainData.UPDATE_PUBLIC_CHAT, onUpdatePublicChat);
+			mainData.addEventListener(MainData.UPDATE_MESSAGE_LIST, onUpdateMessageList);
 			stage.addEventListener(MouseEvent.CLICK, onStageClick);
 			if (mainData.isOnAndroid)
 				NativeApplication.nativeApplication.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown, false, 0, true);
@@ -585,6 +599,7 @@ package view.screen
 			mainData.chooseChannelData.removeEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
 			mainData.chooseChannelData.removeEventListener(ChooseChannelData.UPDATE_CHANNEL_INFO, onUpdateChannelInfo);
 			mainData.removeEventListener(MainData.UPDATE_PUBLIC_CHAT, onUpdatePublicChat);
+			mainData.removeEventListener(MainData.UPDATE_MESSAGE_LIST, onUpdateMessageList);
 			if (mainData.isOnAndroid)
 				NativeApplication.nativeApplication.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown, false);
 				
@@ -592,6 +607,26 @@ package view.screen
 			{
 				timerToGetChannelInfo.removeEventListener(TimerEvent.TIMER, onTimerToGetChannelInfo);
 				timerToGetChannelInfo.start();
+			}
+		}
+		
+		private function onUpdateMessageList(e:Event):void 
+		{
+			messageBox.removeAllChat();
+			var messageList:Array = mainData.messageObject[DataFieldMauBinh.MESSAGE_LIST];
+			for (var i:int = 0; i < messageList.length; i++) 
+			{
+				messageBox.addChatSentence(messageList[i][DataFieldMauBinh.CHAT_CONTENT], messageList[i][DataFieldMauBinh.SENDER], true);
+			}
+			
+			if (messageButton.visible && mainData.messageObject[DataFieldMauBinh.UNREAD_MESSAGE] != 0)
+			{
+				messageButton.gotoAndStop(2);
+				messageButton["messNumberTxt"].text = mainData.messageObject[DataFieldMauBinh.UNREAD_MESSAGE];
+			}
+			else
+			{
+				mainData.messageObject[DataFieldMauBinh.UNREAD_MESSAGE] = 0;
 			}
 		}
 		
@@ -652,6 +687,15 @@ package view.screen
 					default:
 				}
 			}
+			
+			if (!SoundManager.getInstance().isLoadMusicBackground)
+				SoundManager.getInstance().loadBackgroundMusic();
+			if (!SoundManager.getInstance().isLoadSoundMauBinh && mainData.gameType == MainData.MAUBINH)
+				SoundManager.getInstance().loadSoundMauBinh();
+			else if (!SoundManager.getInstance().isLoadSoundPhom && mainData.gameType == MainData.PHOM)
+				SoundManager.getInstance().loadSoundPhom();
+			else if (!SoundManager.getInstance().isLoadSoundTlmn && mainData.gameType == MainData.TLMN)
+				SoundManager.getInstance().addSound();
 			
 			var i:int;
 			var j:int;
