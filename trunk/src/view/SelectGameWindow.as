@@ -251,6 +251,9 @@ package view
 				case tlmnIcon:
 					gameId = 3;
 					mainData.minBetRate = 1;
+					mainData.game_id = 'AZGB_TLMN';
+					mainData.gameName = 'TLMN';
+					mainData.portNumber = 5101;
 				break;
 				case phomIcon:
 					gameId = 2;
