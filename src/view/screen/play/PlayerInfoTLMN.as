@@ -446,7 +446,7 @@ package view.screen.play
 		
 		public function addMyMoney(money:int):void 
 		{
-			content.userMoney.text = format(money);
+			content.txtMoney.text = format(money);
 		}
 		
 		public function addMoney(money:String):void 
