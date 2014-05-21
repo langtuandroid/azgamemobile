@@ -434,7 +434,7 @@ package view.screen
 		private function listenDealCard(obj:Object):void 
 		{
 			
-			
+			checkShowTextNotice();
 			
 			dealcard = 0;
 			content.noc.visible = true;
@@ -478,7 +478,7 @@ package view.screen
 			
 			trace("nut bat dau: ", _isPlaying, GameDataTLMN.getInstance().master , MyDataTLMN.getInstance().myId)
 			
-			checkShowTextNotice();
+			
 			
 			if (obj[DataField.USER_NAME] == MyDataTLMN.getInstance().myId) 
 			{
@@ -496,6 +496,8 @@ package view.screen
 					
 				}
 			}
+			
+			checkShowTextNotice();
 		}
 		
 		private function deleteCard(obj:Object):void 
@@ -865,7 +867,7 @@ package view.screen
 				_resultWindow.addEventListener("close", onCloseResultWindow);
 				_resultWindow.addEventListener("out game", onOutGame);
 			}
-			
+			checkShowTextNotice()
 			if (int(MyDataTLMN.getInstance().myMoney[0]) < int(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet) 
 			{
 				EffectLayer.getInstance().removeAllEffect();
@@ -1219,6 +1221,8 @@ package view.screen
 				GameDataTLMN.getInstance().notEnoughMoney = true;
 				//okOut();
 			}
+			
+			checkShowTextNotice();
 		}
 		private function onOutGame(e:Event):void 
 		{
@@ -1372,7 +1376,7 @@ package view.screen
 				content.removeChild(_containerSpecial);
 				_containerSpecial = null;
 			}
-			checkShowTextNotice();
+			
 			
 			dealcard = 0;
 			
@@ -1383,7 +1387,7 @@ package view.screen
 			{
 				checkPosClock();
 			}
-			//
+			checkShowTextNotice();
 		}
 		
 		private function onCompleteDealCard(e:TimerEvent):void 
@@ -2974,16 +2978,20 @@ package view.screen
 			{
 				if (_numUser > 1) 
 				{
+					trace("numuser > 1: ", GameDataTLMN.getInstance().master , MyDataTLMN.getInstance().myId)
 					if (GameDataTLMN.getInstance().master == MyDataTLMN.getInstance().myId) 
 					{
 						var count:int = 0;
 						for (var i:int = 0; i < _arrUserInfo.length; i++) 
 						{
+							trace("count++", _arrUserInfo[i].ready)
 							if (_arrUserInfo[i].ready) 
 							{
+								trace("count++")
 								count++;
 							}
 						}
+						trace("count++", count)
 						if (count > 0) 
 						{
 							content.noticeForUserTxt.text = "";//"ĐÃ CÓ THỂ BẮT ĐẦU VÁN CHƠI!";
@@ -3773,7 +3781,7 @@ package view.screen
 		private function listenHaveUserJoinRoom(obj:Object):void 
 		{
 			_numUser++;
-			checkShowTextNotice();
+			
 			for (var i:int = 0; i < _arrUserInfo.length; i++) 
 			{
 				if (_arrUserInfo[i]._userName == "") 
@@ -3803,6 +3811,7 @@ package view.screen
 					break;
 				}
 			}
+			checkShowTextNotice();
 		}
 		
 		private function addPlayer(obj:Object):void 
@@ -3938,7 +3947,7 @@ package view.screen
 			}
 			
 			
-			
+			checkShowTextNotice();
 		}
 		
 		private function addPlayerInfo():void 
@@ -4126,7 +4135,7 @@ package view.screen
 			{
 				content.boardEvent.visible = false;
 			}
-			
+			checkShowTextNotice();
 		}
 		
 		/**
