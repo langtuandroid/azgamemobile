@@ -881,11 +881,14 @@
 		<child>GB003</child>
 		<child>GB004</child>
 		<child>GB005</child>
+		<child>GB006</child>
+		<child>GB007</child>
 		<child>GB008</child>
 		<child>GB009</child>
 		<child>GB010</child>
 		<child>GB011</child>
 		<child>GB012</child>
 		<child>GB013</child>
+		<child>GB017</child>
 	</soundChungList>
 </data>
