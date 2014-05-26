@@ -100,17 +100,32 @@ package view.window
 		
 		private function onInvitePlay(e:MouseEvent):void 
 		{
+			
 			var invitedNameArray:Array = invitePlayBox.choosedList;
 			
 			var infoObject:Object = new Object();
 			infoObject[DataFieldMauBinh.DISPLAY_NAME] = mainData.chooseChannelData.myInfo.name;
 			infoObject[DataFieldMauBinh.USER_NAME] = mainData.chooseChannelData.myInfo.uId;
-			infoObject[DataFieldMauBinh.ROOM_PASSWORD] = GameDataTLMN.getInstance().gameRoomInfo[DataField.PASSWORD];
-			infoObject[DataFieldMauBinh.AVATAR] = mainData.chooseChannelData.myInfo.avatar;
-			infoObject[DataFieldMauBinh.ROOM_BET] = GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET];
-			infoObject[DataFieldMauBinh.MONEY] = mainData.chooseChannelData.myInfo.money;
-			infoObject[DataFieldMauBinh.SEX] = mainData.chooseChannelData.myInfo.sex;
-			infoObject[DataFieldMauBinh.MESSAGE] = "";
+			
+			if (mainData.gameType == MainData.TLMN) 
+			{
+				infoObject[DataFieldMauBinh.ROOM_PASSWORD] = GameDataTLMN.getInstance().gameRoomInfo[DataField.PASSWORD];
+				infoObject[DataFieldMauBinh.AVATAR] = mainData.chooseChannelData.myInfo.avatar;
+				infoObject[DataFieldMauBinh.ROOM_BET] = GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET];
+				infoObject[DataFieldMauBinh.MONEY] = mainData.chooseChannelData.myInfo.money;
+				infoObject[DataFieldMauBinh.SEX] = mainData.chooseChannelData.myInfo.sex;
+				infoObject[DataFieldMauBinh.MESSAGE] = "";
+			}
+			else 
+			{
+				infoObject[DataFieldMauBinh.ROOM_PASSWORD] = mainData.playingData.gameRoomData.roomPassword;
+				infoObject[DataFieldMauBinh.AVATAR] = mainData.chooseChannelData.myInfo.avatar;
+				infoObject[DataFieldMauBinh.ROOM_BET] = mainData.playingData.gameRoomData.roomBet;
+				infoObject[DataFieldMauBinh.MONEY] = mainData.chooseChannelData.myInfo.money;
+				infoObject[DataFieldMauBinh.SEX] = mainData.chooseChannelData.myInfo.sex;
+				infoObject[DataFieldMauBinh.MESSAGE] = "";
+			}
+			
 			electroServerCommand.invitePlay(infoObject, invitedNameArray);
 			close(BaseWindow.MIDDLE_EFFECT);
 		}
