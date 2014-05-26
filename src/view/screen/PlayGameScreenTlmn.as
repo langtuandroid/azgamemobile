@@ -230,7 +230,7 @@ package view.screen
 			GameDataTLMN.getInstance().playingData.addEventListener(PlayingData.UPDATE_PLAYING_SCREEN, onUpdatePlayingScreen);
 			
 			var textfield:TextField = new TextField();
-			textfield.text = "test 28/03/2013 : 12h20m";
+			textfield.text = "test 26/05/2014 : 12h20m";
 			textfield.x = 20;
 			textfield.y = 20;
 			content.addChild(textfield);
