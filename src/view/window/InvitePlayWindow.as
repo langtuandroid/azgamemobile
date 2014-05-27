@@ -100,7 +100,8 @@ package view.window
 		
 		private function onInvitePlay(e:MouseEvent):void 
 		{
-			
+			if (!invitePlayBox.userList)
+				return;
 			var invitedNameArray:Array = invitePlayBox.choosedList;
 			
 			var infoObject:Object = new Object();

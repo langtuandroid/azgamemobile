@@ -117,6 +117,7 @@ package view.screen
 		private var playingLayer:Sprite;
 		private var chatboxLayer:Sprite;
 		private var chatButton:SimpleButton;
+		private var isResetDone:Boolean = true;
 		
 		private var _giveUpPlayerArray:Array;
 		
@@ -311,6 +312,9 @@ package view.screen
 			musicOnButton = settingBoard["musicOnButton"];
 			musicOffButton = settingBoard["musicOffButton"];
 			orderCardButton = content["orderCardButton"];
+			orderCardButton.visible = false;
+			if (mainData.chooseChannelData.myInfo.name == "truongvu")
+				orderCardButton.visible = true;
 			
 			sharedObject = SharedObject.getLocal("soundConfig");
 			
@@ -594,7 +598,7 @@ package view.screen
 					listenJoinRoom(e.data[ModelField.DATA]);
 				break;
 				case PlayingScreenAction.HAVE_USER_JOIN_ROOM: // có người khác join room
-					listenHaveUserJoineRoom(e.data[ModelField.DATA]);
+					listenHaveUserJoinRoom(e.data[ModelField.DATA]);
 				break;
 				case PlayingScreenAction.HAVE_USER_OUT_ROOM: // có người khác rời room
 					listenHaveUserOutRoom(e.data[ModelField.DATA]);
@@ -650,7 +654,7 @@ package view.screen
 			}
 		}
 		
-		private function listenHaveUserJoineRoom(data:Object):void 
+		private function listenHaveUserJoinRoom(data:Object):void 
 		{
 			SoundManager.getInstance().soundManagerPhom.playOtherJoinGamePlayerSound(data[DataFieldPhom.SEX]);
 			
@@ -681,7 +685,7 @@ package view.screen
 				if (allPlayerArray[i])
 					countPlayer++;
 			}
-			if (!isPlaying && countPlayer == 2)
+			if (isResetDone && countPlayer == 2)
 			{
 				removeCardManager();
 				waitToPlay.visible = true;
@@ -878,6 +882,7 @@ package view.screen
 					}
 				}
 				isPlaying = true;
+				isResetDone = false;
 				cardManager.playerArray = playingPlayerArray;
 			}
 			
@@ -911,6 +916,7 @@ package view.screen
 			waitToStart.visible = false;
 			var i:int;
 			isPlaying = true;
+			isResetDone = false;
 			playingPlayerArray = new Array();
 			for (i = 0; i < allPlayerArray.length; i++)
 			{
@@ -1150,7 +1156,7 @@ package view.screen
 					}
 				}
 			}
-			if (!isPlaying)
+			if (isResetDone)
 			{
 				if (belowUserInfo.isRoomMaster)
 				{
@@ -1495,6 +1501,7 @@ package view.screen
 		
 		private function resetMatch():void // reset ván bài
 		{
+			isResetDone = true;
 			if (timerToResetMatch)
 			{
 				timerToResetMatch.removeEventListener(TimerEvent.TIMER_COMPLETE, onResetMatch);
@@ -2155,7 +2162,7 @@ package view.screen
 		
 		private function listenReadySuccess(data:Object):void 
 		{
-			if (belowUserInfo.isRoomMaster && !isPlaying)
+			if (belowUserInfo.isRoomMaster && isResetDone)
 			{
 				waitToPlay.visible = false;
 				showStartButton();

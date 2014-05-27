@@ -80,13 +80,13 @@
 					switch (randomIndex) 
 					{
 						case 0:
-							playMusic("GameSound1", 1000);
+							playMusic(SoundLibChung.BACKGROUND_SOUND_1, 1000);
 						break;
 						case 1:
-							playMusic("GameSound2", 1000);
+							playMusic(SoundLibChung.BACKGROUND_SOUND_2, 1000);
 						break;
 						case 2:
-							playMusic("GameSound3", 1000);
+							playMusic(SoundLibChung.BACKGROUND_SOUND_3, 1000);
 						break;
 						default:
 					}
@@ -246,10 +246,10 @@
 			for (var i:int = 0; i < 3; i++) 
 			{
 				var tempSound:Sound = new Sound();
+				SoundManager.getInstance().registerSound("GB001 (" + String(i + 1) + ")", tempSound);
 				tempSound.load(new URLRequest("http://183.91.14.52/gamebai/bimkute/maubinh/soundChung/" + "GB001 (" + String(i + 1) + ")" + ".az"));
 				tempSound.addEventListener(Event.COMPLETE, onLoadBackgroundMusicComplete);
 				tempSound.addEventListener(IOErrorEvent.IO_ERROR, onLoadSoundIOError);
-				SoundManager.getInstance().registerSound("GB001 (" + String(i + 1) + ")", tempSound);
 			}
 		}
 		

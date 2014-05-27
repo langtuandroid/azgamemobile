@@ -9,6 +9,7 @@ package view.window
 	import model.lobbyRoomData.LobbyRoomData;
 	import model.MainData;
 	import view.userInfo.avatar.Avatar;
+	import view.window.windowLayer.WindowLayer;
 	/**
 	 * ...
 	 * @author Yun
@@ -30,6 +31,7 @@ package view.window
 		private var _level:int;
 		private var _isFriend:Boolean;
 		
+		private var messageButton:SimpleButton;
 		private var addFriendButton:SimpleButton;
 		private var removeFriendButton:SimpleButton;
 		private var closeButton:SimpleButton;
@@ -53,11 +55,13 @@ package view.window
 			gameTxt = content["gameTxt"];
 			roomTxt = content["roomTxt"];
 			addFriendButton = content["addFriendButton"];
+			messageButton = content["messageButton"];
 			removeFriendButton = content["removeFriendButton"];
 			closeButton = content["closeButton"];
 			
 			addFriendButton.visible = removeFriendButton.visible = false;
 			
+			messageButton.addEventListener(MouseEvent.CLICK, onButtonClick);
 			addFriendButton.addEventListener(MouseEvent.CLICK, onButtonClick);
 			removeFriendButton.addEventListener(MouseEvent.CLICK, onButtonClick);
 			closeButton.addEventListener(MouseEvent.CLICK, onButtonClick);
@@ -136,6 +140,12 @@ package view.window
 					gameTxt.text = '';
 					roomTxt.text = '';
 					content["statusIcon"].visible = false;
+				break;
+				case messageButton:
+					var sendMessageWindow:SendMessageWindow = new SendMessageWindow();
+					sendMessageWindow.data = data;
+					WindowLayer.getInstance().openWindow(sendMessageWindow);
+					close();
 				break;
 				case closeButton:
 					close();

@@ -53,6 +53,7 @@
 			<arrangeCardTime>90</arrangeCardTime>
 			<showMoneyTime>5</showMoneyTime>
 			<showGroupTime>5</showGroupTime>
+			<hideMauBinhTime>3</hideMauBinhTime>
 			<groupName>
 				<node>Gồm có 1 bộ 4 lá Át</node>
 				<node>Gồm 1 dãy liên tiếp và đồng chất</node>
@@ -151,7 +152,7 @@
 			<confirmDownCardFinish>Bạn vẫn còn phỏm chưa hạ, bạn có chắc chắn muốn bỏ qua ?</confirmDownCardFinish>
 			<confirmKickOut>Bạn có chắc chắn muốn kick người chơi</confirmKickOut>
 			<confirmSendCardFinish>Bạn vẫn còn bài chưa gửi, bạn có chắc chắn muốn bỏ qua ?</confirmSendCardFinish>
-			<confirmExit>Ván bài chưa kết thúc, nếu thoát ra bạn sẽ mất 4 lần tiền cược</confirmExit>
+			<confirmExit>Ván bài chưa kết thúc, nếu thoát ra bạn sẽ bị xử thua, bạn có chắc chắn không?</confirmExit>
 			<waitOtherPlayer>Chờ người khác vào phòng chơi</waitOtherPlayer>
 			<readyAlert>Bạn có 20s để sẵn sàng</readyAlert>
 			<playWrongCard>Quân bài bạn đánh không hợp lệ</playWrongCard>
@@ -162,7 +163,7 @@
 			<kickOutMoney>Bạn đã bị đẩy ra khỏi phòng do không đủ tiền cược để chơi tiếp</kickOutMoney>
 			<roomMasterKick>Bạn đã bị chủ bàn đuổi ra</roomMasterKick>
 			<userLeaveRoom>đã thoát ra khỏi phòng chơi</userLeaveRoom>
-			<userJoinRoom>vừa vào phòng chơi</userJoinRoom>
+			<userJoinRoom>vừa vào bàn chơi</userJoinRoom>
 			<roomNameDefault>
 				<node>Làm 1 ván nào!!!</node>
 				<node>Nhẹ nhàng đẩy xe hàng!!!</node>

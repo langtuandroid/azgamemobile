@@ -400,6 +400,7 @@ package
 			playingScreenLayer.addChild(playingScreen);
 			playingScreen.effectOpen();
 			playingScreen.addEventListener(ConstTlmn.OUT_ROOM, onExitPlayingScreen);
+			playingScreen.addEventListener(PlayerInfo.EXIT, onExitPlayingScreen);
 			
 			playingScreen.addEventListener(PlayingScreen.CLOSE_COMPLETE, onRemoveScreen);
 		}
