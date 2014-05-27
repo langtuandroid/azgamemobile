@@ -284,6 +284,7 @@ package view.screen
 			
 			chatButton = content["chatButton"];
 			messageButton = content["messageButton"];
+			messageButton["messNumberTxt"].text = '';
 			exitButton = content["exitButton"];
 			helpButton = content["helpButton"];
 			soundOnButton = content["soundOnButton"];
@@ -338,6 +339,9 @@ package view.screen
 		
 		private function onMessageButtonClick(e:MouseEvent):void 
 		{
+			messageButton.gotoAndStop(1);
+			mainData.messageObject[DataFieldMauBinh.UNREAD_MESSAGE] = 0;
+			messageButton["messNumberTxt"].text = '';
 			addChild(messageBox);
 		}
 		
@@ -393,16 +397,16 @@ package view.screen
 		
 		private function onOtherButtonClick(e:MouseEvent):void 
 		{
-			switch (mainData.gameType) 
+			/*switch (mainData.gameType) 
 			{
 				case MainData.MAUBINH:
 					SoundManager.getInstance().soundManagerMauBinh.playExitGamePlayerSound(mainData.chooseChannelData.myInfo.sex);
 				break;
-				case MainData.MAUBINH:
+				case MainData.PHOM:
 					SoundManager.getInstance().soundManagerPhom.playExitGamePlayerSound(mainData.chooseChannelData.myInfo.sex);
 				break;
 				default:
-			}
+			}*/
 		}
 		
 		private function onChannelButtonClick(e:MouseEvent):void 
@@ -593,6 +597,7 @@ package view.screen
 		private function onRemovedFromStage(e:Event):void 
 		{
 			roomList.isInvite = false;
+			renderInviteList();
 			
 			stage.removeEventListener(MouseEvent.CLICK, onStageClick);
 			mainData.chooseChannelData.removeEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
@@ -689,12 +694,6 @@ package view.screen
 			
 			if (!SoundManager.getInstance().isLoadMusicBackground)
 				SoundManager.getInstance().loadBackgroundMusic();
-			if (!SoundManager.getInstance().isLoadSoundMauBinh && mainData.gameType == MainData.MAUBINH)
-				SoundManager.getInstance().loadSoundMauBinh();
-			else if (!SoundManager.getInstance().isLoadSoundPhom && mainData.gameType == MainData.PHOM)
-				SoundManager.getInstance().loadSoundPhom();
-			else if (!SoundManager.getInstance().isLoadSoundTlmn && mainData.gameType == MainData.TLMN)
-				SoundManager.getInstance().addSound();
 			
 			var i:int;
 			var j:int;
@@ -819,13 +818,6 @@ package view.screen
 			}
 				
 			windowLayer.openWindow(alertWindow);
-		}
-		
-		private function onRemoveFriend(e:Event):void 
-		{
-			var rowElement:UserRowULC = userList.findRowElementById(mainData.removeFriendData[DataFieldMauBinh.USER_NAME]);
-			if (rowElement)
-				rowElement.isFriend = false;
 		}
 		
 		private function onConfirmFriendRequest(e:Event):void 
@@ -968,7 +960,6 @@ package view.screen
 			mainData.addEventListener(MainData.INVITE_ADD_FRIEND, onInviteAddFriend); // Lời mời kết bạn
 			mainData.addEventListener(MainData.CONFIRM_FRIEND_REQUEST, onConfirmFriendRequest);
 			mainData.addEventListener(MainData.FRIEND_CONFIRM_ADD_FRIEND_INVITE, onFriendConfirmAddFriendInvite);
-			mainData.addEventListener(MainData.REMOVE_FRIEND, onRemoveFriend);
 			mainData.lobbyRoomData.addEventListener(LobbyRoomData.HAVE_INVITE_PLAY, onHaveInvitePlay);
 			// Cập nhật lại thông tin của người chơi
 			if (mainData.chooseChannelData.myInfo)
@@ -1007,7 +998,6 @@ package view.screen
 			mainData.removeEventListener(MainData.INVITE_ADD_FRIEND, onInviteAddFriend); // Lời mời kết bạn
 			mainData.removeEventListener(MainData.CONFIRM_FRIEND_REQUEST, onConfirmFriendRequest);
 			mainData.removeEventListener(MainData.FRIEND_CONFIRM_ADD_FRIEND_INVITE, onFriendConfirmAddFriendInvite);
-			mainData.removeEventListener(MainData.REMOVE_FRIEND, onRemoveFriend);
 			mainData.lobbyRoomData.removeEventListener(LobbyRoomData.HAVE_INVITE_PLAY, onHaveInvitePlay);
 			GTween.defaultDispatchEvents = true;
 			var tempTween1:GTween = new GTween(roomList, effectTime, { x:0, alpha:0 }, { ease:Back.easeIn } );
@@ -1094,6 +1084,24 @@ package view.screen
 				if (!e.hasPassword)
 				{
 					mainCommand.electroServerCommand.joinGameRoom(e.gameId, e.password);
+					
+					var i:int;		
+					for (var userName:String in mainData.inviteList)
+					{
+						for (i = 0; i < mainData.lobbyRoomData.roomList.length; i++) 
+						{
+							var roomData:RoomDataRLC = mainData.lobbyRoomData.roomList[i];
+							if (mainData.inviteList[userName][DataFieldMauBinh.ROOM_ID] == roomData.id)
+							{
+								if (e.gameId == roomData.gameId)
+								{
+									delete mainData.inviteList[userName];
+									mainData.inviteList = mainData.inviteList;
+									break;
+								}
+							}
+						}
+					}
 				}
 				else
 				{

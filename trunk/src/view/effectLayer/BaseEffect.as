@@ -16,7 +16,7 @@ package view.effectLayer
 	public class BaseEffect extends Sprite 
 	{
 		public static const SCALE_INCREASE:String = "scaleIncrease"; // effect to dần lên
-		public static const BIG_SCALE_INCREASE:String = "smallScaleIncrease"; // effect to dần lên
+		public static const BIG_SCALE_INCREASE:String = "bigScaleIncrease"; // effect to dần lên
 		public static const SMALL_SCALE_INCREASE:String = "smallScaleIncrease"; // effect to dần lên
 		public static const MOVING_TRANSPARENT:String = "movingTransparent"; // di chuyển từ điểm nào đó và alpha đậm dần lên
 		
@@ -110,16 +110,32 @@ package view.effectLayer
 				switch (effectType) 
 				{
 					case SCALE_INCREASE:
-						movingTween = new GTween(content, movingTime, { scaleX:0, scaleY:0 }, { ease:Back.easeIn });
-						movingTween.addEventListener(Event.COMPLETE, removeComplete);
+						//movingTween = new GTween(content, movingTime, { scaleX:0, scaleY:0 }, { ease:Back.easeIn });
+						//movingTween.addEventListener(Event.COMPLETE, removeComplete);
+						
+						if (stage && parent)
+							parent.removeChild(this);
 					break;
 					case SMALL_SCALE_INCREASE:
-						movingTween = new GTween(content, movingTime, { scaleX:0, scaleY:0 }, { ease:Back.easeIn });
-						movingTween.addEventListener(Event.COMPLETE, removeComplete);
+						//movingTween = new GTween(content, movingTime, { scaleX:0, scaleY:0 }, { ease:Back.easeIn });
+						//movingTween.addEventListener(Event.COMPLETE, removeComplete);
+						
+						if (stage && parent)
+							parent.removeChild(this);
+					break;
+					case BIG_SCALE_INCREASE:
+						//movingTween = new GTween(content, movingTime, { scaleX:0, scaleY:0 }, { ease:Back.easeIn });
+						//movingTween.addEventListener(Event.COMPLETE, removeComplete);
+						
+						if (stage && parent)
+							parent.removeChild(this);
 					break;
 					case MOVING_TRANSPARENT:
-						movingTween = new GTween(content, movingTime, { x:content.x + movingDistanceX, y:content.y + movingDistanceY, alpha:0, scaleX:0, scaleY:0 }, { ease:Back.easeIn });
-						movingTween.addEventListener(Event.COMPLETE, removeComplete);
+						//movingTween = new GTween(content, movingTime, { x:content.x + movingDistanceX, y:content.y + movingDistanceY, alpha:0, scaleX:0, scaleY:0 }, { ease:Back.easeIn });
+						//movingTween.addEventListener(Event.COMPLETE, removeComplete);
+						
+						if (stage && parent)
+							parent.removeChild(this);
 					break;
 				}
 			}

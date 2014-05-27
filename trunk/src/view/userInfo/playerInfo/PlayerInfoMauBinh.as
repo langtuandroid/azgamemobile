@@ -160,6 +160,14 @@ package view.userInfo.playerInfo
 			deckRank[0] = -1;
 		}
 		
+		public function updateMoneyNumber(value:Number):void
+		{	
+			moneyNumber = value;
+			
+			if(formName == PlayerInfoMauBinh.BELOW_USER) // Nếu là user của mình thì cập nhật lại tiền cho phòng chờ và phòng chọn kênh
+				mainData.chooseChannelData.myInfo.money = value;
+		}
+		
 		public function hightlineGroup(groupIndex:int):void
 		{
 			for (var i:int = 0; i < unLeaveCards.length; i++) 

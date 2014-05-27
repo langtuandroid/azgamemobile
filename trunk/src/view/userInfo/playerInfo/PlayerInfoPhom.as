@@ -675,6 +675,14 @@ package view.userInfo.playerInfo
 			{
 				CardPhom(unLeaveCards[i]).effectOpen();
 			}
+			
+			if (formName == ABOVE_USER || formName == RIGHT_USER)
+			{
+				for (i = unLeaveCards.length - 1; i >= 0; i--) 
+				{
+					CardPhom(unLeaveCards[i]).parent.addChild(unLeaveCards[i]);
+				}
+			}
 		}
 		
 		// Hàm để hạ tất cả các phỏm khi ù
@@ -1931,6 +1939,11 @@ package view.userInfo.playerInfo
 						}
 						if (cardDeck.length == 0) // trường hợp không chọn lá bài nào thì cho hạ tự động
 						{
+							if (noticeFullDeckButton.enable)
+							{
+								electroServerCommand.noticeFullDeck();
+								return;
+							}
 							autoDownCard();
 							return;
 						}

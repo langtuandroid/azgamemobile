@@ -56,13 +56,13 @@ package view.effectLayer
 					mc.gotoAndStop("3sanh");
 				break;
 				case '22':
-					mc.gotoAndStop("thungphasanhlon");
+					mc.gotoAndStop("thungphasanhlonchi2");
 				break;
 				case '21':
-					mc.gotoAndStop("thungphasanhnho");
+					mc.gotoAndStop("thungphasanhnhochi2");
 				break;
 				case '20':
-					mc.gotoAndStop("thungphasanh");
+					mc.gotoAndStop("thungphasanhchi2");
 				break;
 				case '19':
 					mc.gotoAndStop("tuquyAchi2");

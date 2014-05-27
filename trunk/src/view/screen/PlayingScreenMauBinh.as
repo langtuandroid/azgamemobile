@@ -334,6 +334,8 @@ package view.screen
 			musicOffButton = settingBoard["musicOffButton"];
 			orderCardButton = content["orderCardButton"];
 			orderCardButton.visible = false;
+			if (mainData.chooseChannelData.myInfo.name == "truongvu")
+				orderCardButton.visible = true;
 			
 			sharedObject = SharedObject.getLocal("soundConfig");
 			
@@ -1179,31 +1181,36 @@ package view.screen
 				if (allPlayerArray[i])
 				{
 					if (PlayerInfoMauBinh(allPlayerArray[i]).userName == data[DataFieldMauBinh.USER_NAME])
-					{
-						PlayerInfoMauBinh(allPlayerArray[i]).updateMoney(data[DataFieldMauBinh.MONEY]);
-						
-						if (data[DataFieldMauBinh.USER_NAME] == belowUserInfo.userName && !isPlaying)
-						{
-							// Nếu không đủ tiền để chơi ván mới
-							if (mainData.chooseChannelData.myInfo.money < Number(mainData.playingData.gameRoomData.roomBet))
-							{	
-								dispatchEvent(new Event(PlayerInfoMauBinh.EXIT));
-								windowLayer.isNoCloseAll = true;
-								electroServerCommand.joinLobbyRoom();
-								
-								if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
-								{
-									var kickOutWindow:AlertWindow = new AlertWindow();
-									kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
-									kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
-									windowLayer.openWindow(kickOutWindow);
-								}
-								
-								EffectLayer.getInstance().removeAllEffect();
-							}
-						}
-					}
+						PlayerInfoMauBinh(allPlayerArray[i]).updateMoneyNumber(data[DataFieldMauBinh.MONEY]);
 				}
+			}
+		}
+		
+		private function updateMoney():void 
+		{
+			for (var i:int = 0; i < allPlayerArray.length; i++) 
+			{
+				if (allPlayerArray[i])
+				{
+					PlayerInfoMauBinh(allPlayerArray[i]).updateMoney(PlayerInfoMauBinh(allPlayerArray[i]).moneyNumber);
+				}
+			}
+			
+			// Nếu không đủ tiền để chơi ván mới
+			if (mainData.chooseChannelData.myInfo.money < Number(mainData.playingData.gameRoomData.roomBet))
+			{
+				if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
+				{
+					var kickOutWindow:AlertWindow = new AlertWindow();
+					kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
+					windowLayer.openWindow(kickOutWindow);
+				}
+				
+				dispatchEvent(new Event(PlayerInfoMauBinh.EXIT));
+				windowLayer.isNoCloseAll = true;
+				electroServerCommand.joinLobbyRoom();
+				
+				EffectLayer.getInstance().removeAllEffect();
 			}
 		}
 		
@@ -1598,7 +1605,7 @@ package view.screen
 					PlayerInfoMauBinh(playingPlayerArray[j]).removeHightline();
 					if (PlayerInfoMauBinh(playingPlayerArray[j]).userName == resultArray[i][DataFieldMauBinh.USER_NAME])
 					{
-						if (resultArray[i][DataFieldMauBinh.HE_SO_SAP] != 0)
+						if (resultArray[i][DataFieldMauBinh.HE_SO_SAP] != undefined)
 						{
 							var groupNumber:int = resultArray[i][DataFieldMauBinh.HE_SO_SAP];
 							p1 = PlayerInfoMauBinh(playingPlayerArray[j]).localToGlobal(PlayerInfoMauBinh(playingPlayerArray[j]).moneyEffectPosition);
@@ -1813,6 +1820,7 @@ package view.screen
 			if (!stage)
 				return;
 			
+			updateMoney();
 			var resultArray:Array = compareGroupData[DataFieldMauBinh.PLAYER_LIST];
 			resultArray.sortOn(DataFieldMauBinh.TOTAL, Array.NUMERIC);
 			resultArray.reverse();
@@ -1824,9 +1832,7 @@ package view.screen
 					if (PlayerInfoMauBinh(playingPlayerArray[j]).userName == resultArray[i][DataFieldMauBinh.USER_NAME])
 					{
 						if (resultArray[i][DataFieldMauBinh.TOTAL] > 0 && i == 0)
-						{
 							SoundManager.getInstance().soundManagerMauBinh.playOtherWinPlayerSound(playingPlayerArray[j].sex);
-						}
 						if (resultArray[i][DataFieldMauBinh.TOTAL] > 0)
 							PlayerInfoMauBinh(playingPlayerArray[j]).setStatus('win');
 						else if (resultArray[i][DataFieldMauBinh.TOTAL] < 0)
@@ -1865,6 +1871,7 @@ package view.screen
 				{
 					if (resultArray[i][DataFieldMauBinh.TOTAL] == 0)
 					{
+						SoundManager.getInstance().playSound(SoundLibChung.LOSE_SOUND);
 						SoundManager.getInstance().soundManagerMauBinh.playDrawPlayerSound(belowUserInfo.sex);
 					}
 					else if (resultArray[i][DataFieldMauBinh.TOTAL] < 0)
