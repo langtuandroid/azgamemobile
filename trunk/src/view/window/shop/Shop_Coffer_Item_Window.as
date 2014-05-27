@@ -153,6 +153,8 @@ package view.window.shop
 			var httpRequest:HTTPRequest = new HTTPRequest();
 			var obj:Object;
 			
+			headerOn(3);
+			
 			switch (type) 
 			{
 				case 0:
@@ -198,6 +200,15 @@ package view.window.shop
 				scrollView.removeAll();
 				_arrMyAvatar = [];
 				
+				if (arrData.length < 1) 
+				{
+					var buyAvatarWindow:ConfirmWindow;
+					buyAvatarWindow = new ConfirmWindow();
+					buyAvatarWindow.setNotice("Bạn chưa có đồ nào trong hòm đồ");
+					
+					windowLayer.openWindow(buyAvatarWindow);
+				}
+				
 				for (i = 0; i < arrData.length; i++ ) 
 				{
 					var nameAvatar:String = arrData[i]['avt_name'];
@@ -206,6 +217,7 @@ package view.window.shop
 					var expireAvatar:String = arrData[i]['avt_sell_expire_dt'];
 					var sellRelease:String = arrData[i]['avt_sell_release_dt'];
 					var idAvt:String = arrData[i]['avt_id'];
+					var idAvtWeb:String = arrData[i]['avt_cd_wb'];
 					var idListAvt:String = arrData[i]['avt_lst_id'];
 					
 					var contentAvatar:ContentMyAvatar = new ContentMyAvatar();
@@ -224,7 +236,7 @@ package view.window.shop
 					}
 					
 					
-					contentAvatar.addInfo(idAvt, idListAvt, nameAvatar, sellRelease, linkAvatar, expireAvatar);
+					contentAvatar.addInfo(idAvt, idListAvt, nameAvatar, sellRelease, linkAvatar, expireAvatar, idAvtWeb);
 					scrollView.addRow(contentAvatar);
 					//_arrBoard[3].addChild(contentAvatar);
 					
@@ -351,6 +363,8 @@ package view.window.shop
 		 */
 		public function loadItem(type:int):void 
 		{
+			headerOn(2);
+			
 			var method:String = "POST";
 			var url:String;
 			var httpRequest:HTTPRequest = new HTTPRequest();
@@ -407,7 +421,7 @@ package view.window.shop
 				var payGold:String = arrData[i]['it_pay_gold'];
 				var linkAvatar:String = arrData[i]['it_dir_path'];
 				var expireAvatar:String = arrData[i]['it_sell_expire_dt'];
-				
+				var idAvtWeb:String = arrData[i]['it_cd_wb'];
 				var idAvt:String = arrData[i]['it_id'];
 				
 				var contentAvatar:ContentItemGold = new ContentItemGold();
@@ -426,7 +440,7 @@ package view.window.shop
 				}
 				
 				
-				contentAvatar.addInfo(idAvt, nameAvatar, chipAvatar, payGold, linkAvatar, expireAvatar);
+				contentAvatar.addInfo(idAvt, nameAvatar, chipAvatar, payGold, linkAvatar, expireAvatar, idAvtWeb);
 				scrollView.addRow(contentAvatar);
 				//_arrBoard[3].addChild(contentAvatar);
 				
@@ -513,6 +527,7 @@ package view.window.shop
 				var expireAvatar:String = arrData[i]['avt_sell_expire_dt'];
 				var gender:String = arrData[i]['avt_gender_code'];
 				var idAvt:String = arrData[i]['avt_id'];
+				var idAvtWeb:String = arrData[i]['avt_cd_wb'];
 				
 				var contentAvatar:ContentAvatar = new ContentAvatar();
 				_arrAvatar.push(contentAvatar);
@@ -530,7 +545,7 @@ package view.window.shop
 				}
 				
 				
-				contentAvatar.addInfo(idAvt, nameAvatar, chipAvatar, goldAvatar, linkAvatar, expireAvatar);
+				contentAvatar.addInfo(idAvt, nameAvatar, chipAvatar, goldAvatar, linkAvatar, expireAvatar, idAvtWeb);
 				scrollView.addRow(contentAvatar);
 				//_arrBoard[3].addChild(contentAvatar);
 				

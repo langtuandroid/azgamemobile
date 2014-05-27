@@ -49,7 +49,8 @@ package view.window.shop
 			dispatchEvent(new Event(ConstTlmn.BUY_AVATAR));
 		}
 		
-		public function addInfo(idAvt:String, nameAvt:String, chip:String, gold:String, linkAvt:String, expire:String):void 
+		public function addInfo(idAvt:String, nameAvt:String, chip:String, gold:String, linkAvt:String, 
+								expire:String, idWeb:String):void 
 		{
 			_idAvt = idAvt;
 			_goldAvt = gold;
@@ -74,7 +75,9 @@ package view.window.shop
 			
 			var image:Avatar = new Avatar();
 			content.containerImg.addChild(image);
-			image.addImg(linkAvt);
+			
+			trace("addavâtrr: ", linkAvt + "/WAZ/" + idWeb + ".png")
+			image.addImg(linkAvt + "/WAZ/" + idWeb + ".png");
 			
 		}
 		

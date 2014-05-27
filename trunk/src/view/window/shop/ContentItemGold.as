@@ -49,7 +49,8 @@ package view.window.shop
 			dispatchEvent(new Event(ConstTlmn.BUY_ITEM));
 		}
 		
-		public function addInfo(idAvt:String, nameAvt:String, chip:String, gold:String, linkAvt:String, expire:String):void 
+		public function addInfo(idAvt:String, nameAvt:String, chip:String, gold:String, linkAvt:String, 
+							expire:String, idWeb:String):void 
 		{
 			_idAvt = idAvt;
 			_goldAvt = gold;
@@ -66,7 +67,7 @@ package view.window.shop
 				year = year + 1;
 			}
 			
-			content.itemLimitTxt.text = String(date.dateUTC) + "/" + String(month) + "/" + String(year);
+			//content.itemLimitTxt.text = String(date.dateUTC) + "/" + String(month) + "/" + String(year);
 			
 			
 			content.itemNameTxt.text = nameAvt;
@@ -77,7 +78,8 @@ package view.window.shop
 			
 			var image:Avatar = new Avatar();
 			content.containerImg.addChild(image);
-			image.addImg(linkAvt);
+			trace("load gold: ", linkAvt + "/WAZ/" + idWeb + ".gif")
+			image.addImg(linkAvt + "/WAZ/" + idWeb + ".gif");
 			
 		}
 		
