@@ -75,7 +75,7 @@ package
 			zChannelRow;
 			zCardManagerPhom;
 			zTimeBar_1_Phom;
-			
+			zSendMessageWindow;
 			
 			MyInfoTlmnMc;
 			MyClock;
