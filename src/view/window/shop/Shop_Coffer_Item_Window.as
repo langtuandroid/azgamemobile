@@ -21,6 +21,8 @@ package view.window.shop
 	public class Shop_Coffer_Item_Window extends Sprite 
 	{
 		private var myContent:MovieClip;
+		private var choosePay:ChoosePayMoneyType;
+		private var typeOfPay:int; //0:thanh toan bang gold, 1:thanh toan bang chip
 		private var _arrBtnInTab:Array;
 		
 		private var _arrHeaderTab:Array;
@@ -41,6 +43,9 @@ package view.window.shop
 		private var _arrMyAvatar:Array = [];
 		private var _arrMyItem:Array = [];
 		private var _arrMyGold:Array = [];
+		
+		private var avatarChoseBuy:ContentAvatar;
+		private var goldChoseBuy:ContentItemGold;
 		
 		public function Shop_Coffer_Item_Window() 
 		{
@@ -77,6 +82,7 @@ package view.window.shop
 					_arrHeaderTab[i].getChildAt(j).stop();
 				}
 			}
+			
 			
 			
 			tabOn(3);
@@ -150,7 +156,7 @@ package view.window.shop
 			switch (type) 
 			{
 				case 0:
-					url = "http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/GetListAvatarOfBuyer?nick_name=" + 
+					url = "http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetListAvatarOfBuyer?nick_name=" + 
 						MainData.getInstance().chooseChannelData.myInfo.name + "&rowStart=0&rowEnd=10";
 						
 					obj = new Object();
@@ -158,7 +164,7 @@ package view.window.shop
 					httpRequest.sendRequest(method, url, obj, loadMyAvatarSuccess, true);
 				break;
 				case 1:
-					url = "http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+					url = "http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
 									"?rowStart=0&rowEnd=10";
 					obj = new Object();
 					obj.it_group_id = String(1);
@@ -231,7 +237,7 @@ package view.window.shop
 		{
 			var avatar:ContentMyAvatar = e.currentTarget as ContentMyAvatar;
 			var myInfo:MyInfo = new MyInfo();
-			var url:String = "http://wss.test.azgame.us/Service02/OnplayShopExt.asmx/DressAvatarFromClientSide";
+			var url:String = "http://wss.azgame.vn/Service02/OnplayShopExt.asmx/DressAvatarFromClientSide";
 			var obj:Object = new Object();
 			var mainData:MainData = MainData.getInstance();
 			obj["access_token"] = mainData.loginData["AccessToken"];
@@ -353,14 +359,14 @@ package view.window.shop
 			switch (type) 
 			{
 				case 0:
-					url = "http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/GetListTwav00" + String(1)
+					url = "http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetListTwav00" + String(1)
 									+ "?rowStart=0&rowEnd=10";
 					obj = new Object();
 					obj.avt_group_id = String(0);
 					httpRequest.sendRequest(method, url, obj, loadAvatarSuccess, true);
 				break;
 				case 1:
-					url = "http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+					url = "http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
 									"?rowStart=0&rowEnd=10";
 					obj = new Object();
 					obj.it_group_id = String(1);
@@ -430,16 +436,29 @@ package view.window.shop
 		
 		private function onBuyItemGold(e:Event):void 
 		{
-			var avatar:ContentItemGold = e.currentTarget as ContentItemGold;
+			
+			choosePay = new ChoosePayMoneyType();
+			myContent.addChild(choosePay);
+			choosePay.showChoose(1);
+			
+			choosePay.addEventListener("agree", onClickBuyGold);
+			
+			goldChoseBuy = e.currentTarget as ContentItemGold;
+			
+		}
+		
+		private function onClickBuyGold(e:MouseEvent):void 
+		{
+			
 			var myInfo:MyInfo = new MyInfo();
-			var url:String = "http://wss.test.azgame.us/Service02/OnplayShopExt.asmx/BuyItemFromClientSide";
+			var url:String = "http://wss.azgame.vn/Service02/OnplayShopExt.asmx/BuyItemFromClientSide";
 			var obj:Object = new Object();
 			var mainData:MainData = MainData.getInstance();
 			obj["access_token"] = mainData.loginData["AccessToken"];
-			obj["game_code"] = avatar._goldAvt;
+			obj["game_code"] = goldChoseBuy._goldAvt;
 			obj["payment_type"] = "1";
 			obj["nk_nm_receiver"] = mainData.loginData["Id"];
-			obj["item_id"] = avatar._idAvt;
+			obj["item_id"] = goldChoseBuy._idAvt;
 			obj["item_quantity"] = "1";
 			obj["client_hash"] = MD5.hash(obj["access_token"] + mainData.client_secret + obj["game_code"]
 			 + obj["payment_type"] + obj["nk_nm_receiver"] + obj["item_id"] +
@@ -453,10 +472,18 @@ package view.window.shop
 		private function buyItemRespone(obj:Object):void 
 		{
 			trace(obj)
+			var buyAvatarWindow:ConfirmWindow;
 			if (obj["Msg"] == "Cập nhật thành công") 
 			{
-				var buyAvatarWindow:ConfirmWindow = new ConfirmWindow();
-				buyAvatarWindow.setNotice("Bạn đã mua thành công vật phẩm này!");
+				buyAvatarWindow = new ConfirmWindow();
+				buyAvatarWindow.setNotice("Giao dịch thành công");
+				
+				windowLayer.openWindow(buyAvatarWindow);
+			}
+			else if (obj["Msg"] == "Tài khoản không có đủ CHIP") 
+			{
+				buyAvatarWindow = new ConfirmWindow();
+				buyAvatarWindow.setNotice("Tài khoản không có đủ CHIP");
 				
 				windowLayer.openWindow(buyAvatarWindow);
 			}
@@ -513,16 +540,30 @@ package view.window.shop
 		
 		private function onBuyAvatar(e:Event):void 
 		{
-			var avatar:ContentAvatar = e.currentTarget as ContentAvatar;
+			choosePay = new ChoosePayMoneyType();
+			myContent.addChild(choosePay);
+			choosePay.showChoose(0);
+			
+			choosePay.addEventListener("agree", onClickBuyAvatar);
+			
+			
+			
+			avatarChoseBuy = e.currentTarget as ContentAvatar;
+			
+		}
+		
+		private function onClickBuyAvatar(e:MouseEvent):void 
+		{
+			
 			var myInfo:MyInfo = new MyInfo();
-			var url:String = "http://wss.test.azgame.us/Service02/OnplayShopExt.asmx/BuyAvatarFromClientSide";
+			var url:String = "http://wss.azgame.vn/Service02/OnplayShopExt.asmx/BuyAvatarFromClientSide";
 			var obj:Object = new Object();
 			var mainData:MainData = MainData.getInstance();
 			obj["access_token"] = mainData.loginData["AccessToken"];
-			obj["game_code"] = avatar._goldAvt;
+			obj["game_code"] = avatarChoseBuy._goldAvt;
 			obj["payment_type"] = "1";
 			obj["nk_nm_receiver"] = mainData.loginData["Id"];
-			obj["item_id"] = avatar._idAvt;
+			obj["item_id"] = avatarChoseBuy._idAvt;
 			obj["item_quantity"] = "1";
 			obj["client_hash"] = MD5.hash(obj["access_token"] + mainData.client_secret + obj["game_code"]
 			 + obj["payment_type"] + obj["nk_nm_receiver"] + obj["item_id"] +
@@ -539,7 +580,7 @@ package view.window.shop
 			if (obj["Msg"] == "Cập nhật thành công") 
 			{
 				var buyAvatarWindow:ConfirmWindow = new ConfirmWindow();
-				buyAvatarWindow.setNotice("Bạn đã mua thành công vật phẩm này!");
+				buyAvatarWindow.setNotice("Giao dịch thành công");
 				
 				windowLayer.openWindow(buyAvatarWindow);
 			}

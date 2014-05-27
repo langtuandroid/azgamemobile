@@ -92,6 +92,7 @@ package
 			ContentItemMc;
 			ContentTourMc;
 			ContentMyAvatarMc;
+			ChoosePayMoneyTypeMc;
 		}
 	}
 }

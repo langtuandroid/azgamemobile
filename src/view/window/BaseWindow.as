@@ -21,6 +21,7 @@ package view.window
 		public static const CLOSE_COMPLETE:String = "closeComplete";
 		
 		public var content:Sprite;
+		public var contentMc:MovieClip;
 		private var openTween:GTween;
 		private var closeTween:GTween;
 		private var openTime:Number = 0.5;
@@ -42,6 +43,14 @@ package view.window
 			tempClass = Class(getDefinitionByName(className));
 			content = Sprite(new tempClass());
 			addChild(content);
+		}
+		
+		public function addContentMc(className:String):void
+		{
+			var tempClass:Class;
+			tempClass = Class(getDefinitionByName(className));
+			contentMc = MovieClip(new tempClass());
+			addChild(contentMc);
 		}
 		
 		public function close(closeType:String=BaseWindow.MIDDLE_EFFECT):void

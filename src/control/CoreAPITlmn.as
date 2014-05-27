@@ -522,6 +522,7 @@ package control
 						object[DataField.LEVEL] = user.userVariableByName(DataField.USER_INFO).value.getString(DataField.LEVEL);
 						object[DataField.MONEY] = user.userVariableByName(DataField.USER_INFO).value.getString(DataField.MONEY);
 						//object[DataField.CASH] = myData.userList[userName][DataField.USER_INFO][DataField.CASH];
+						object[DataField.IP] = user.userVariableByName(DataField.USER_INFO).value.getString(DataField.IP);
 						object[DataField.AVATAR] = user.userVariableByName(DataField.USER_INFO).value.getString(DataField.AVATAR);
 						object[DataField.DISPLAY_NAME] = EsObject(tempUserList[i]).getString(DataField.DISPLAY_NAME);
 						
