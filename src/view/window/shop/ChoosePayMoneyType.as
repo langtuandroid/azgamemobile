@@ -87,8 +87,8 @@ package view.window.shop
 			if (mc.name == "choosePay1") 
 			{
 				typeOfPay = 0;
-				contentMc.chooseTypeMoney.content1.gotoAndStop(2);
-				contentMc.chooseTypeMoney.content2.gotoAndStop(1);
+				contentMc.chooseTypeMoney.choosePay1.gotoAndStop(2);
+				contentMc.chooseTypeMoney.choosePay2.gotoAndStop(1);
 			}
 			else 
 			{
