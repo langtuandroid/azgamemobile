@@ -1,6 +1,7 @@
 package view.userInfo.avatar 
 {
 	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.Loader;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -36,9 +37,13 @@ package view.userInfo.avatar
 		private var logoWidth:Number = 12;
 		private var logoHeight:Number = 12;
 		
+		private var _bitmap:Bitmap;
+		private var _bitmapData:BitmapData;
+		
 		public function Avatar() 
 		{
-			
+			avatarBackground = new Sprite();
+			addChild(avatarBackground);
 		}
 		
 		public function setForm(_formName:String):void
@@ -63,11 +68,8 @@ package view.userInfo.avatar
 		
 		public function addImg(imgSrc:String, logoSrc:String = null, isConvert:Boolean = true, userId:String = ''):void
 		{
-			if (loader)
-			{
-				if (avatarBackground.contains(loader))
-					avatarBackground.removeChild(loader);
-			}
+			trace("link avatar: " , imgSrc, "=====================")
+			var str:String = imgSrc.substr(0, 4);
 			
 			//Security.allowDomain("*");
 			//Security.allowInsecureDomain("*");
@@ -78,87 +80,105 @@ package view.userInfo.avatar
 			
 			
 			context.securityDomain = SecurityDomain.currentDomain;
+			
 			Security.loadPolicyFile("http://graph.facebook.com/crossdomain.xml");
+			Security.loadPolicyFile("http://gamebai888.com/crossdomain.xml");
 			
-			if (isConvert)
-			{
-				var url:String = imgSrc;
-			}
-			else
-			{
-				url = imgSrc;
-			}
 			
-			try 
+			Security.loadPolicyFile("http://profile.ak.fbcdn.net/crossdomain.xml");
+			//Security.loadPolicyFile('http://api.facebook.com/crossdomain.xml');
+			
+			/*Security.allowDomain('http://profile.ak.fbcdn.net');
+			Security.allowInsecureDomain('http://profile.ak.fbcdn.net');*/
+			
 			{
-				loader = new Loader();
-				var urlRequest:URLRequest = new URLRequest(url);
-				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadImgComplete);
-				loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
-				loader.load(urlRequest, context);
-				if (form_1)
+				if (_bitmapData) 
 				{
-					if (currentForm["avatarBackground"]["avatarDefault"])
+					_bitmapData.dispose();
+				}
+				if (_bitmap) 
+				{
+					removeChild(_bitmap);
+					_bitmap = null;
+				}
+				
+				if (loader)
+				{
+					if (contains(loader))
+						removeChild(loader);
+				}
+				try 
+				{
+					if (imgSrc) 
 					{
-						currentForm["avatarBackground"]["avatarDefault"].visible = false;
+							loader = new Loader();
+						var urlRequest:URLRequest = new URLRequest(imgSrc);
+						loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadImgComplete);
+						loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
+						loader.load(urlRequest);
+						trace("chay xuong day")
 					}
 				}
-			}
-			catch (err:Error)
-			{
+				catch (err:Error)
+				{
+					//_textFiled.text = "co loi khi load avatar";
+				}
 				
-			}
-			
-			if (!logoSrc)
-				return;
-			if (logoLoader)
-			{
-				if (contains(logoLoader))
-					removeChild(logoLoader);
-			}
-			
-			if (logoSrc)
-			{
-				logoLoader = new Loader();
-				urlRequest = new URLRequest(logoSrc);
-				logoLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadLogoComplete);
-				logoLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
-				logoLoader.load(urlRequest);
 			}
 		}
 		
 		private function onIOError(e:IOErrorEvent):void 
 		{
-			
+			trace("load loi")
 		}
 		
 		private function onLoadImgComplete(e:Event):void 
 		{
 			try 
 			{
-				var formRatio:Number = avatarMask.width / avatarMask.height;
-				var loaderRatio:Number = loader.width / loader.height;
-				var ratio:Number;
-				Bitmap(loader.content).smoothing = true;
-					
-				if (formRatio > loaderRatio)
-					ratio = avatarMask.width / loader.width;
-				else
-					ratio = avatarMask.height / loader.height;	
-					
-				loader.scaleX = loader.scaleY = ratio;
-				
-				loader.x = (avatarBackground.width - loader.width) / 2; 
-				loader.y = (avatarBackground.height - loader.height) / 2;
-				
-				/*switch (formName) 
+				var formRatio:Number = 96 / 96;
+				var loaderRatio:Number = 0;
+				if (loader.content) 
 				{
-					case Avatar.MY_AVATAR:
-						width = height = 76;
-					break;
-				}*/
-			
-				avatarBackground.addChild(loader);
+					loaderRatio = loader.content.width / loader.content.height;
+				}
+				
+				var ratio:Number;
+				
+				
+				if (formRatio > loaderRatio)
+				{
+					ratio = 96 / int(loader.height);
+				}
+				else
+				{
+					ratio = 96 / int(loader.width);	
+				}
+				
+				if (_bitmap) 
+				{
+					_bitmapData.dispose();
+					
+					removeChild(_bitmap);
+					_bitmap = null;
+				}
+				
+				if (loader.content) 
+				{
+					_bitmapData = new BitmapData(loader.content.width, loader.content.height, true, 0x123456);
+					_bitmapData.draw(loader);
+					_bitmap = new Bitmap(_bitmapData);
+					addChild(_bitmap);
+					trace("con lon nay", _bitmap.width, _bitmap.height)
+					_bitmap.width = _bitmap.width * ratio;
+					_bitmap.height = _bitmap.height * ratio;
+					trace("con lon nay da scale", _bitmap.width, _bitmap.height)
+					_bitmap.smoothing = true;
+					
+					_bitmap.x = (96 - _bitmap.width) / 2 - 10;
+					
+					//_bitmap.alpha = .3;
+				}
 			}
 			catch (err:Error)
 			{

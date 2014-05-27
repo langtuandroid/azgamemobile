@@ -49,7 +49,8 @@ package view.window.shop
 			dispatchEvent(new Event(ConstTlmn.USE_AVATAR));
 		}
 		
-		public function addInfo(idAvt:String, idListAvt:String, nameAvt:String, timeUse:String, linkAvt:String, expire:String):void 
+		public function addInfo(idAvt:String, idListAvt:String, nameAvt:String, timeUse:String, linkAvt:String, 
+									expire:String, idWeb:String):void 
 		{
 			_idAvt = idAvt;
 			_idListAvt = idListAvt;
@@ -75,7 +76,7 @@ package view.window.shop
 			
 			var image:Avatar = new Avatar();
 			content.containerImg.addChild(image);
-			image.addImg(linkAvt);
+			image.addImg(linkAvt + "/WAZ/" + idWeb + ".png");
 			
 		}
 		
