@@ -56,14 +56,35 @@ package view.window.shop
 			_chipAvt = chip;
 			
 			content.itemNameTxt.text = nameAvt;
-			content.itemGoldTxt.text = gold;
-			content.itemChipTxt.text = chip;
+			content.itemGoldTxt.text = format(int(gold));
+			content.itemChipTxt.text = format(int(chip));
 			content.itemLimitTxt.text = expire;
 			
 			var image:Avatar = new Avatar();
 			content.containerImg.addChild(image);
 			image.addImg(linkAvt);
 			
+		}
+		
+		
+		protected function format(number:int):String 
+		{
+			var numString:String = number.toString()
+			var result:String = ''
+
+			while (numString.length > 3)
+			{
+					var chunk:String = numString.substr(-3)
+					numString = numString.substr(0, numString.length - 3)
+					result = ',' + chunk + result
+			}
+
+			if (numString.length > 0)
+			{
+					result = numString + result
+			}
+
+			return result
 		}
 	}
 

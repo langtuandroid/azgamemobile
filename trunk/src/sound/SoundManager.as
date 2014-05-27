@@ -262,7 +262,7 @@
 		
 		private function onLoadSoundIOError(e:IOErrorEvent):void 
 		{
-			
+			trace("load sound lỗi")
 		}
 		
 		public function addSound():void 

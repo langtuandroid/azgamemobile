@@ -3286,7 +3286,17 @@ package view.screen
 			}
 			
 			content.settingBoard.visible = false;
+			content.ipBoard.visible = false;
+			content.ipBoard.nam1Txt.mouseEnabled = false;
+			content.ipBoard.nam2Txt.mouseEnabled = false;
+			content.ipBoard.nam3Txt.mouseEnabled = false;
+			content.ipBoard.nam4Txt.mouseEnabled = false;
+			content.ipBoard.ip1Txt.mouseEnabled = false;
+			content.ipBoard.ip2Txt.mouseEnabled = false;
+			content.ipBoard.ip3Txt.mouseEnabled = false;
+			content.ipBoard.ip4Txt.mouseEnabled = false;
 			content.setChildIndex(content.settingBoard, content.numChildren - 1);
+			content.setChildIndex(content.ipBoard, content.numChildren - 1);
 			content.settingBtn.addEventListener(MouseEvent.CLICK, onShowSettingBoard);
 			
 			content.settingBoard.onSoundEffect.addEventListener(MouseEvent.CLICK, onClickOnOffSoundEffect);
@@ -3314,6 +3324,7 @@ package view.screen
 			if (content.settingBoard.visible) 
 			{
 				content.settingBoard.visible = false;
+				content.ipBoard.visible = false;
 			}
 			else 
 			{
@@ -3363,14 +3374,14 @@ package view.screen
 			if (SoundManager.getInstance().isSoundOn) 
 			{
 				GameDataTLMN.getInstance().playSound = false;
-				content.onSoundEffect.visible = true;
+				content.settingBoard.onSoundEffect.visible = true;
 				SoundManager.getInstance().isSoundOn = false;
 				sharedObject.data.isSoundOff = true;
 			}
 			else 
 			{
 				GameDataTLMN.getInstance().playSound = true;
-				content.onSoundEffect.visible = false;
+				content.settingBoard.onSoundEffect.visible = false;
 				SoundManager.getInstance().isSoundOn = true;
 				sharedObject.data.isSoundOff = false;
 			}
@@ -3426,6 +3437,77 @@ package view.screen
 			if (SoundManager.getInstance().isSoundOn) 
 			{
 				SoundManager.getInstance().playSound(SoundLib.CLICK_BUTTON_SOUND);
+			}
+			if (content.ipBoard.visible) 
+			{
+				content.ipBoard.visible = false;
+			}
+			else 
+			{
+				content.ipBoard.visible = true;
+				
+				getIpAllPlayer();
+			}
+		}
+		
+		
+		private function getIpAllPlayer():void 
+		{
+			content.ipBoard.nam1Txt.visible = false;
+			content.ipBoard.nam2Txt.visible = false;
+			content.ipBoard.nam3Txt.visible = false;
+			content.ipBoard.nam4Txt.visible = false;
+			content.ipBoard.ip1Txt.visible = false;
+			content.ipBoard.ip2Txt.visible = false;
+			content.ipBoard.ip3Txt.visible = false;
+			content.ipBoard.ip4Txt.visible = false;
+			
+			content.ipBoard.nam1Txt.text = "";
+			content.ipBoard.nam2Txt.text = "";
+			content.ipBoard.nam3Txt.text = "";
+			content.ipBoard.nam4Txt.text = "";
+			content.ipBoard.ip1Txt.text = "";
+			content.ipBoard.ip2Txt.text = "";
+			content.ipBoard.ip3Txt.text = "";
+			content.ipBoard.ip4Txt.text = "";
+			
+			content.ipBoard.nam1Txt.visible = true;
+			content.ipBoard.ip1Txt.visible = true;
+			
+			content.ipBoard.nam1Txt.text = _myInfo._displayName;
+			content.ipBoard.ip1Txt.text = _myInfo.myIp;
+				
+			for (var i:int = 1; i < 4; i++) 
+			{
+				if (_arrUserInfo[i - 1]._userName != "" ) 
+				{
+					switch (i) 
+					{
+						case 1:
+							content.ipBoard.nam2Txt.visible = true;
+							content.ipBoard.ip2Txt.visible = true;
+							
+							content.ipBoard.nam2Txt.text = _arrUserInfo[i - 1]._displayName;
+							content.ipBoard.ip2Txt.text = _arrUserInfo[i - 1].userIp;
+						break;
+						case 2:
+							content.ipBoard.nam3Txt.visible = true;
+							content.ipBoard.ip3Txt.visible = true;
+							
+							content.ipBoard.nam3Txt.text = _arrUserInfo[i - 1]._displayName;
+							content.ipBoard.ip3Txt.text = _arrUserInfo[i - 1].userIp;
+						break;
+						case 3:
+							content.ipBoard.nam4Txt.visible = true;
+							content.ipBoard.ip4Txt.visible = true;
+							
+							content.ipBoard.nam4Txt.text = _arrUserInfo[i - 1]._displayName;
+							content.ipBoard.ip4Txt.text = _arrUserInfo[i - 1].userIp;
+						break;
+						default:
+					}
+					
+				}
 			}
 		}
 		

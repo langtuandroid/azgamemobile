@@ -166,6 +166,13 @@ package view
 			shopTabDisable.visible = false;
 			inventoryTabDisable.visible = false;
 			
+			if (_shopWindow) 
+			{
+				_shopWindow.removeAllEvent();
+				removeChild(_shopWindow);
+				_shopWindow = null;
+			}
+			
 			switch (index) 
 			{
 				case 1:

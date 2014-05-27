@@ -91,7 +91,8 @@ package view.screen.play
 		
 		private var _win:Boolean = false;
 		private var _timerVoiceLose:Timer;
-		private var myIp:String = "";
+		public var _displayName:String = "";
+		public var myIp:String = "";
 		
 		public function MyInfoTLMN(playgame:PlayGameScreenTlmn) 
 		{
@@ -944,6 +945,7 @@ package view.screen.play
 			content.addChild(loader);*/
 			
 			content.userName.text = displayName;
+			_displayName = displayName;
 			content.userMoney.text = format(int(money));
 			
 			content.level.txt.text = level;
