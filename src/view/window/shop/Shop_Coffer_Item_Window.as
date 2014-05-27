@@ -438,7 +438,7 @@ package view.window.shop
 		{
 			
 			choosePay = new ChoosePayMoneyType();
-			myContent.addChild(choosePay);
+			windowLayer.openWindow(choosePay);
 			choosePay.showChoose(1);
 			
 			choosePay.addEventListener("agree", onClickBuyGold);
@@ -447,7 +447,7 @@ package view.window.shop
 			
 		}
 		
-		private function onClickBuyGold(e:MouseEvent):void 
+		private function onClickBuyGold(e:Event):void 
 		{
 			
 			var myInfo:MyInfo = new MyInfo();
@@ -541,7 +541,7 @@ package view.window.shop
 		private function onBuyAvatar(e:Event):void 
 		{
 			choosePay = new ChoosePayMoneyType();
-			myContent.addChild(choosePay);
+			windowLayer.openWindow(choosePay);
 			choosePay.showChoose(0);
 			
 			choosePay.addEventListener("agree", onClickBuyAvatar);
@@ -552,7 +552,7 @@ package view.window.shop
 			
 		}
 		
-		private function onClickBuyAvatar(e:MouseEvent):void 
+		private function onClickBuyAvatar(e:Event):void 
 		{
 			
 			var myInfo:MyInfo = new MyInfo();
