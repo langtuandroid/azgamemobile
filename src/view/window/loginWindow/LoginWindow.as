@@ -16,6 +16,7 @@ package view.window.loginWindow
 	import getFacebookInfo.GetFacebookInfo;
 	import model.chooseChannelData.MyInfo;
 	import model.MainData;
+	import model.MyDataTLMN;
 	import request.MainRequest;
 	import view.window.BaseWindow;
 	import view.window.ConfirmWindow;
@@ -416,6 +417,13 @@ package view.window.loginWindow
 			myInfo.id = value.Data["Id"];
 			myInfo.logo = '';
 			myInfo.sex = value.Data["GenderCode"];
+			
+			MyDataTLMN.getInstance().myId = value.Data["Id"];
+			MyDataTLMN.getInstance().myDisplayName = value.Data["Displayname"];
+			MyDataTLMN.getInstance().myMoney[0] = value.Data["Money"];
+			MyDataTLMN.getInstance().myMoney[1] = value.Data["Cash"];
+			MyDataTLMN.getInstance().myAvatar = value.Data["Avatar"];
+			MyDataTLMN.getInstance().sex = value.Data["GenderCode"];
 			
 			/*myInfo.avatar = '';
 			myInfo.money = 100000;

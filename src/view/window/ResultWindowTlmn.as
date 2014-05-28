@@ -44,7 +44,7 @@ package view.window
 			//createShadow();
 			content = new ResultEndGame();
 			addChild(content);
-			
+			content.close.visible = false;
 			content.x = (1024 - content.width) / 2;
 			content.y = (768 - content.height) / 2;
 			//addButton();
@@ -131,8 +131,8 @@ package view.window
 		
 		private function onOutGameClick(e:MouseEvent):void 
 		{
-			onClose(null);
 			dispatchEvent(new Event("out game"));
+			
 		}
 		
 		private function onCoundDownToClose(e:TimerEvent):void 
@@ -240,6 +240,13 @@ package view.window
 			var arrResult:Array = obj[ConstTlmn.PLAYER_LIST];
 			arrResult.sortOn(ConstTlmn.SUB_MONEY, Array.NUMERIC);
 			var count:int = 0;
+			for (i = 0; i < arrUserResult.length; i++) 
+			{
+				trace("setinfowhitewin")
+				trace(i, arrUserResult[i]["user"].myResult.visible)
+				arrUserResult[i]["user"].myResult.visible = false;
+				trace(i, arrUserResult[i]["user"].myResult.visible)
+			}
 			for (i = arrResult.length - 1; i > -1; i--) 
 			{
 				trace("den thang nao duoc ghi ten: ", arrResult[i][ConstTlmn.DISPLAY_NAME])
@@ -365,7 +372,13 @@ package view.window
 			 */
 			if (obj["resultArr"]) 
 			{
-				
+				for (i = 0; i< arrUserResult.length; i++) 
+				{
+					trace("setinfothuong")
+					trace(i, arrUserResult[i]["user"].myResult.visible)
+					arrUserResult[i]["user"].myResult.visible = false;
+					trace(i, arrUserResult[i]["user"].myResult.visible)
+				}
 				arrResult.sortOn(ConstTlmn.SUB_MONEY, Array.NUMERIC);
 				for (i = arrResult.length - 1; i > -1; i--) 
 				{

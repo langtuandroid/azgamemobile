@@ -687,7 +687,7 @@ package view.screen
 				timerDealCard.stop();
 				timerDealCard.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealCard);
 			}
-			
+			canExitGame = true;
 			content.noc.visible = false;
 			
 			if (timerDealcardForme) 
@@ -758,7 +758,7 @@ package view.screen
 					{
 						card = new CardTlmn(arrCardWin[j]);
 						card.x = 42 + 35 * j;
-						card.y = 110;
+						card.y = 70;
 						_containCard.addChild(card);
 						_arrCardDiscard.push(card);
 					}
@@ -771,7 +771,7 @@ package view.screen
 					{
 						card = new CardTlmn(obj[ConstTlmn.PLAYER_LIST][i][ConstTlmn.CARDS][j]);
 						card.x = _myInfo.x + 160 + 35 * j;
-						card.y = _myInfo.y + 130;
+						card.y = _myInfo.y + 30;
 						//card.scaleX = card.scaleY = .75;
 						
 						containerCardResult.addChild(card);
@@ -792,12 +792,13 @@ package view.screen
 			
 			
 			
-			_containCard.x = 270;
-			_containCard.y = 285;
+			_containCard.x = 180;
+			_containCard.y = 155;
 			content.specialCard.gotoAndStop(6);
 			content.specialCard.visible = true;
 			content.whiteWin.gotoAndStop(convertWhiteWin(obj["whiteWinType"]));
 			content.whiteWin.visible = true;
+			//content.whiteWin.x = 390;
 			
 			content.setChildIndex(content.whiteWin, content.numChildren - 1);
 			
@@ -855,7 +856,7 @@ package view.screen
 		
 		private function onResetGame(e:TimerEvent):void 
 		{
-			
+			_isPlaying = false;
 			removeAllDisCard();
 			content.specialCard.visible = false;
 			content.whiteWin.visible = false;
@@ -1176,18 +1177,18 @@ package view.screen
 				if (pos == 0) 
 				{
 					card.rotation = 90;
-					card.x = _arrUserInfo[0].x - 79;
-					card.y = _arrUserInfo[0].y + 5 + (13 - arr.length) * 10 + 10 * i;
+					card.x = _arrUserInfo[0].x - 10;
+					card.y = _arrUserInfo[0].y - 25 + (13 - arr.length) * 10 + 13 * i;
 				}
 				else if (pos == 2)
 				{
 					card.rotation = 90;
 					card.x = _arrUserInfo[2].x + 124;
-					card.y = _arrUserInfo[2].y + 5 + (13 - arr.length) * 10 + 10 * i;
+					card.y = _arrUserInfo[2].y - 25 + (13 - arr.length) * 10 + 13 * i;
 				}
 				else 
 				{
-					card.x = _arrUserInfo[1].x - 165 + (13 - arr.length) * 10 + 10 * i;
+					card.x = _arrUserInfo[1].x - 165 + (13 - arr.length) * 10 + 13 * i;
 					card.y = _arrUserInfo[1].y + 114;
 				}
 			}
@@ -3736,9 +3737,11 @@ package view.screen
 				_contanierCardOutUser = null;
 			}
 			_isPlaying = false;
-			removeAllEvent();
+			
+			dispatchEvent(new Event(ConstTlmn.OUT_ROOM, true));
 			electroServerCommand.joinLobbyRoom();
-			//dispatchEvent(new Event("SignOutGame"));
+			
+			EffectLayer.getInstance().removeAllEffect();
 		}
 		
 		private function masterUnVisible():void 
@@ -4108,9 +4111,7 @@ package view.screen
 		private function addUsersInfo(startGame:Boolean = false):void 
 		{
 			
-			MyDataTLMN.getInstance().myId = _arrUserList[0].userName;
-			MyDataTLMN.getInstance().myDisplayName = _arrUserList[0].displayName;
-			MyDataTLMN.getInstance().myMoney[0] = _arrUserList[0].money;
+			
 			trace("master in adduserinfo: ", GameDataTLMN.getInstance().master , MyDataTLMN.getInstance().myId)
 			trace("master in adduserinfo: ", _arrUserList[0].userName , _arrUserList[0].displayName)
 			var i:int;

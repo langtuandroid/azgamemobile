@@ -1056,6 +1056,7 @@ package view.screen.play
 			TweenMax.killChildTweensOf(this);
 			_clock.removeTween();
 			removeAllCard();
+			_clock.visible = false;
 			/*if (_arrcardDeck && _arrcardDeck.length > 0) 
 			{
 				var lengthArr:int = _arrcardDeck.length;
@@ -1190,7 +1191,7 @@ package view.screen.play
 			}
 			else
 			{
-				
+				showHitCard();
 				showChooseAgainCard();
 			}
 			
@@ -1666,11 +1667,13 @@ package view.screen.play
 				_posNewMouseX = mouseX;
 				if (card.isChoose) 
 				{
-					card.startDrag(false, new Rectangle(_posCardX, card._posCardY - 20, 500, 0));
+					card.startDrag(false, new Rectangle(0, card._posCardY - 20, 
+							((13 - _arrCardInt.length) * _distance) / 2 + _arrCardInt.length * _distance + 60, 0));
 				}
 				else 
 				{
-					card.startDrag(false, new Rectangle(_posCardX, card._posCardY, 500, 0));
+					card.startDrag(false, new Rectangle(0, card._posCardY, 
+							((13 - _arrCardInt.length) * _distance) / 2 + _arrCardInt.length * _distance + 60, 0));
 				}
 				content.cardContainer.setChildIndex(card, content.cardContainer.numChildren - 1);
 				

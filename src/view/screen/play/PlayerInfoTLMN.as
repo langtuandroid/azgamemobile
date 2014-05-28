@@ -97,7 +97,7 @@ package view.screen.play
 				content.iconMaster.x = 0;
 				content.effectMoneySpecial.y = 100;
 				content.numCardRemainTxt.x = 168;
-				content.numCardRemainTxt.y = 177;
+				content.numCardRemainTxt.y = 174;
 				distance = 19.5;
 			}
 			else if (_pos == 1) 
@@ -125,7 +125,7 @@ package view.screen.play
 				content.iconMaster.x = 90;
 				content.effectMoneySpecial.y = 100;
 				content.numCardRemainTxt.x = -37;
-				content.numCardRemainTxt.y = 177;
+				content.numCardRemainTxt.y = 174;
 				distance = 19.5;
 			}
 			
@@ -342,17 +342,17 @@ package view.screen.play
 				{
 					card.rotation = 90;
 					card.x = -96;
-					card.y = 13 + 27 * i;
+					card.y = 13 + 32 * i;
 				}
 				else if (_pos == 2)
 				{
 					card.rotation = 90;
 					card.x = 118;
-					card.y = 13 + 27 * i;
+					card.y = 13 + 32 * i;
 				}
 				else 
 				{
-					card.x = 165 + 30 * i;
+					card.x = 165 + 32 * i;
 					card.y = 130;
 				}
 			}
@@ -1122,6 +1122,7 @@ package view.screen.play
 		{
 			TweenMax.killAll();
 			_clock.removeTween();
+			_clock.visible = false;
 		}
 		
 		public function reset():void 
