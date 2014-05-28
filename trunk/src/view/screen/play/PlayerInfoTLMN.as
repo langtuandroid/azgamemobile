@@ -410,7 +410,17 @@ package view.screen.play
 		public function checkPosClock():void 
 		{
 			_clock.visible = true;
-			_clock.countTime(20);
+			trace("day co phai luot danh dau tien ko: ", GameDataTLMN.getInstance().firstPlayer , _userName)
+			if (GameDataTLMN.getInstance().firstPlayer == _userName) 
+			{
+				_clock.countTime(15);
+				
+			}
+			else 
+			{
+				_clock.countTime(10);
+				
+			}
 		}
 		
 		private function addMoneyEffect():void 

@@ -343,14 +343,15 @@ package view.screen.play
 		public function checkPosClock():void 
 		{
 			trace("day co phai luot danh dau tien ko: ", GameDataTLMN.getInstance().firstPlayer , MyDataTLMN.getInstance().myId)
+			
 			if (GameDataTLMN.getInstance().firstPlayer == MyDataTLMN.getInstance().myId) 
 			{
-				_clock.countTime(10);
+				_clock.countTime(15);
 				showPassTurn();
 			}
 			else 
 			{
-				_clock.countTime(15);
+				_clock.countTime(10);
 				hidePassTurn();
 			}
 			
