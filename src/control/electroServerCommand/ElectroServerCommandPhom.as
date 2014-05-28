@@ -480,7 +480,7 @@ package control.electroServerCommand
 			removeEventForCoreAPI();
 			
 			var closeConnectionWindow:AlertWindow = new AlertWindow();
-			closeConnectionWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onCloseConnectionWindowClose);
+			//closeConnectionWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onCloseConnectionWindowClose);
 			closeConnectionWindow.setNotice(mainData.init.gameDescription.alertSentence.closeConnection);
 			windowLayer.openWindow(closeConnectionWindow);
 		}

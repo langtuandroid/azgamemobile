@@ -210,7 +210,7 @@
 			<closeConnection>Đứt kết nối với server</closeConnection>
 			<connectFail>Kết nối tới server thất bại</connectFail>
 			<removeFriendFail>Bỏ bạn thất bại</removeFriendFail>
-			<loginFail>Đăng nhập thất bại</loginFail>
+			<loginFail>Đăng nhập server game thất bại</loginFail>
 			<pluginNotFound>Plugin not found</pluginNotFound>
 			<joinGameRoomFail>Tham gia phòng chơi thất bại, bạn hãy thử lại xem</joinGameRoomFail>
 			<gameRoomInvalid>Không tồn tại phòng chơi này</gameRoomInvalid>
