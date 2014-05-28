@@ -1254,6 +1254,16 @@ package view.userInfo.playerInfo
 			}
 		}
 		
+		public function hideAllInfo():void
+		{
+			avatar.visible = false;
+			homeIcon.visible = false;
+			level.visible = false;
+			content["levelIcon"].visible = false;
+			playerName.visible = false;
+			money.visible = false;
+		}
+		
 		private function getPointByCardType(cardType:String):Point 
 		{
 			var tempPoint:Point = new Point();

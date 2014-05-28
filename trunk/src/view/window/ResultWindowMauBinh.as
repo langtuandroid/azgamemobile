@@ -229,8 +229,11 @@ package view.window
 						TextField(note[i]).appendText(' (' + "Sập " + String(playerList[i][DataFieldMauBinh.NUMBER_SAP]) + " nhà." + ')');
 				}
 				
-				if (playerList[i][DataFieldMauBinh.OTHER_USER_QUIT])
-					TextField(note[i]).appendText(' (' + "Người chơi khác thoát." + ')');
+				//if (playerList[i][DataFieldMauBinh.OTHER_USER_QUIT])
+					//TextField(note[i]).appendText(' (' + "Người chơi khác thoát." + ')');
+					
+				if (playerList[i][DataFieldMauBinh.QUITERS])
+					TextField(note[i]).appendText(' (' + "Bỏ cuộc" + ')');
 					
 				switch (String(playerList[i][DataFieldMauBinh.WIN_TYPE])) 
 				{

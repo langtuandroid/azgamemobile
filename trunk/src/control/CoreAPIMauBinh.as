@@ -505,6 +505,22 @@ package control
 					var esObjec_PlayerList:Array = e.parameters.getEsObjectArray(DataFieldMauBinh.RESULT);
 					var playerList:Array = new Array();
 					
+					var quiterList:Array = new Array();
+					if (e.parameters.doesPropertyExist(DataFieldMauBinh.QUITERS))
+					{
+						tempArray = e.parameters.getEsObjectArray(DataFieldMauBinh.QUITERS);
+						for (i = 0; i < tempArray.length; i++)
+						{
+							tempObject = new Object();
+							tempObject[DataFieldMauBinh.MONEY] = Number(EsObject(tempArray[i]).getString(DataFieldMauBinh.MONEY));
+							tempObject[DataFieldMauBinh.USER_NAME] = EsObject(tempArray[i]).getString(DataFieldMauBinh.USER_NAME);
+							tempObject[DataFieldMauBinh.DISPLAY_NAME] = EsObject(tempArray[i]).getString(DataFieldMauBinh.DISPLAY_NAME);
+							tempObject[DataFieldMauBinh.TOTAL] = EsObject(tempArray[i]).getInteger(DataFieldMauBinh.TOTAL);
+							tempObject[DataFieldMauBinh.QUITERS] = true;
+							quiterList.push(tempObject);
+						}
+					}
+					
 					if (e.parameters.getBoolean(DataFieldMauBinh.IS_SAP_HAM))
 						gameOverObject[DataFieldMauBinh.IS_SAP_HAM] = true;
 					if (e.parameters.getBoolean(DataFieldMauBinh.IS_SAP_LANG))
@@ -592,10 +608,28 @@ package control
 						playerList.push(tempObject);
 					}
 					gameOverObject[DataFieldMauBinh.PLAYER_LIST] = playerList;
+					gameOverObject[DataFieldMauBinh.QUITERS] = quiterList;
 					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.GAME_OVER, gameOverObject));
 				break;
 				case Command.GAME_OVER_SPECIAL: 
 					gameOverObject = new Object();
+					
+					var quiterList:Array = new Array();
+					if (e.parameters.doesPropertyExist(DataFieldMauBinh.QUITERS))
+					{
+						tempArray = e.parameters.getEsObjectArray(DataFieldMauBinh.QUITERS);
+						for (i = 0; i < tempArray.length; i++)
+						{
+							tempObject = new Object();
+							tempObject[DataFieldMauBinh.MONEY] = Number(EsObject(tempArray[i]).getString(DataFieldMauBinh.MONEY));
+							tempObject[DataFieldMauBinh.USER_NAME] = EsObject(tempArray[i]).getString(DataFieldMauBinh.USER_NAME);
+							tempObject[DataFieldMauBinh.DISPLAY_NAME] = EsObject(tempArray[i]).getString(DataFieldMauBinh.DISPLAY_NAME);
+							tempObject[DataFieldMauBinh.TOTAL] = EsObject(tempArray[i]).getInteger(DataFieldMauBinh.TOTAL);
+							tempObject[DataFieldMauBinh.QUITERS] = true;
+							quiterList.push(tempObject);
+						}
+					}
+					
 					playerList = new Array();
 					playerList[0] = new Object();
 					playerList[0][DataFieldMauBinh.USER_NAME] = e.parameters.getString(DataFieldMauBinh.USER_NAME);
@@ -604,6 +638,7 @@ package control
 					playerList[0][DataFieldMauBinh.MONEY] = 0;
 					playerList[0][DataFieldMauBinh.NO_COMPARE_GROUP] = true;
 					gameOverObject[DataFieldMauBinh.PLAYER_LIST] = playerList;
+					gameOverObject[DataFieldMauBinh.QUITERS] = quiterList;
 					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.GAME_OVER, gameOverObject));
 				break;
 				case Command.UPDATE_ROOM_MASTER: // kết quả trả về của hành động ăn bài
@@ -1027,6 +1062,8 @@ package control
 				switch (e.action) 
 				{
 					case UserVariableUpdateAction.VariableCreated: // tình huống vừa có user khác join vào lobby lần đầu tiên và userVariable được tạo
+						if (!electroServer.managerHelper.userManager.userByName(e.userName))
+							return;
 						var isMe:Boolean = electroServer.managerHelper.userManager.userByName(e.userName).isMe;
 						if (!isMe)
 						{

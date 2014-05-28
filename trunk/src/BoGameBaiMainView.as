@@ -270,6 +270,8 @@ package
 		private function onCloseConnection(e:Event):void 
 		{
 			removePlayingScreen();
+			addLobbyRoomScreen();
+			lobbyRoomScreen.showLoginWindow();
 		}
 		
 		private function onServerKickOut(e:Event):void 

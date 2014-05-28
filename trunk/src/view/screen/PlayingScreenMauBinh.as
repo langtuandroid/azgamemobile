@@ -140,6 +140,7 @@ package view.screen
 		
 		private var _giveUpPlayerArray:Array;
 		private var isGameOver:Boolean = true;
+		private var addMoneyObject:Object;
 		
 		public function PlayingScreenMauBinh() 
 		{
@@ -320,6 +321,7 @@ package view.screen
 		private var timerToCheckTime:Timer;
 		private var bestResult:String;
 		private var haveMauBinh:Boolean;
+		private var destroyPlayerArray:Array;
 		private function setupButton():void 
 		{
 			chatButton = content["chatButton"];
@@ -780,7 +782,7 @@ package view.screen
 				{
 					if (PlayerInfoMauBinh(playingPlayerArray[i]).userName == data[DataFieldMauBinh.USER_NAME])
 					{
-						playingPlayerArray.splice(i, 1);
+						//playingPlayerArray.splice(i, 1);
 					}
 				}
 			}
@@ -801,15 +803,17 @@ package view.screen
 								removeOnePlayer(i, true);
 							else
 								removeOnePlayer(i);
+							for (j = 0; j < allPlayerArray.length; j++) 
+							{
+								if (allPlayerArray[j])
+									countPlayer++;
+							}
+							if (countPlayer < 2)
+								removeCardManager();
+							addMoneyObject[DataFieldMauBinh.TOTAL] += (6 / countPlayer);
+							addMoneyObject[DataFieldMauBinh.MONEY] += (((Number(mainData.playingData.gameRoomData.roomBet) * 6) / countPlayer) * (1 - mainData.fee));
 						}
 					}
-					for (j = 0; j < allPlayerArray.length; j++) 
-					{
-						if (allPlayerArray[j])
-							countPlayer++;
-					}
-					if (countPlayer < 2)
-						removeCardManager();
 				}
 			}
 			else
@@ -1008,6 +1012,10 @@ package view.screen
 		
 		private function listenDealCard(data:Object):void 
 		{
+			addMoneyObject = new Object();
+			addMoneyObject[DataFieldMauBinh.TOTAL] = 0;
+			addMoneyObject[DataFieldMauBinh.MONEY] = 0;
+			
 			isGameOver = false;
 			haveMauBinh = false;
 			giveUpPlayerArray = new Array();
@@ -1019,6 +1027,8 @@ package view.screen
 			var i:int;
 			isPlaying = true;
 			isResetDone = false;
+			
+			destroyPlayerArray = new Array();
 			playingPlayerArray = new Array();
 			for (i = 0; i < allPlayerArray.length; i++)
 			{
@@ -1512,6 +1522,8 @@ package view.screen
 		
 		private function onPlayNormalPlayerSound(e:TimerEvent):void 
 		{
+			if (!stage)
+				return;
 			if (countBinhLungAndMauBinh >= playingPlayerArray.length - 1)
 				return;
 			SoundManager.getInstance().soundManagerMauBinh.playNormalPlayerSound(mainData.chooseChannelData.myInfo.sex, bestResult);
@@ -1858,6 +1870,18 @@ package view.screen
 		private function onShowResultWindow(e:TimerEvent):void 
 		{
 			var playerList:Array = compareGroupData[DataFieldMauBinh.PLAYER_LIST] as Array;
+			var quiterList:Array = compareGroupData[DataFieldMauBinh.QUITERS] as Array;
+			
+			for (var i:int = 0; i < playerList.length; i++) 
+			{
+				if (!playerList[i][DataFieldMauBinh.TOTAL])
+					playerList[i][DataFieldMauBinh.TOTAL] = 0;
+				playerList[i][DataFieldMauBinh.MONEY] += addMoneyObject[DataFieldMauBinh.MONEY];
+				playerList[i][DataFieldMauBinh.TOTAL] += addMoneyObject[DataFieldMauBinh.TOTAL];
+			}
+			
+			playerList = playerList.concat(quiterList);
+			
 			resultWindow = new ResultWindowMauBinh();
 			resultWindow.addEventListener(PlayerInfoMauBinh.EXIT, onExitButtonClick);
 			resultWindow.setInfo(playerList);
@@ -1952,6 +1976,10 @@ package view.screen
 					PlayerInfoMauBinh(allPlayerArray[i]).isFirstClick = true;
 					PlayerInfoMauBinh(allPlayerArray[i]).removeAllCards();
 				}
+			}
+			for (i = 0; i < destroyPlayerArray.length; i++)
+			{
+				PlayerInfoMauBinh(destroyPlayerArray[i]).destroy();
 			}
 			var countPlayer:int = 0;
 			for (var j:int = 0; j < allPlayerArray.length; j++) 
@@ -2168,6 +2196,7 @@ package view.screen
 		
 		public function removeOnePlayer(position:int, isGiveUp:Boolean = false):void // xóa một người chơi
 		{
+			var isPlayingUser:Boolean;
 			for (var i:int = 0; i < allPlayerArray.length; i++) 
 			{
 				if (allPlayerArray[i])
@@ -2182,6 +2211,17 @@ package view.screen
 								{
 									playingPlayerArray.splice(j, 1);
 									j = playingPlayerArray.length + 1;
+								}
+							}
+						}
+						else
+						{
+							for (j = 0; j < playingPlayerArray.length; j++) 
+							{
+								if (PlayerInfoMauBinh(allPlayerArray[i]) == PlayerInfoMauBinh(playingPlayerArray[j]))
+								{
+									PlayerInfoMauBinh(allPlayerArray[i]).hideAllInfo();
+									isPlayingUser = true;
 								}
 							}
 						}
@@ -2207,19 +2247,31 @@ package view.screen
 					case 0:
 						PlayerInfoMauBinh(this[PlayerInfoMauBinh.BELOW_USER]).removeEventListener(PlayerInfoMauBinh.AVATAR_CLICK, onShowContextMenu);
 						PlayerInfoMauBinh(this[PlayerInfoMauBinh.BELOW_USER]).removeEventListener(PlayerInfoMauBinh.UPDATE_THREE_GROUP, onUpdateThreeGroup);
-						PlayerInfoMauBinh(this[PlayerInfoMauBinh.BELOW_USER]).destroy();
+						if (!isPlayingUser)
+							PlayerInfoMauBinh(this[PlayerInfoMauBinh.BELOW_USER]).destroy();
+						else
+							destroyPlayerArray.push(this[PlayerInfoMauBinh.BELOW_USER]);
 					break;
 					case 1:
 						PlayerInfoMauBinh(this[PlayerInfoMauBinh.RIGHT_USER]).removeEventListener(PlayerInfoMauBinh.AVATAR_CLICK, onShowContextMenu);
-						PlayerInfoMauBinh(this[PlayerInfoMauBinh.RIGHT_USER]).destroy();
+						if (!isPlayingUser)
+							PlayerInfoMauBinh(this[PlayerInfoMauBinh.RIGHT_USER]).destroy();
+						else
+							destroyPlayerArray.push(this[PlayerInfoMauBinh.RIGHT_USER]);
 					break;
 					case 2:
 						PlayerInfoMauBinh(this[PlayerInfoMauBinh.ABOVE_USER]).removeEventListener(PlayerInfoMauBinh.AVATAR_CLICK, onShowContextMenu);
-						PlayerInfoMauBinh(this[PlayerInfoMauBinh.ABOVE_USER]).destroy();
+						if (!isPlayingUser)
+							PlayerInfoMauBinh(this[PlayerInfoMauBinh.ABOVE_USER]).destroy();
+						else
+							destroyPlayerArray.push(this[PlayerInfoMauBinh.ABOVE_USER]);
 					break;
 					case 3:
 						PlayerInfoMauBinh(this[PlayerInfoMauBinh.LEFT_USER]).removeEventListener(PlayerInfoMauBinh.AVATAR_CLICK, onShowContextMenu);
-						PlayerInfoMauBinh(this[PlayerInfoMauBinh.LEFT_USER]).destroy();
+						if (!isPlayingUser)
+							PlayerInfoMauBinh(this[PlayerInfoMauBinh.LEFT_USER]).destroy();
+						else
+							destroyPlayerArray.push(this[PlayerInfoMauBinh.LEFT_USER]);
 					break;
 				}
 				

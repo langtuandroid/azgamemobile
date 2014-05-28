@@ -443,6 +443,7 @@ package view.screen
 							channelData.channelId = channelObject[DataFieldMauBinh.CHANNEL_NUM];
 							channelData.channelName = channelObject[DataFieldMauBinh.CHANNEL_NAME];
 							channelData.playerNumber = channelObject[DataFieldMauBinh.USERS_ONLINE];
+							channelData.fee = channelObject[DataFieldMauBinh.DEALER_FEE];
 							channelData.maxPlayer = 200;
 							dataList.push(channelData);
 						}
@@ -473,6 +474,7 @@ package view.screen
 			mainCommand.electroServerCommand.closeConnection();
 			WindowLayer.getInstance().openLoadingWindow();
 			mainCommand.electroServerCommand.startConnect("", channelList.currentChannelData.channelId);
+			mainData.fee = channelList.currentChannelData.fee;
 			channelInfoTxt.text = mainData.gameName + " - " + channelList.currentChannelData.channelName;
 			mainData.playingData.gameRoomData.channelName = channelList.currentChannelData.channelName;
 		}
@@ -677,6 +679,7 @@ package view.screen
 				var channelObject:Object = mainData.chooseChannelData.channelInfoArray[0];
 				WindowLayer.getInstance().openLoadingWindow();
 				mainCommand.electroServerCommand.startConnect("", channelObject[DataFieldMauBinh.CHANNEL_NUM]);
+				mainData.fee = channelObject[DataFieldMauBinh.DEALER_FEE];
 				channelInfoTxt.text = mainData.gameName + " - " + channelObject[DataFieldMauBinh.CHANNEL_NAME];
 				mainData.playingData.gameRoomData.channelName = channelObject[DataFieldMauBinh.CHANNEL_NAME];
 				

@@ -153,6 +153,8 @@ package event
 		public static const BETS: String = "bets";
 		public static const MESSAGE_LIST:String = "messageList";
 		public static const UNREAD_MESSAGE:String = "unreadMessage";
+		public static const QUITERS: String = "quiters";
+		public static const DEALER_FEE:String = "dealer_fee";
 		
 		public function DataFieldMauBinh() 
 		{
