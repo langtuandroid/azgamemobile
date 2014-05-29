@@ -80,6 +80,7 @@ package view.screen.play
 			{
 				_avatar = new Avatar();
 				content.specialAvatar.addChild(_avatar);
+				_avatar.addEventListener("loadError", onLoadAvatarError);
 				_avatar.x = 20;
 				_avatar.y = 25;
 				//content.setChildIndex(_avatar, 0);
@@ -134,6 +135,7 @@ package view.screen.play
 			content.chatde.visible = false;
 			content.nextturn.visible = false;
 			content.effectMoneySpecial.visible = false;
+			content.defaltAvatar.visible = false;
 			//_avatar.addEventListener("onClick", onClickShowContex);
 			//addMoneyEffect();
 			
@@ -146,6 +148,11 @@ package view.screen.play
 			content.inviteBtn.addEventListener(MouseEvent.CLICK, onClickInvite);
 			content.showDetailUser.addEventListener(MouseEvent.CLICK, onClickShowContex);
 			nothing();
+		}
+		
+		private function onLoadAvatarError(e:Event):void 
+		{
+			content.defaltAvatar.visible = true;
 		}
 		
 		private function onShowInfoUser(e:MouseEvent):void 
@@ -856,6 +863,7 @@ package view.screen.play
 			_clock.removeEventListener(Clock.COUNT_TIME_FINISH, onOverTimer);
 			content.showDetailUser.removeEventListener("onClick", onClickShowContex);
 			content.inviteBtn.removeEventListener(MouseEvent.CLICK, onClickInvite);
+			_avatar.addEventListener("loadError", onLoadAvatarError);
 		}
 		
 		public function removeCardDeck(num:int):void 

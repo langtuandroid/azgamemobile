@@ -141,6 +141,7 @@ package view.screen.play
 		private function onIOError(e:IOErrorEvent):void 
 		{
 			trace("BBBBBBBBBBBBBBBB")
+			dispatchEvent(new Event("loadError"));
 		}
 		
 		private function onLoadImgComplete(e:Event):void 
