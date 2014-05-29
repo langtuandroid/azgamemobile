@@ -161,17 +161,17 @@ package view.screen.play
 			
 			if (formRatio > loaderRatio)
 			{
-				ratio = 128 / int(loader.height);
+				ratio = 100 / int(loader.height);
 			}
 			else
 			{
-				ratio = 128 / int(loader.width);	
+				ratio = 100 / int(loader.width);	
 			}
 				
 			loader.scaleX = loader.scaleY = ratio;
 			
-			loader.x = (128 - loader.width) / 2; 
-			loader.y = (128 - loader.height) / 2; 
+			loader.x = (100 - loader.width) / 2; 
+			loader.y = (100 - loader.height) / 2; 
 		}
 		
 		private function onCompleteStartLoader(e:TimerEvent):void 

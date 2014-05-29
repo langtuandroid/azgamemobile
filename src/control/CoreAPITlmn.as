@@ -328,7 +328,7 @@ package control
 					obj["plus"] = arrPlus;
 					obj["sub"] = arrSub;
 					
-					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_MONEY, obj));
+					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_MONEY_SPECIAL, obj));
 				break;
 			}
 		}
@@ -730,7 +730,7 @@ package control
 					obj["plus"] = arrPlus;
 					obj["sub"] = arrSub;
 					
-					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_MONEY, obj));
+					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_MONEY_SPECIAL, obj));
 				break;
 				case "bccGetMoney": //chuyen bai
 					var objGetResult:Object = new Object();

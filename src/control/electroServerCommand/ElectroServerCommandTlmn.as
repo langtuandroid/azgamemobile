@@ -99,6 +99,7 @@ package control.electroServerCommand
 			coreAPI.addEventListener(ElectroServerEventTlmn.COMPARE_GROUP, onCompareGroup); // Đọ chi
 			coreAPI.addEventListener(ElectroServerEventTlmn.WHITE_WIN, onWhiteWin); // Đọ chi
 			coreAPI.addEventListener(ElectroServerEventTlmn.UPDATE_MONEY, onUpdateMoney); // Lắng nghe udpate tiền
+			coreAPI.addEventListener(ElectroServerEventTlmn.UPDATE_MONEY_SPECIAL, onUpdateMoneySpecial); // Lắng nghe udpate tiền
 			
 			coreAPI.addEventListener(ElectroServerEventTlmn.JOIN_LOBBY_ROOM_SUCCESS, onJoinLobbyRoomSuccess); // Lắng nghe join phòng chờ thành công
 			coreAPI.addEventListener(ElectroServerEventTlmn.UPDATE_USER_LIST, onUpdateUserList); // Lắng nghe cập nhật danh sách người chơi trong phòng chờ
@@ -131,6 +132,11 @@ package control.electroServerCommand
 			coreAPI.addEventListener(ElectroServerEventTlmn.NEXTTURN, haveUserNextTurn);
 			
 			coreAPI.addEventListener(ElectroServerEventTlmn.END_ROUND, onEndRound);
+		}
+		
+		private function onUpdateMoneySpecial(e:ElectroServerEventTlmn):void 
+		{
+			callPlayingScreenAction(PlayingScreenActionTlmn.UPDATE_MONEY_SPECIAL, e.data);
 		}
 		
 		private function onEndRound(e:ElectroServerEventTlmn):void 
