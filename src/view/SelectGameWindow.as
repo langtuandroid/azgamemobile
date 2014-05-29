@@ -15,6 +15,7 @@ package view
 	import model.MainData;
 	import request.MainRequest;
 	import sound.SoundManager;
+	import view.itemContainer.ItemContainerYun;
 	import view.userInfo.avatar.Avatar;
 	import view.window.BaseWindow;
 	import view.window.shop.Shop_Coffer_Item_Window;
@@ -35,6 +36,10 @@ package view
 		private var tlmnIcon:Sprite;
 		private var phomIcon:Sprite;
 		private var maubinhIcon:Sprite;
+		private var xitoIcon:Sprite;
+		private var xizachIcon:Sprite;
+		private var pokerIcon:Sprite;
+		private var gameList:Array;
 		private var mainData:MainData = MainData.getInstance();
 		private var eventDispatcher:EventDispatcher;
 		private var gameId:int;
@@ -61,6 +66,7 @@ package view
 		private var levelTxt:TextField;
 		private var money1Txt:TextField;
 		private var money2Txt:TextField;
+		private var gameContainer:ItemContainerYun;
 		
 		public function SelectGameWindow() 
 		{
@@ -69,10 +75,28 @@ package view
 			tlmnIcon = content["tlmnIcon"];
 			phomIcon = content["phomIcon"];
 			maubinhIcon = content["maubinhIcon"];
+			xitoIcon = content["xitoIcon"];
+			xizachIcon = content["xizachIcon"];
+			pokerIcon = content["pokerIcon"];
 			
-			tlmnIcon.addEventListener(MouseEvent.CLICK, onSelectGame);
-			phomIcon.addEventListener(MouseEvent.CLICK, onSelectGame);
-			maubinhIcon.addEventListener(MouseEvent.CLICK, onSelectGame);
+			tlmnIcon.x = tlmnIcon.y = 0;
+			phomIcon.x = phomIcon.y = 0;
+			maubinhIcon.x = maubinhIcon.y = 0;
+			xitoIcon.x = xitoIcon.y = 0;
+			xizachIcon.x = xizachIcon.y = 0;
+			pokerIcon.x = pokerIcon.y = 0;
+			
+			gameList = new Array();
+			gameList.push(tlmnIcon);
+			gameList.push(phomIcon);
+			gameList.push(maubinhIcon);
+			gameList.push(xitoIcon);
+			gameList.push(xizachIcon);
+			gameList.push(pokerIcon);
+			
+			tlmnIcon.addEventListener(MouseEvent.MOUSE_UP, onSelectGame);
+			phomIcon.addEventListener(MouseEvent.MOUSE_UP, onSelectGame);
+			maubinhIcon.addEventListener(MouseEvent.MOUSE_UP, onSelectGame);
 			
 			selectGameTabEnable = content["selectGameTabEnable"];
 			rankTabEnable = content["rankTabEnable"];
@@ -238,6 +262,18 @@ package view
 			}
 			
 			mainData.chooseChannelData.addEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
+			
+			if (!gameContainer)
+			{
+				gameContainer = new ItemContainerYun();
+				gameContainer.x = content["container"].x;
+				gameContainer.y = content["container"].y;
+				addChild(gameContainer);
+				gameContainer.setData(content["container"], 0.5);
+				gameContainer.numberForRow = 3;
+				gameContainer.numberForColumn = 1;
+				gameContainer.itemList = gameList;
+			}
 		}
 		
 		private function onRemovedFromStage(e:Event):void 
@@ -257,7 +293,8 @@ package view
 		
 		private function onSelectGame(e:MouseEvent):void 
 		{
-			//WindowLayer.getInstance().openLoadingWindow();
+			if (gameContainer.getMovingSpeed() > 10 || gameContainer.isDragFar)
+				return;
 			
 			mainData.isFirstJoinLobby = true;
 			mainData.maxPlayer = 4;
