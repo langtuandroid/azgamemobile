@@ -80,7 +80,8 @@ package view.screen.play
 			{
 				_avatar = new Avatar();
 				content.specialAvatar.addChild(_avatar);
-				
+				_avatar.x = 20;
+				_avatar.y = 25;
 				//content.setChildIndex(_avatar, 0);
 				
 			}
@@ -492,14 +493,14 @@ package view.screen.play
 			
 			_money = _money + int(money);
 			content.effectMoneySpecial.text = format(int(money));
-			TweenMax.to(content.effectMoneySpecial, 3, { y: content.effectMoneySpecial.y - 130, onComplete:onCompleteMoneySpecial } );
+			TweenMax.to(content.effectMoneySpecial, 3, { y: content.effectMoneySpecial.y - 50, onComplete:onCompleteMoneySpecial } );
 			//_moneyEffect.showEffect(money);
 		}
 		
 		private function onCompleteMoneySpecial():void 
 		{
 			content.effectMoneySpecial.visible = false;
-			content.effectMoneySpecial.y += 130;
+			content.effectMoneySpecial.y += 50;
 			content.txtMoney.text = format(_money);
 		}
 		

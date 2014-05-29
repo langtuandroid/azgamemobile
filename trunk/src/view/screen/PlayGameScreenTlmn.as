@@ -1183,7 +1183,7 @@ package view.screen
 				else if (pos == 2)
 				{
 					card.rotation = 90;
-					card.x = _arrUserInfo[2].x + 124;
+					card.x = _arrUserInfo[2].x + 150;
 					card.y = _arrUserInfo[2].y - 25 + (13 - arr.length) * 10 + 13 * i;
 				}
 				else 
