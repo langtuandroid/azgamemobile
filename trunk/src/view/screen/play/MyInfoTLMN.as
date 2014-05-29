@@ -118,6 +118,7 @@ package view.screen.play
 			{
 				_avatar = new Avatar();
 				content.specialAvatar.addChild(_avatar);
+				_avatar.addEventListener("loadError", onLoadAvatarError);
 				_avatar.x = 15;
 				_avatar.y = 25;
 				//content.setChildIndex(_avatar, 0);
@@ -133,6 +134,7 @@ package view.screen.play
 			content.readyBtn.visible = false;
 			content.confirmReady.visible = false;
 			content.resultGame.visible = false;
+			content.defaltAvatar.visible = false;
 			
 			content.nextturn.x = 535;
 			content.nextturn.y = -84;
@@ -142,6 +144,11 @@ package view.screen.play
 			
 			buttonForMe();
 			//addMoneyEffect();
+		}
+		
+		private function onLoadAvatarError(e:Event):void 
+		{
+			content.defaltAvatar.visible = true;
 		}
 		
 		public function chatde(win:Boolean):void 
@@ -485,6 +492,7 @@ package view.screen.play
 			content.readyBtn.removeEventListener(MouseEvent.CLICK, onClickready);
 			
 			_clock.removeEventListener(Clock.COUNT_TIME_FINISH, onOverTimer);
+			_avatar.addEventListener("loadError", onLoadAvatarError);
 			
 			if (_timerShowChatde) 
 			{
