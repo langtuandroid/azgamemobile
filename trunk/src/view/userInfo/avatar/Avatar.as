@@ -134,6 +134,7 @@ package view.userInfo.avatar
 		
 		private function onLoadImgComplete(e:Event):void 
 		{
+			avatarBackground.visible = false;
 			try 
 			{
 				var formRatio:Number = 96 / 96;

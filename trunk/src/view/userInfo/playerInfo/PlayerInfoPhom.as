@@ -121,6 +121,7 @@ package view.userInfo.playerInfo
 		private var playCardButton:MobileButton; // Nút đánh bài
 		private var reSelectButton:MobileButton; // Nút chọn lại
 		private var downCardButton:MobileButton; // Nút hạ bài
+		private var downCardButtonDisable:Sprite; // Nút hạ bài
 		private var sendCardButton:MobileButton; // Nút gửi bài
 		private var noticeFullDeckButton:MobileButton; // Nút gửi bài
 		private var buttonArray:Array; // mảng chứa tất cả các nút
@@ -1839,6 +1840,8 @@ package view.userInfo.playerInfo
 			downCardButton = content["downCardButton"];
 			sendCardButton = content["sendCardButton"];
 			noticeFullDeckButton = content["noticeFullDeckButton"];
+			downCardButtonDisable = content["downCardButtonDisable"];
+			downCardButtonDisable.visible = false;
 			
 			buttonArray.push(getCardButton);
 			buttonArray.push(stealCardButton);
@@ -2128,12 +2131,22 @@ package view.userInfo.playerInfo
 			
 			saveDownCardArray = phomLogic.checkDownCard(cardDeck);
 			
+			addChild(downCardButtonDisable);
 			if (saveDownCardArray.length != 0)
+			{
 				downCardButton.enable = true;
+				downCardButtonDisable.visible = false;
+			}
 			else if (cardDeck.length == 0)
+			{
 				downCardButton.enable = true;
+				downCardButtonDisable.visible = false;
+			}
 			else
+			{
 				downCardButton.enable = false;
+				downCardButtonDisable.visible = true;
+			}
 		}
 		
 		private var _isCurrentWinner:Boolean;

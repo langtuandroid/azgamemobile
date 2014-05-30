@@ -1396,7 +1396,7 @@ package view.screen
 							{
 								if(groupResult == '1')
 									groupResult = MauBinhLogic.getInstance().checkMauThau(idArray);
-								p1.y = p1.y + (3 - groupIndex) * 39;
+								//p1.y = p1.y + (3 - groupIndex) * 39;
 								effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT, p1, time, groupNumber);
 								if (countBinhLungAndMauBinh < playingPlayerArray.length - 1)
 									effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, p2,time, 1, groupResult);
@@ -1452,7 +1452,7 @@ package view.screen
 								haveMauBinh = true;
 								mauBinhIndex = groupResult;
 								playerMauBinh = PlayerInfoMauBinh(playingPlayerArray[j]);
-								p1.y = p1.y + (3 - groupIndex) * 39;
+								//p1.y = p1.y + (3 - groupIndex) * 39;
 								if (countBinhLungAndMauBinh < playingPlayerArray.length - 1)
 								{
 									effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT, p1, time * 3, groupNumber);
@@ -1628,7 +1628,7 @@ package view.screen
 								effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT_MAU_BINH, p1, time, groupNumber, PlayerInfoMauBinh.BELOW_USER);
 								if (resultArray[i][DataFieldMauBinh.HE_SO_SAP] > 0)
 									effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, p2, time, 0, '-16');
-								else
+								else if (resultArray[i][DataFieldMauBinh.HE_SO_SAP] < 0)
 									effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, p2, time, 0, '-15');
 							}
 							else
@@ -1636,7 +1636,7 @@ package view.screen
 								effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT_MAU_BINH, p1, time, groupNumber);
 								if (resultArray[i][DataFieldMauBinh.HE_SO_SAP] > 0)
 									effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, p2, time, 1, '-16');
-								else
+								else if (resultArray[i][DataFieldMauBinh.HE_SO_SAP] < 0)
 									effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, p2, time, 1, '-15');
 							}
 						}
@@ -1889,7 +1889,7 @@ package view.screen
 			
 			var resultArray:Array = compareGroupData[DataFieldMauBinh.PLAYER_LIST];
 			
-			for (var i:int = 0; i < resultArray.length; i++) 
+			for (i = 0; i < resultArray.length; i++) 
 			{
 				if (belowUserInfo.userName == resultArray[i][DataFieldMauBinh.USER_NAME])
 				{

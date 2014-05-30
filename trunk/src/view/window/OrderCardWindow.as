@@ -95,8 +95,17 @@ package view.window
 			for (var i:int = 0; i < tempArray1.length; i++) 
 			{
 				tempArray1[i] = int(tempArray1[i]) - 1;
+			}
+			for (i = 0; i < tempArray2.length; i++) 
+			{
 				tempArray2[i] = int(tempArray2[i]) - 1;
+			}
+			for (i = 0; i < tempArray3.length; i++) 
+			{
 				tempArray3[i] = int(tempArray3[i]) - 1;
+			}
+			for (i = 0; i < tempArray4.length; i++) 
+			{
 				tempArray4[i] = int(tempArray4[i]) - 1;
 			}
 			electroServerCommand.orderCard(tempArray1, tempArray2, tempArray3, tempArray4);

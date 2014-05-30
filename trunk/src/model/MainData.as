@@ -33,7 +33,7 @@ package model
 		public var stageHeight:Number = 600;
 		public var maxPlayer:Number = 4; // số người chơi tối đa
 		public var cardNumberToDown:Number = 3; // số lá bài đã đánh thì phải hạ
-		public var resetMatchTime:Number = 8; // Thời gian chờ sau khi kết thúc ván
+		public var resetMatchTime:Number = 0; // Thời gian chờ sau khi kết thúc ván
 		public var fee:Number;
 		
 		public function MainData() 

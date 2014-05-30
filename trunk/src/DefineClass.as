@@ -76,6 +76,9 @@ package
 			zCardManagerPhom;
 			zTimeBar_1_Phom;
 			zSendMessageWindow;
+			zAirFullDeckEffect;
+			zFinishFullDeckEffect;
+			zResultWindowPhom;
 			
 			MyInfoTlmnMc;
 			MyClock;

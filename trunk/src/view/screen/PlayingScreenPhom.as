@@ -312,7 +312,7 @@ package view.screen
 			musicOnButton = settingBoard["musicOnButton"];
 			musicOffButton = settingBoard["musicOffButton"];
 			orderCardButton = content["orderCardButton"];
-			orderCardButton.visible = false;
+			//orderCardButton.visible = false;
 			if (mainData.chooseChannelData.myInfo.name == "truongvu")
 				orderCardButton.visible = true;
 			

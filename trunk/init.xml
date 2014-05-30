@@ -152,7 +152,7 @@
 			<confirmDownCardFinish>Bạn vẫn còn phỏm chưa hạ, bạn có chắc chắn muốn bỏ qua ?</confirmDownCardFinish>
 			<confirmKickOut>Bạn có chắc chắn muốn kick người chơi</confirmKickOut>
 			<confirmSendCardFinish>Bạn vẫn còn bài chưa gửi, bạn có chắc chắn muốn bỏ qua ?</confirmSendCardFinish>
-			<confirmExit>Ván bài chưa kết thúc, nếu thoát ra bạn sẽ bị xử thua, bạn có chắc chắn không?</confirmExit>
+			<confirmExit>Ván chơi chưa kết thúc. Nếu thoát ra bạn sẽ bị xử thua.</confirmExit>
 			<waitOtherPlayer>Chờ người khác vào phòng chơi</waitOtherPlayer>
 			<readyAlert>Bạn có 20s để sẵn sàng</readyAlert>
 			<playWrongCard>Quân bài bạn đánh không hợp lệ</playWrongCard>

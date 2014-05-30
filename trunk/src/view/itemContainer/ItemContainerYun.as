@@ -382,7 +382,6 @@ package view.itemContainer
 		
 		private function calculateMoving():void
 		{
-			trace("cccccccccccccccccc");
 			if (!stage)
 				return;
 			/*if (isStartDrag)

@@ -515,7 +515,8 @@ package control
 							tempObject[DataFieldMauBinh.MONEY] = Number(EsObject(tempArray[i]).getString(DataFieldMauBinh.MONEY));
 							tempObject[DataFieldMauBinh.USER_NAME] = EsObject(tempArray[i]).getString(DataFieldMauBinh.USER_NAME);
 							tempObject[DataFieldMauBinh.DISPLAY_NAME] = EsObject(tempArray[i]).getString(DataFieldMauBinh.DISPLAY_NAME);
-							tempObject[DataFieldMauBinh.TOTAL] = EsObject(tempArray[i]).getInteger(DataFieldMauBinh.TOTAL);
+							tempObject[DataFieldMauBinh.TOTAL] = EsObject(tempArray[i]).getString(DataFieldMauBinh.TOTAL);
+							tempObject[DataFieldMauBinh.TOTAL] = tempObject[DataFieldMauBinh.TOTAL] * -1;
 							tempObject[DataFieldMauBinh.QUITERS] = true;
 							quiterList.push(tempObject);
 						}
@@ -614,7 +615,7 @@ package control
 				case Command.GAME_OVER_SPECIAL: 
 					gameOverObject = new Object();
 					
-					var quiterList:Array = new Array();
+					quiterList = new Array();
 					if (e.parameters.doesPropertyExist(DataFieldMauBinh.QUITERS))
 					{
 						tempArray = e.parameters.getEsObjectArray(DataFieldMauBinh.QUITERS);
@@ -624,7 +625,8 @@ package control
 							tempObject[DataFieldMauBinh.MONEY] = Number(EsObject(tempArray[i]).getString(DataFieldMauBinh.MONEY));
 							tempObject[DataFieldMauBinh.USER_NAME] = EsObject(tempArray[i]).getString(DataFieldMauBinh.USER_NAME);
 							tempObject[DataFieldMauBinh.DISPLAY_NAME] = EsObject(tempArray[i]).getString(DataFieldMauBinh.DISPLAY_NAME);
-							tempObject[DataFieldMauBinh.TOTAL] = EsObject(tempArray[i]).getInteger(DataFieldMauBinh.TOTAL);
+							tempObject[DataFieldMauBinh.TOTAL] = EsObject(tempArray[i]).getString(DataFieldMauBinh.TOTAL);
+							tempObject[DataFieldMauBinh.TOTAL] = tempObject[DataFieldMauBinh.TOTAL] * -1;
 							tempObject[DataFieldMauBinh.QUITERS] = true;
 							quiterList.push(tempObject);
 						}
