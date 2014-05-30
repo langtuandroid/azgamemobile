@@ -156,6 +156,8 @@ package view.screen
 		//private var arrCardSpecial:Array = [];
 		private var _contanierCardOutUser:Sprite;
 		
+		private var _arrRealUser:Array = [];
+		
 		public function PlayGameScreenTlmn() 
 		{
 			addEventListener(Event.ADDED_TO_STAGE, onAddToStage);
@@ -758,7 +760,8 @@ package view.screen
 					{
 						card = new CardTlmn(arrCardWin[j]);
 						card.x = 42 + 35 * j;
-						card.y = 70;
+						card.y = 110;
+						card.scaleX = card.scaleY = .8;
 						_containCard.addChild(card);
 						_arrCardDiscard.push(card);
 					}
@@ -1183,13 +1186,13 @@ package view.screen
 				else if (pos == 2)
 				{
 					card.rotation = 90;
-					card.x = _arrUserInfo[2].x + 150;
+					card.x = _arrUserInfo[2].x + 215;
 					card.y = _arrUserInfo[2].y - 25 + (13 - arr.length) * 10 + 13 * i;
 				}
 				else 
 				{
-					card.x = _arrUserInfo[1].x - 165 + (13 - arr.length) * 10 + 13 * i;
-					card.y = _arrUserInfo[1].y + 114;
+					card.x = _arrUserInfo[1].x - 230 + (13 - arr.length) * 10 + 13 * i;
+					card.y = _arrUserInfo[1].y + 50;
 				}
 			}
 		}
@@ -3039,6 +3042,7 @@ package view.screen
 			_numUser--;
 			checkShowTextNotice();
 			var i:int;
+			var j:int;
 			var outArr:Array = [];
 			if (!_contanierCardOutUser) 
 			{
@@ -3049,10 +3053,14 @@ package view.screen
 			
 			for (i = 0; i < _arrUserList.length; i++) 
 			{
+				
 				if (_arrUserList[i])
 				{
 					if ((_arrUserList[i]).userName == data[DataField.USER_NAME])
+					{
+						
 						_arrUserList.splice(i, 1);
+					}
 				}
 			}
 			trace("co user out room: ", _arrUserList)
@@ -3087,6 +3095,13 @@ package view.screen
 				{
 					if ((_arrUserInfo[i])._userName == data[DataField.USER_NAME])
 					{
+						for (j = 0; j < _arrRealUser.length; j++) 
+						{
+							if (data[DataField.USER_NAME] == _arrRealUser[j]) 
+							{
+								_arrRealUser[j] = "";
+							}
+						}
 						if (_chatBox) 
 						{
 							var str:String = (_arrUserInfo[i])._displayName + " vừa thoát bàn chơi!";
@@ -3140,6 +3155,8 @@ package view.screen
 			content.settingBoard.guideBtn.removeEventListener(MouseEvent.CLICK, onClickGuidGame);
 			
 			content.startGame.removeEventListener(MouseEvent.CLICK, onClickStartGame);
+			
+			_arrRealUser = [];
 			
 			for (var i:int = 0; i < _arrUserInfo.length; i++) 
 			{
@@ -3322,14 +3339,20 @@ package view.screen
 		
 		private function onShowSettingBoard(e:MouseEvent):void 
 		{
-			if (content.settingBoard.visible) 
+			if (!content.settingBoard.visible) 
+			{
+				content.settingBoard.visible = true;
+				content.ipBoard.visible = false;
+			}
+			else if (content.settingBoard.visible && content.ipBoard.visible) 
+			{
+				content.settingBoard.visible = true;
+				content.ipBoard.visible = false;
+			}
+			else if (content.settingBoard.visible && !content.ipBoard.visible) 
 			{
 				content.settingBoard.visible = false;
 				content.ipBoard.visible = false;
-			}
-			else 
-			{
-				content.settingBoard.visible = true;
 			}
 			
 		}
@@ -3376,6 +3399,7 @@ package view.screen
 			{
 				GameDataTLMN.getInstance().playSound = false;
 				content.settingBoard.onSoundEffect.visible = true;
+				content.settingBoard.offSoundEffect.visible = false;
 				SoundManager.getInstance().isSoundOn = false;
 				sharedObject.data.isSoundOff = true;
 			}
@@ -3383,6 +3407,7 @@ package view.screen
 			{
 				GameDataTLMN.getInstance().playSound = true;
 				content.settingBoard.onSoundEffect.visible = false;
+				content.settingBoard.offSoundEffect.visible = true;
 				SoundManager.getInstance().isSoundOn = true;
 				sharedObject.data.isSoundOff = false;
 			}
@@ -3398,6 +3423,7 @@ package view.screen
 			{
 				GameDataTLMN.getInstance().playGameBackGroud = false;
 				content.settingBoard.onMusic.visible = true;
+				content.settingBoard.offMusic.visible = false;
 				SoundManager.getInstance().isMusicOn = false;
 				SoundManager.getInstance().stopMusic(ConstTlmn.MUSIC_BG);
 			}
@@ -3405,6 +3431,7 @@ package view.screen
 			{
 				GameDataTLMN.getInstance().playGameBackGroud = true;
 				content.settingBoard.onMusic.visible = false;
+				content.settingBoard.offMusic.visible = true;
 				
 				/*var rd:int = int(Math.random() * 3);
 				if (rd == 0 ) 
@@ -3865,37 +3892,93 @@ package view.screen
 		
 		private function listenHaveUserJoinRoom(obj:Object):void 
 		{
+			var i:int;
+			var j:int;
+			var obj:Object;
+			var objUser:Object;
 			_numUser++;
-			
-			for (var i:int = 0; i < _arrUserInfo.length; i++) 
+			for (j = 0; j < _arrRealUser.length; j++) 
 			{
-				if (_arrUserInfo[i]._userName == "") 
+				if (_arrRealUser[j] == "") 
 				{
-					if (_chatBox) 
+					_arrRealUser[j] = obj[ConstTlmn.PLAYER_NAME];
+					
+					if (_myInfo.realPos == 0) 
 					{
-						var str:String = obj[DataField.DISPLAY_NAME] + " vừa vào bàn chơi!";
-						_chatBox.addChatSentence(str, "Thông báo", false, false);
+						for (i = 0; i < _arrUserInfo.length; i++) 
+						{
+							if (_arrUserInfo[i]._userName == "") 
+							{
+								
+								_arrUserInfo[i].getInfoPlayer(i + 1, obj[DataField.USER_NAME], obj[DataField.MONEY], obj[DataField.AVATAR], 
+								0, String(obj[DataField.LEVEL]), false, _isPlaying, false,
+								obj[DataField.DISPLAY_NAME], obj[DataField.SEX], obj[DataField.IP]);
+								
+								objUser = new Object();
+								objUser[DataField.USER_NAME] = obj[DataField.USER_NAME];
+								objUser[DataField.POSITION] = i + 1;
+								objUser[DataField.MONEY] = obj[DataField.MONEY];
+								objUser[DataField.AVATAR] = obj[DataField.AVATAR];
+								objUser[DataField.NUM_CARD] = obj[DataField.NUM_CARD];
+								objUser[DataField.LEVEL] = obj[DataField.LEVEL];
+								objUser[DataField.READY] = false;
+								
+								objUser["isMaster"] = false;
+								objUser[DataField.DISPLAY_NAME] = obj[DataField.DISPLAY_NAME];
+								objUser[DataField.SEX] = obj[DataField.SEX];
+								_arrUserList[i + 1] = objUser;
+								/*if (_stageId == 1) 
+								{
+									_arrPlayerInfo[i].alpha = .3;
+								}*/
+								
+								
+								
+								break;
+							}
+						}
 					}
-					_arrUserInfo[i].getInfoPlayer(i + 1, obj[DataField.USER_NAME], obj[DataField.MONEY], obj[DataField.AVATAR], 
-					0, String(obj[DataField.LEVEL]), false, _isPlaying, false,
-					obj[DataField.DISPLAY_NAME], obj[DataField.SEX], obj[DataField.IP]);
+					else 
+					{
+						i = 3 % _myInfo.realPos;
+						if (_arrUserInfo[i]._userName == "") 
+						{
+							
+							_arrUserInfo[i].getInfoPlayer(i + 1, obj[DataField.USER_NAME], obj[DataField.MONEY], obj[DataField.AVATAR], 
+								0, String(obj[DataField.LEVEL]), false, _isPlaying, false,
+								obj[DataField.DISPLAY_NAME], obj[DataField.SEX], obj[DataField.IP]);
+							
+							
+							/*if (_stageId == 1) 
+							{
+								_arrPlayerInfo[i].alpha = .3;
+							}*/
+							objUser = new Object();
+							objUser[DataField.USER_NAME] = obj[DataField.USER_NAME];
+							objUser[DataField.POSITION] = i + 1;
+							objUser[DataField.MONEY] = obj[DataField.MONEY];
+							objUser[DataField.AVATAR] = obj[DataField.AVATAR];
+							objUser[DataField.NUM_CARD] = obj[DataField.NUM_CARD];
+							objUser[DataField.LEVEL] = obj[DataField.LEVEL];
+							objUser[DataField.READY] = false;
+							
+							objUser["isMaster"] = false;
+							objUser[DataField.DISPLAY_NAME] = obj[DataField.DISPLAY_NAME];
+							objUser[DataField.SEX] = obj[DataField.SEX];
+							_arrUserList[i + 1] = objUser;
+						}
+					}
 					
-					var objUser:Object = new Object();
-					objUser[DataField.USER_NAME] = obj[DataField.USER_NAME];
-					objUser[DataField.POSITION] = i + 1;
-					objUser[DataField.MONEY] = obj[DataField.MONEY];
-					objUser[DataField.AVATAR] = obj[DataField.AVATAR];
-					objUser[DataField.NUM_CARD] = obj[DataField.NUM_CARD];
-					objUser[DataField.LEVEL] = obj[DataField.LEVEL];
-					objUser[DataField.READY] = false;
-					
-					objUser["isMaster"] = false;
-					objUser[DataField.DISPLAY_NAME] = obj[DataField.DISPLAY_NAME];
-					objUser[DataField.SEX] = obj[DataField.SEX];
-					_arrUserList[i + 1] = objUser;
 					break;
 				}
 			}
+			
+			if (_chatBox) 
+			{
+				var str:String = obj[DataField.DISPLAY_NAME] + " vừa vào bàn chơi!";
+				_chatBox.addChatSentence(str, "Thông báo", false, false);
+			}
+			
 			checkShowTextNotice();
 		}
 		
@@ -3903,6 +3986,7 @@ package view.screen
 		{
 			//specialAvatar
 			var i:int;
+			var j:int;
 			var count:int = 0;
 			if (GameDataTLMN.getInstance().gameRoomInfo["gameState"] == "waiting") 
 			{
@@ -3915,12 +3999,26 @@ package view.screen
 			}
 			
 			
+			for (i = 0; i < 4; i++) 
+			{
+				_arrRealUser[i] = "";
+				for (j = 0; j < obj.userList.length; j++) 
+				{
+					if (obj.userList[j].position == i)
+					{
+						_arrRealUser[i] = obj.userList[j][ConstTlmn.PLAYER_NAME];
+						
+					}
+				}
+			}
+			
 			for (i = 0; i < obj.userList.length; i++) 
 				{
 					//trace(i, obj.userList[i].userName)
 					if (obj.userList[i].userName == MyDataTLMN.getInstance().myId) 
 					{
 						count = obj.userList[i].position;
+						_myInfo.realPos = count;
 						if (!_myInfo) 
 						{
 							
