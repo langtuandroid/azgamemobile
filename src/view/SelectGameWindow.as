@@ -313,6 +313,7 @@ package view
 					mainData.game_id = 'AZGB_PHOM';
 					mainData.portNumber = 5301;
 					mainData.minBetRate = 1;
+					mainData.resetMatchTime = 6.5;
 				break;
 				case maubinhIcon:
 					gameId = 6;
@@ -320,6 +321,7 @@ package view
 					mainData.game_id = 'AZGB_BINH';
 					mainData.portNumber = 5201;
 					mainData.minBetRate = 10;
+					mainData.resetMatchTime = 8;
 				break;
 				default:
 			}

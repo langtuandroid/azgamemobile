@@ -1005,6 +1005,10 @@ package logic
 		// Tìm phỏm để tự động hạ
 		public function getDeckToAutoDownCard(cardArray:Array):Array
 		{
+			var fullDeckArray:Array = checkFullDeck(cardArray);
+			if (fullDeckArray.length != 0)
+				return fullDeckArray;
+			
 			var tempCardArray:Array = cardArray.concat();
 			var deckArray:Array = countDeck(tempCardArray);
 			

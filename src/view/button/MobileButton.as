@@ -67,7 +67,7 @@ package view.button
 			if (!value)
 				gotoAndStop("disable");
 			else
-				gotoAndStop(1);
+				gotoAndStop(2);
 			mouseEnabled = value;
 		}
 		

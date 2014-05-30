@@ -15,6 +15,7 @@ package view.window
 		public static const CONFIRM:String = "confirm";
 		public static const REJECT:String = "reject";
 		private var confirmButton:SimpleButton;
+		private var closeButton:SimpleButton;
 		private var denyButton:SimpleButton;
 		private var notice:TextField;
 		
@@ -24,6 +25,9 @@ package view.window
 		{
 			addContent("zConfirmWindow");
 			notice = content["notice"];
+			
+			closeButton = content["closeButton"];
+			closeButton.addEventListener(MouseEvent.CLICK, onCloseWindow);
 			
 			confirmButton = content["confirmButton"];
 			denyButton = content["denyButton"];
