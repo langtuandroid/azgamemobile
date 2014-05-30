@@ -72,8 +72,8 @@ package view.screen.play
 			{
 				_clock = new Clock();
 				addChild(_clock);
-				_clock.x = 23;
-				_clock.y = 13;
+				_clock.x = 22;
+				_clock.y = 5;
 				_clock.addEventListener(Clock.COUNT_TIME_FINISH, onOverTimer);
 			}
 			if (!_avatar) 
@@ -601,7 +601,28 @@ package view.screen.play
 		{
 			//_pos = pos;
 			_sex = sex;
-			userIp = ip;
+			
+			var count:int = 0;
+			var i:int = 0;
+			var j:int = 0;
+			var newIp:String = "*.*";
+			for (i = 0; i < ip.length; i++) 
+			{
+				if (ip.charAt(i) == ".") 
+				{
+					count++;
+					if (count == 2) 
+					{
+						for (j = i; j < ip.length; j++) 
+						{
+							newIp += ip.charAt(j);
+						}
+						break;
+					}
+				}
+			}
+			
+			userIp = newIp;
 			content.inviteBtn.visible = false;
 			_isPlaying = userPlaying;
 			ready = userPlaying;

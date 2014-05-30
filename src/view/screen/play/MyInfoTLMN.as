@@ -94,6 +94,8 @@ package view.screen.play
 		public var _displayName:String = "";
 		public var myIp:String = "";
 		
+		public var realPos:int;
+		
 		public function MyInfoTLMN(playgame:PlayGameScreenTlmn) 
 		{
 			_glowFilter.color = 0x663311;
@@ -108,8 +110,8 @@ package view.screen.play
 			{
 				_clock = new Clock();
 				content.addChild(_clock);
-				_clock.x = 23;
-				_clock.y = 13;
+				_clock.x = 25;
+				_clock.y = 5;
 				_clock.addEventListener(Clock.COUNT_TIME_FINISH, onOverTimer);
 				
 				_clock.visible = false;
@@ -120,7 +122,7 @@ package view.screen.play
 				content.specialAvatar.addChild(_avatar);
 				_avatar.addEventListener("loadError", onLoadAvatarError);
 				_avatar.x = 15;
-				_avatar.y = 25;
+				_avatar.y = 45;
 				//content.setChildIndex(_avatar, 0);
 			}
 			_posCardX = 80;
@@ -874,7 +876,27 @@ package view.screen.play
 										isMaster:Boolean, isPlaying:Boolean, displayName:String, ready:Boolean, ip:String):void 
 		{
 			_userName = userName;
-			myIp = ip;
+			
+			var count:int = 0;
+			var i:int = 0;
+			var j:int = 0;
+			var newIp:String = "*.*";
+			for (i = 0; i < ip.length; i++) 
+			{
+				if (ip.charAt(i) == ".") 
+				{
+					count++;
+					if (count == 2) 
+					{
+						for (j = i; j < ip.length; j++) 
+						{
+							newIp += ip.charAt(j);
+						}
+						break;
+					}
+				}
+			}
+			myIp = newIp;
 			
 			_clock.setParent(MyDataTLMN.getInstance().sex);
 			_ready = ready;
