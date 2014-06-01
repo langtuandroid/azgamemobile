@@ -3161,7 +3161,11 @@ package view.screen
 			for (var i:int = 0; i < _arrUserInfo.length; i++) 
 			{
 				_arrUserInfo[i].removeAllEvent();
-				
+				_userInfo.removeEventListener("showInfo", onShowInfo);
+				_userInfo.removeEventListener("kick", onClickKick);
+				_userInfo.removeEventListener("add friend", onAddFriend);
+				_userInfo.removeEventListener("remove friend", onRemoveFriend);
+				_userInfo.removeEventListener(ConstTlmn.INVITE, onClickInvite);
 				_arrUserInfo[i].removeEventListener(ConstTlmn.INVITE, onClickInvite);
 			}
 			
@@ -4170,14 +4174,22 @@ package view.screen
 				
 				//_userInfo.visible = false;
 				_arrUserInfo.push(_userInfo);
+				_userInfo.addEventListener("showInfo", onShowInfo);
 				_userInfo.addEventListener("kick", onClickKick);
 				_userInfo.addEventListener("add friend", onAddFriend);
 				_userInfo.addEventListener("remove friend", onRemoveFriend);
 				_userInfo.addEventListener(ConstTlmn.INVITE, onClickInvite);
+				_userInfo.addcarddeck();
 				//count++;
 			}
 			
 			
+		}
+		
+		private function onShowInfo(e:Event):void 
+		{
+			var user:PlayerInfoTLMN = e.currentTarget as PlayerInfoTLMN;
+			content.setChildIndex(user, content.numChildren - 1);
 		}
 		
 		private function onAddFriend(e:Event):void 

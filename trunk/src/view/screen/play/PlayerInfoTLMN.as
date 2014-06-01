@@ -517,7 +517,7 @@ package view.screen.play
 			{
 				_contextMenu = new ContextMenu();
 				addChild(_contextMenu);
-				
+				dispatchEvent(new Event("showInfo"));
 				_contextMenu.setInfo(content.txtName.text, String(_money), "10", _linkAvatar, false);
 				_contextMenu.addEventListener("kick", onClickKick);
 				_contextMenu.addEventListener("close", onClose);
@@ -574,16 +574,16 @@ package view.screen.play
 			switch (_pos) 
 			{
 				case 0:
-					_contextMenu.x = -154;
-					_contextMenu.y = -168;
+					_contextMenu.x = -216;
+					_contextMenu.y = -89;
 				break;
 				case 1:
-					_contextMenu.x = -271;
-					_contextMenu.y = 11;
+					_contextMenu.x = -325;
+					_contextMenu.y = 0;
 				break;
 				case 2:
-					_contextMenu.x = 4;
-					_contextMenu.y = -167;
+					_contextMenu.x = 135;
+					_contextMenu.y = -100;
 				break;
 				default:
 			}
@@ -939,14 +939,83 @@ package view.screen.play
 			
 			
 		}
-		
+		public function addcarddeck():void 
+		{
+			for (var i:int = 0; i < 13; i++) 
+			{
+				var cardDeck:CardDeck = new CardDeck();
+				cardDeck.scaleX = cardDeck.scaleY = .75;
+				
+				if (_pos == 2) 
+				{
+					//trace("chia bai cho cac info, vị trí là: 2  ", _pos)
+					cardDeck.x = 230
+					cardDeck.y = -96 + distance * i;
+					cardDeck.rotation = 90;
+					/*cardDeck.x = 0;
+						cardDeck.y = 0;*/
+					
+				}
+				else 
+				{
+					
+					if (_pos == 1) 
+					{
+						//trace("chia bai cho cac info, vị trí là: 1 ", _pos)
+						cardDeck.x = -325 + distance * i;
+						cardDeck.y = 15;
+						/*cardDeck.x = 0;
+						cardDeck.y = 0;*/
+					}
+					else
+					{
+						cardDeck.rotation = 90;
+						//trace("chia bai cho cac info, vị trí là:3  ", _pos)
+						cardDeck.x = -15;
+						cardDeck.y = -96 + distance * i;
+						/*cardDeck.x = 0;
+						cardDeck.y = 0;*/
+					}
+					
+					
+				}
+				content.addChild(cardDeck);
+			}
+			
+			/*if (_pos == 2) 
+				{
+					
+					TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: 200, y:-96 + distance * _remainingCard} ], 
+								ease:Back.easeOut, onComplete:onComleteDeal } ); 
+					//TweenMax.to(_arrCardDeck[type], 1, { x:0 * type, y:0} ); 
+					////trace("di chuyen den con , vị trí là:  ", _pos)
+				}
+				else 
+				{
+					if (_pos == 1) 
+					{
+						TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: -305 + distance * _remainingCard, y:15} ], 
+								ease:Back.easeOut, onComplete:onComleteDeal } ); 
+						
+					}
+					else 
+					{
+						TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: -5, y: -96 + distance * _remainingCard} ], 
+								ease:Back.easeOut, onComplete:onComleteDeal} ); 
+						
+					}
+					////trace("di chuyen den con , vị trí là:  ", _pos)
+					
+					//TweenMax.to(_arrCardDeck[type], 1, { x:0 * type, y:0} ); 
+				}*/
+		}
 		private function startDeal(numCard:int):void 
 		{
 			
 			if (numCard < 0) 
 			{
 				var cardDeck:CardDeck = new CardDeck();
-				cardDeck.scaleX = cardDeck.scaleY = .35;
+				cardDeck.scaleX = cardDeck.scaleY = .75;
 				_remainingCard++;
 				
 				if (_pos == 2) 
@@ -1081,7 +1150,7 @@ package view.screen.play
 				if (_pos == 2) 
 				{
 					
-					TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: 200, y:-96 + distance * _remainingCard} ], 
+					TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: 230, y:-96 + distance * _remainingCard} ], 
 								ease:Back.easeOut, onComplete:onComleteDeal } ); 
 					//TweenMax.to(_arrCardDeck[type], 1, { x:0 * type, y:0} ); 
 					////trace("di chuyen den con , vị trí là:  ", _pos)
@@ -1090,13 +1159,13 @@ package view.screen.play
 				{
 					if (_pos == 1) 
 					{
-						TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: -305 + distance * _remainingCard, y:15} ], 
+						TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: -325 + distance * _remainingCard, y:15} ], 
 								ease:Back.easeOut, onComplete:onComleteDeal } ); 
 						
 					}
 					else 
 					{
-						TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: -5, y: -96 + distance * _remainingCard} ], 
+						TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: -10, y: -96 + distance * _remainingCard} ], 
 								ease:Back.easeOut, onComplete:onComleteDeal} ); 
 						
 					}
