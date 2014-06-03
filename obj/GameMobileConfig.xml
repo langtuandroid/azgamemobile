@@ -16,7 +16,7 @@
     </define>
     <define append="true">
       <name>CONFIG::timeStamp</name>
-      <value>'6/2/2014'</value>
+      <value>'6/3/2014'</value>
     </define>
     <define append="true">
       <name>CONFIG::air</name>
@@ -32,43 +32,43 @@
     </define>
     <verbose-stacktraces>true</verbose-stacktraces>
     <source-path append="true">
-      <path-element>D:\ongame\mobileGame\src</path-element>
+      <path-element>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\src</path-element>
       <path-element>C:\Program Files (x86)\FlashDevelop\Library\AS3\classes</path-element>
     </source-path>
     <include-libraries>
-      <library>D:\ongame\mobileGame\lib\baseGUI.swc</library>
-      <library>D:\ongame\mobileGame\lib\chooseChannelScreen.swc</library>
-      <library>D:\ongame\mobileGame\lib\inviteFriendComponent.swc</library>
-      <library>D:\ongame\mobileGame\lib\InvitePlayComponent.swc</library>
-      <library>D:\ongame\mobileGame\lib\lobbyRoomScreen.swc</library>
-      <library>D:\ongame\mobileGame\lib\playingScreenMauBinh.swc</library>
-      <library>D:\ongame\mobileGame\lib\PlayingScreenPhom.swc</library>
-      <library>D:\ongame\mobileGame\lib\playingScreenXito.swc</library>
-      <library>D:\ongame\mobileGame\lib\roomListComponent.swc</library>
-      <library>D:\ongame\mobileGame\lib\selectChannelComponent.swc</library>
-      <library>D:\ongame\mobileGame\lib\userListComponent.swc</library>
-      <library>D:\ongame\mobileGame\lib\MyComboBox.swc</library>
-      <library>D:\ongame\mobileGame\lib\chatBoxLobbyComponent.swc</library>
-      <library>D:\ongame\mobileGame\lib\chatBoxComponent.swc</library>
+      <library>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\baseGUI.swc</library>
+      <library>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\inviteFriendComponent.swc</library>
+      <library>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\InvitePlayComponent.swc</library>
+      <library>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\lobbyRoomScreen.swc</library>
+      <library>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\playingScreenMauBinh.swc</library>
+      <library>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\PlayingScreenPhom.swc</library>
+      <library>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\playingScreenXito.swc</library>
+      <library>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\roomListComponent.swc</library>
+      <library>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\selectChannelComponent.swc</library>
+      <library>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\userListComponent.swc</library>
+      <library>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\MyComboBox.swc</library>
+      <library>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\chatBoxLobbyComponent.swc</library>
+      <library>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\chatBoxComponent.swc</library>
+      <library>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\playingScreenTlmn.swc</library>
+      <library>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\shopItem.swc</library>
     </include-libraries>
     <library-path append="true">
-      <path-element>D:\ongame\mobileGame\lib\analytics_flash.swc</path-element>
-      <path-element>D:\ongame\mobileGame\lib\baseClass.swc</path-element>
-      <path-element>D:\ongame\mobileGame\lib\Electroserver5.swc</path-element>
-      <path-element>D:\ongame\mobileGame\lib\AndroidExtensions.ane</path-element>
-      <path-element>D:\ongame\mobileGame\lib\AndroidUtilsExtension.ane</path-element>
-      <path-element>D:\ongame\mobileGame\lib\FacebookNativeExtension.ane</path-element>
-      <path-element>D:\ongame\mobileGame\lib\IngenNativeExtension.ane</path-element>
-      <path-element>D:\ongame\mobileGame\lib\MSGNativeExtension.ane</path-element>
-      <path-element>D:\ongame\mobileGame\lib\AirFacebook.ane</path-element>
-      <path-element>D:\ongame\mobileGame\lib\com.milkmangames.extensions.GoViral.ane</path-element>
-      <path-element>D:\ongame\mobileGame\lib\playingScreenTlmn.swc</path-element>
-      <path-element>D:\ongame\mobileGame\lib\shopItem.swc</path-element>
-      <path-element>D:\ongame\mobileGame\lib\chatBoxPhomComponent.swc</path-element>
+      <path-element>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\analytics_flash.swc</path-element>
+      <path-element>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\baseClass.swc</path-element>
+      <path-element>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\Electroserver5.swc</path-element>
+      <path-element>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\AndroidExtensions.ane</path-element>
+      <path-element>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\AndroidUtilsExtension.ane</path-element>
+      <path-element>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\FacebookNativeExtension.ane</path-element>
+      <path-element>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\IngenNativeExtension.ane</path-element>
+      <path-element>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\MSGNativeExtension.ane</path-element>
+      <path-element>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\AirFacebook.ane</path-element>
+      <path-element>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\com.milkmangames.extensions.GoViral.ane</path-element>
+      <path-element>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\chatBoxPhomComponent.swc</path-element>
+      <path-element>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\lib\chooseChannelScreen.swc</path-element>
     </library-path>
   </compiler>
   <file-specs>
-    <path-element>D:\ongame\mobileGame\src\BoGameBaiMainView.as</path-element>
+    <path-element>D:\DropBox\azgame\googleSVN\BoGameBaiAZMobile\src\BoGameBaiMainView.as</path-element>
   </file-specs>
   <default-background-color>#FFFFFF</default-background-color>
   <default-frame-rate>30</default-frame-rate>

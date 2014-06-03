@@ -2,6 +2,7 @@ package view.window
 {
 	import control.MainCommand;
 	import fl.controls.TextInput;
+	import flash.display.SimpleButton;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -14,11 +15,11 @@ package view.window
 	 */
 	public class JoinRoomWindow extends BaseWindow 
 	{
-		private var joinRoomButton:MyButton;
-		private var closeButton:MyButton;
+		private var joinRoomButton:SimpleButton;
+		private var closeButton:SimpleButton;
 		
 		private var roomIdInputText:TextField;
-		private var passInputText:TextInput;
+		private var passInputText:TextField;
 		private var roomIdText:TextField;
 		
 		private var _roomId:int;
@@ -31,27 +32,19 @@ package view.window
 		public function JoinRoomWindow() 
 		{
 			addContent("zSearchRoomWindow");
-			zSearchRoomWindow(content).closeButton.addEventListener(MouseEvent.CLICK, onCloseWindow);
-			zSearchRoomWindow(content).joinRoomButton.addEventListener(MouseEvent.CLICK, onJoinRoom);
+			addButton();
 			createInputText();
 		}
 		
 		private function createInputText():void 
 		{
 			roomIdInputText = content["roomIdInputText"];
+			passInputText = content["passInputText"];
 			
-			passInputText = new TextInput();
 			passInputText.displayAsPassword = true;
-			passInputText.x = -29;
-			passInputText.y = -8;
-			addChild(passInputText);
-			passInputText.width = 150;
-			passInputText.height = 18;
-			var textFormat:TextFormat = new TextFormat("Arial", 14, 0xffffff);
-			passInputText.setStyle("textFormat", textFormat);
 			
 			roomIdText = new TextField();
-			roomIdText.defaultTextFormat = new TextFormat("Arial", 14, 0xffffff);
+			roomIdText.defaultTextFormat = new TextFormat("Arial", 12, 0x000000);
 			roomIdText.autoSize = TextFieldAutoSize.LEFT;
 			roomIdText.x = roomIdInputText.x;
 			roomIdText.y = roomIdInputText.y;
@@ -62,10 +55,14 @@ package view.window
 		private function addButton():void 
 		{
 			// tạo nút vào phòng chơi
-			createButton("joinRoomButton", 90, 18, onJoinRoom);
+			//createButton("joinRoomButton", 90, 18, onJoinRoom);
+			joinRoomButton = content["joinRoomButton"];
+			joinRoomButton.addEventListener(MouseEvent.CLICK, onJoinRoom);
 			
 			// tạo nút đóng cửa sổ
-			createButton("closeButton", 90, 18, onCloseWindow);
+			//createButton("closeButton", 90, 18, onCloseWindow);
+			closeButton = content["closeButton"];
+			closeButton.addEventListener(MouseEvent.CLICK, onCloseWindow);
 		}
 		
 		private function createButton(buttonName:String,_width:Number,_height:Number,_function:Function):void

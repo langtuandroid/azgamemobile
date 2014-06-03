@@ -171,6 +171,13 @@ package view.screen
 			ipBoard = content["ipBoard"];
 			ipBoard.addEventListener(MouseEvent.CLICK, onIpBoardClick);
 			ipBoard.visible = false;
+			
+			for (var j:int = 0; j < mainData.systemNoticeList.length; j++) 
+			{
+				var textField:TextField = new TextField();
+				textField.htmlText = mainData.systemNoticeList[j];
+				chatBox.addChatSentence(textField.text, "Thông báo");
+			}
 		}
 		
 		private function onChatBoxBackButtonClick(e:Event):void 
@@ -312,7 +319,7 @@ package view.screen
 			musicOnButton = settingBoard["musicOnButton"];
 			musicOffButton = settingBoard["musicOffButton"];
 			orderCardButton = content["orderCardButton"];
-			//orderCardButton.visible = false;
+			orderCardButton.visible = false;
 			if (mainData.chooseChannelData.myInfo.name == "truongvu")
 				orderCardButton.visible = true;
 			
@@ -1964,15 +1971,20 @@ package view.screen
 			if (!stage)
 				return;
 			
-			var giveUpObject:Dictionary = giveUpPlayerArray[giveUpPlayerArray.length - 1];
-			if (!giveUpObject)
-				return;
-			if (giveUpObject[DataFieldPhom.TIME] == e.currentTarget)
+			for (var i:int = 0; i < giveUpPlayerArray.length; i++) 
 			{
-				if (giveUpObject[DataFieldPhom.POSITION] != 0)
-					invitePlayButtonArray[giveUpObject[DataFieldPhom.POSITION] - 1].visible = true;
-				PlayerInfoPhom(giveUpObject[DataFieldPhom.PLAYER]).destroy();
-				giveUpPlayerArray.pop();
+				var giveUpObject:Dictionary = giveUpPlayerArray[i];
+				if (giveUpObject)
+				{
+					if (giveUpObject[DataFieldPhom.TIME] == e.currentTarget)
+					{
+						if (giveUpObject[DataFieldPhom.POSITION] != 0)
+							invitePlayButtonArray[giveUpObject[DataFieldPhom.POSITION] - 1].visible = true;
+						PlayerInfoPhom(giveUpObject[DataFieldPhom.PLAYER]).destroy();
+						giveUpPlayerArray.splice(i, 1);
+						break;
+					}
+				}
 			}
 		}
 		

@@ -306,6 +306,8 @@ package view
 					mainData.game_id = 'AZGB_TLMN';
 					mainData.gameName = 'TLMN';
 					mainData.portNumber = 5101;
+					if (mainData.isTest)
+						mainData.portNumber = 3101;
 				break;
 				case phomIcon:
 					gameId = 2;
@@ -314,6 +316,8 @@ package view
 					mainData.portNumber = 5301;
 					mainData.minBetRate = 1;
 					mainData.resetMatchTime = 6.5;
+					if (mainData.isTest)
+						mainData.portNumber = 3301;
 				break;
 				case maubinhIcon:
 					gameId = 6;
@@ -322,6 +326,8 @@ package view
 					mainData.portNumber = 5201;
 					mainData.minBetRate = 10;
 					mainData.resetMatchTime = 8;
+					if (mainData.isTest)
+						mainData.portNumber = 3201;
 				break;
 				default:
 			}
@@ -333,22 +339,18 @@ package view
 				case 3:
 					mainData.gameType = MainData.TLMN;
 					mainData.minBetRate = 10;
-					mainData.electroInfo.port = 5501;
 				break;
 				case 2:
 					mainData.gameType = MainData.PHOM;
 					mainData.minBetRate = 1;
-					mainData.electroInfo.port = 8501;
 				break;
 				case 6:
 					mainData.gameType = MainData.MAUBINH;
 					mainData.minBetRate = 10;
-					mainData.electroInfo.port = 8101;
 				break;
 				case 5:
 					mainData.gameType = MainData.XITO;
 					mainData.minBetRate = 20;
-					mainData.electroInfo.port = 8601;
 				break;
 				default:
 			}

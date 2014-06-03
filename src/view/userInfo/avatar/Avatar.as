@@ -104,8 +104,8 @@ package view.userInfo.avatar
 				
 				if (loader)
 				{
-					if (contains(loader))
-						removeChild(loader);
+					if (loader.parent)
+						loader.parent.removeChild(loader);
 				}
 				try 
 				{
@@ -134,52 +134,32 @@ package view.userInfo.avatar
 		
 		private function onLoadImgComplete(e:Event):void 
 		{
-			avatarBackground.visible = false;
 			try 
 			{
-				var formRatio:Number = 96 / 96;
-				var loaderRatio:Number = 0;
-				if (loader.content) 
-				{
-					loaderRatio = loader.content.width / loader.content.height;
-				}
-				
+				var formRatio:Number = avatarMask.width / avatarMask.height;
+				var loaderRatio:Number = loader.width / loader.height;
 				var ratio:Number;
-				
-				
+				Bitmap(loader.content).smoothing = true;
+					
 				if (formRatio > loaderRatio)
-				{
-					ratio = 96 / int(loader.height);
-				}
+					ratio = avatarMask.width / loader.width;
 				else
-				{
-					ratio = 96 / int(loader.width);	
-				}
+					ratio = avatarMask.height / loader.height;	
+					
+				loader.scaleX = loader.scaleY = ratio;
 				
-				if (_bitmap) 
-				{
-					_bitmapData.dispose();
-					
-					removeChild(_bitmap);
-					_bitmap = null;
-				}
+				loader.x = (avatarBackground.width - loader.width) / 2; 
+				loader.y = (avatarBackground.height - loader.height) / 2;
 				
-				if (loader.content) 
+				/*switch (formName) 
 				{
-					_bitmapData = new BitmapData(loader.content.width, loader.content.height, true, 0x123456);
-					_bitmapData.draw(loader);
-					_bitmap = new Bitmap(_bitmapData);
-					addChild(_bitmap);
-					trace("con lon nay", _bitmap.width, _bitmap.height)
-					_bitmap.width = _bitmap.width * ratio;
-					_bitmap.height = _bitmap.height * ratio;
-					trace("con lon nay da scale", _bitmap.width, _bitmap.height)
-					_bitmap.smoothing = true;
-					
-					_bitmap.x = (96 - _bitmap.width) / 2 - 10;
-					
-					//_bitmap.alpha = .3;
-				}
+					case Avatar.MY_AVATAR:
+						width = height = 76;
+					break;
+				}*/
+			
+				avatarBackground.addChild(loader);
+				avatarBackground["avatarDefault"].visible = false;
 			}
 			catch (err:Error)
 			{

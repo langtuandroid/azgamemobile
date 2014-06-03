@@ -16,6 +16,7 @@ package view.screen
 	import sound.SoundManager;
 	import view.channelList.ChannelList;
 	import view.SelectGameWindow;
+	import view.SystemNoticeBar;
 	import view.window.AddFriendWindow;
 	import view.window.BaseWindow;
 	import view.window.loginWindow.LoginWindow;
@@ -103,6 +104,8 @@ package view.screen
 		private var timerToGetChannelInfo:Timer;
 		private var smallButtonMenu:Sprite;
 		private var buttonMenu:Sprite;
+		private var timerToGetSystemNoticeInfo:Timer;
+		private var systemNoticeBar:SystemNoticeBar;
 		
 		public function LobbyRoomScreen() 
 		{
@@ -208,6 +211,21 @@ package view.screen
 			timerToGetChannelInfo = new Timer(4000)
 			timerToGetChannelInfo.addEventListener(TimerEvent.TIMER, onTimerToGetChannelInfo);
 			timerToGetChannelInfo.start();
+			
+			mainCommand.getInfoCommand.getSystemNoticeInfo();
+			if (timerToGetSystemNoticeInfo)
+			{
+				timerToGetSystemNoticeInfo.removeEventListener(TimerEvent.TIMER, onGetSystemNoticeInfo);
+				timerToGetSystemNoticeInfo.stop();
+			}
+			timerToGetSystemNoticeInfo = new Timer(30000);
+			timerToGetSystemNoticeInfo.addEventListener(TimerEvent.TIMER, onGetSystemNoticeInfo);
+			timerToGetSystemNoticeInfo.start();
+		}
+		
+		private function onGetSystemNoticeInfo(e:TimerEvent):void 
+		{
+			mainCommand.getInfoCommand.getSystemNoticeInfo();
 		}
 		
 		private function onTimerToGetChannelInfo(e:TimerEvent):void 
@@ -583,6 +601,14 @@ package view.screen
 			stage.addEventListener(MouseEvent.CLICK, onStageClick);
 			if (mainData.isOnAndroid)
 				NativeApplication.nativeApplication.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown, false, 0, true);
+				
+			if (!systemNoticeBar)
+			{
+				systemNoticeBar = new SystemNoticeBar();
+				systemNoticeBar.x = 120;
+				systemNoticeBar.y = 5;
+				addChild(systemNoticeBar);
+			}
 		}
 		
 		private function onStageClick(e:MouseEvent):void 

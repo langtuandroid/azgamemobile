@@ -1,0 +1,896 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<phomSize>1177945</phomSize>
+	<!--<gameName>TienLenMN</gameName>-->
+	<gameName>tlmn</gameName>
+	<maxCharsChat>140</maxCharsChat>
+	<maxCharsFeedback>500</maxCharsFeedback>
+	<maxCharsInputText>30</maxCharsInputText>
+	<maxCharsRoomName>33</maxCharsRoomName>
+	<ipNumber>183.91.14.52</ipNumber>
+	
+	<swfLoading src="lib/swfList/loadingScreen.swf"/>
+	<swfList size="1230421" > <!--danh sách đường dẫn các file content cần load-->
+		<swfFile src="lib/swfList/background.swf"/>
+		<swfFile src="lib/swfList/chooseChannelScreen.swf" />
+		<swfFile src="lib/swfList/lobbyRoomScreen.swf" />
+		<swfFile src="lib/swfList/playingScreen.swf" />
+		<swfFile src="lib/swfList/baseGUI.swf" />
+		<swfFile src="lib/swfList/faceIcon.swf" />
+	</swfList>
+	
+	<requestLink>
+		<addMoneyLink url="http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_ChargeGoldFree" />
+		<getMessageInfoLink url="http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/GetListChatMessage" />
+		<getAccessTokenLink url="http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/GetAccessTokenDirectly" />
+		<reNewAccessTokenLink url="http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/GetAccessToken" />
+		<sendMessageLink url="http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/SendChatMessage" />
+		<getPersonalInfoLink url="/javajson/user_info/" />
+		<getChannelLink url="http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetServerInfo" />
+	</requestLink>
+	
+	<!--<requestLink>
+		<addMoneyLink url="http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/Azgamebai_ChargeGoldFree" />
+		<getMessageInfoLink url="http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetListChatMessage" />
+		<getAccessTokenLink url="http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetAccessTokenDirectly" />
+		<reNewAccessTokenLink url="http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetAccessToken" />
+		<sendMessageLink url="http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/SendChatMessage" />
+		<getPersonalInfoLink url="/javajson/user_info/" />
+		<getChannelLink url="http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetServerInfo" />
+	</requestLink>-->
+	
+	<gameDescription> <!--Các đoạn text thể hiện nội dung của game, ví dụ tên các button....-->
+		<moneyUnit>Ciao</moneyUnit>
+		<isTurnOnSms>1</isTurnOnSms>
+		<waitingSentence>Hệ thống đang xử lý, bạn vui lòng chờ trong giây lát</waitingSentence>
+		<waitingLoadRoomSentence>Đang cập nhật danh sách bàn chơi ...</waitingLoadRoomSentence>
+		<loginError>Bạn chưa đăng nhập</loginError>
+		<chooseChannelScreen>
+			<addMoney>Nạp Ciao theo cú pháp sau</addMoney>
+			<addMoneyNumber_1>7739</addMoneyNumber_1>
+			<addMoneyNumber_2>8588</addMoneyNumber_2>
+		</chooseChannelScreen>
+		<playingScreen>
+			<arrangeCardTime>90</arrangeCardTime>
+			<showMoneyTime>5</showMoneyTime>
+			<showGroupTime>5</showGroupTime>
+			<hideMauBinhTime>3</hideMauBinhTime>
+			<groupName>
+				<node>Gồm có 1 bộ 4 lá Át</node>
+				<node>Gồm 1 dãy liên tiếp và đồng chất</node>
+				<node>Gồm có 1 bộ 4 lá bài cùng số</node>
+				<node>Gồm có 1 bộ 3 và 1 đôi</node>
+				<node>Gồm 1 bộ các lá bài đồng chất</node>
+				<node>Gồm 1 dãy liên tiếp và không đồng chất</node>
+				<node>Gồm 1 bộ ba</node>
+				<node>Gồm 2 bộ đôi</node>
+				<node>Gồm 1 bộ đôi</node>
+				<node>Gồm 1 bộ không kết hợp gì với nhau</node>
+			</groupName>
+			<groupButtonName>
+				<node>Tứ quý át</node>
+				<node>Thùng phá sảnh</node>
+				<node>Tứ quý</node>
+				<node>Cù lũ</node>
+				<node>Thùng</node>
+				<node>Sảnh</node>
+				<node>Sám cô</node>
+				<node>Thú</node>
+				<node>Độn</node>
+				<node>Mậu thầu</node>
+			</groupButtonName>
+			<specialGroupName>
+				<node>Khi xếp được 13 lá từ 2 đến A và đồng chất. Thắng trắng và được 78 lần cược mỗi người</node>
+				<node>Khi xếp được 13 lá từ 2 đến A và không đồng chất. Thắng trắng và được 39 lần cược mỗi người</node>
+				<node>Khi xếp được 13 lá là chất zô hoặc cơ</node>
+				<node>Khi xếp được 13 lá là chất bích hoặc tép</node>
+				<node>Khi xếp được 12 lá là chất bích hoặc tép, lá còn lại là zô hoặc cơ</node>
+				<node>Khi xếp được 12 lá là chất zô hoặc cơ, lá còn lại là bích hoặc tép</node>
+				<node>Khi xếp được 5 đôi và 1 sám cô ở cả 3 chi. Thắng trắng và được 18 lần cược mỗi người</node>
+				<node>Khi xếp được 6 đôi ở cả 3 chi. Thắng trắng và được 9 lần cược mỗi người</node>
+				<node>Khi xếp được 3 thùng ở cả 3 chi. Thắng trắng và được 9 lần cược mỗi người</node>
+				<node>Khi xếp được 3 sảnh ở cả 3 chi. Thắng trắng và được 9 lần cược mỗi người</node>
+				<node>Có thùng phá sảnh ở chi 1 hoặc 2. Thắng được thêm 5 hoặc 10 lần tiền cược</node>
+				<node>Có tứ quý ở chi 1 hoặc 2. Thắng được thêm 4 hoặc 8 lần tiền cược</node>
+				<node>Có cù lũ ở chi 2. Thắng được thêm 1 lần tiền cược</node>
+				<node>Có sám cô ở chi 3. Thắng được thêm 2 lần cược</node>
+			</specialGroupName>
+			<specialGroupButtonName>
+				<node>Rồng cuốn</node>
+				<node>Sảnh rồng</node>
+				<node>13 đỏ</node>
+				<node>13 đen</node>
+				<node>12 đen 1 đỏ</node>
+				<node>12 đỏ 1 đen</node>
+				<node>Năm đôi một sám</node>
+				<node>Lục phé bôn</node>
+				<node>3 thùng</node>
+				<node>3 sảnh</node>
+				<node>Thùng phá sảnh</node>
+				<node>Tứ quý</node>
+				<node>Cù lũ chi 2</node>
+				<node>Sám cô chi 3</node>
+			</specialGroupButtonName>
+			<accuseWindow>
+				<selectSentence_1>Nói tục</selectSentence_1>
+				<selectSentence_2>Liên tục sao chép cùng một nội dung và gửi lên</selectSentence_2>
+				<selectSentence_3>Có những hành động vô vắn hóa</selectSentence_3>
+				<selectSentence_4>Các lý do khác </selectSentence_4>
+				<accuseButton>Tố cáo</accuseButton>
+				<closeButton>Hủy bỏ</closeButton>
+				<noReason>Bạn chưa chọn lý do tố cáo</noReason>
+				<emptyReason>Bạn chưa điền nội dung cho lý do khác</emptyReason>
+			</accuseWindow>
+			
+			<callButton>THEO</callButton>
+			<raiseButton>TỐ</raiseButton>
+			<allInButton>TỐ TẤT CẢ</allInButton>
+			<raiseDoubleButton>TỐ GẤP ĐÔI</raiseDoubleButton>
+			<raiseQuaterButton>TỐ 1/4</raiseQuaterButton>
+			<raiseHalfButton>TỐ 1/2</raiseHalfButton>
+			<foldButton>ÚP BỎ</foldButton>
+			<checkButton>NHƯỜNG TỐ</checkButton>
+			
+			<arrangeFinishButton>HOÀN THÀNH</arrangeFinishButton>
+			<reArrangeButton>XẾP LẠI BÀI</reArrangeButton>
+			<arrangeButton>SẮP XẾP BÀI</arrangeButton>
+			<getCardButton>BỐC BÀI</getCardButton>
+			<stealCardButton>ĂN BÀI</stealCardButton>
+			<playCardButton>ĐÁNH BÀI</playCardButton>
+			<reSelectButton>CHỌN LẠI</reSelectButton>
+			<downCardButton>HẠ BÀI</downCardButton>
+			<downCardFinishButton>TỰ ĐỘNG HẠ</downCardFinishButton>
+			<sendCardButton>GỬI BÀI</sendCardButton>
+			<sendCardFinishButton>THÔI GỬI</sendCardFinishButton>
+			<passButton>BỎ QUA</passButton>
+			<reSelectCardButton>CHỌN LẠI</reSelectCardButton>
+			<arrangeCardButton>XẾP BÀI</arrangeCardButton>
+			<closeButton>Đóng</closeButton>
+			<denyButton>Từ chối</denyButton>
+			<confirmButton>Đồng ý</confirmButton>
+			<feedButton>Chia sẻ</feedButton>
+			<invitePlayButton>Mời</invitePlayButton>
+			<confirmDownCardFinish>Bạn vẫn còn phỏm chưa hạ, bạn có chắc chắn muốn bỏ qua ?</confirmDownCardFinish>
+			<confirmKickOut>Bạn có chắc chắn muốn kick người chơi</confirmKickOut>
+			<confirmSendCardFinish>Bạn vẫn còn bài chưa gửi, bạn có chắc chắn muốn bỏ qua ?</confirmSendCardFinish>
+			<confirmExit>Ván chơi chưa kết thúc. Nếu thoát ra bạn sẽ bị xử thua.</confirmExit>
+			<waitOtherPlayer>Chờ người khác vào phòng chơi</waitOtherPlayer>
+			<readyAlert>Bạn có 20s để sẵn sàng</readyAlert>
+			<playWrongCard>Quân bài bạn đánh không hợp lệ</playWrongCard>
+			<downCard>Hãy chọn phỏm để hạ, hạ theo từng phỏm một</downCard>
+			<playCard>Hãy click chọn một quân bài để đánh</playCard>
+			<sendCard>Hãy chọn quân bài để gửi, gửi từng quân bài một</sendCard>
+			<kickOutReady>Bạn đã bị đẩy ra khỏi phòng do không ấn sẵn sàng</kickOutReady>
+			<kickOutMoney>Bạn đã bị đẩy ra khỏi phòng do không đủ tiền cược để chơi tiếp</kickOutMoney>
+			<roomMasterKick>Bạn đã bị chủ bàn đuổi ra</roomMasterKick>
+			<userLeaveRoom>đã thoát ra khỏi phòng chơi</userLeaveRoom>
+			<userJoinRoom>vừa vào bàn chơi</userJoinRoom>
+			<roomNameDefault>
+				<node>Làm 1 ván nào!!!</node>
+				<node>Nhẹ nhàng đẩy xe hàng!!!</node>
+				<node>Pro thì nhẩy vô!!!!!!</node>
+				<node>Giải trí tí thôi!!!!!!</node>
+			</roomNameDefault>
+			<sendCardRule>Gửi bài</sendCardRule>
+			<notSendCardRule>Không gửi bài</notSendCardRule>
+			<gaRule>Có gà</gaRule>
+			<notGaRule>Không gà</notGaRule>
+			<potMoneyDes>Tiền gà:</potMoneyDes>
+			<potLevelDes>Cấp độ gà:</potLevelDes>
+			<confirmPlayGa1>Phòng cấp độ gà </confirmPlayGa1>
+			<confirmPlayGa2>, bạn sẽ phải trả </confirmPlayGa2>
+			<confirmPlayGa3> lần số tiền gà tương đương với </confirmPlayGa3>
+			<confirmPlayGa4> để tham gia phòng gà.</confirmPlayGa4>
+			<confirmQuitGa1>vả</confirmQuitGa1>
+			<confirmQuitGa2>tiền gà bạn đã góp trong bàn.</confirmQuitGa2>
+			<confirmQuitGa3>Nếu thoát khỏi bàn bạn sẽ mất</confirmQuitGa3>
+		</playingScreen>
+		<lobbyRoomScreen>
+			<addFriendSentence>gửi lời mời kết bạn</addFriendSentence>
+			<addCiao_1>Bạn đã hết tiền và được hệ thống nạp cho 3.500 ciao, bạn còn</addCiao_1>
+			<addCiao_2>lần nạp tiền nữa.</addCiao_2>
+			<acceptAddFriend>đã chấp nhận lời mời kết bạn</acceptAddFriend>
+			<rejectAddFriend>đã từ chối lời mời kết bạn</rejectAddFriend>
+			<sendAddFriendSuccess>Lời mời kết bạn đã được gửi đi</sendAddFriendSuccess>
+			<removeFriendSuccess>Bỏ kết bạn thành công</removeFriendSuccess>
+			<sendCard>Tái gửi</sendCard>
+			<notSendCard>Không gửi</notSendCard>
+			<createRoomButton>Tạo phòng</createRoomButton>
+			<joinRoomButton>Vào phòng</joinRoomButton>
+			<closeButton>Đóng</closeButton>
+			<feedButton>Chia sẻ</feedButton>
+			<confirmButton>Đồng ý</confirmButton>
+			<fullPlayer>Phòng chơi này hiện đã đầy, bạn không thể vào chơi.</fullPlayer>
+			<emptyRoomList>Hiện tại không có phòng chơi nào</emptyRoomList>
+			<fullRoomList>Tất cả các phòng chơi đều đã đầy</fullRoomList>
+			<notEnoughMoneyToCreate1>Bạn không đủ tiền, bạn phải có số tiền tối thiểu bằng</notEnoughMoneyToCreate1>
+			<notEnoughMoneyToCreate2>lần mức cược</notEnoughMoneyToCreate2>
+			
+		</lobbyRoomScreen>
+		<alertSentence>
+			<closeConnection>Đứt kết nối với server</closeConnection>
+			<connectFail>Kết nối tới server thất bại</connectFail>
+			<removeFriendFail>Bỏ bạn thất bại</removeFriendFail>
+			<loginFail>Đăng nhập server game thất bại</loginFail>
+			<pluginNotFound>Plugin not found</pluginNotFound>
+			<joinGameRoomFail>Tham gia phòng chơi thất bại, bạn hãy thử lại xem</joinGameRoomFail>
+			<gameRoomInvalid>Không tồn tại phòng chơi này</gameRoomInvalid>
+		</alertSentence>
+	</gameDescription>
+	
+	<effect>
+		<time>
+			<moneyEffect>3</moneyEffect>
+			<resultEffect>6</resultEffect>
+		</time>
+	</effect>
+	<playTime>
+		<selectActionTime>20</selectActionTime>
+		<selectOpenCardTime>20</selectOpenCardTime>
+		<playCardTimePhom>20</playCardTimePhom>
+		<playCardTime>15</playCardTime>
+		<downCardTime>15</downCardTime>
+		<sendCardTime>15</sendCardTime>
+		<readyTime>20</readyTime>
+	</playTime>
+	
+	<emoticon>
+		
+	</emoticon>
+	<emoticon2>
+		<child face=":*" className="Kiss" reg=":[*]" />
+		<child face=":-*" className="Kiss" reg=":[-][*]" />
+		
+		<child face=':)&gt;-' className="Victory" reg=':[)][&gt;][\-]' />
+		
+		<child face=":))" className="NormalSmile" reg=":[)][)]" />
+		<child face=":-))" className="NormalSmile" reg=":[-][)][)]" />
+		
+		<child face="O:-)" className="Angel" reg="O[:][-][)]" />
+		<child face="o:-)" className="Angel" reg="o[:][-][)]" />
+		
+		<child face="^:)^" className="Worthy" reg="\^[:][)][\^]" />
+		
+		<child face=":)]" className="Phone" reg=":[)][\]]" />
+		
+		<child face=":-)" className="Smile" reg=":[-][)]" />
+		<child face=":)" className="Smile" reg=":[)]" />
+		
+		<child face=":((" className="Cry" reg=":[(][(]" />
+		<child face=":-((" className="Cry" reg=":[-][(][(]" />
+		
+		<child face=":-(" className="Sad" reg=":[-][(]" />
+		<child face=":(" className="Sad" reg=":[(]" />
+		
+		<child face=";))" className="Hehe" reg=";[)][)]" />
+		
+		<child face=";-)" className="Winking" reg=";[-][)]" />
+		<child face=";)" className="Winking" reg=";[)]" />
+		
+		<child face="\:d/" className="Dancing" reg="\\[:][d][\/]" />
+		<child face="\:D/" className="Dancing" reg="\\[:][D][\/]" />
+		
+		<child face=":-d" className="Grin" reg=":[-][d]" />
+		<child face=":d" className="Grin" reg=":[d]" />
+		<child face=":-D" className="Grin" reg=":[-][D]" />
+		<child face=":D" className="Grin" reg=":[D]" />
+		
+		<child face=";;-)" className="Eyelashes" reg=";[;][-][)]" />
+		<child face=";;)" className="Eyelashes" reg=";[;][)]" />
+		
+		<child face='&gt;:d&lt;' className="Hug" reg="[&gt;][:][d][&lt;]" />
+		<child face='&gt;:D&lt;' className="Hug" reg="[&gt;][:][D][&lt;]" />
+		
+		<child face=":-/" className="Confused" reg=":[-][/]" />
+		
+		<child face="~x(" className="Crazy" reg="~[x][(]" />
+		<child face="~X(" className="Crazy" reg="~[X][(]" />
+		
+		<child face="[-x" className="ShameOnYou" reg="[\[][-][x]" />
+		<child face="[-X" className="ShameOnYou" reg="[\[][-][X]" />
+		
+		<child face=":-x" className="Love" reg=":[-][x]" />
+		<child face=":x" className="Love" reg=":[x]" />
+		<child face=":-X" className="Love" reg=":[-][X]" />
+		<child face=":X" className="Love" reg=":[X]" />
+		
+		<child face=':"&gt;' className="Shy" reg=':["][&gt;]' />
+		
+		<child face=":-*" className="Kiss" reg=":[-][*]" />
+		<child face=":*" className="Kiss" reg=":[*]" />
+		
+		<child face=":-p" className="Tongue" reg=":[-][p]" />
+		<child face=":p" className="Tongue" reg=":[p]" />
+		<child face=":-P" className="Tongue" reg=":[-][P]" />
+		<child face=":P" className="Tongue" reg=":[P]" />
+		
+		<child face=":o)" className="Clown" reg=":[o][)]" />
+		<child face=":O)" className="Clown" reg=":[O][)]" />
+		
+		<child face=":-o" className="Supprised" reg=":[-][o]" />
+		<child face=":o" className="Supprised" reg=":[o]" />
+		<child face=":-O" className="Supprised" reg=":[-][O]" />
+		<child face=":O" className="Supprised" reg=":[O]" />
+		
+		<child face="x-(" className="Angry" reg="x[-][(]" />
+		<child face="x(" className="Angry" reg="x[(]" />
+		<child face="X-(" className="Angry" reg="X[-][(]" />
+		<child face="X(" className="Angry" reg="X[(]" />
+		
+		<child face=":->" className="Smug" reg=":[-][>]" />
+		<child face=":>" className="Smug" reg=":[>]" />
+		
+		<child face="b-)" className="Cool" reg="b[-][)]" />
+		<child face="B-)" className="Cool" reg="B[-][)]" />
+		
+		<child face="#:-s" className="Whew" reg="#[:][-][s]" />
+		<child face="#:-S" className="Whew" reg="#[:][-][S]" />
+		
+		<child face=":-ss" className="Nailbiting" reg=":[-][s][s]" />
+		<child face=":-SS" className="Nailbiting" reg=":[-][S][S]" />
+		<child face=":-sS" className="Nailbiting" reg=":[-][s][S]" />
+		<child face=":-Ss" className="Nailbiting" reg=":[-][S][s]" />
+		
+		<child face=":-s" className="Worrie" reg=":[-][s]" />
+		<child face=":-S" className="Worrie" reg=":[-][S]" />
+		
+		<child face=">:)" className="Satan" reg=">[:][)]" />
+		
+		<child face=":|" className="StraightFace" reg=":[|]" />
+		<child face=":-|" className="StraightFace" reg=":[-][|]" />
+		
+		<child face=":-B" className="Nerd" reg=":[-][B]" />
+		<child face=":-b" className="Nerd" reg=":[-][b]" />
+		
+		<child face="/:)" className="EyeBrow" reg="/[:][)]" />
+		
+		<child face="=;" className="HandTalk" reg="=[;]" />
+		<child face="=))" className="BigSmile" reg="=[)][)]" />
+		
+		<child face="I-)" className="Sleepy" reg="I[-][)]" />
+		<child face="i-)" className="Sleepy" reg="i[-][)]" />
+		
+		<child face="L-)" className="Loser" reg="L[-][)]" />
+		<child face="l-)" className="Loser" reg="l[-][)]" />
+		
+		<child face="8-}" className="Silly" reg="8[-][}]" />
+		
+		<child face="[-(" className="Reject" reg="\[[-][(]" />
+		
+		<child face=":-&amp;" className="Sick" reg=":[-][&amp;]" />
+		<child face=":-$" className="ShutUp" reg=":[-][$]" />
+		
+		<child face="8-|" className="RollingEyes" reg="8[-][|]" />
+		
+		<child face="(-|" className="Yawn" reg="\([-][|]" />
+		
+		<child face="=p~" className="Drooling" reg="=[p][~]" />
+		<child face="=P~" className="Drooling" reg="=[p][~]" />
+		
+		<child face="#-o" className="Regret" reg="#[-][o]" />
+		<child face="#-O" className="Regret" reg="#[-][O]" />
+		
+		<child face="=d&gt;" className="Applause" reg="=[d][&gt;]" />
+		<child face="=D&gt;" className="Applause" reg="=[D][&gt;]" />
+		
+		<child face=":-??" className="Unknow" reg=":[-][?][?]" />
+		
+		<child face=":-?" className="Thinking" reg=":[-][?]" />
+		
+		<child face='b-(' className="Beat" reg='b[-][(]' />
+		<child face='B-(' className="Beat" reg='B[-][(]' />
+		
+		<child face=':-"' className="Whistling" reg=':[-]["]' />
+		
+		<child face="@-)" className="Hynotized" reg="@[-][)]" />
+		
+		<child face=":^o" className="Liar" reg=":[^][o]" />
+		<child face=":^O" className="Liar" reg=":[^][O]" />
+		
+		<child face=":-w" className="Waiting" reg=":[-][w]" />
+		<child face=":-W" className="Waiting" reg=":[-][W]" />
+		
+		<child face="&gt;:p" className="Phbbbt" reg="[&gt;][:][p]" />
+		<child face="&gt;:P" className="Phbbbt" reg="[&gt;][:][P]" />
+		
+		<child face="&gt;:/" className="BringItOn" reg="[&gt;][:][\/]" />
+		
+		<child face=":-&lt;" className="Sigh" reg=":[-][&lt;]" />
+		
+		<child face="&lt;):)" className="Cowboy" reg="[&lt;][)][:][)]" />
+		
+		<child face="&lt;:-P" className="Party" reg="[&lt;][:][-][P]" />
+		<child face="&lt;:-p" className="Party" reg="[&lt;][:][-][p]" />
+		
+		<child face=":-j" className="GoOn" reg=":[-][j]" />
+		<child face=":-J" className="GoOn" reg=":[-][J]" />
+		
+		<child face=":-c" className="CallMe" reg=":[-][c]" />
+		<child face=":-C" className="CallMe" reg=":[-][C]" />
+		
+		<child face=":-h" className="Wave" reg=":[-][h]" />
+		<child face=":-H" className="Wave" reg=":[-][H]" />
+		
+		<child face=":-q" className="ThumbDown" reg=":[-][q]" />
+		<child face=":-Q" className="ThumbDown" reg=":[-][Q]" />
+		
+		<child face="%-(" className="NotListen" reg="%[-][(]" />
+		
+		<child face=":!!" className="HurryUp" reg=":[!][!]" />
+		
+		<child face="8-&gt;" className="Dream" reg="8[\-][&gt;]" />
+		<child face="fuck" className="ThreeDot" reg="fuck" />
+	</emoticon2>
+	
+	<soundMauBinhList>
+		<child>B.M001 (1)</child>
+		<child>B.M001 (2)</child>
+		
+		<child>B.F001 (1)</child>
+		<child>B.F001 (2)</child>
+		
+		<child>B.M002 (1)</child>
+		<child>B.M002 (2)</child>
+		<child>B.M002 (3)</child>
+		<child>B.M002 (4)</child>
+		<child>B.M002 (5)</child>
+		
+		<child>B.F002 (1)</child>
+		<child>B.F002 (2)</child>
+		<child>B.F002 (3)</child>
+		<child>B.F002 (4)</child>
+		<child>B.F002 (5)</child>
+		
+		<child>B.M003 (1)</child>
+		<child>B.M003 (2)</child>
+		<child>B.M003 (3)</child>
+		<child>B.M003 (4)</child>
+		<child>B.M003 (5)</child>
+		
+		<child>B.F003 (1)</child>
+		<child>B.F003 (2)</child>
+		<child>B.F003 (3)</child>
+		<child>B.F003 (4)</child>
+		<child>B.F003 (5)</child>
+		
+		<child>B.M004 (1)</child>
+		<child>B.M004 (2)</child>
+		<child>B.M004 (3)</child>
+		<child>B.M004 (4)</child>
+		<child>B.M004 (5)</child>
+		
+		<child>B.F004 (1)</child>
+		<child>B.F004 (2)</child>
+		<child>B.F004 (3)</child>
+		<child>B.F004 (4)</child>
+		<child>B.F004 (5)</child>
+		
+		<child>B.M005 (1)</child>
+		<child>B.M005 (2)</child>
+		<child>B.M005 (3)</child>
+		<child>B.M005 (4)</child>
+		<child>B.M005 (5)</child>
+		
+		<child>B.F005 (1)</child>
+		<child>B.F005 (2)</child>
+		<child>B.F005 (3)</child>
+		<child>B.F005 (4)</child>
+		<child>B.F005 (5)</child>
+		
+		<child>B.M006 (1)</child>
+		<child>B.M006 (2)</child>
+		<child>B.M006 (3)</child>
+		<child>B.M006 (4)</child>
+		<child>B.M006 (5)</child>
+		
+		<child>B.F006 (1)</child>
+		<child>B.F006 (2)</child>
+		<child>B.F006 (3)</child>
+		<child>B.F006 (4)</child>
+		<child>B.F006 (5)</child>
+		
+		<child>B.M007 (1)</child>
+		<child>B.M007 (2)</child>
+		<child>B.M007 (3)</child>
+		<child>B.M007 (4)</child>
+		<child>B.M007 (5)</child>
+		
+		<child>B.F007 (1)</child>
+		<child>B.F007 (2)</child>
+		<child>B.F007 (3)</child>
+		<child>B.F007 (4)</child>
+		<child>B.F007 (5)</child>
+		
+		<child>B.F008</child>
+		<child>B.F009</child>
+		<child>B.F010</child>
+		<child>B.F011</child>
+		<child>B.F012a</child>
+		
+		<child>B.M008</child>
+		<child>B.M009</child>
+		<child>B.M010</child>
+		<child>B.M011</child>
+		<child>B.M012a</child>
+		
+		<child>B.M013 (1)</child>
+		<child>B.M013 (2)</child>
+		<child>B.M013 (3)</child>
+		<child>B.M013 (4)</child>
+		<child>B.M013 (5)</child>
+		
+		<child>B.F013 (1)</child>
+		<child>B.F013 (2)</child>
+		<child>B.F013 (3)</child>
+		<child>B.F013 (4)</child>
+		<child>B.F013 (5)</child>
+		
+		<child>B.M014 (1)</child>
+		<child>B.M014 (2)</child>
+		<child>B.M014 (3)</child>
+		<child>B.M014 (4)</child>
+		<child>B.M014 (5)</child>
+		
+		<child>B.F014 (1)</child>
+		<child>B.F014 (2)</child>
+		<child>B.F014 (3)</child>
+		<child>B.F014 (4)</child>
+		<child>B.F014 (5)</child>
+		
+		<child>B.M015</child>
+		<child>B.M016</child>
+		<child>B.M017</child>
+		
+		<child>B.F015</child>
+		<child>B.F016</child>
+		<child>B.F017</child>
+		
+		<child>B.M018</child>
+		<child>B.M019</child>
+		<child>B.M020</child>
+		<child>B.M021</child>
+		<child>B.M022</child>
+		<child>B.M023</child>
+		<child>B.M024</child>
+		<child>B.M025</child>
+		<child>B.M026</child>
+		<child>B.M027</child>
+		<child>B.M028</child>
+		<child>B.M029</child>
+		<child>B.M030</child>
+		<child>B.M031</child>
+		<child>B.M032</child>
+		<child>B.M033</child>
+		<child>B.M034</child>
+		<child>B.M035</child>
+		<child>B.M036</child>
+		<child>B.M037</child>
+		<child>B.M038</child>
+		<child>B.M039</child>
+		<child>B.M040</child>
+		
+		<child>B.F018</child>
+		<child>B.F019</child>
+		<child>B.F020</child>
+		<child>B.F021</child>
+		<child>B.F022</child>
+		<child>B.F023</child>
+		<child>B.F024</child>
+		<child>B.F025</child>
+		<child>B.F026</child>
+		<child>B.F027</child>
+		<child>B.F028</child>
+		<child>B.F029</child>
+		<child>B.F030</child>
+		<child>B.F031</child>
+		<child>B.F032</child>
+		<child>B.F033</child>
+		<child>B.F034</child>
+		<child>B.F035</child>
+		<child>B.F036</child>
+		<child>B.F037</child>
+		<child>B.F038</child>
+		<child>B.F039</child>
+		<child>B.F040</child>
+		
+		<child>B.M041 (1)</child>
+		<child>B.M041 (2)</child>
+		<child>B.M041 (3)</child>
+		<child>B.M041 (4)</child>
+		<child>B.M041 (5)</child>
+		
+		<child>B.F041 (1)</child>
+		<child>B.F041 (2)</child>
+		<child>B.F041 (3)</child>
+		<child>B.F041 (4)</child>
+		<child>B.F041 (5)</child>
+		
+		<child>B.M042 (1)</child>
+		<child>B.M042 (2)</child>
+		<child>B.M042 (3)</child>
+		<child>B.M042 (4)</child>
+		<child>B.M042 (5)</child>
+		
+		<child>B.F042 (1)</child>
+		<child>B.F042 (2)</child>
+		<child>B.F042 (3)</child>
+		<child>B.F042 (4)</child>
+		<child>B.F042 (5)</child>
+		
+		<child>B.M043 (1)</child>
+		<child>B.M043 (2)</child>
+		<child>B.M043 (3)</child>
+		<child>B.M043 (4)</child>
+		<child>B.M043 (5)</child>
+		
+		<child>B.F043 (1)</child>
+		<child>B.F043 (2)</child>
+		<child>B.F043 (3)</child>
+		<child>B.F043 (4)</child>
+		<child>B.F043 (5)</child>
+		
+		<child>B.M044 (1)</child>
+		<child>B.M044 (2)</child>
+		<child>B.M044 (3)</child>
+		<child>B.M044 (4)</child>
+		<child>B.M044 (5)</child>
+		
+		<child>B.F044 (1)</child>
+		<child>B.F044 (2)</child>
+		<child>B.F044 (3)</child>
+		<child>B.F044 (4)</child>
+		<child>B.F044 (5)</child>
+	</soundMauBinhList>
+	
+	<soundPhomList>
+		<child>P.M001 (1)</child>
+		<child>P.M001 (2)</child>
+		
+		<child>P.F001 (1)</child>
+		<child>P.F001 (2)</child>
+		
+		<!--<child>P.M002 (1)</child>
+		<child>P.M002 (2)</child>
+		<child>P.M002 (3)</child>
+		<child>P.M002 (4)</child>
+		<child>P.M002 (5)</child>
+		
+		<child>P.F002 (1)</child>
+		<child>P.F002 (2)</child>
+		<child>P.F002 (3)</child>
+		<child>P.F002 (4)</child>
+		<child>P.F002 (5)</child>-->
+		
+		<child>P.M003 (1)</child>
+		<child>P.M003 (2)</child>
+		<child>P.M003 (3)</child>
+		<child>P.M003 (4)</child>
+		<child>P.M003 (5)</child>
+		
+		<child>P.F003 (1)</child>
+		<child>P.F003 (2)</child>
+		<child>P.F003 (3)</child>
+		<child>P.F003 (4)</child>
+		<child>P.F003 (5)</child>
+		
+		<child>P.M004 (1)</child>
+		<child>P.M004 (2)</child>
+		<child>P.M004 (3)</child>
+		<child>P.M004 (4)</child>
+		<child>P.M004 (5)</child>
+		
+		<child>P.F004 (1)</child>
+		<child>P.F004 (2)</child>
+		<child>P.F004 (3)</child>
+		<child>P.F004 (4)</child>
+		<child>P.F004 (5)</child>
+		
+		<child>P.M005 (1)</child>
+		<child>P.M005 (2)</child>
+		<child>P.M005 (3)</child>
+		<child>P.M005 (4)</child>
+		<child>P.M005 (5)</child>
+		
+		<child>P.F005 (1)</child>
+		<child>P.F005 (2)</child>
+		<child>P.F005 (3)</child>
+		<child>P.F005 (4)</child>
+		<child>P.F005 (5)</child>
+		
+		<child>P.M006 (1)</child>
+		<child>P.M006 (2)</child>
+		<child>P.M006 (3)</child>
+		<child>P.M006 (4)</child>
+		<child>P.M006 (5)</child>
+		
+		<child>P.F006 (1)</child>
+		<child>P.F006 (2)</child>
+		<child>P.F006 (3)</child>
+		<child>P.F006 (4)</child>
+		<child>P.F006 (5)</child>
+		
+		<child>P.M007 (1)</child>
+		<child>P.M007 (2)</child>
+		<child>P.M007 (3)</child>
+		<child>P.M007 (4)</child>
+		<child>P.M007 (5)</child>
+		
+		<child>P.F007 (1)</child>
+		<child>P.F007 (2)</child>
+		<child>P.F007 (3)</child>
+		<child>P.F007 (4)</child>
+		<child>P.F007 (5)</child>
+		
+		<child>P.M008 (1)</child>
+		<child>P.M008 (2)</child>
+		<child>P.M008 (3)</child>
+		<child>P.M008 (4)</child>
+		<child>P.M008 (5)</child>
+		
+		<child>P.F008 (1)</child>
+		<child>P.F008 (2)</child>
+		<child>P.F008 (3)</child>
+		<child>P.F008 (4)</child>
+		<child>P.F008 (5)</child>
+		
+		<child>P.M009 (1)</child>
+		<child>P.M009 (2)</child>
+		<child>P.M009 (3)</child>
+		<child>P.M009 (4)</child>
+		<child>P.M009 (5)</child>
+		
+		<child>P.F009 (1)</child>
+		<child>P.F009 (2)</child>
+		<child>P.F009 (3)</child>
+		<child>P.F009 (4)</child>
+		<child>P.F009 (5)</child>
+		
+		<child>P.M010 (1)</child>
+		<child>P.M010 (2)</child>
+		<child>P.M010 (3)</child>
+		<child>P.M010 (4)</child>
+		<child>P.M010 (5)</child>
+		
+		<child>P.F010 (1)</child>
+		<child>P.F010 (2)</child>
+		<child>P.F010 (3)</child>
+		<child>P.F010 (4)</child>
+		<child>P.F010 (5)</child>
+		
+		<child>P.M011 (1)</child>
+		<child>P.M011 (2)</child>
+		<child>P.M011 (3)</child>
+		<child>P.M011 (4)</child>
+		<child>P.M011 (5)</child>
+		
+		<child>P.F011 (1)</child>
+		<child>P.F011 (2)</child>
+		<child>P.F011 (3)</child>
+		<child>P.F011 (4)</child>
+		<child>P.F011 (5)</child>
+		
+		<child>P.M012 (1)</child>
+		<child>P.M012 (2)</child>
+		<child>P.M012 (3)</child>
+		<child>P.M012 (4)</child>
+		<child>P.M012 (5)</child>
+		
+		<child>P.F012 (1)</child>
+		<child>P.F012 (2)</child>
+		<child>P.F012 (3)</child>
+		<child>P.F012 (4)</child>
+		<child>P.F012 (5)</child>
+		
+		<child>P.M013 (1)</child>
+		<child>P.M013 (2)</child>
+		<child>P.M013 (3)</child>
+		<child>P.M013 (4)</child>
+		<child>P.M013 (5)</child>
+		
+		<child>P.F013 (1)</child>
+		<child>P.F013 (2)</child>
+		<child>P.F013 (3)</child>
+		<child>P.F013 (4)</child>
+		<child>P.F013 (5)</child>
+		
+		<child>P.M014 (1)</child>
+		<child>P.M014 (2)</child>
+		<child>P.M014 (3)</child>
+		<child>P.M014 (4)</child>
+		<child>P.M014 (5)</child>
+		
+		<child>P.F014 (1)</child>
+		<child>P.F014 (2)</child>
+		<child>P.F014 (3)</child>
+		<child>P.F014 (4)</child>
+		<child>P.F014 (5)</child>
+		
+		<child>P.M015 (1)</child>
+		<child>P.M015 (2)</child>
+		<child>P.M015 (3)</child>
+		<child>P.M015 (4)</child>
+		<child>P.M015 (5)</child>
+		
+		<child>P.F015 (1)</child>
+		<child>P.F015 (2)</child>
+		<child>P.F015 (3)</child>
+		<child>P.F015 (4)</child>
+		<child>P.F015 (5)</child>
+		
+		<child>P.M016 (1)</child>
+		<child>P.M016 (2)</child>
+		<child>P.M016 (3)</child>
+		<child>P.M016 (4)</child>
+		<child>P.M016 (5)</child>
+		
+		<child>P.F016 (1)</child>
+		<child>P.F016 (2)</child>
+		<child>P.F016 (3)</child>
+		<child>P.F016 (4)</child>
+		<child>P.F016 (5)</child>
+		
+		<child>P.M017 (1)</child>
+		<child>P.M017 (2)</child>
+		<child>P.M017 (3)</child>
+		<child>P.M017 (4)</child>
+		<child>P.M017 (5)</child>
+		
+		<child>P.F017 (1)</child>
+		<child>P.F017 (2)</child>
+		<child>P.F017 (3)</child>
+		<child>P.F017 (4)</child>
+		<child>P.F017 (5)</child>
+		
+		<child>P.M018 (1)</child>
+		<child>P.M018 (2)</child>
+		<child>P.M018 (3)</child>
+		<child>P.M018 (4)</child>
+		<child>P.M018 (5)</child>
+		
+		<child>P.F018 (1)</child>
+		<child>P.F018 (2)</child>
+		<child>P.F018 (3)</child>
+		<child>P.F018 (4)</child>
+		<child>P.F018 (5)</child>
+		
+		<child>P.M019 (1)</child>
+		<child>P.M019 (2)</child>
+		<child>P.M019 (3)</child>
+		<child>P.M019 (4)</child>
+		<child>P.M019 (5)</child>
+		
+		<child>P.F019 (1)</child>
+		<child>P.F019 (2)</child>
+		<child>P.F019 (3)</child>
+		<child>P.F019 (4)</child>
+		<child>P.F019 (5)</child>
+		
+		<!--<child>P.M020 (1)</child>
+		<child>P.M020 (2)</child>
+		<child>P.M020 (3)</child>
+		<child>P.M020 (4)</child>
+		<child>P.M020 (5)</child>
+		
+		<child>P.F020 (1)</child>
+		<child>P.F020 (2)</child>
+		<child>P.F020 (3)</child>
+		<child>P.F020 (4)</child>
+		<child>P.F020 (5)</child>-->
+	</soundPhomList>
+	
+	<soundChungList>
+		<child>GB002</child>
+		<child>GB003</child>
+		<child>GB004</child>
+		<child>GB005</child>
+		<child>GB006</child>
+		<child>GB007</child>
+		<child>GB008</child>
+		<child>GB009</child>
+		<child>GB010</child>
+		<child>GB011</child>
+		<child>GB012</child>
+		<child>GB013</child>
+		<child>GB017</child>
+	</soundChungList>
+</data>

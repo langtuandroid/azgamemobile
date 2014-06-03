@@ -200,6 +200,13 @@ package view.screen
 			ipBoard.visible = false;
 			
 			//addPlayer();
+			
+			for (var j:int = 0; j < mainData.systemNoticeList.length; j++) 
+			{
+				var textField:TextField = new TextField();
+				textField.htmlText = mainData.systemNoticeList[j];
+				chatBox.addChatSentence(textField.text, "Thông báo");
+			}
 		}
 		
 		private function onChatBoxBackButtonClick(e:Event):void 
@@ -336,6 +343,8 @@ package view.screen
 			musicOffButton = settingBoard["musicOffButton"];
 			orderCardButton = content["orderCardButton"];
 			orderCardButton.visible = false;
+			if (mainData.chooseChannelData.myInfo.name == "zhaolong296")
+				orderCardButton.visible = true;
 			if (mainData.chooseChannelData.myInfo.name == "truongvu")
 				orderCardButton.visible = true;
 			
@@ -585,6 +594,13 @@ package view.screen
 				timerToCheckTime.stop();
 			}
 			
+			if (timerToResetMatch)
+			{
+				timerToResetMatch.removeEventListener(TimerEvent.TIMER_COMPLETE, onResetMatch);
+				timerToResetMatch.stop();
+				timerToResetMatch = null;
+			}
+			
 			stage.removeEventListener(MouseEvent.CLICK, onStageClick);
 			removeEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 			if (timerToPing)
@@ -766,8 +782,8 @@ package view.screen
 		
 		private function listenHaveUserRespondIsCompareGroup(data:Object):void
 		{
-			if (!data[DataFieldMauBinh.IS_COMPARE_GROUP])
-				showReadyButton();
+			//if (!data[DataFieldMauBinh.IS_COMPARE_GROUP])
+				//showReadyButton();
 		}
 		
 		private function listenHaveUserOutRoom(data:Object):void 
@@ -810,8 +826,11 @@ package view.screen
 							}
 							if (countPlayer < 2)
 								removeCardManager();
-							addMoneyObject[DataFieldMauBinh.TOTAL] += (6 / countPlayer);
-							addMoneyObject[DataFieldMauBinh.MONEY] += (((Number(mainData.playingData.gameRoomData.roomBet) * 6) / countPlayer) * (1 - mainData.fee));
+							if (addMoneyObject)
+							{
+								addMoneyObject[DataFieldMauBinh.TOTAL] += (6);
+								addMoneyObject[DataFieldMauBinh.MONEY] += (((Number(mainData.playingData.gameRoomData.roomBet) * 6)) * (1 - mainData.fee));
+							}
 						}
 					}
 				}
@@ -907,17 +926,18 @@ package view.screen
 			{
 				if (allPlayerArray.length > 1)
 				{
+					showReadyButton();
 					var esObject:EsObject = new EsObject();
 					esObject.setString(DataFieldMauBinh.USER_NAME, mainData.chooseChannelData.myInfo.uId);
 					var isCompareGroup:Boolean;
-					for (var j:int = 0; j < allPlayerArray.length; j++) 
+					/*for (var j:int = 0; j < allPlayerArray.length; j++) 
 					{
 						if (allPlayerArray[j])
 						{
 							if (PlayerInfoMauBinh(allPlayerArray[j]).unLeaveCards && PlayerInfoMauBinh(allPlayerArray[j]).userName != mainData.chooseChannelData.myInfo.uId)
 								electroServerCommand.sendPrivateMessage([PlayerInfoMauBinh(allPlayerArray[j]).userName], Command.REQUEST_IS_COMPARE_GROUP, esObject);
 						}
-					}
+					}*/
 				}
 			}
 			else // Nếu phòng chơi đang chơi
@@ -1209,16 +1229,17 @@ package view.screen
 			// Nếu không đủ tiền để chơi ván mới
 			if (mainData.chooseChannelData.myInfo.money < Number(mainData.playingData.gameRoomData.roomBet))
 			{
-				if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
-				{
-					var kickOutWindow:AlertWindow = new AlertWindow();
-					kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
-					windowLayer.openWindow(kickOutWindow);
-				}
-				
 				dispatchEvent(new Event(PlayerInfoMauBinh.EXIT));
 				windowLayer.isNoCloseAll = true;
 				electroServerCommand.joinLobbyRoom();
+				
+				if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
+				{
+					var kickOutWindow:AlertWindow = new AlertWindow();
+					kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
+					kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
+					windowLayer.openWindow(kickOutWindow);
+				}
 				
 				EffectLayer.getInstance().removeAllEffect();
 			}
@@ -1504,6 +1525,8 @@ package view.screen
 				
 			if (haveMauBinh)
 			{
+				if (countBinhLungAndMauBinh < playingPlayerArray.length - 1 && groupIndex != 1)
+					return;
 				SoundManager.getInstance().playSound(SoundLibChung.SPECIAL_SOUND);
 				
 				time = mainData.init.gameDescription.playingScreen.hideMauBinhTime;
@@ -1625,7 +1648,8 @@ package view.screen
 							
 							if (PlayerInfoMauBinh(playingPlayerArray[j]) == belowUserInfo)
 							{
-								effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT_MAU_BINH, p1, time, groupNumber, PlayerInfoMauBinh.BELOW_USER);
+								if (resultArray[i][DataFieldMauBinh.SAP_HAM] || resultArray[i][DataFieldMauBinh.BAT_SAP_HAM])
+									effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT_MAU_BINH, p1, time, groupNumber, PlayerInfoMauBinh.BELOW_USER);
 								if (resultArray[i][DataFieldMauBinh.HE_SO_SAP] > 0)
 									effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, p2, time, 0, '-16');
 								else if (resultArray[i][DataFieldMauBinh.HE_SO_SAP] < 0)
@@ -1633,7 +1657,8 @@ package view.screen
 							}
 							else
 							{
-								effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT_MAU_BINH, p1, time, groupNumber);
+								if (resultArray[i][DataFieldMauBinh.SAP_HAM] || resultArray[i][DataFieldMauBinh.BAT_SAP_HAM])
+									effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT_MAU_BINH, p1, time, groupNumber);
 								if (resultArray[i][DataFieldMauBinh.HE_SO_SAP] > 0)
 									effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, p2, time, 1, '-16');
 								else if (resultArray[i][DataFieldMauBinh.HE_SO_SAP] < 0)
@@ -1837,6 +1862,8 @@ package view.screen
 			resultArray.sortOn(DataFieldMauBinh.TOTAL, Array.NUMERIC);
 			resultArray.reverse();
 			
+			if (!playingPlayerArray)
+				return;
 			for (var i:int = 0; i < resultArray.length; i++) 
 			{
 				for (var j:int = 0; j < playingPlayerArray.length; j++) 
@@ -1876,8 +1903,11 @@ package view.screen
 			{
 				if (!playerList[i][DataFieldMauBinh.TOTAL])
 					playerList[i][DataFieldMauBinh.TOTAL] = 0;
-				playerList[i][DataFieldMauBinh.MONEY] += addMoneyObject[DataFieldMauBinh.MONEY];
-				playerList[i][DataFieldMauBinh.TOTAL] += addMoneyObject[DataFieldMauBinh.TOTAL];
+				if (addMoneyObject)
+				{
+					playerList[i][DataFieldMauBinh.MONEY] += addMoneyObject[DataFieldMauBinh.MONEY];
+					playerList[i][DataFieldMauBinh.TOTAL] += addMoneyObject[DataFieldMauBinh.TOTAL];
+				}
 			}
 			
 			playerList = playerList.concat(quiterList);
@@ -1977,9 +2007,12 @@ package view.screen
 					PlayerInfoMauBinh(allPlayerArray[i]).removeAllCards();
 				}
 			}
-			for (i = 0; i < destroyPlayerArray.length; i++)
+			if (destroyPlayerArray)
 			{
-				PlayerInfoMauBinh(destroyPlayerArray[i]).destroy();
+				for (i = 0; i < destroyPlayerArray.length; i++)
+				{
+					PlayerInfoMauBinh(destroyPlayerArray[i]).destroy();
+				}
 			}
 			var countPlayer:int = 0;
 			for (var j:int = 0; j < allPlayerArray.length; j++) 
@@ -2314,15 +2347,20 @@ package view.screen
 			if (!stage)
 				return;
 			
-			var giveUpObject:Dictionary = giveUpPlayerArray[giveUpPlayerArray.length - 1];
-			if (!giveUpObject)
-				return;
-			if (giveUpObject[DataFieldMauBinh.TIME] == e.currentTarget)
+			for (var i:int = 0; i < giveUpPlayerArray.length; i++) 
 			{
-				if (giveUpObject[DataFieldMauBinh.POSITION] != 0)
-					invitePlayButtonArray[giveUpObject[DataFieldMauBinh.POSITION] - 1].visible = true;
-				PlayerInfoMauBinh(giveUpObject[DataFieldMauBinh.PLAYER]).destroy();
-				giveUpPlayerArray.pop();
+				var giveUpObject:Dictionary = giveUpPlayerArray[i];
+				if (giveUpObject)
+				{
+					if (giveUpObject[DataFieldMauBinh.TIME] == e.currentTarget)
+					{
+						if (giveUpObject[DataFieldMauBinh.POSITION] != 0)
+							invitePlayButtonArray[giveUpObject[DataFieldMauBinh.POSITION] - 1].visible = true;
+						PlayerInfoMauBinh(giveUpObject[DataFieldMauBinh.PLAYER]).destroy();
+						giveUpPlayerArray.splice(i, 1);
+						break;
+					}
+				}
 			}
 		}
 		

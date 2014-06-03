@@ -109,6 +109,8 @@ package event
 		public static const EXTENSION_NAME: String = "extensionName";
 		public static const TIME_CLOCK: String = "timeClock";
 		public static const PLUGIN_HANDLE: String = "pluginHandle";
+		public static const SAP_HAM: String = "sapHam";
+		public static const BAT_SAP_HAM: String = "batSapHam";
 		
 		public static const CHAT_CONTENT: String = "chatContent";
 		public static const USER_UPDATE_EVENT_TYPE:String = "userUpdateEventType";
