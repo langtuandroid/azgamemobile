@@ -66,6 +66,9 @@ package
 		[Embed(source = '../init.xml', mimeType = "application/octet-stream")]
 		private static const InitData:Class;
 		
+		[Embed(source = '../init_test.xml', mimeType = "application/octet-stream")]
+		private static const InitData_Test:Class;
+		
 		private var urlRequest:URLRequest; // urlRequest chứa đường dẫn đễn file init.xml
 		private var contentLoader:URLLoader; // urlLoader để load fie init.xml
 		private var countLoadSwfFinish:int = 0;
@@ -115,6 +118,8 @@ package
 			DefineClass.init();
 			
 			var byteArray:ByteArray = new InitData() as ByteArray;
+			if (mainData.isTest)
+				byteArray = new InitData_Test() as ByteArray;
 			mainData.init = new XML(byteArray.readUTFBytes(byteArray.length));
 			
 			addEventListener(Event.ADDED_TO_STAGE, init);

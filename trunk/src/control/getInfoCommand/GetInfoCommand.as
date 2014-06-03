@@ -291,6 +291,87 @@ package control.getInfoCommand
 				WindowLayer.getInstance().openAlertWindow(value.Msg);
 			}
 		}
+		
+		// Lấy thông tin thông báo hệ thống
+		public function getSystemNoticeInfo():void
+		{
+			var tokenTime:Number = mainData.chooseChannelData.myInfo.tokenTime;
+			var currentTime:Number = (new Date()).getTime();
+			if (tokenTime == 0)
+			{
+				var tempRequest:MainRequest = new MainRequest();
+				var url:String = mainData.init.requestLink.getAccessTokenLink.@url;
+				var object:Object = new Object();
+				object.client_id = mainData.client_id
+				object.client_secret = mainData.client_secret
+				object.client_timestamp = (new Date()).getTime();
+				object.nick_name = mainData.chooseChannelData.myInfo.name;
+				object.client_hash = MD5.encrypt(object.client_id + object.client_timestamp + object.client_secret + object.nick_name);
+				tempRequest.sendRequest_Post(url, object, getAccessTokenFromSystemNoticeFn, true);
+			}
+			else if ((currentTime - tokenTime) / (1000 * 60) > 55)
+			{
+				tempRequest = new MainRequest();
+				url = mainData.init.requestLink.reNewAccessTokenLink.@url;
+				object = new Object();
+				object.client_id = mainData.client_id
+				object.client_secret = mainData.client_secret
+				object.access_token = mainData.chooseChannelData.myInfo.token;
+				object.client_hash = MD5.encrypt(object.client_id + object.client_secret + object.access_token);
+				tempRequest.sendRequest_Post(url, object, getAccessTokenFromSystemNoticeFn, true);
+			}
+			else
+			{
+				tempRequest = new MainRequest();
+				url = mainData.init.requestLink.getMessageInfoLink.@url;
+				object = new Object();
+				object.access_token = mainData.chooseChannelData.myInfo.token;
+				object.nick_receiver = "system_notify_top";
+				tempRequest.sendRequest_Post(url, object, getSystemNoticeInfoFn, true);
+			}
+		}
+		
+		private function getAccessTokenFromSystemNoticeFn(value:Object):void 
+		{
+			if (value.TypeMsg == '1')
+			{
+				mainData.chooseChannelData.myInfo.token = value.Data.access_token;
+				var tempRequest:MainRequest = new MainRequest();
+				var url:String = mainData.init.requestLink.getMessageInfoLink.@url;
+				var object:Object = new Object();
+				object.access_token = mainData.chooseChannelData.myInfo.token;
+				object.nick_receiver = "system_notify_top";
+				tempRequest.sendRequest_Post(url, object, getSystemNoticeInfoFn, true);
+			}
+			else
+			{
+				//WindowLayer.getInstance().openAlertWindow("get access token from get message list fail !!");
+			}
+		}
+		
+		private function getSystemNoticeInfoFn(value:Object):void 
+		{
+			//mainData.chooseChannelData.channelInfoArray = value as Array;
+			
+			if (value.TypeMsg == '1')
+			{
+				var dataList:Array = value.Data.List_Message;
+				dataList.reverse();
+				var unreadMess:int = value.Data.New_Message_Count;
+				var messageList:Array = new Array();
+				var messageObject:Object = new Object();
+				var noticeList:Array = new Array();
+				for (var i:int = 0; i < dataList.length; i++) 
+				{
+					noticeList.push(dataList[i].message);
+				}
+				mainData.systemNoticeList = noticeList;
+			}
+			else
+			{
+				
+			}
+		}
 	}
 
 }

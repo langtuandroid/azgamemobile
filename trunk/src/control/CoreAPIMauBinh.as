@@ -533,6 +533,8 @@ package control
 					{
 						var tempObject:Object = new Object();
 						tempObject[DataFieldMauBinh.IS_BINH_LUNG] = EsObject(esObjec_PlayerList[i]).getBoolean(DataFieldMauBinh.IS_BINH_LUNG);
+						tempObject[DataFieldMauBinh.SAP_HAM] = EsObject(esObjec_PlayerList[i]).getBoolean(DataFieldMauBinh.SAP_HAM);
+						tempObject[DataFieldMauBinh.BAT_SAP_HAM] = EsObject(esObjec_PlayerList[i]).getBoolean(DataFieldMauBinh.BAT_SAP_HAM);
 						tempObject[DataFieldMauBinh.MONEY] = Number(EsObject(esObjec_PlayerList[i]).getString(DataFieldMauBinh.MONEY));
 						tempObject[DataFieldMauBinh.USER_NAME] = EsObject(esObjec_PlayerList[i]).getString(DataFieldMauBinh.USER_NAME);
 						tempObject[DataFieldMauBinh.DISPLAY_NAME] = EsObject(esObjec_PlayerList[i]).getString(DataFieldMauBinh.DISPLAY_NAME);

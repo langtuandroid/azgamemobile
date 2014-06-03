@@ -14,6 +14,7 @@ package view.window.loginWindow
 	import flash.text.TextFormat;
 	import flash.utils.Timer;
 	import getFacebookInfo.GetFacebookInfo;
+	import model.chooseChannelData.ChooseChannelData;
 	import model.chooseChannelData.MyInfo;
 	import model.MainData;
 	import model.MyDataTLMN;
@@ -235,6 +236,7 @@ package view.window.loginWindow
 		{
 			mainData.removeEventListener(MainData.UPDATE_FACEBOOK_DATA, onUpdateFacebookData);
 			mainData.removeEventListener(MainData.LOGIN_FACEBOOK_FAIL, onLoginFacebookFail);
+			mainData.chooseChannelData.removeEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
 			mainData.isOnLoginWindow = false;
 		}
 		
@@ -242,7 +244,13 @@ package view.window.loginWindow
 		{
 			mainData.addEventListener(MainData.UPDATE_FACEBOOK_DATA, onUpdateFacebookData);
 			mainData.addEventListener(MainData.LOGIN_FACEBOOK_FAIL, onLoginFacebookFail);
+			mainData.chooseChannelData.addEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
 			mainData.isOnLoginWindow = true;
+		}
+		
+		private function onUpdateMyInfo(e:Event):void 
+		{
+			close(BaseWindow.MIDDLE_EFFECT);
 		}
 		
 		private function onCloseLoadingLayer(e:TimerEvent):void 
@@ -345,7 +353,10 @@ package view.window.loginWindow
 			data.password = zLoginWindow(content).pass.text;
 			data.client_id = mainData.client_id;
 			zLoginWindow(content).loadingLayer.visible = true;
-			mainRequest.sendRequest_Post("http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileLogin", data, onLoginValidateRespond, true);
+			if (mainData.isTest)
+				mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileLogin", data, onLoginValidateRespond, true);
+			else
+				mainRequest.sendRequest_Post("http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileLogin", data, onLoginValidateRespond, true);
 			
 			if (zLoginWindow(content).savePassword["check"].visible)
 			{
@@ -374,7 +385,10 @@ package view.window.loginWindow
 			data.client_id = mainData.client_id;
             data.client_hash = MD5.encrypt(mainData.client_id + mainData.client_secret + value.Data.Code);
             data.code = value.Data.Code;
-			mainRequest.sendRequest_Post("http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileGetUserInfo", data, onLoginRespond, true);
+			if (mainData.isTest)
+				mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileGetUserInfo", data, onLoginRespond, true);
+			else
+				mainRequest.sendRequest_Post("http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileGetUserInfo", data, onLoginRespond, true);
 		}
 		
 		private function onLoginRespond(value:Object):void 

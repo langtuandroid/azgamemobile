@@ -379,6 +379,22 @@ package model
 			_tracker = value;
 		}
 		
+		public static const UPDATE_SYSTEM_NOTICE:String = "updateSystemNotice";
+		private var _systemNoticeList:Array;
+		
+		public function get systemNoticeList():Array 
+		{
+			if (!_systemNoticeList)
+				_systemNoticeList = new Array();
+			return _systemNoticeList;
+		}
+		
+		public function set systemNoticeList(value:Array):void 
+		{
+			_systemNoticeList = value;
+			dispatchEvent(new Event(UPDATE_SYSTEM_NOTICE));
+		}
+		
 		public var isFirstPlay:Boolean; // Biến để check xem mình có phải người đầu tiên đánh bài của ván bài ko
 		
 		public var isEndRound:Boolean; // Biến để check xem mình có phải vừa kết thúc 1 vòng đánh bài ko
@@ -464,6 +480,7 @@ package model
 		public var electroServer:ElectroServer;
 		public var lobbyRoomId:int = -1;
 		public var currentChannelId:int = 0;
+		public var isTest:Boolean = true; // biến để check xem đang chạy trên server test hay server thật
 	}
 
 }

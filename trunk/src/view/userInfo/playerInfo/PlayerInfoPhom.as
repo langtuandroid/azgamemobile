@@ -1352,6 +1352,8 @@ package view.userInfo.playerInfo
 					CardPhom(unLeaveCards[i]).moving(tempPoint, time, CardManagerPhom.TURN_OVER_STYLE, unLeaveCardSize, unLeaveCardRotation, true, true, false);
 				}
 			}
+			
+			reAddUnleaveCard();
 		}
 		
 		private function addContent(type:int):void

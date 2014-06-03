@@ -49,7 +49,7 @@ package control.electroServerCommand
 			if(!configuration)
 				configuration = new EsConfiguration();
 			configuration.ip = "183.91.14.52"
-			configuration.port = 5301;
+			configuration.port = mainData.portNumber;
 			configuration.protocol = Protocol.BinaryTCP;
 			if (!coreAPI)
 				coreAPI = new CoreAPIPhom(configuration);
