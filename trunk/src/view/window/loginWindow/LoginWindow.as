@@ -419,6 +419,7 @@ package view.window.loginWindow
 		{
 			var myInfo:MyInfo = new MyInfo();
 			
+			mainData.minMoney = value.Data["MinMoneyToFreeGold"];
 			myInfo.avatar = value.Data["Avatar"];
 			myInfo.money = value.Data["Money"];
 			myInfo.cash = value.Data["Cash"];

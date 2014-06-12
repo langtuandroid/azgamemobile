@@ -363,7 +363,15 @@ package control.getInfoCommand
 				var noticeList:Array = new Array();
 				for (var i:int = 0; i < dataList.length; i++) 
 				{
-					noticeList.push(dataList[i].message);
+					var tempObject:Object = new Object();
+					tempObject[DataFieldMauBinh.MESSAGE] = dataList[i].message;
+					tempObject[DataFieldMauBinh.INDEX] = dataList[i].rgt_dtm;
+					noticeList.push(tempObject);
+				}
+				if (noticeList[0] && mainData.systemNoticeList[0])
+				{
+					if (noticeList[0][DataFieldMauBinh.INDEX] == mainData.systemNoticeList[0][DataFieldMauBinh.INDEX])
+						return;
 				}
 				mainData.systemNoticeList = noticeList;
 			}

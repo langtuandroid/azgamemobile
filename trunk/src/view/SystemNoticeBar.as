@@ -1,6 +1,7 @@
 package view 
 {
 	import com.gskinner.motion.GTween;
+	import event.DataFieldMauBinh;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
@@ -78,7 +79,7 @@ package view
 			for (var i:int = 0; i < mainData.systemNoticeList.length; i++) 
 			{
 				var textfield:TextField = new TextField();
-				textfield.htmlText = mainData.systemNoticeList[i];
+				textfield.htmlText = mainData.systemNoticeList[i][DataFieldMauBinh.MESSAGE];
 				infoTxt.appendText(textfield.text);
 				if (i < mainData.systemNoticeList.length - 1)
 					infoTxt.appendText(" - ");

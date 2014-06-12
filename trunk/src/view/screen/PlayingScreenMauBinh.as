@@ -204,7 +204,7 @@ package view.screen
 			for (var j:int = 0; j < mainData.systemNoticeList.length; j++) 
 			{
 				var textField:TextField = new TextField();
-				textField.htmlText = mainData.systemNoticeList[j];
+				textField.htmlText = mainData.systemNoticeList[j][DataFieldMauBinh.MESSAGE];
 				chatBox.addChatSentence(textField.text, "Thông báo");
 			}
 		}
@@ -620,6 +620,7 @@ package view.screen
 			mainData.addEventListener(MainData.INVITE_ADD_FRIEND, onInviteAddFriend); // Lời mời kết bạn
 			mainData.addEventListener(MainData.CONFIRM_FRIEND_REQUEST, onConfirmFriendRequest);
 			mainData.addEventListener(MainData.FRIEND_CONFIRM_ADD_FRIEND_INVITE, onFriendConfirmAddFriendInvite);
+			mainData.addEventListener(MainData.UPDATE_SYSTEM_NOTICE, onUpdateSystemNotice);
 			var tempTween1:GTween = new GTween(this, effectTime, { alpha:1 } );
 		}
 		
@@ -629,8 +630,19 @@ package view.screen
 			mainData.removeEventListener(MainData.CONFIRM_FRIEND_REQUEST, onConfirmFriendRequest);
 			mainData.removeEventListener(MainData.FRIEND_CONFIRM_ADD_FRIEND_INVITE, onFriendConfirmAddFriendInvite);
 			mainData.removeEventListener(MainData.UPDATE_PUBLIC_CHAT, onUpdatePublicChat);
+			mainData.removeEventListener(MainData.UPDATE_SYSTEM_NOTICE, onUpdateSystemNotice);
 			
 			dispatchEvent(new Event(CLOSE_COMPLETE));
+		}
+		
+		private function onUpdateSystemNotice(e:Event):void 
+		{
+			for (var j:int = 0; j < mainData.systemNoticeList.length; j++) 
+			{
+				var textField:TextField = new TextField();
+				textField.htmlText = mainData.systemNoticeList[j][DataFieldMauBinh.MESSAGE];
+				chatBox.addChatSentence(textField.text, "Thông báo");
+			}
 		}
 		
 		private function closeComplete(e:Event):void 
@@ -1282,7 +1294,6 @@ package view.screen
 						{
 							if (playerList[i][DataFieldMauBinh.NO_COMPARE_GROUP]) // Trường hợp có người thoát và chỉ còn 1 mình mình trong phòng
 							{
-								timerToResetMatch = new Timer(mainData.resetMatchTime * 1, 1);
 								timerToResetMatch.addEventListener(TimerEvent.TIMER_COMPLETE, onResetMatch);
 								timerToResetMatch.start();
 								return;
@@ -1444,12 +1455,18 @@ package view.screen
 								if (countBinhLungAndMauBinh < playingPlayerArray.length - 1)
 								{
 									effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, p2, time * 3, 0, '-19');
-									effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT, p1, time * 3, groupNumber, PlayerInfoMauBinh.BELOW_USER);
+									if (PlayerInfoMauBinh(playingPlayerArray[j]) == belowUserInfo)
+										effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT, p1, time * 3, groupNumber, PlayerInfoMauBinh.BELOW_USER);
+									else
+										effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT, p1, time * 3, groupNumber);
 								}
 								else
 								{
 									effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, p2, time, 0, '-19');
-									effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT, p1, time, groupNumber, PlayerInfoMauBinh.BELOW_USER);
+									if (PlayerInfoMauBinh(playingPlayerArray[j]) == belowUserInfo)
+										effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT, p1, time, groupNumber, PlayerInfoMauBinh.BELOW_USER);
+									else
+										effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT, p1, time, groupNumber);
 								}
 							}
 							else if (PlayerInfoMauBinh(playingPlayerArray[j]) == belowUserInfo)
@@ -2637,14 +2654,12 @@ package view.screen
 			
 			if (mainData)
 				mainData.playingData.removeEventListener(PlayingData.UPDATE_PLAYING_SCREEN, onUpdatePlayingScreen);
-			mainData = null;
+			//mainData = null;
 			
 			if(readyButton)
 				readyButton.removeEventListener(MouseEvent.CLICK, onButtonClick);
 			readyButton = null;
 			mainCommand = null;
-			electroServerCommand = null;
-			windowLayer = null;
 			
 			if (timerToResetMatch)
 			{

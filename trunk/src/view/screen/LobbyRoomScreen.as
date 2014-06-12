@@ -200,6 +200,11 @@ package view.screen
 					selectGameWindow.parent.removeChild(selectGameWindow);
 			}
 			
+			excuteWhenJoinLobby();
+		}
+		
+		public function excuteWhenJoinLobby():void
+		{	
 			mainCommand.getInfoCommand.getChannelInfo();
 			mainCommand.getInfoCommand.getMessageInfo();
 			

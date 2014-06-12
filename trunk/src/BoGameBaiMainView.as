@@ -349,6 +349,9 @@ package
 				windowLayerChild.isNoCloseAll = false;
 			else
 				windowLayerChild.closeAllWindow();
+				
+			if (mainData.chooseChannelData.myInfo.money < mainData.minMoney) // Nếu user hết tiền thì nạp tiền
+				mainCommand.getInfoCommand.addMoney();
 		}
 		
 		private function onJoinGameRoomSuccess(e:Event):void 
@@ -478,6 +481,7 @@ package
 			playingScreen.effectClose();
 			removePlayingScreen();
 			addLobbyRoomScreen();
+			lobbyRoomScreen.excuteWhenJoinLobby();
 			switch (mainData.gameType) 
 			{
 				case MainData.PHOM:

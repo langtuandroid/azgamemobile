@@ -792,6 +792,9 @@ package view.userInfo.playerInfo
 					timerToPlayGetDeckSound.start();
 				}
 			}
+			
+			if (formName != ABOVE_USER)
+				reArrangeDownCard();
 		}
 		
 		private function onPlayGetDeckSound(e:TimerEvent):void 

@@ -4179,7 +4179,7 @@ package view.screen
 				_userInfo.addEventListener("add friend", onAddFriend);
 				_userInfo.addEventListener("remove friend", onRemoveFriend);
 				_userInfo.addEventListener(ConstTlmn.INVITE, onClickInvite);
-				_userInfo.addcarddeck();
+				//_userInfo.addcarddeck();
 				//count++;
 			}
 			

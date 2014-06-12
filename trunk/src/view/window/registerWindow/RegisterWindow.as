@@ -8,6 +8,7 @@ package view.window.registerWindow
 	import flash.events.MouseEvent;
 	import flash.events.SoftKeyboardEvent;
 	import flash.geom.Point;
+	import flash.net.SharedObject;
 	import flash.system.Capabilities;
 	import flash.text.TextFormat;
 	import flash.ui.Keyboard;
@@ -211,8 +212,8 @@ package view.window.registerWindow
 				var mainRequest:MainRequest = new MainRequest();
 				var data:Object = new Object();
 				data.client_id = mainData.client_id;
-				data.client_hash = MD5.encrypt(mainData.client_id + mainData.client_secret + value.Data.Code);
 				data.code = value.Data.Code;
+				data.client_hash = MD5.encrypt(mainData.client_id + mainData.client_secret + value.Data.Code);
 				if (mainData.isTest)
 					mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileGetUserInfo", data, onLoginRespond, true);
 				else
@@ -230,6 +231,8 @@ package view.window.registerWindow
 			}
 		}
 		
+		private var sharedObject:SharedObject;
+		
 		private function onLoginRespond(value:Object):void 
 		{
 			if (value["status"] == "IO_ERROR")
@@ -245,6 +248,10 @@ package view.window.registerWindow
 				return;
 			}
 			
+			sharedObject = SharedObject.getLocal("userInfo");
+			sharedObject.setProperty("userName", zRegisterWindow(content).email.text);
+			sharedObject.setProperty("password", zRegisterWindow(content).password.text);
+			
 			mainData.loginData = value.Data;
 			
 			zRegisterWindow(content).loadingLayer.visible = false;
@@ -258,6 +265,7 @@ package view.window.registerWindow
 		{
 			var myInfo:MyInfo = new MyInfo();
 			
+			mainData.minMoney = value.Data["MinMoneyToFreeGold"];
 			myInfo.avatar = value.Data["Avatar"];
 			myInfo.money = value.Data["Money"];
 			myInfo.cash = value.Data["Cash"];
