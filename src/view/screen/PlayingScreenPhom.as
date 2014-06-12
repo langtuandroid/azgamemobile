@@ -175,7 +175,7 @@ package view.screen
 			for (var j:int = 0; j < mainData.systemNoticeList.length; j++) 
 			{
 				var textField:TextField = new TextField();
-				textField.htmlText = mainData.systemNoticeList[j];
+				textField.htmlText = mainData.systemNoticeList[j][DataFieldPhom.MESSAGE];
 				chatBox.addChatSentence(textField.text, "Thông báo");
 			}
 		}
@@ -557,6 +557,7 @@ package view.screen
 			mainData.addEventListener(MainData.INVITE_ADD_FRIEND, onInviteAddFriend); // Lời mời kết bạn
 			mainData.addEventListener(MainData.CONFIRM_FRIEND_REQUEST, onConfirmFriendRequest);
 			mainData.addEventListener(MainData.FRIEND_CONFIRM_ADD_FRIEND_INVITE, onFriendConfirmAddFriendInvite);
+			mainData.addEventListener(MainData.UPDATE_SYSTEM_NOTICE, onUpdateSystemNotice);
 			//alpha = 0;
 			//var tempTween1:GTween = new GTween(this, effectTime, { alpha:1 } );
 		}
@@ -568,9 +569,20 @@ package view.screen
 			mainData.removeEventListener(MainData.FRIEND_CONFIRM_ADD_FRIEND_INVITE, onFriendConfirmAddFriendInvite);
 			mainData.removeEventListener(MainData.UPDATE_PUBLIC_CHAT, onUpdatePublicChat);
 			var tempTween1:GTween = new GTween(this, effectTime, { alpha:0 } );
+			mainData.removeEventListener(MainData.UPDATE_SYSTEM_NOTICE, onUpdateSystemNotice);
 			//tempTween1.addEventListener(Event.COMPLETE, closeComplete);
 			
 			dispatchEvent(new Event(CLOSE_COMPLETE));
+		}
+		
+		private function onUpdateSystemNotice(e:Event):void 
+		{
+			for (var j:int = 0; j < mainData.systemNoticeList.length; j++) 
+			{
+				var textField:TextField = new TextField();
+				textField.htmlText = mainData.systemNoticeList[j][DataFieldPhom.MESSAGE];
+				chatBox.addChatSentence(textField.text, "Thông báo");
+			}
 		}
 		
 		private function closeComplete(e:Event):void 
@@ -2257,14 +2269,12 @@ package view.screen
 			
 			if (mainData)
 				mainData.playingData.removeEventListener(PlayingData.UPDATE_PLAYING_SCREEN, onUpdatePlayingScreen);
-			mainData = null;
+			//mainData = null;
 			
 			if(readyButton)
 				readyButton.removeEventListener(MouseEvent.CLICK, onButtonClick);
 			readyButton = null;
 			mainCommand = null;
-			electroServerCommand = null;
-			windowLayer = null;
 			
 			if (timerToShowResultWindow)
 			{

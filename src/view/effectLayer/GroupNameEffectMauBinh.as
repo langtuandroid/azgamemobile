@@ -42,8 +42,7 @@ package view.effectLayer
 				}
 				else
 				{
-					greenTxt.x = content["chiMc"].x + (35 - greenTxt.width);
-					content["chiMc"].x = 15;
+					greenTxt.x = content["chiMc"].x + (39 - greenTxt.width);
 				}
 				greenTxt.visible = true;
 			}
@@ -57,9 +56,7 @@ package view.effectLayer
 				}
 				else
 				{
-					trace("aaaaaaaaaaaaaaaa",content["chiMc"].width);
-					redTxt.x = content["chiMc"].x + (35 - redTxt.width);
-					content["chiMc"].x = 15;
+					redTxt.x = content["chiMc"].x + (39 - redTxt.width);
 				}
 				redTxt.visible = true;
 			}

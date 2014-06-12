@@ -247,6 +247,10 @@ package view.window
 					else
 						roomTxt.text = "Bàn số " + String(data.roomID);
 				}
+				else
+				{
+					gameTxt.text = "Offline";
+				}
 			}
 			else
 			{
