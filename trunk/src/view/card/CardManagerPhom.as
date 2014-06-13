@@ -174,6 +174,8 @@ package view.card
 			
 			// di chuyển lá bài đến vị trí tương ứng
 			tempCard.moving(tempPoint, time, CardManagerPhom.OPEN_FINISH_STYLE, player.unLeaveCardSize, player.unLeaveCardRotation, true, true, false, 1, true);
+			
+			player.reAddUnleaveCard();
 		}
 		
 		/**
