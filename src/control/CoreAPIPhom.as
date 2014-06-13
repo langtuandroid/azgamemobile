@@ -309,6 +309,9 @@ package control
 			var loginRequest:LoginRequest = new LoginRequest();
 			loginRequest.userName = userName;
 			loginRequest.password = password;
+			var tempEsObject:EsObject = new EsObject();
+			tempEsObject.setString(DataFieldMauBinh.CHANNEL_ID, String(mainData.currentChannelId));
+			loginRequest.esObject = tempEsObject;
 			electroServer.engine.send(loginRequest);
 		}
 		
