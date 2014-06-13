@@ -350,6 +350,8 @@ package
 			else
 				windowLayerChild.closeAllWindow();
 				
+			lobbyRoomScreen.updateGameType();
+				
 			if (mainData.chooseChannelData.myInfo.money < mainData.minMoney) // Nếu user hết tiền thì nạp tiền
 				mainCommand.getInfoCommand.addMoney();
 		}

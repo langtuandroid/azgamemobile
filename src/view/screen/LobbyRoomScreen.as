@@ -69,6 +69,7 @@ package view.screen
 		private var searchRoomWindow:SearchRoomWindow;
 		private var joinRoomWindow:JoinRoomWindow;
 		private var effectTime:Number = 0.2;
+		private var gameLogo:MovieClip;
 		
 		private var mainData:MainData = MainData.getInstance();
 		private var mainCommand:MainCommand = MainCommand.getInstance();
@@ -111,6 +112,9 @@ package view.screen
 		{
 			super();
 			addContent("zLobbyRoomScreen");
+			
+			gameLogo = content["gameLogo"];
+			
 			addRoomList();
 			addUserList();
 			addUserProfile();
@@ -168,6 +172,11 @@ package view.screen
 			
 			selectGameButton.addEventListener(MouseEvent.CLICK, onSelectGameButtonClick);
 			
+		}
+		
+		public function updateGameType():void
+		{
+			gameLogo.gotoAndStop(mainData.gameType);
 		}
 		
 		private function onCloseMessageBox(e:Event):void 
