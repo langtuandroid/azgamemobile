@@ -618,6 +618,7 @@ package control
 						addFriendObject[DataField.FRIEND_ID] = e.parameters.getString(DataField.FRIEND_ID);
 						dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.SEND_ADD_FRIEND_SUCCESS, addFriendObject));
 					}
+					getFriendList();
 				break; 
 				case CommandTlmn.CONFIRM_FRIEND_REQUEST: // Xác nhận với server đồng ý hay từ chối lời mời kết bạn
 					isSuccess = e.parameters.getBoolean("success");
@@ -634,18 +635,67 @@ package control
 						dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.CONFIRM_FRIEND_REQUEST, confirmFriendRequestObject));
 					}
 				break;
-				/*case CommandTlmn.GET_FRIEND_LIST: // Get danh sách bạn bè
+				case CommandTlmn.GET_FRIEND_LIST: // Get danh sách bạn bè
 					myData.friendList = new Object();
-					var friendList:Array = e.parameters.getEsObjectArray(DataField.FRIEND_LIST);
+					GameDataTLMN.getInstance().friendList = new Object();
+					var friendList:Array = e.parameters.getEsObjectArray(DataFieldMauBinh.FRIEND_LIST);
 					var friendObject:Object;
+					var userData:UserDataULC;
+					tempUserList = new Array();
 					for (i = 0; i < friendList.length; i++) 
 					{
-						myData.friendList[EsObject(friendList[i]).getString(DataField.USER_NAME)] = new Object();
-						myData.friendList[EsObject(friendList[i]).getString(DataField.USER_NAME)][DataField.DISPLAY_NAME] = EsObject(friendList[i]).getString(DataField.DISPLAY_NAME);
+						userData = new UserDataULC();
+						userData.isJoinRoom = true;
+						userData.isViewPersonalInfo = true;
+						userData.isMakeFriend = true;
+						userData.moneyLogoUrl = '';
+						userData.displayName = EsObject(friendList[i]).getString(DataFieldMauBinh.DISPLAY_NAME);
+						userData.levelName = '1';
+						userData.userID = EsObject(friendList[i]).getString(DataFieldMauBinh.USER_NAME);
+						userData.userName = EsObject(friendList[i]).getString(DataFieldMauBinh.USER_NAME);
+						userData.isOnline = EsObject(friendList[i]).getBoolean(DataFieldMauBinh.ONLINE);
+						if (userData.isOnline)
+						{
+							userData.roomID = int(EsObject(friendList[i]).getString("room_id"));
+							
+							switch (EsObject(friendList[i]).getString("game_id")) 
+							{
+								case "AZGB_BINH":
+									userData.gameId = MainData.MAUBINH_ID;
+								break;
+								case "AZGB_PHOM":
+									userData.gameId = MainData.PHOM_ID;
+								break;
+								case "AZGB_TLMN":
+									userData.gameId = MainData.TLMN_ID;
+								break;
+								default:
+							}
+						}
+						
+						if (!EsObject(friendList[i]).doesPropertyExist(DataFieldMauBinh.LOSE))
+							userData.lose = 0;
+						else
+							userData.lose = EsObject(friendList[i]).getInteger(DataFieldMauBinh.LOSE);
+						if (!EsObject(friendList[i]).doesPropertyExist(DataFieldMauBinh.WIN))
+							userData.win = 0;
+						else
+							userData.win = EsObject(friendList[i]).getInteger(DataFieldMauBinh.WIN);
+							
+						userData.money = EsObject(friendList[i]).getString(DataFieldMauBinh.MONEY);
+						
+						userData.avatar = EsObject(friendList[i]).getString(DataFieldMauBinh.AVATAR);
+						userData.isFriend = true;
+						
+						if (userData.userName != mainData.chooseChannelData.myInfo.uId)
+							tempUserList.push(userData);
 					}
-				break;*/
+					GameDataTLMN.getInstance().friendList[DataField.FRIEND_LIST] = tempUserList;
+					mainData.lobbyRoomData.friendList = tempUserList;
+				break;
 				case CommandTlmn.REMOVE_FRIEND: // Server confirm remove friend
 					trace("aaaaaaaaaaaaaaaaaaaaa");
+					getFriendList();
 				break;
 				/*case CommandTlmn.ADD_CIAO: // add ciao khi hết tiền
 					var addCiaoObject:Object = new Object();
@@ -1100,24 +1150,23 @@ package control
 				else // join vào game
 				{
 					
-					/*userRecentlyJoinRoom = e.userName;
-					var userJoinRoom:EsObject = UserVariable(e.userVariables[2]).value;
+					var room:Room = zone.roomById(roomId);
+					userRecentlyJoinRoom = e.userName;
+					var userJoinRoom:EsObject = UserVariable(e.userVariables[0]).value;
 					var userRecentlyJoinRoomObject:Object = new Object();
 					userRecentlyJoinRoomObject[DataField.USER_NAME] = userRecentlyJoinRoom;
 					userRecentlyJoinRoomObject[DataField.LEVEL] = userJoinRoom.getString(DataField.LEVEL);
 					userRecentlyJoinRoomObject[DataField.MONEY] = userJoinRoom.getString(DataField.MONEY);
+					userRecentlyJoinRoomObject[DataField.IP] = userJoinRoom.getString(DataField.IP);
+					//userRecentlyJoinRoomObject[DataField.IP] = "123.123.123.123";
 					//userRecentlyJoinRoomObject[DataField.CASH] = object[DataField.CASH];
 					userRecentlyJoinRoomObject[DataField.AVATAR] = userJoinRoom.getString(DataField.AVATAR);
 					userRecentlyJoinRoomObject[DataField.DISPLAY_NAME] = userJoinRoom.getString(DataField.DISPLAY_NAME);
+					userRecentlyJoinRoomObject[DataField.SEX] = userJoinRoom.getString(DataField.SEX);
 					//userRecentlyJoinRoomObject[DataField.LOGO] = object[DataField.LOGO];
 					//userRecentlyJoinRoomObject[DataField.DEVICE] = object[DataField.DEVICE];
 					userRecentlyJoinRoom = "";
-					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.HAVE_USER_JOIN_ROOM, userRecentlyJoinRoomObject));*/
-					
-					// Gửi pluginRequest lên lấy thông tin các user trong phòng chơi
-					var pluginMessage:EsObject = new EsObject();
-					pluginMessage.setString("command", CommandTlmn.GET_PLAYING_INFO);
-					sendPluginRequest(GameDataTLMN.getInstance().zoneId, e.roomId, GameDataTLMN.getInstance().gameType, pluginMessage);
+					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.HAVE_USER_JOIN_ROOM, userRecentlyJoinRoomObject));
 					
 					
 				}

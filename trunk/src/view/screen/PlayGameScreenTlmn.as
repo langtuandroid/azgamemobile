@@ -232,9 +232,9 @@ package view.screen
 			GameDataTLMN.getInstance().playingData.addEventListener(PlayingData.UPDATE_PLAYING_SCREEN, onUpdatePlayingScreen);
 			
 			var textfield:TextField = new TextField();
-			textfield.text = "test 26/05/2014 : 12h20m";
+			textfield.text = "test 13/06/2014 : 17h20m";
 			textfield.x = 20;
-			textfield.y = 20;
+			textfield.y = 520;
 			content.addChild(textfield);
 			
 			if (heartbeart) 
@@ -3944,7 +3944,12 @@ package view.screen
 					}
 					else 
 					{
-						i = 3 % _myInfo.realPos;
+						i = j - _myInfo.realPos + 3;
+						if (i > 3) 
+						{
+							i = i - 4;
+						}
+						
 						if (_arrUserInfo[i]._userName == "") 
 						{
 							
