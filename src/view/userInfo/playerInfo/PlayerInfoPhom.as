@@ -792,9 +792,6 @@ package view.userInfo.playerInfo
 					timerToPlayGetDeckSound.start();
 				}
 			}
-			
-			if (formName != ABOVE_USER)
-				reArrangeDownCard();
 		}
 		
 		private function onPlayGetDeckSound(e:TimerEvent):void 
@@ -922,7 +919,7 @@ package view.userInfo.playerInfo
 			}
 		}
 		
-		private function reAddUnleaveCard():void 
+		public function reAddUnleaveCard():void 
 		{
 			var tempPoint:Point;
 			var i:int;
@@ -1283,6 +1280,9 @@ package view.userInfo.playerInfo
 			
 			// gọi hàm di chuyển
 			card.moving(tempPoint, time , CardManagerPhom.TURN_OVER_STYLE, leavedCardSize);
+			
+			if (formName != ABOVE_USER)
+				reArrangeDownCard();
 		}
 		
 		private function removeCardsArray(cardsArray:Array):void
