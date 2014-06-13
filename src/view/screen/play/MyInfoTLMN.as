@@ -138,8 +138,8 @@ package view.screen.play
 			content.resultGame.visible = false;
 			content.defaltAvatar.visible = false;
 			
-			content.nextturn.x = 535;
-			content.nextturn.y = -84;
+			//content.nextturn.x = 535;
+			//content.nextturn.y = -84;
 			
 			content.autoReadyBtn.gotoAndStop(1);
 			content.autoReadyBtn.addEventListener(MouseEvent.CLICK, onClickAutoReady);
@@ -170,7 +170,8 @@ package view.screen.play
 				content.chatde.gotoAndStop(2);
 			}
 			
-			content.chatde.visible = true;
+			//content.chatde.visible = true;
+			content.chatde.visible = false;
 			
 			_timerShowChatde = new Timer(1000, 3);
 			_timerShowChatde.addEventListener(TimerEvent.TIMER_COMPLETE, onCompleteShowChatde);

@@ -60,10 +60,12 @@ package view.screen.play
 		private function onClickAddFriend(e:MouseEvent):void 
 		{
 			dispatchEvent(new Event("add friend"));
+			dispatchEvent(new Event("close"));
 		}
 		private function onClickRemoveFriend(e:MouseEvent):void 
 		{
 			dispatchEvent(new Event("remove friend"));
+			dispatchEvent(new Event("close"));
 		}
 		
 		private function onClickKick(e:MouseEvent):void 

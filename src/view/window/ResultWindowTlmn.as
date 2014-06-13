@@ -272,10 +272,12 @@ package view.window
 					arrUserResult[count]["user"].betResultTxt.text = "+" + format(int(arrResult[i][ConstTlmn.MONEY])) ;
 					//TextField(arrUserResult[i]["user"].betResultTxt).defaultTextFormat = _textformatWin;
 					arrUserResult[i]["user"].noticeTxt.text = whiteWin(obj["whiteWinType"]) ;
-					if (arrUserResult[count]["user"].userNameTxt.text != MyDataTLMN.getInstance().myName) 
+					var str:String = arrUserResult[count]["user"].noticeTxt.text;
+					if (str.length > 30) 
 					{
-						//arrUserResult[i].user.win.visible = true;
-						//arrUserResult[i].user.lose.visible = false;
+						str = str.slice(0, 30);
+						str += "...";
+						arrUserResult[count]["user"].noticeTxt.text = str;
 					}
 					else 
 					{
@@ -419,11 +421,6 @@ package view.window
 					{
 						//TextField(arrUserResult[i]["user"].betResultTxt).defaultTextFormat = _textformatLose;
 						arrUserResult[count]["user"].betResultTxt.text = format(int(arrResult[i][ConstTlmn.SUB_MONEY])) ;
-						if (arrUserResult[count]["user"].userNameTxt.text != MyDataTLMN.getInstance().myName) 
-						{
-							//arrUserResult[i].user.win.visible = false;
-							//arrUserResult[i].user.lose.visible = true;
-						}
 						
 					}
 					
@@ -431,6 +428,14 @@ package view.window
 					{
 						trace("den thang nao duoc ghi thoi: ", arrResult[i]["description"])
 						arrUserResult[count]["user"].noticeTxt.text = typeOfReamain(arrResult[i]["description"]);
+						
+						var str:String = arrUserResult[count]["user"].noticeTxt.text;
+						if (str.length > 30) 
+						{
+							str = str.slice(0, 30);
+							str += "...";
+							arrUserResult[count]["user"].noticeTxt.text = str;
+						}
 					}
 					else 
 					{
@@ -514,6 +519,7 @@ package view.window
 						break;
 						case 8:
 						str += "trắng, ";
+						checkcayle = false;
 						break;
 						default:
 						str += "";
