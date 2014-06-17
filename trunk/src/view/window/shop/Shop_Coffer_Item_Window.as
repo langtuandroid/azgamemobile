@@ -1,11 +1,14 @@
 package view.window.shop 
 {
 	import com.adobe.crypto.MD5;
+	import com.milkmangames.nativeextensions.GVFacebookRequestFilter;
 	import control.ConstTlmn;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.FocusEvent;
 	import flash.events.MouseEvent;
+	import flash.text.TextField;
 	import model.chooseChannelData.MyInfo;
 	import model.MainData;
 	import request.HTTPRequest;
@@ -30,6 +33,10 @@ package view.window.shop
 		private var _arrBoard:Array;
 		
 		private var _type:int; // dang chon xem cai j`
+		/**
+		 * 1:vina, 2:mobi, 3:viettel, 4:Vtc, 5:megacard, 6:fptgate
+		 */
+		private var _typOfNetwork:String = "VNP"; // dang chon nap the bang nha mang nao
 		
 		private var scrollView:ScrollViewYun;
 		private var windowLayer:WindowLayer = WindowLayer.getInstance();
@@ -44,8 +51,8 @@ package view.window.shop
 		private var _arrMyItem:Array = [];
 		private var _arrMyGold:Array = [];
 		
-		private var avatarChoseBuy:ContentAvatar;
-		private var goldChoseBuy:ContentItemGold;
+		private var avatarChoseBuy:*;
+		private var goldChoseBuy:*;
 		
 		public function Shop_Coffer_Item_Window() 
 		{
@@ -107,6 +114,9 @@ package view.window.shop
 			myContent.chooseInCofferMc.chooseGold.removeEventListener(MouseEvent.MOUSE_UP, onClickShowMyGold);
 			myContent.chooseInCofferMc.chooseItem.removeEventListener(MouseEvent.MOUSE_UP, onClickShowMyItem);
 			
+			myContent.chooseInAddMoneyMc.raking.removeEventListener(MouseEvent.MOUSE_UP, onClickShowAddMoneyRaking);
+			myContent.chooseInAddMoneyMc.sms.removeEventListener(MouseEvent.MOUSE_UP, onClickShowAddMoneySms);
+			
 			for (i = 0; i < _arrGold.length; i++ ) 
 			{
 				_arrGold[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemGold);
@@ -140,7 +150,211 @@ package view.window.shop
 			myContent.chooseInCofferMc.chooseItem.addEventListener(MouseEvent.MOUSE_UP, onClickShowMyItem);
 			
 			
+			myContent.chooseInAddMoneyMc.raking.addEventListener(MouseEvent.MOUSE_UP, onClickShowAddMoneyRaking);
+			myContent.chooseInAddMoneyMc.sms.addEventListener(MouseEvent.MOUSE_UP, onClickShowAddMoneySms);
 			
+			myContent.rakingBg.choosePayVina.gotoAndStop(2);
+			myContent.rakingBg.choosePayMobi.gotoAndStop(1);
+			myContent.rakingBg.choosePayViettel.gotoAndStop(1);
+			myContent.rakingBg.choosePayVtc.gotoAndStop(1);
+			myContent.rakingBg.choosePayMega.gotoAndStop(1);
+			myContent.rakingBg.choosePayFpt.gotoAndStop(1);
+			
+			myContent.rakingBg.userNameTxt.addEventListener(FocusEvent.FOCUS_IN, userNameFocusHandler);
+			myContent.rakingBg.userNameTxt.addEventListener(FocusEvent.FOCUS_OUT, userNameFocusOutHandler);
+			
+			myContent.rakingBg.serinumberTxt.addEventListener(FocusEvent.FOCUS_IN, seriFocusHandler);
+			myContent.rakingBg.serinumberTxt.addEventListener(FocusEvent.FOCUS_OUT, seriFocusOutHandler);
+			
+			myContent.rakingBg.codenumberTxt.addEventListener(FocusEvent.FOCUS_IN, codeFocusHandler);
+			myContent.rakingBg.codenumberTxt.addEventListener(FocusEvent.FOCUS_OUT, codeFocusOutHandler);
+			
+			myContent.smsBg.addSmsBtn1.addEventListener(MouseEvent.MOUSE_UP, onClickChoseSms1);
+			myContent.smsBg.addSmsBtn2.addEventListener(MouseEvent.MOUSE_UP, onClickChoseSms2);
+			myContent.smsBg.addSmsBtn3.addEventListener(MouseEvent.MOUSE_UP, onClickChoseSms3);
+			
+			myContent.rakingBg.accessBtn.addEventListener(MouseEvent.MOUSE_UP, onClickChoseRaking);
+			myContent.rakingBg.choosePayVina.addEventListener(MouseEvent.MOUSE_UP, onClickChosePayVina);
+			myContent.rakingBg.choosePayMobi.addEventListener(MouseEvent.MOUSE_UP, onClickChosePayMobi);
+			myContent.rakingBg.choosePayViettel.addEventListener(MouseEvent.MOUSE_UP, onClickChosePayViettel);
+			myContent.rakingBg.choosePayVtc.addEventListener(MouseEvent.MOUSE_UP, onClickChosePayVtc);
+			myContent.rakingBg.choosePayMega.addEventListener(MouseEvent.MOUSE_UP, onClickChosePayMega);
+			myContent.rakingBg.choosePayFpt.addEventListener(MouseEvent.MOUSE_UP, onClickChoseRakingPayFpt);
+			
+		}
+		
+		private function onClickChosePayMobi(e:MouseEvent):void 
+		{
+			_typOfNetwork = "VMS";
+			myContent.rakingBg.choosePayVina.gotoAndStop(1);
+			myContent.rakingBg.choosePayMobi.gotoAndStop(2);
+			myContent.rakingBg.choosePayViettel.gotoAndStop(1);
+			myContent.rakingBg.choosePayVtc.gotoAndStop(1);
+			myContent.rakingBg.choosePayMega.gotoAndStop(1);
+			myContent.rakingBg.choosePayFpt.gotoAndStop(1);
+		}
+		
+		private function onClickChosePayVina(e:MouseEvent):void 
+		{
+			_typOfNetwork = "VNP";
+			myContent.rakingBg.choosePayVina.gotoAndStop(2);
+			myContent.rakingBg.choosePayMobi.gotoAndStop(1);
+			myContent.rakingBg.choosePayViettel.gotoAndStop(1);
+			myContent.rakingBg.choosePayVtc.gotoAndStop(1);
+			myContent.rakingBg.choosePayMega.gotoAndStop(1);
+			myContent.rakingBg.choosePayFpt.gotoAndStop(1);
+		}
+		
+		private function onClickChosePayViettel(e:MouseEvent):void 
+		{
+			_typOfNetwork = "VTT";
+			myContent.rakingBg.choosePayVina.gotoAndStop(1);
+			myContent.rakingBg.choosePayMobi.gotoAndStop(1);
+			myContent.rakingBg.choosePayViettel.gotoAndStop(2);
+			myContent.rakingBg.choosePayVtc.gotoAndStop(1);
+			myContent.rakingBg.choosePayMega.gotoAndStop(1);
+			myContent.rakingBg.choosePayFpt.gotoAndStop(1);
+		}
+		
+		private function onClickChosePayVtc(e:MouseEvent):void 
+		{
+			_typOfNetwork = "VTC";
+			myContent.rakingBg.choosePayVina.gotoAndStop(1);
+			myContent.rakingBg.choosePayMobi.gotoAndStop(1);
+			myContent.rakingBg.choosePayViettel.gotoAndStop(1);
+			myContent.rakingBg.choosePayVtc.gotoAndStop(2);
+			myContent.rakingBg.choosePayMega.gotoAndStop(1);
+			myContent.rakingBg.choosePayFpt.gotoAndStop(1);
+		}
+		
+		private function onClickChosePayMega(e:MouseEvent):void 
+		{
+			_typOfNetwork = "MGC";
+			myContent.rakingBg.choosePayVina.gotoAndStop(1);
+			myContent.rakingBg.choosePayMobi.gotoAndStop(1);
+			myContent.rakingBg.choosePayViettel.gotoAndStop(1);
+			myContent.rakingBg.choosePayVtc.gotoAndStop(1);
+			myContent.rakingBg.choosePayMega.gotoAndStop(2);
+			myContent.rakingBg.choosePayFpt.gotoAndStop(1);
+		}
+		
+		private function onClickChoseRakingPayFpt(e:MouseEvent):void 
+		{
+			_typOfNetwork = "FPT";
+			myContent.rakingBg.choosePayVina.gotoAndStop(1);
+			myContent.rakingBg.choosePayMobi.gotoAndStop(1);
+			myContent.rakingBg.choosePayViettel.gotoAndStop(1);
+			myContent.rakingBg.choosePayVtc.gotoAndStop(1);
+			myContent.rakingBg.choosePayMega.gotoAndStop(1);
+			myContent.rakingBg.choosePayFpt.gotoAndStop(2);
+		}
+		
+		private function codeFocusOutHandler(e:FocusEvent):void 
+		{
+			var txt:TextField = e.currentTarget as TextField;
+			if (txt.text == "") 
+			{
+				txt.text = "nhập mã thẻ";
+			}
+		}
+		
+		private function codeFocusHandler(e:FocusEvent):void 
+		{
+			var txt:TextField = e.currentTarget as TextField;
+			if (txt.text == "nhập mã thẻ") 
+			{
+				txt.text = "";
+			}
+		}
+		
+		private function seriFocusOutHandler(e:FocusEvent):void 
+		{
+			var txt:TextField = e.currentTarget as TextField;
+			if (txt.text == "") 
+			{
+				txt.text = "nhập seri thẻ";
+			}
+		}
+		
+		private function seriFocusHandler(e:FocusEvent):void 
+		{
+			var txt:TextField = e.currentTarget as TextField;
+			if (txt.text == "nhập seri thẻ") 
+			{
+				txt.text = "";
+			}
+		}
+		
+		private function userNameFocusOutHandler(e:FocusEvent):void 
+		{
+			var txt:TextField = e.currentTarget as TextField;
+			if (txt.text == "") 
+			{
+				txt.text = "nhập tên";
+			}
+		}
+		
+		private function userNameFocusHandler(e:FocusEvent):void 
+		{
+			var txt:TextField = e.currentTarget as TextField;
+			if (txt.text == "nhập tên") 
+			{
+				txt.text = "";
+			}
+		}
+		
+		private function onClickChoseRaking(e:MouseEvent):void 
+		{
+			if ((myContent.rakingBg.userNameTxt.text != "" || myContent.rakingBg.userNameTxt.text != "nhập tên")
+				&& (myContent.rakingBg.serinumberTxt.text != "" || myContent.rakingBg.serinumberTxt.text != "nhập seri thẻ")
+				&& (myContent.rakingBg.codenumberTxt.text != ""  || myContent.rakingBg.codenumberTxt.text != "nhập mã thẻ")
+				
+				) 
+			{
+				var method:String = "POST";
+				var url:String;
+				var httpRequest:HTTPRequest = new HTTPRequest();
+				var obj:Object;
+				
+				url = "http://wss.azgame.us/Service01/Billings/OnplayMobile.asmx/CardCharging";
+				
+				obj = new Object();
+				obj.nick_name = MainData.getInstance().chooseChannelData.myInfo.id;
+				obj.telco_code = _typOfNetwork;
+				obj.card_serial = myContent.rakingBg.serinumberTxt.text;
+				obj.card_id = myContent.rakingBg.codenumberTxt.text;
+				httpRequest.sendRequest(method, url, obj, onAddMoneyRespone, true);
+			}
+		}
+		
+		private function onAddMoneyRespone(obj:Object):void 
+		{
+			
+		}
+		
+		private function onClickChoseSms1(e:MouseEvent):void 
+		{
+			
+		}
+		private function onClickChoseSms2(e:MouseEvent):void 
+		{
+			
+		}
+		private function onClickChoseSms3(e:MouseEvent):void 
+		{
+			
+		}
+		
+		private function onClickShowAddMoneySms(e:MouseEvent):void 
+		{
+			headerOn(1);
+			boardOn(1);
+		}
+		
+		private function onClickShowAddMoneyRaking(e:MouseEvent):void 
+		{
+			headerOn(1);
+			boardOn(2);
 		}
 		
 		/**
@@ -171,13 +385,13 @@ package view.window.shop
 					obj = new Object();
 					obj.it_group_id = String(1);
 					obj.it_type = String(1);
-					httpRequest.sendRequest(method, url, obj, loadMyItemSuccess, true);
+					httpRequest.sendRequest(method, url, obj, loadMyItemGoldSuccess, true);
 				break;
 				default:
 			}
 		}
 		
-		private function loadMyItemSuccess(obj:Object):void 
+		private function loadMyItemGoldSuccess(obj:Object):void 
 		{
 			
 		}
@@ -385,7 +599,15 @@ package view.window.shop
 					obj = new Object();
 					obj.it_group_id = String(1);
 					obj.it_type = String(1);
-					httpRequest.sendRequest(method, url, obj, loadItemSuccess, true);
+					httpRequest.sendRequest(method, url, obj, loadItemGoldSuccess, true);
+				break;
+				case 2:
+					url = "http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+									"?rowStart=0&rowEnd=10";
+					obj = new Object();
+					obj.it_group_id = String(1);
+					obj.it_type = String(2);
+					httpRequest.sendRequest(method, url, obj, loadItemNormalSuccess, true);
 				break;
 				default:
 			}
@@ -397,7 +619,88 @@ package view.window.shop
 			
 		}
 		
-		private function loadItemSuccess(obj:Object):void 
+		private function loadItemNormalSuccess(obj:Object):void 
+		{
+			var arrData:Array = obj.Data;
+			var countX:int;
+			var countY:int;
+			var i:int;
+			
+			for (i = 0; i < _arrGold.length; i++ ) 
+			{
+				_arrGold[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemGold);
+				
+			}
+			scrollView.removeAll();
+			_arrGold = [];
+			
+			for (i = 0; i < arrData.length; i++ ) 
+			{
+				var nameAvatar:String = arrData[i]['it_name'];
+				var chipAvatar:String = arrData[i]['it_buy_chip'];
+				var payGold:String = arrData[i]['it_pay_gold'];
+				var linkAvatar:String = arrData[i]['it_dir_path'];
+				var expireAvatar:String = arrData[i]['it_sell_expire_dt'];
+				var idAvtWeb:String = arrData[i]['it_cd_wb'];
+				var idAvt:String = arrData[i]['it_id'];
+				
+				var contentAvatar:ContentItemNormal = new ContentItemNormal();
+				_arrGold.push(contentAvatar);
+				//contentAvatar.x = 10 + countX * 440;
+				//contentAvatar.y = 5 + countY * 135;
+				
+				if (countX < 2) 
+				{
+					countX++;
+				}
+				else 
+				{
+					countY++;
+					countX = 0;
+				}
+				
+				
+				contentAvatar.addInfo(idAvt, nameAvatar, chipAvatar, payGold, linkAvatar, expireAvatar, idAvtWeb);
+				scrollView.addRow(contentAvatar);
+				//_arrBoard[3].addChild(contentAvatar);
+				
+				contentAvatar.addEventListener(ConstTlmn.BUY_ITEM, onBuyItemNormal);
+			}
+		}
+		
+		private function onBuyItemNormal(e:Event):void 
+		{
+			choosePay = new ChoosePayMoneyType();
+			windowLayer.openWindow(choosePay);
+			choosePay.showChoose(0);
+			
+			choosePay.addEventListener("agree", onClickBuyItem);
+			
+			goldChoseBuy = e.currentTarget as ContentItemNormal;
+		}
+		
+		private function onClickBuyItem(e:Event):void 
+		{
+			var myInfo:MyInfo = new MyInfo();
+			var url:String = "http://wss.azgame.vn/Service02/OnplayShopExt.asmx/BuyItemFromClientSide";
+			var obj:Object = new Object();
+			var mainData:MainData = MainData.getInstance();
+			obj["access_token"] = mainData.loginData["AccessToken"];
+			obj["game_code"] = goldChoseBuy._goldAvt;
+			obj["payment_type"] = "1";
+			obj["nk_nm_receiver"] = mainData.loginData["Id"];
+			obj["item_id"] = goldChoseBuy._idAvt;
+			obj["item_quantity"] = "1";
+			obj["client_hash"] = MD5.hash(obj["access_token"] + mainData.client_secret + obj["game_code"]
+			 + obj["payment_type"] + obj["nk_nm_receiver"] + obj["item_id"] +
+			 obj["item_quantity"]);
+			
+			trace("link mua item: ", obj["access_token"])
+			var httpReq:HTTPRequest = new HTTPRequest();
+			httpReq.sendRequest("POST", url, obj, buyItemRespone, true);
+		}
+		
+		private function loadItemGoldSuccess(obj:Object):void 
 		{
 			trace(obj)
 			
@@ -601,6 +904,13 @@ package view.window.shop
 			}
 		}
 		
+		public function chooseAddMoney():void 
+		{
+			headerOn(1);
+			boardOn(2);
+			
+			
+		}
 	}
 	
 	
