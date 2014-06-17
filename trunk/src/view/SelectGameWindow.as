@@ -333,7 +333,6 @@ package view
 			}
 			
 			mainData.electroInfo = new Object();
-			mainData.electroInfo.ip = "123.30.210.55";
 			switch (gameId) 
 			{
 				case 3:

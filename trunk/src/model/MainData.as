@@ -423,7 +423,7 @@ package model
 		public var isLoadTlmnComplete:Boolean;
 		public var loginData:Object;
 		
-		public var gameIp:String = "123.30.210.59";
+		public var gameIp:String = "203.162.121.120";
 		public var electroInfo:Object;
 		public var game_id:String = '';
 		
