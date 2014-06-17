@@ -48,7 +48,7 @@ package control.electroServerCommand
 			
 			if(!configuration)
 				configuration = new EsConfiguration();
-			configuration.ip = "183.91.14.52"
+			configuration.ip = mainData.gameIp;
 			configuration.port = mainData.portNumber;
 			configuration.protocol = Protocol.BinaryTCP;
 			if (!coreAPI)

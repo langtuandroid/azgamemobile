@@ -29,13 +29,13 @@
 	</requestLink>-->
 	
 	<requestLink> <!--danh sách các link request lên server PHP-->
-		<addMoneyLink url="http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/Azgamebai_ChargeGoldFree" />
-		<getMessageInfoLink url="http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetListChatMessage" />
-		<getAccessTokenLink url="http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetAccessTokenDirectly" />
-		<reNewAccessTokenLink url="http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetAccessToken" />
-		<sendMessageLink url="http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/SendChatMessage" />
+		<addMoneyLink url="http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_ChargeGoldFree" />
+		<getMessageInfoLink url="http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetListChatMessage" />
+		<getAccessTokenLink url="http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetAccessTokenDirectly" />
+		<reNewAccessTokenLink url="http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetAccessToken" />
+		<sendMessageLink url="http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/SendChatMessage" />
 		<getPersonalInfoLink url="/javajson/user_info/" />
-		<getChannelLink url="http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetServerInfo" />
+		<getChannelLink url="http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetServerInfo" />
 	</requestLink>
 	
 	<gameDescription> <!--Các đoạn text thể hiện nội dung của game, ví dụ tên các button....-->
