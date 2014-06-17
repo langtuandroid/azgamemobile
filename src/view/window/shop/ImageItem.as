@@ -78,7 +78,7 @@ package view.window.shop
 					var urlRequest:URLRequest = new URLRequest(linkAvatar);
 					loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadImgComplete);
 					loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
-					loader.load(urlRequest, context);
+					loader.load(urlRequest);
 				}
 			}
 			

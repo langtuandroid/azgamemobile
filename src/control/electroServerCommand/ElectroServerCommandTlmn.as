@@ -44,7 +44,7 @@ package control.electroServerCommand
 		
 		public function startConnect(_userName:String, _channelId:int, _capacity:int = -1, _pass:String = ""):void
 		{
-			ipNumber = "183.91.14.52";//mainData.init.ipNumber;
+			ipNumber = "203.162.121.120";//mainData.init.ipNumber;
 			portNumber = 3101;
 			channelId = _channelId;
 			capacity = _capacity;

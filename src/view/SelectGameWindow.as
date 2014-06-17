@@ -210,6 +210,19 @@ package view
 				case 3:
 					addMoneyTabEnable.visible = false;
 					addMoneyTabDisable.visible = true;
+					
+					if (_shopWindow) 
+					{
+						_shopWindow.removeAllEvent();
+						removeChild(_shopWindow);
+						_shopWindow = null;
+					}
+					_shopWindow = new Shop_Coffer_Item_Window();
+					addChild(_shopWindow);
+					_shopWindow.x = -470;
+					_shopWindow.y = -300;
+					_shopWindow.loadItem(0);
+					
 				break;
 				case 4:
 					shopTabEnable.visible = false;

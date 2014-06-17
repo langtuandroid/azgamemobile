@@ -355,8 +355,10 @@ package view.window.loginWindow
 			zLoginWindow(content).loadingLayer.visible = true;
 			if (mainData.isTest)
 				mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileLogin", data, onLoginValidateRespond, true);
+				//mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/Azgamebai_AppMobileLogin", data, onLoginValidateRespond, true);
+				//mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/GetListTwav001", data, onLoginValidateRespond, true);
 			else
-				mainRequest.sendRequest_Post("http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileLogin", data, onLoginValidateRespond, true);
+				mainRequest.sendRequest_Post("http://wss.sanhbai.com/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileLogin", data, onLoginValidateRespond, true);
 			
 			if (zLoginWindow(content).savePassword["check"].visible)
 			{
