@@ -73,8 +73,10 @@ package view.window.shop
 			
 			content.itemLimitTxt.text = String(date.dateUTC) + "/" + String(month) + "/" + String(year);
 			
-			var image:Avatar = new Avatar();
+			var image:ImageItem = new ImageItem();
 			content.containerImg.addChild(image);
+			image.x = 5;
+			image.y = 18;
 			
 			trace("addavâtrr: ", linkAvt + "/WAZ/" + idWeb + ".png")
 			image.addImg(linkAvt + "/WAZ/" + idWeb + ".png");

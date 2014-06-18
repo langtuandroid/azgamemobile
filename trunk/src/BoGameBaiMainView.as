@@ -41,6 +41,7 @@ package
 	import com.adobe.serialization.json.JSON;
 	import model.playingData.PlayingData;
 	import net.hires.debug.Stats;
+	import request.HTTPRequest;
 	import sound.SoundLibChung;
 	import sound.SoundManager;
 	import view.button.MobileButton;
@@ -55,6 +56,7 @@ package
 	import view.topMenu.TopMenu;
 	import view.userInfo.playerInfo.PlayerInfo;
 	import view.window.AlertWindow;
+	import view.window.ConfirmWindow;
 	import view.window.windowLayer.WindowLayer;
 	/**
 	 * ...
@@ -136,7 +138,7 @@ package
 		
 		private function onLoadSoundIOError(e:IOErrorEvent):void 
 		{
-			
+			//trace("load sound error")
 		}
 		
 		private function loadSoundChung():void 
@@ -197,6 +199,7 @@ package
 			
 			mainData.main = this;
 			
+			//testCallServices();
 			// add background
 			addBackGround();
 			
@@ -223,6 +226,59 @@ package
 			
 			// Lắng nghe sự kiện join phòng game
 			mainData.playingData.addEventListener(PlayingData.JOIN_GAME_ROOM_SUCCESS, onJoinGameRoomSuccess);
+		}
+		
+		private function testCallServices():void 
+		{
+			/*var method:String = "POST";
+			var url:String;
+			var httpRequest:HTTPRequest = new HTTPRequest();
+			var obj:Object;
+			
+			url = "http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileLogin";
+					obj = new Object();
+					
+					obj.user_name = "bimkute";
+					obj.password = "";
+					obj.client_id = "1234567890";
+					httpRequest.sendRequest(method, url, obj, loadAvatarSuccess, true);*/
+			
+			var method:String = "POST";
+				var url:String;
+				var httpRequest:HTTPRequest = new HTTPRequest();
+				var obj:Object;
+				
+				url = "http://wss.azgame.us/Service01/Billings/OnplayMobile.asmx/CardCharging";
+				//url = "http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetListTwav00" + String(1)
+									//+ "?rowStart=0&rowEnd=10";
+				
+				obj = new Object();
+				obj.nick_name = "78";
+				obj.telco_code = "VIT";
+				obj.card_serial = "123456790";
+				obj.card_id = "1234123451234";
+				//obj.avt_group_id = String(0);
+				httpRequest.sendRequest(method, url, obj, loadAvatarSuccess, true);
+		}
+		
+		private function loadAvatarSuccess(obj:Object):void 
+		{
+			
+			var addMoney:ConfirmWindow = new ConfirmWindow();
+			
+			
+			if (obj.TypeMsg < 0) 
+			{
+				addMoney.setNotice(obj.Msg);
+				addMoney.buttonStatus(false, true, false);
+			}
+			else 
+			{
+				addMoney.setNotice("Bạn đã nạp " + obj.Data.Amount + " k thành công");
+				addMoney.buttonStatus(false, true, false);
+			}
+			
+			WindowLayer.getInstance().openWindow(addMoney);
 		}
 		
 		private function onStageClick(e:MouseEvent):void 

@@ -329,7 +329,21 @@ package view.window.shop
 		
 		private function onAddMoneyRespone(obj:Object):void 
 		{
+			var addMoney:ConfirmWindow = new ConfirmWindow();
 			
+			
+			if (obj.TypeMsg < 0) 
+			{
+				addMoney.setNotice(obj.Msg);
+				addMoney.buttonStatus(false, true, false);
+			}
+			else 
+			{
+				addMoney.setNotice("Bạn đã nạp " + obj.Data.Amount + " k thành công");
+				addMoney.buttonStatus(false, true, false);
+			}
+			
+			windowLayer.openWindow(addMoney);
 		}
 		
 		private function onClickChoseSms1(e:MouseEvent):void 
@@ -419,7 +433,7 @@ package view.window.shop
 					var buyAvatarWindow:ConfirmWindow;
 					buyAvatarWindow = new ConfirmWindow();
 					buyAvatarWindow.setNotice("Bạn chưa có đồ nào trong hòm đồ");
-					
+					buyAvatarWindow.buttonStatus(false, true, false);
 					windowLayer.openWindow(buyAvatarWindow);
 				}
 				
