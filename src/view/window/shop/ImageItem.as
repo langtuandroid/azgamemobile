@@ -11,6 +11,7 @@ package view.window.shop
 	import flash.system.LoaderContext;
 	import flash.system.Security;
 	import flash.system.SecurityDomain;
+	import flash.text.TextField;
 	
 	/**
 	 * ...
@@ -22,6 +23,8 @@ package view.window.shop
 		private var _linkAvatar:String;
 		private var _bitmap:Bitmap;
 		private var _bitmapData:BitmapData;
+		
+		private var textField:TextField;
 		public function ImageItem() 
 		{
 			super();

@@ -76,7 +76,7 @@ package view.window.shop
 			
 			
 			
-			var image:Avatar = new Avatar();
+			var image:ImageItem = new ImageItem();
 			content.containerImg.addChild(image);
 			trace("load gold: ", linkAvt + "/WAZ/" + idWeb + ".gif")
 			image.addImg(linkAvt + "/WAZ/" + idWeb + ".gif");

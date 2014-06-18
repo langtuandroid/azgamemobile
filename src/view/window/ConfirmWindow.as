@@ -64,6 +64,28 @@ package view.window
 		{
 			notice.text = content;
 		}
+		
+		public function buttonStatus(close:Boolean, confirm:Boolean, deny:Boolean):void 
+		{
+			closeButton.visible = close;
+			confirmButton.visible = confirm;
+			denyButton.visible = deny;
+			
+			if (!denyButton.visible) 
+			{
+				confirmButton.x = -38;
+			}
+			else if (!confirmButton.visible) 
+			{
+				denyButton.x = -38;
+				
+			}
+			else if (confirmButton.visible && closeButton.visible) 
+			{
+				confirmButton.x = -86;
+				denyButton.x = 6;
+			}
+		}
 	}
 
 }

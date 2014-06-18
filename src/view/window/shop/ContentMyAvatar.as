@@ -74,8 +74,10 @@ package view.window.shop
 			content.itemTimeUseTxt.text = timeUse;
 			content.itemLimitTxt.text = expire;
 			
-			var image:Avatar = new Avatar();
+			var image:ImageItem = new ImageItem();
 			content.containerImg.addChild(image);
+			image.x = 5;
+			image.y = 18;
 			image.addImg(linkAvt + "/WAZ/" + idWeb + ".png");
 			
 		}
