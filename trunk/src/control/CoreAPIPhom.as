@@ -91,8 +91,8 @@ package control
 		{
 			myData = new MyData();
 			
-			myData.gameType = "phomv2";
-			myData.lobbyName = "CiaoCoreGame";
+			myData.gameType = "PhomPlugin";
+			myData.lobbyName = "Phom";
 			myData.lobbyPluginName = "LobbyHandle";
 			
 			if (!electroServer)

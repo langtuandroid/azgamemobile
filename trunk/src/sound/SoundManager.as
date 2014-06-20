@@ -29,6 +29,7 @@
 		public var soundManagerMauBinh:SoundManagerMauBinh;
 		public var soundManagerPhom:SoundManagerPhom;
 		
+		public var isLoadSoundChung:Boolean;
 		public var isLoadSoundMauBinh:Boolean;
 		public var isLoadSoundPhom:Boolean;
 		public var isLoadSoundTlmn:Boolean;
@@ -235,6 +236,25 @@
 				tempSound.addEventListener(IOErrorEvent.IO_ERROR, onLoadSoundIOError);
 				SoundManager.getInstance().registerSound(soundUrl, tempSound);
 			}
+		}
+		
+		public function loadSoundChung():void 
+		{
+			isLoadSoundChung = true;
+			for (var i:int = 0; i < mainData.init.soundChungList.child.length(); i++) 
+			{
+				var soundUrl:String = mainData.init.soundChungList.child[i];
+				var tempSound:Sound = new Sound();
+				tempSound.addEventListener(IOErrorEvent.IO_ERROR, onLoadSoundIOError);
+				tempSound.addEventListener(Event.COMPLETE, onLoadSoundComplete);
+				tempSound.load(new URLRequest("http://183.91.14.52/gamebai/bimkute/maubinh/soundChung/" + soundUrl + ".az"));
+				SoundManager.getInstance().registerSound(soundUrl, tempSound);
+			}
+		}
+		
+		private function onLoadSoundComplete(e:Event):void 
+		{
+			trace("load sound thanh cong");
 		}
 		
 		public function loadBackgroundMusic():void 

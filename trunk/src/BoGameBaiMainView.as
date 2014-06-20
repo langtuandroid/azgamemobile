@@ -132,31 +132,6 @@ package
 				NativeApplication.nativeApplication.addEventListener(Event.ACTIVATE, handleActivate, false, 0, true);
 				NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, handleDeactivate, false, 0, true);
 			}
-			
-			loadSoundChung();
-		}
-		
-		private function onLoadSoundIOError(e:IOErrorEvent):void 
-		{
-			trace("load sound lỗi");
-		}
-		
-		private function loadSoundChung():void 
-		{
-			for (var i:int = 0; i < mainData.init.soundChungList.child.length(); i++) 
-			{
-				var soundUrl:String = mainData.init.soundChungList.child[i];
-				var tempSound:Sound = new Sound();
-				tempSound.addEventListener(IOErrorEvent.IO_ERROR, onLoadSoundIOError);
-				tempSound.addEventListener(Event.COMPLETE, onLoadSoundComplete);
-				tempSound.load(new URLRequest("http://183.91.14.52/gamebai/bimkute/maubinh/soundChung/" + soundUrl + ".az"));
-				SoundManager.getInstance().registerSound(soundUrl, tempSound);
-			}
-		}
-		
-		private function onLoadSoundComplete(e:Event):void 
-		{
-			trace("load sound thanh cong");
 		}
 		
 		private function handleActivate(e:Event):void 

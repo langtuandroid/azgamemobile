@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <application xmlns="http://ns.adobe.com/air/application/3.5">
-  <id>air.BoGameBaiCiaoMobile</id>
+  <id>air.SanhBaiMobile</id>
   <versionNumber>0.1</versionNumber>
   <supportedProfiles>mobileDevice</supportedProfiles>
-  <filename>BoGameBaiCiaoMobile</filename>
-  <name>BoGameBaiCiaoMobile</name>
+  <filename>SanhBaiMobile</filename>
+  <name>SanhBaiMobile</name>
   <android>
     <colorDepth>16bit</colorDepth>
     <manifestAdditions><![CDATA[<manifest android:installLocation="auto">
@@ -63,8 +63,8 @@
     <requestedDisplayResolution>high</requestedDisplayResolution>
   </iPhone>
   <initialWindow>
-    <title>BoGameBaiCiaoMobile</title>
-    <content>BoGameBaiCiaoMobile.swf</content>
+    <title>SanhBaiMobile</title>
+    <content>SanhBaiMobile.swf</content>
     <visible>true</visible>
     <fullScreen>true</fullScreen>
     <autoOrients>false</autoOrients>

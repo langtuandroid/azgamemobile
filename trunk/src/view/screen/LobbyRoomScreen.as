@@ -331,6 +331,7 @@ package view.screen
 			addChild(musicOffButton);
 			addChild(chatButton);
 			addChild(messageButton);
+			addChild(helpButton);
 			
 			sharedObject = SharedObject.getLocal("soundConfig");
 			
@@ -421,7 +422,7 @@ package view.screen
 					musicOffButton.visible = false;
 				break;
 				case helpButton:
-					
+					navigateToURL(new URLRequest("http://sanhbai.com/ho-tro.html"));
 				break;
 				default:
 			}
@@ -505,6 +506,7 @@ package view.screen
 			SoundManager.getInstance().playSound(SoundLibChung.CLICK_SOUND);
 			mainCommand.electroServerCommand.closeConnection();
 			WindowLayer.getInstance().openLoadingWindow();
+			mainData.currentChannelId = channelList.currentChannelData.channelId;
 			mainCommand.electroServerCommand.startConnect("", channelList.currentChannelData.channelId);
 			mainData.fee = channelList.currentChannelData.fee;
 			channelInfoTxt.text = mainData.gameName + " - " + channelList.currentChannelData.channelName;
@@ -718,6 +720,7 @@ package view.screen
 			{
 				var channelObject:Object = mainData.chooseChannelData.channelInfoArray[0];
 				WindowLayer.getInstance().openLoadingWindow();
+				mainData.currentChannelId = channelObject[DataFieldMauBinh.CHANNEL_NUM];
 				mainCommand.electroServerCommand.startConnect("", channelObject[DataFieldMauBinh.CHANNEL_NUM]);
 				mainData.fee = channelObject[DataFieldMauBinh.DEALER_FEE];
 				channelInfoTxt.text = mainData.gameName + " - " + channelObject[DataFieldMauBinh.CHANNEL_NAME];

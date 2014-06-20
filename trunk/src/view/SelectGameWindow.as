@@ -139,13 +139,6 @@ package view
 			money2Txt = content["money2Txt"];
 			
 			exitButton.addEventListener(MouseEvent.CLICK, onExitButtonClick);
-			
-			if (!SoundManager.getInstance().isLoadSoundMauBinh)
-				SoundManager.getInstance().loadSoundMauBinh();
-			if (!SoundManager.getInstance().isLoadSoundPhom)
-				SoundManager.getInstance().loadSoundPhom();
-			if (!SoundManager.getInstance().isLoadSoundTlmn)
-				SoundManager.getInstance().addSound();
 		}
 		
 		private function onExitButtonClick(e:MouseEvent):void 
