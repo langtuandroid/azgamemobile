@@ -82,14 +82,7 @@ package view.userInfo.avatar
 			context.securityDomain = SecurityDomain.currentDomain;
 			
 			Security.loadPolicyFile("http://graph.facebook.com/crossdomain.xml");
-			Security.loadPolicyFile("http://gamebai888.com/crossdomain.xml");
-			
-			
 			Security.loadPolicyFile("http://profile.ak.fbcdn.net/crossdomain.xml");
-			//Security.loadPolicyFile('http://api.facebook.com/crossdomain.xml');
-			
-			/*Security.allowDomain('http://profile.ak.fbcdn.net');
-			Security.allowInsecureDomain('http://profile.ak.fbcdn.net');*/
 			
 			{
 				if (_bitmapData) 
@@ -111,7 +104,7 @@ package view.userInfo.avatar
 				{
 					if (imgSrc) 
 					{
-							loader = new Loader();
+						loader = new Loader();
 						var urlRequest:URLRequest = new URLRequest(imgSrc);
 						loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadImgComplete);
 						loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onIOError);

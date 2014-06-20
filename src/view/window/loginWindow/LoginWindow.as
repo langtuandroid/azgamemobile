@@ -19,6 +19,7 @@ package view.window.loginWindow
 	import model.MainData;
 	import model.MyDataTLMN;
 	import request.MainRequest;
+	import sound.SoundManager;
 	import view.window.BaseWindow;
 	import view.window.ConfirmWindow;
 	import view.window.FillNameWindow;
@@ -246,6 +247,36 @@ package view.window.loginWindow
 			mainData.addEventListener(MainData.LOGIN_FACEBOOK_FAIL, onLoginFacebookFail);
 			mainData.chooseChannelData.addEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
 			mainData.isOnLoginWindow = true;
+			
+			if (mainData.isFacebookVersion)
+			{
+				zLoginWindow(content).loadingLayer.visible = true;
+				var tempRequest:MainRequest = new MainRequest();
+				if (mainData.isTest)
+					var url:String = "http://test.sanhbai.com/Handler/Game/azgame.ashx?op=azgame_bai_user_info";
+				else
+					url = "http://sanhbai.com/Handler/Game/azgame.ashx?op=azgame_bai_user_info";
+				tempRequest.sendRequest_Post(url, null, getMyInfoFn, true);
+			}
+		}
+		
+		private function getMyInfoFn(value:Object):void 
+		{
+			var myInfo:MyInfo = new MyInfo();
+			if (value == "")
+			{
+				zLoginWindow(content).loadingLayer.visible = false;
+				mainData.chooseChannelData.myInfo = null;
+				return;
+			}
+			if (value.TypeMsg == -1)
+			{
+				zLoginWindow(content).loadingLayer.visible = false;
+				WindowLayer.getInstance().openAlertWindow(value.Msg);
+				return;
+			}
+			zLoginWindow(content).loadingLayer.visible = false;
+			excuteUserInfo(value);
 		}
 		
 		private function onUpdateMyInfo(e:Event):void 
@@ -455,6 +486,15 @@ package view.window.loginWindow
 			myInfo.sex = '';*/
 			
 			mainData.chooseChannelData.myInfo = myInfo;
+			
+			//if (!SoundManager.getInstance().isLoadSoundChung)
+				//SoundManager.getInstance().loadSoundChung();
+			//if (!SoundManager.getInstance().isLoadSoundMauBinh)
+				//SoundManager.getInstance().loadSoundMauBinh();
+			//if (!SoundManager.getInstance().isLoadSoundPhom)
+				//SoundManager.getInstance().loadSoundPhom();
+			//if (!SoundManager.getInstance().isLoadSoundTlmn)
+				//SoundManager.getInstance().addSound();
 		}
 	}
 
