@@ -429,6 +429,9 @@ package model
 		
 		public var phone1:String = "7739";
 		public var phone2:String = "5678";
+		public var phone3:String = "8569";
+		public var phone4:String = "8669";
+		public var phone5:String = "8769";
 		
 		public var description1:String = "Phí dịch vụ 15k/tin";
 		public var description2:String = "Phí dịch vụ 5k/tin";

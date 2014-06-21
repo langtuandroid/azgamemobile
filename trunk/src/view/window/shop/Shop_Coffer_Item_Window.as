@@ -2,6 +2,7 @@ package view.window.shop
 {
 	import com.adobe.crypto.MD5;
 	import com.milkmangames.nativeextensions.GVFacebookRequestFilter;
+	import com.ssd.ane.AndroidExtensions;
 	import control.ConstTlmn;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
@@ -13,6 +14,7 @@ package view.window.shop
 	import model.MainData;
 	import request.HTTPRequest;
 	import view.ScrollView.ScrollViewYun;
+	import view.window.AlertWindow;
 	import view.window.BaseWindow;
 	import view.window.ConfirmWindow;
 	import view.window.windowLayer.WindowLayer;
@@ -25,6 +27,7 @@ package view.window.shop
 	{
 		private var myContent:MovieClip;
 		private var choosePay:ChoosePayMoneyType;
+		private var buyTour:BuyTourTicket;
 		private var typeOfPay:int; //0:thanh toan bang gold, 1:thanh toan bang chip
 		private var _arrBtnInTab:Array;
 		
@@ -39,6 +42,7 @@ package view.window.shop
 		private var _typOfNetwork:String = "VNP"; // dang chon nap the bang nha mang nao
 		
 		private var scrollView:ScrollViewYun;
+		private var scrollViewForRank:ScrollViewYun;
 		private var windowLayer:WindowLayer = WindowLayer.getInstance();
 		
 		private var _arrAvatar:Array = [];
@@ -51,6 +55,10 @@ package view.window.shop
 		private var _arrMyItem:Array = [];
 		private var _arrMyGold:Array = [];
 		
+		private var _arrTopRich:Array = [];
+		private var _arrTopPlayer:Array = [];
+		private var _arrTopRoyal:Array = [];
+		
 		private var avatarChoseBuy:*;
 		private var goldChoseBuy:*;
 		
@@ -60,9 +68,9 @@ package view.window.shop
 			
 			myContent = new Shop_Coffer_Item_Mc();
 			addChild(myContent);
+			myContent.mask = myContent.boardMask;
 			
-			
-						//chon game, bang xep hang, nap tien, shop, hom do
+						//bang xep hang, nap tien, shop, hom do
 			_arrHeaderTab = [myContent.chooseInStandingMc, myContent.chooseInAddMoneyMc, myContent.chooseInShopMc,
 							myContent.chooseInCofferMc];
 							//xep hang, nap tien, shop, hom do
@@ -76,6 +84,17 @@ package view.window.shop
 			scrollView.columnNumber = 2;
 			scrollView.isScrollVertical = true;
 			myContent.addChild(scrollView);
+			scrollView.y = 10;
+			
+			scrollViewForRank = new ScrollViewYun();
+			scrollViewForRank.setData(myContent.containerTopMc, 0);
+			scrollViewForRank.distanceInColumn = 55;
+			scrollViewForRank.distanceInRow = 55;
+			scrollViewForRank.columnNumber = 1;
+			scrollViewForRank.isScrollVertical = true;
+			myContent.addChild(scrollViewForRank);
+			scrollViewForRank.y = 50;
+			
 			
 			//scrollView.visible = false;
 			addEvent();
@@ -135,8 +154,39 @@ package view.window.shop
 			
 		}
 		
+		private function allHeaderVisible():void 
+		{
+			myContent.chooseInStandingMc.richBtn.gotoAndStop(2);
+			myContent.chooseInStandingMc.topBtn.gotoAndStop(2);
+			myContent.chooseInStandingMc.royalBtn.gotoAndStop(2);
+			
+			myContent.chooseInCofferMc.chooseAvatar.gotoAndStop(2);
+			myContent.chooseInCofferMc.chooseGold.gotoAndStop(2);
+			myContent.chooseInCofferMc.chooseItem.gotoAndStop(2);
+			
+			myContent.chooseInAddMoneyMc.raking.gotoAndStop(2);
+			myContent.chooseInAddMoneyMc.sms.gotoAndStop(2);
+			
+			myContent.chooseInShopMc.chooseAvatar.gotoAndStop(2);
+			myContent.chooseInShopMc.chooseGold.gotoAndStop(2);
+			myContent.chooseInShopMc.chooseTour.gotoAndStop(2);
+			myContent.chooseInShopMc.chooseItem.gotoAndStop(2);
+			myContent.chooseInShopMc.chooseGift.gotoAndStop(2);
+		}
+		
 		private function addEvent():void 
 		{
+			myContent.rakingBg.choosePayVina.gotoAndStop(2);
+			myContent.rakingBg.choosePayMobi.gotoAndStop(1);
+			myContent.rakingBg.choosePayViettel.gotoAndStop(1);
+			myContent.rakingBg.choosePayVtc.gotoAndStop(1);
+			myContent.rakingBg.choosePayMega.gotoAndStop(1);
+			myContent.rakingBg.choosePayFpt.gotoAndStop(1);
+			
+			myContent.standingBg.topMenu.topTlmnBtn.gotoAndStop(1);
+			myContent.standingBg.topMenu.topBinhBtn.gotoAndStop(2);
+			myContent.standingBg.topMenu.topPhomBtn.gotoAndStop(2);
+			
 			myContent.chooseInShopMc.chooseAvatar.addEventListener(MouseEvent.MOUSE_UP, onClickShowAvatar);
 			myContent.chooseInShopMc.chooseGold.addEventListener(MouseEvent.MOUSE_UP, onClickShowGold);
 			myContent.chooseInShopMc.chooseItem.addEventListener(MouseEvent.MOUSE_UP, onClickShowItem);
@@ -153,12 +203,7 @@ package view.window.shop
 			myContent.chooseInAddMoneyMc.raking.addEventListener(MouseEvent.MOUSE_UP, onClickShowAddMoneyRaking);
 			myContent.chooseInAddMoneyMc.sms.addEventListener(MouseEvent.MOUSE_UP, onClickShowAddMoneySms);
 			
-			myContent.rakingBg.choosePayVina.gotoAndStop(2);
-			myContent.rakingBg.choosePayMobi.gotoAndStop(1);
-			myContent.rakingBg.choosePayViettel.gotoAndStop(1);
-			myContent.rakingBg.choosePayVtc.gotoAndStop(1);
-			myContent.rakingBg.choosePayMega.gotoAndStop(1);
-			myContent.rakingBg.choosePayFpt.gotoAndStop(1);
+			
 			
 			myContent.rakingBg.userNameTxt.addEventListener(FocusEvent.FOCUS_IN, userNameFocusHandler);
 			myContent.rakingBg.userNameTxt.addEventListener(FocusEvent.FOCUS_OUT, userNameFocusOutHandler);
@@ -168,6 +213,9 @@ package view.window.shop
 			
 			myContent.rakingBg.codenumberTxt.addEventListener(FocusEvent.FOCUS_IN, codeFocusHandler);
 			myContent.rakingBg.codenumberTxt.addEventListener(FocusEvent.FOCUS_OUT, codeFocusOutHandler);
+			
+			myContent.rakingBg.codecheckTxt.addEventListener(FocusEvent.FOCUS_IN, codeCheckFocusHandler);
+			myContent.rakingBg.codecheckTxt.addEventListener(FocusEvent.FOCUS_OUT, codeCheckFocusOutHandler);
 			
 			myContent.smsBg.addSmsBtn1.addEventListener(MouseEvent.MOUSE_UP, onClickChoseSms1);
 			myContent.smsBg.addSmsBtn2.addEventListener(MouseEvent.MOUSE_UP, onClickChoseSms2);
@@ -181,6 +229,194 @@ package view.window.shop
 			myContent.rakingBg.choosePayMega.addEventListener(MouseEvent.MOUSE_UP, onClickChosePayMega);
 			myContent.rakingBg.choosePayFpt.addEventListener(MouseEvent.MOUSE_UP, onClickChoseRakingPayFpt);
 			
+			myContent.chooseInStandingMc.richBtn.addEventListener(MouseEvent.MOUSE_UP, onClickShowRichTop);
+			myContent.chooseInStandingMc.topBtn.addEventListener(MouseEvent.MOUSE_UP, onClickShowTop);
+			myContent.chooseInStandingMc.royalBtn.addEventListener(MouseEvent.MOUSE_UP, onClickShowRoyalTop);
+			
+			myContent.standingBg.topMenu.topTlmnBtn.addEventListener(MouseEvent.MOUSE_UP, onClickShowTopTlmn);
+			myContent.standingBg.topMenu.topBinhBtn.addEventListener(MouseEvent.MOUSE_UP, onClickShowTopBinh);
+			myContent.standingBg.topMenu.topPhomBtn.addEventListener(MouseEvent.MOUSE_UP, onClickShowTopPhom);
+			
+			
+			
+		}
+		
+		private function onClickShowTopTlmn(e:MouseEvent):void 
+		{
+			allHeaderVisible();
+			showHeaderChose(0, 1);
+			myContent.standingBg.topMenu.topTlmnBtn.gotoAndStop(1);
+			myContent.standingBg.topMenu.topBinhBtn.gotoAndStop(2);
+			myContent.standingBg.topMenu.topPhomBtn.gotoAndStop(2);
+			loadTop(1, 0);
+		}
+		
+		private function onClickShowTopBinh(e:MouseEvent):void 
+		{
+			allHeaderVisible();
+			showHeaderChose(0, 1);
+			myContent.standingBg.topMenu.topTlmnBtn.gotoAndStop(2);
+			myContent.standingBg.topMenu.topBinhBtn.gotoAndStop(1);
+			myContent.standingBg.topMenu.topPhomBtn.gotoAndStop(2);
+			loadTop(1, 1);
+		}
+		
+		private function onClickShowTopPhom(e:MouseEvent):void 
+		{
+			allHeaderVisible();
+			showHeaderChose(0, 1);
+			myContent.standingBg.topMenu.topTlmnBtn.gotoAndStop(2);
+			myContent.standingBg.topMenu.topBinhBtn.gotoAndStop(2);
+			myContent.standingBg.topMenu.topPhomBtn.gotoAndStop(1);
+			loadTop(1, 2);
+		}
+		
+		public function loadTop(type:int, typeGame:int = 0):void 
+		{
+			headerOn(0);
+			boardOn(0);
+			//http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserMoney?row_start=0&row_end=10
+			var method:String = "POST";
+			var url:String;
+			var httpRequest:HTTPRequest = new HTTPRequest();
+			var obj:Object;
+			
+			switch (type) 
+			{
+				case 0:
+					url = "http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserMoney?row_start=0&row_end=10";
+					obj = new Object();
+					obj.avt_group_id = String(0);
+					httpRequest.sendRequest(method, url, obj, loadRichTopSuccess, true);
+				break;
+				case 1:
+					if (typeGame == 0) 
+					{
+						url = "http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserWin?"
+								+ "game_id=AZGB_TLMNrow_start=0&row_end=10";
+					}
+					else if (typeGame == 1) 
+					{
+						url = "http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserWin?"
+								+ "game_id=AZGB_BINHrow_start=0&row_end=10";
+					}
+					else if (typeGame == 2) 
+					{
+						url = "http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserWin?"
+								+ "game_id=AZGB_PHOMrow_start=0&row_end=10";
+					}
+					
+					obj = new Object();
+					obj.it_group_id = String(1);
+					obj.it_type = String(1);
+					httpRequest.sendRequest(method, url, obj, loadTopSuccess, true);
+				break;
+				case 2:
+					
+				break;
+				default:
+			}
+		}
+		
+		private function loadRichTopSuccess(obj:Object):void 
+		{
+			
+			if (scrollViewForRank) 
+			{
+				scrollViewForRank.removeAll();
+				
+			}
+			var arr:Array = obj.Data;
+			trace("danh sahc top: ", arr.length)
+			for (var i:int = 0; i < arr.length; i++) 
+			{
+				var contentTop:MovieClip = new ContentUserTopList();
+				
+				var gold:int = arr[i].gold;
+				var nickname:String = arr[i].nick_name;
+				var level:int = 1;
+				var winNumber:int = 1000;
+				var loseNumber:int = 10000;
+				
+				
+				contentTop.sttTxt.text = String(i + 1);
+				contentTop.userNameTxt.text = nickname;
+				contentTop.moneyTxt.text = format(gold) + " G";
+				contentTop.levelTxt.text = format(level);
+				contentTop.winTxt.text = format(winNumber);
+				contentTop.loseTxt.text = format(loseNumber);
+				
+				//myContent.standingBg.addChild(contentTop);
+				
+				contentTop.gotoAndStop((i % 2) + 1);
+				scrollViewForRank.addRow(contentTop);
+				
+			}
+			
+		}
+		
+		private function loadTopSuccess(obj:Object):void 
+		{
+			trace(obj)
+			if (scrollViewForRank) 
+			{
+				scrollViewForRank.removeAll();
+				
+			}
+			var arr:Array = obj.Data;
+			trace("danh sahc top: ", arr.length)
+			for (var i:int = 0; i < arr.length; i++) 
+			{
+				var contentTop:MovieClip = new ContentUserTopList();
+				
+				var gold:int = arr[i].gold;
+				var nickname:String = arr[i].nick_name;
+				var level:int = 1;
+				var winNumber:int = 1000;
+				var loseNumber:int = 10000;
+				
+				trace(i, i + 1, arr[i].nick_name);
+				contentTop.sttTxt.text = String(i + 1);
+				contentTop.userNameTxt.text = nickname;
+				contentTop.moneyTxt.text = format(gold) + " G";
+				contentTop.levelTxt.text = format(level);
+				contentTop.winTxt.text = format(winNumber);
+				contentTop.loseTxt.text = format(loseNumber);
+				
+				//myContent.standingBg.addChild(contentTop);
+				
+				contentTop.gotoAndStop((i % 2) + 1);
+				scrollViewForRank.addRow(contentTop);
+				trace("addrow")
+			}
+			
+		}
+		
+		private function onClickShowRichTop(e:MouseEvent):void 
+		{
+			scrollViewForRank.y = 50;
+			
+			allHeaderVisible();
+			showHeaderChose(0, 0);
+			loadTop(0);
+		}
+		
+		private function onClickShowTop(e:MouseEvent):void 
+		{
+			scrollViewForRank.y = 37;
+			
+			allHeaderVisible();
+			showHeaderChose(0, 1);
+			loadTop(1, 0);
+		}
+		
+		private function onClickShowRoyalTop(e:MouseEvent):void 
+		{
+			scrollViewForRank.y = 50;
+			
+			allHeaderVisible();
+			showHeaderChose(0, 2);
+			loadTop(2);
 		}
 		
 		private function onClickChosePayMobi(e:MouseEvent):void 
@@ -267,6 +503,26 @@ package view.window.shop
 			}
 		}
 		
+		
+		private function codeCheckFocusOutHandler(e:FocusEvent):void 
+		{
+			var txt:TextField = e.currentTarget as TextField;
+			if (txt.text == "") 
+			{
+				txt.text = "Mã xác nhận";
+			}
+		}
+		
+		private function codeCheckFocusHandler(e:FocusEvent):void 
+		{
+			var txt:TextField = e.currentTarget as TextField;
+			if (txt.text == "Mã xác nhận") 
+			{
+				txt.text = "";
+			}
+		}
+		
+		
 		private function seriFocusOutHandler(e:FocusEvent):void 
 		{
 			var txt:TextField = e.currentTarget as TextField;
@@ -305,10 +561,12 @@ package view.window.shop
 		
 		private function onClickChoseRaking(e:MouseEvent):void 
 		{
+			var aleart:AlertWindow;
 			if ((myContent.rakingBg.userNameTxt.text != "" || myContent.rakingBg.userNameTxt.text != "nhập tên")
 				&& (myContent.rakingBg.serinumberTxt.text != "" || myContent.rakingBg.serinumberTxt.text != "nhập seri thẻ")
-				&& (myContent.rakingBg.codenumberTxt.text != ""  || myContent.rakingBg.codenumberTxt.text != "nhập mã thẻ")
-				
+				&& (myContent.rakingBg.codenumberTxt.text != "" || myContent.rakingBg.codenumberTxt.text != "nhập mã thẻ")
+				&& (myContent.rakingBg.codecheckTxt.text != "" || myContent.rakingBg.codecheckTxt.text != "Mã xác nhận")
+				&& myContent.rakingBg.codecheckTxt.text == myContent.rakingBg.codeCheck.text
 				) 
 			{
 				var method:String = "POST";
@@ -325,6 +583,34 @@ package view.window.shop
 				obj.card_id = myContent.rakingBg.codenumberTxt.text;
 				httpRequest.sendRequest(method, url, obj, onAddMoneyRespone, true);
 			}
+			else 
+			{
+				if (myContent.rakingBg.userNameTxt.text == "" || myContent.rakingBg.userNameTxt.text == " ") 
+				{
+					aleart = new AlertWindow();
+					windowLayer.openAlertWindow("Chưa nhập tên");
+				}
+				else if (myContent.rakingBg.serinumberTxt.text == "" || myContent.rakingBg.serinumberTxt.text == " ") 
+				{
+					aleart = new AlertWindow();
+					windowLayer.openAlertWindow("Chưa nhập số seri");
+				}
+				else if (myContent.rakingBg.codenumberTxt.text == "" || myContent.rakingBg.codenumberTxt.text == " ") 
+				{
+					aleart = new AlertWindow();
+					windowLayer.openAlertWindow("Chưa nhập mã thẻ");
+				}
+				else if (myContent.rakingBg.codecheckTxt.text == "" || myContent.rakingBg.codecheckTxt.text == " ") 
+				{
+					aleart = new AlertWindow();
+					windowLayer.openAlertWindow("Chưa nhập mã xác nhận");
+				}
+				else if (myContent.rakingBg.codecheckTxt.text != myContent.rakingBg.codeCheck.text) 
+				{
+					aleart = new AlertWindow();
+					windowLayer.openAlertWindow("Mã xác nhận không đúng");
+				}
+			}
 		}
 		
 		private function onAddMoneyRespone(obj:Object):void 
@@ -332,7 +618,14 @@ package view.window.shop
 			var addMoney:ConfirmWindow = new ConfirmWindow();
 			
 			
-			if (obj.TypeMsg < 0) 
+			if (obj["Msg"] == "Access Token Expired") 
+			{
+				var buyAvatarWindow:ConfirmWindow = new ConfirmWindow();
+				buyAvatarWindow.setNotice("Giao dịch không thành công, xin vui lòng thử lại");
+				
+				windowLayer.openWindow(buyAvatarWindow);
+			}
+			else if (obj.TypeMsg < 0) 
 			{
 				addMoney.setNotice(obj.Msg);
 				addMoney.buttonStatus(false, true, false);
@@ -348,27 +641,45 @@ package view.window.shop
 		
 		private function onClickChoseSms1(e:MouseEvent):void 
 		{
-			
+			if (MainData.getInstance().isOnAndroid)
+			{
+				AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.uId, 
+											MainData.getInstance().phone3);
+			}
 		}
 		private function onClickChoseSms2(e:MouseEvent):void 
 		{
-			
+			if (MainData.getInstance().isOnAndroid)
+			{
+				AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.uId, 
+											MainData.getInstance().phone4);
+			}
 		}
 		private function onClickChoseSms3(e:MouseEvent):void 
 		{
-			
+			if (MainData.getInstance().isOnAndroid)
+			{
+				AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.uId, 
+											MainData.getInstance().phone5);
+			}
 		}
 		
 		private function onClickShowAddMoneySms(e:MouseEvent):void 
 		{
+			allHeaderVisible();
+			showHeaderChose(1, 1);
 			headerOn(1);
 			boardOn(1);
 		}
 		
 		private function onClickShowAddMoneyRaking(e:MouseEvent):void 
 		{
+			allHeaderVisible();
+			showHeaderChose(1, 0);
+			
 			headerOn(1);
 			boardOn(2);
+			createCodeCheck();
 		}
 		
 		/**
@@ -383,26 +694,40 @@ package view.window.shop
 			
 			headerOn(3);
 			
+			
 			switch (type) 
 			{
 				case 0:
-					url = "http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetListAvatarOfBuyer?nick_name=" + 
-						MainData.getInstance().chooseChannelData.myInfo.name + "&rowStart=0&rowEnd=10";
+					url = "http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetListAvatarOfBuyer?nick_name=" + 
+						MainData.getInstance().chooseChannelData.myInfo.name + "&rowStart=0&rowEnd=20";
 						
 					obj = new Object();
 					trace("xem avâtr cua minh: ", url);
 					httpRequest.sendRequest(method, url, obj, loadMyAvatarSuccess, true);
 				break;
 				case 1:
-					url = "http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+					url = "http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
 									"?rowStart=0&rowEnd=10";
 					obj = new Object();
 					obj.it_group_id = String(1);
 					obj.it_type = String(1);
 					httpRequest.sendRequest(method, url, obj, loadMyItemGoldSuccess, true);
 				break;
+				case 2:
+					url = "http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+									"?rowStart=0&rowEnd=10";
+					obj = new Object();
+					obj.it_group_id = String(2);//loai 1: gold, 2 ve giai dau
+					obj.it_type = String(3);
+					httpRequest.sendRequest(method, url, obj, loadMyItemTourSuccess, true);
+				break;
 				default:
 			}
+		}
+		
+		private function loadMyItemTourSuccess(obj:Object):void 
+		{
+			
 		}
 		
 		private function loadMyItemGoldSuccess(obj:Object):void 
@@ -420,11 +745,31 @@ package view.window.shop
 				var countX:int;
 				var countY:int;
 
-				for (i = 0; i < _arrMyAvatar.length; i++ ) 
-				{
-					_arrMyAvatar[i].removeEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
-					
-				}
+				for (i = 0; i < _arrTour.length; i++ ) 
+			{
+				_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
+				
+			}
+			for (i = 0; i < _arrItem.length; i++ ) 
+			{
+				_arrItem[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemNormal);
+				
+			}
+			for (i = 0; i < _arrGold.length; i++ ) 
+			{
+				_arrGold[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemGold);
+				
+			}
+			for (i = 0; i < _arrAvatar.length; i++ ) 
+			{
+				_arrAvatar[i].removeEventListener(ConstTlmn.BUY_AVATAR, onBuyAvatar);
+				
+			}
+			for (i = 0; i < _arrMyAvatar.length; i++ ) 
+			{
+				_arrMyAvatar[i].removeEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
+				
+			}
 				scrollView.removeAll();
 				_arrMyAvatar = [];
 				
@@ -477,7 +822,7 @@ package view.window.shop
 		{
 			var avatar:ContentMyAvatar = e.currentTarget as ContentMyAvatar;
 			var myInfo:MyInfo = new MyInfo();
-			var url:String = "http://wss.azgame.vn/Service02/OnplayShopExt.asmx/DressAvatarFromClientSide";
+			var url:String = "http://wss.azgame.us/Service02/OnplayShopExt.asmx/DressAvatarFromClientSide";
 			var obj:Object = new Object();
 			var mainData:MainData = MainData.getInstance();
 			obj["access_token"] = mainData.loginData["AccessToken"];
@@ -492,53 +837,152 @@ package view.window.shop
 		
 		private function useItemRespone(obj:Object):void 
 		{
-			if (obj["Msg"] == "Cập nhật thành công") 
+			var buyAvatarWindow:ConfirmWindow;
+			if (obj["Msg"] == "Access Token Expired") 
 			{
-				var buyAvatarWindow:ConfirmWindow = new ConfirmWindow();
+				buyAvatarWindow = new ConfirmWindow();
+				buyAvatarWindow.setNotice("Giao dịch không thành công, xin vui lòng thử lại");
+				
+				windowLayer.openWindow(buyAvatarWindow);
+			}
+			else if (obj["Msg"] == "Cập nhật thành công") 
+			{
+				buyAvatarWindow = new ConfirmWindow();
 				buyAvatarWindow.setNotice("Bạn đã đổi thành công avatar này!");
 				
 				windowLayer.openWindow(buyAvatarWindow);
 			}
 		}
 		
-		private function onClickShowMyAvatar(e:MouseEvent):void 
+		public function onClickShowMyAvatar(e:MouseEvent):void 
 		{
-			
+			scrollView.visible = true;
+			scrollViewForRank.visible = false;
+			allHeaderVisible();
+			showHeaderChose(3, 0);
+			loadMyItem(0);
 		}
 		
-		private function onClickShowMyGold(e:MouseEvent):void 
+		public function onClickShowMyGold(e:MouseEvent):void 
 		{
-			
+			allHeaderVisible();
+			showHeaderChose(3, 1);
+			loadMyItem(1);
 		}
 		
-		private function onClickShowMyItem(e:MouseEvent):void 
+		public function onClickShowMyItem(e:MouseEvent):void 
 		{
-			
+			allHeaderVisible();
+			showHeaderChose(3, 2);
+			loadMyItem(2);
 		}
 		
-		private function onClickShowGift(e:MouseEvent):void 
+		public function onClickShowGift(e:MouseEvent):void 
 		{
+			allHeaderVisible();
+			showHeaderChose(2, 4);
 			loadItem(4);
 		}
 		
-		private function onClickShowTour(e:MouseEvent):void 
+		public function onClickShowTour(e:MouseEvent):void 
 		{
+			allHeaderVisible();
+			showHeaderChose(2, 3);
 			loadItem(3);
 		}
 		
-		private function onClickShowItem(e:MouseEvent):void 
+		public function onClickShowItem(e:MouseEvent):void 
 		{
+			allHeaderVisible();
+			showHeaderChose(2, 2);
 			loadItem(2);
 		}
 		
-		private function onClickShowGold(e:MouseEvent):void 
+		public function onClickShowGold(e:MouseEvent):void 
 		{
+			allHeaderVisible();
+			showHeaderChose(2, 1);
 			loadItem(1);
 		}
 		
-		private function onClickShowAvatar(e:MouseEvent):void 
+		public function onClickShowAvatar(e:MouseEvent):void 
 		{
+			scrollView.visible = true;
+			scrollViewForRank.visible = false;
+			allHeaderVisible();
+			showHeaderChose(2, 0);
 			loadItem(0);
+		}
+		
+		private function showHeaderChose(header:int, type:int):void 
+		{
+			trace("da chon cai j`: ", header, type)
+			if (header == 0 && type == 0) //bang xep hang: dai gia, cao thu, dang cap
+			{
+				myContent.chooseInStandingMc.richBtn.gotoAndStop(1);
+				myContent.standingBg.boardContent.y = 0;
+				
+			}
+			else if (header == 0 && type == 1) 
+			{
+				myContent.chooseInStandingMc.topBtn.gotoAndStop(1);
+				myContent.standingBg.boardContent.y = 37;
+			}
+			else if (header == 0 && type == 2) 
+			{
+				myContent.chooseInStandingMc.royalBtn.gotoAndStop(1);
+				myContent.standingBg.boardContent.y = 0;
+			}
+			else if (header == 1 && type == 0) //nap tien: the cao, sms
+			{
+				myContent.chooseInAddMoneyMc.raking.gotoAndStop(1);
+				myContent.standingBg.boardContent.y = 0;
+			}
+			else if (header == 1 && type == 1) 
+			{
+				myContent.chooseInAddMoneyMc.sms.gotoAndStop(1);
+				myContent.standingBg.boardContent.y = 0;
+			}
+			else if (header == 2 && type == 0) //shop: avatar, gold. item. tour, phan thuong
+			{
+				myContent.chooseInShopMc.chooseAvatar.gotoAndStop(1);
+				myContent.standingBg.boardContent.y = 0;
+			}
+			else if (header == 2 && type == 1) 
+			{
+				myContent.chooseInShopMc.chooseGold.gotoAndStop(1);
+				myContent.standingBg.boardContent.y = 0;
+			}
+			else if (header == 2 && type == 2) 
+			{
+				myContent.chooseInShopMc.chooseItem.gotoAndStop(1);
+				myContent.standingBg.boardContent.y = 0;
+			}
+			else if (header == 2 && type == 3) 
+			{
+				myContent.chooseInShopMc.chooseTour.gotoAndStop(1);
+				myContent.standingBg.boardContent.y = 0;
+			}
+			else if (header == 2 && type == 4) 
+			{
+				myContent.chooseInShopMc.chooseGift.gotoAndStop(1);
+				myContent.standingBg.boardContent.y = 0;
+			}
+			else if (header == 3 && type == 0) //trong hom do: avatar, gold, item
+			{
+				myContent.chooseInCofferMc.chooseAvatar.gotoAndStop(1);
+				myContent.standingBg.boardContent.y = 0;
+			}
+			else if (header == 3 && type == 1) 
+			{
+				myContent.chooseInCofferMc.chooseGold.gotoAndStop(1);
+				myContent.standingBg.boardContent.y = 0;
+			}
+			else if (header == 3 && type == 2) 
+			{
+				myContent.chooseInCofferMc.chooseItem.gotoAndStop(1);
+				myContent.standingBg.boardContent.y = 0;
+			}
 		}
 		
 		/**
@@ -584,12 +1028,13 @@ package view.window.shop
 			}
 			
 			_arrBoard[type].visible = true;
+			
 		}
 		
 		/**
 		 * type(0: avatar, 1:gold, 2:item, 3:tour, 4:gift)
 		 */
-		public function loadItem(type:int):void 
+		private function loadItem(type:int):void 
 		{
 			headerOn(2);
 			
@@ -601,14 +1046,14 @@ package view.window.shop
 			switch (type) 
 			{
 				case 0:
-					url = "http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetListTwav00" + String(1)
-									+ "?rowStart=0&rowEnd=10";
+					url = "http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetListTwav00" + String(1)
+									+ "?rowStart=0&rowEnd=62";
 					obj = new Object();
 					obj.avt_group_id = String(0);
 					httpRequest.sendRequest(method, url, obj, loadAvatarSuccess, true);
 				break;
 				case 1:
-					url = "http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+					url = "http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
 									"?rowStart=0&rowEnd=10";
 					obj = new Object();
 					obj.it_group_id = String(1);
@@ -616,19 +1061,108 @@ package view.window.shop
 					httpRequest.sendRequest(method, url, obj, loadItemGoldSuccess, true);
 				break;
 				case 2:
-					url = "http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+					url = "http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
 									"?rowStart=0&rowEnd=10";
 					obj = new Object();
 					obj.it_group_id = String(1);
 					obj.it_type = String(2);
 					httpRequest.sendRequest(method, url, obj, loadItemNormalSuccess, true);
 				break;
+				case 3:
+					trace("load ve giai dau")
+					url = "http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+									"?rowStart=0&rowEnd=10";
+					obj = new Object();
+					obj.it_group_id = String(2);//loai 1: gold, 2 ve giai dau
+					obj.it_type = String(3);
+					httpRequest.sendRequest(method, url, obj, loadItemTourSuccess, true);
+				break;
 				default:
 			}
 			
 			
+		}
+		
+		private function loadItemTourSuccess(obj:Object):void 
+		{
+			trace("load dc ve giai dau: ", obj.Data)
+			var arrData:Array = obj.Data;
+			var countX:int;
+			var countY:int;
+			var i:int;
+			
+			for (i = 0; i < _arrTour.length; i++ ) 
+			{
+				_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
+				
+			}
+			for (i = 0; i < _arrItem.length; i++ ) 
+			{
+				_arrItem[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemNormal);
+				
+			}
+			for (i = 0; i < _arrGold.length; i++ ) 
+			{
+				_arrGold[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemGold);
+				
+			}
+			for (i = 0; i < _arrAvatar.length; i++ ) 
+			{
+				_arrAvatar[i].removeEventListener(ConstTlmn.BUY_AVATAR, onBuyAvatar);
+				
+			}
+			for (i = 0; i < _arrMyAvatar.length; i++ ) 
+			{
+				_arrMyAvatar[i].removeEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
+				
+			}
 			
 			
+			scrollView.removeAll();
+			_arrTour = [];
+			
+			for (i = 0; i < arrData.length; i++ ) 
+			{
+				var nameAvatar:String = arrData[i]['it_name'];
+				var chipAvatar:String = arrData[i]['it_buy_chip'];
+				var payGold:String = arrData[i]['it_pay_gold'];
+				var linkAvatar:String = arrData[i]['it_dir_path'];
+				var expireAvatar:String = arrData[i]['it_sell_expire_dt'];
+				var idAvtWeb:String = arrData[i]['it_cd_wb'];
+				var idAvt:String = arrData[i]['it_id'];
+				
+				var contentAvatar:ContentItemTour = new ContentItemTour();
+				_arrTour.push(contentAvatar);
+				//contentAvatar.x = 10 + countX * 440;
+				//contentAvatar.y = 5 + countY * 135;
+				
+				if (countX < 2) 
+				{
+					countX++;
+				}
+				else 
+				{
+					countY++;
+					countX = 0;
+				}
+				
+				
+				contentAvatar.addInfo(idAvt, nameAvatar, chipAvatar, payGold, linkAvatar, expireAvatar, idAvtWeb);
+				scrollView.addRow(contentAvatar);
+				//_arrBoard[3].addChild(contentAvatar);
+				
+				contentAvatar.addEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
+			}
+		}
+		
+		private function onBuyItemTour(e:Event):void 
+		{
+			goldChoseBuy = e.currentTarget as ContentItemTour;
+			buyTour = new BuyTourTicket();
+			windowLayer.openWindow(buyTour);
+			buyTour.questionBuy(goldChoseBuy._nameAvt);
+			
+			buyTour.addEventListener("agree", onClickBuyGold);
 			
 			
 		}
@@ -640,13 +1174,33 @@ package view.window.shop
 			var countY:int;
 			var i:int;
 			
+			for (i = 0; i < _arrTour.length; i++ ) 
+			{
+				_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
+				
+			}
+			for (i = 0; i < _arrItem.length; i++ ) 
+			{
+				_arrItem[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemNormal);
+				
+			}
 			for (i = 0; i < _arrGold.length; i++ ) 
 			{
 				_arrGold[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemGold);
 				
 			}
+			for (i = 0; i < _arrAvatar.length; i++ ) 
+			{
+				_arrAvatar[i].removeEventListener(ConstTlmn.BUY_AVATAR, onBuyAvatar);
+				
+			}
+			for (i = 0; i < _arrMyAvatar.length; i++ ) 
+			{
+				_arrMyAvatar[i].removeEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
+				
+			}
 			scrollView.removeAll();
-			_arrGold = [];
+			_arrItem = [];
 			
 			for (i = 0; i < arrData.length; i++ ) 
 			{
@@ -659,7 +1213,7 @@ package view.window.shop
 				var idAvt:String = arrData[i]['it_id'];
 				
 				var contentAvatar:ContentItemNormal = new ContentItemNormal();
-				_arrGold.push(contentAvatar);
+				_arrItem.push(contentAvatar);
 				//contentAvatar.x = 10 + countX * 440;
 				//contentAvatar.y = 5 + countY * 135;
 				
@@ -696,7 +1250,7 @@ package view.window.shop
 		private function onClickBuyItem(e:Event):void 
 		{
 			var myInfo:MyInfo = new MyInfo();
-			var url:String = "http://wss.azgame.vn/Service02/OnplayShopExt.asmx/BuyItemFromClientSide";
+			var url:String = "http://wss.azgame.us/Service02/OnplayShopExt.asmx/BuyItemFromClientSide";
 			var obj:Object = new Object();
 			var mainData:MainData = MainData.getInstance();
 			obj["access_token"] = mainData.loginData["AccessToken"];
@@ -716,16 +1270,36 @@ package view.window.shop
 		
 		private function loadItemGoldSuccess(obj:Object):void 
 		{
-			trace(obj)
+			trace("load thanh cong item gold: ", obj)
 			
 			var arrData:Array = obj.Data;
 			var countX:int;
 			var countY:int;
 			var i:int;
 			
+			for (i = 0; i < _arrTour.length; i++ ) 
+			{
+				_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
+				
+			}
+			for (i = 0; i < _arrItem.length; i++ ) 
+			{
+				_arrItem[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemNormal);
+				
+			}
 			for (i = 0; i < _arrGold.length; i++ ) 
 			{
 				_arrGold[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemGold);
+				
+			}
+			for (i = 0; i < _arrAvatar.length; i++ ) 
+			{
+				_arrAvatar[i].removeEventListener(ConstTlmn.BUY_AVATAR, onBuyAvatar);
+				
+			}
+			for (i = 0; i < _arrMyAvatar.length; i++ ) 
+			{
+				_arrMyAvatar[i].removeEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
 				
 			}
 			scrollView.removeAll();
@@ -780,9 +1354,14 @@ package view.window.shop
 		
 		private function onClickBuyGold(e:Event):void 
 		{
+			if (buyTour) 
+			{
+				buyTour.removeEventListener("agree", onClickBuyGold);
+			}
+			
 			
 			var myInfo:MyInfo = new MyInfo();
-			var url:String = "http://wss.azgame.vn/Service02/OnplayShopExt.asmx/BuyItemFromClientSide";
+			var url:String = "http://wss.azgame.us/Service02/OnplayShopExt.asmx/BuyItemFromClientSide";
 			var obj:Object = new Object();
 			var mainData:MainData = MainData.getInstance();
 			obj["access_token"] = mainData.loginData["AccessToken"];
@@ -804,19 +1383,59 @@ package view.window.shop
 		{
 			trace(obj)
 			var buyAvatarWindow:ConfirmWindow;
-			if (obj["Msg"] == "Cập nhật thành công") 
+			trace("mua item respone: ", obj["Msg"])
+			if (obj["Msg"] == "Access Token Expired") 
 			{
-				buyAvatarWindow = new ConfirmWindow();
-				buyAvatarWindow.setNotice("Giao dịch thành công");
+				if (goldChoseBuy is ContentItemTour) 
+				{
+					buyTour = new BuyTourTicket();
+					buyTour.noticeChoseItem(goldChoseBuy._nameAvt, "Giao dịch không thành công, xin vui lòng thử lại");
+					windowLayer.openWindow(buyTour);
+				}
+				else
+				{
+					buyAvatarWindow = new ConfirmWindow();
+					buyAvatarWindow.setNotice("Giao dịch không thành công, xin vui lòng thử lại");
+					
+					windowLayer.openWindow(buyAvatarWindow);
+				}
 				
-				windowLayer.openWindow(buyAvatarWindow);
+			}
+			else if (obj["Msg"] == "Cập nhật thành công") 
+			{
+				if (goldChoseBuy is ContentItemTour) 
+				{
+					buyTour = new BuyTourTicket();
+					buyTour.noticeChoseItem(goldChoseBuy._nameAvt, "Giao dịch không thành công");
+					windowLayer.openWindow(buyTour);
+					
+			
+				}
+				else
+				{
+					buyAvatarWindow = new ConfirmWindow();
+					buyAvatarWindow.setNotice("Giao dịch thành công");
+					
+					windowLayer.openWindow(buyAvatarWindow);
+				}
+				
 			}
 			else if (obj["Msg"] == "Tài khoản không có đủ CHIP") 
 			{
-				buyAvatarWindow = new ConfirmWindow();
-				buyAvatarWindow.setNotice("Tài khoản không có đủ CHIP");
+				if (goldChoseBuy is ContentItemTour) 
+				{
+					buyTour = new BuyTourTicket();
+					buyTour.noticeChoseItem(goldChoseBuy._nameAvt, "Tài khoản không có đủ CHIP");
+					windowLayer.openWindow(buyTour);
+				}
+				else 
+				{
+					buyAvatarWindow = new ConfirmWindow();
+					buyAvatarWindow.setNotice("Tài khoản không có đủ CHIP");
+					
+					windowLayer.openWindow(buyAvatarWindow);
+				}
 				
-				windowLayer.openWindow(buyAvatarWindow);
 			}
 		}
 		
@@ -827,9 +1446,29 @@ package view.window.shop
 			var countX:int;
 			var countY:int;
 
+			for (i = 0; i < _arrTour.length; i++ ) 
+			{
+				_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
+				
+			}
+			for (i = 0; i < _arrItem.length; i++ ) 
+			{
+				_arrItem[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemNormal);
+				
+			}
+			for (i = 0; i < _arrGold.length; i++ ) 
+			{
+				_arrGold[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemGold);
+				
+			}
 			for (i = 0; i < _arrAvatar.length; i++ ) 
 			{
 				_arrAvatar[i].removeEventListener(ConstTlmn.BUY_AVATAR, onBuyAvatar);
+				
+			}
+			for (i = 0; i < _arrMyAvatar.length; i++ ) 
+			{
+				_arrMyAvatar[i].removeEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
 				
 			}
 			scrollView.removeAll();
@@ -886,11 +1525,12 @@ package view.window.shop
 		
 		private function onClickBuyAvatar(e:Event):void 
 		{
-			
-			var myInfo:MyInfo = new MyInfo();
-			var url:String = "http://wss.azgame.vn/Service02/OnplayShopExt.asmx/BuyAvatarFromClientSide";
-			var obj:Object = new Object();
 			var mainData:MainData = MainData.getInstance();
+			trace("client id khi mua avatar: ", mainData.client_id , "--", mainData.client_secret)
+			var myInfo:MyInfo = new MyInfo();
+			var url:String = "http://wss.azgame.us/Service02/OnplayShopExt.asmx/BuyAvatarFromClientSide";
+			var obj:Object = new Object();
+			
 			obj["access_token"] = mainData.loginData["AccessToken"];
 			obj["game_code"] = avatarChoseBuy._goldAvt;
 			obj["payment_type"] = "1";
@@ -909,9 +1549,19 @@ package view.window.shop
 		private function buyAvatarRespone(obj:Object):void 
 		{
 			trace(obj)
-			if (obj["Msg"] == "Cập nhật thành công") 
+			var buyAvatarWindow:ConfirmWindow;
+			trace("mua avatar respone: ", obj["Msg"])
+			trace("mua avatar respone: ", obj["TypeMsg"])
+			if (obj["Msg"] == "Access Token Expired") 
 			{
-				var buyAvatarWindow:ConfirmWindow = new ConfirmWindow();
+				buyAvatarWindow = new ConfirmWindow();
+				buyAvatarWindow.setNotice("Giao dịch không thành công, xin vui lòng thử lại");
+				
+				windowLayer.openWindow(buyAvatarWindow);
+			}
+			else if (obj["Msg"] == "Cập nhật thành công") 
+			{
+				buyAvatarWindow = new ConfirmWindow();
 				buyAvatarWindow.setNotice("Giao dịch thành công");
 				
 				windowLayer.openWindow(buyAvatarWindow);
@@ -920,10 +1570,64 @@ package view.window.shop
 		
 		public function chooseAddMoney():void 
 		{
+			scrollView.visible = true;
+			scrollViewForRank.visible = false;
+			
 			headerOn(1);
 			boardOn(2);
 			
+			createCodeCheck();
 			
+			allHeaderVisible();
+			showHeaderChose(1, 0);
+		}
+		
+		private function createCodeCheck():void 
+		{
+			var arr:Array = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", 
+			"T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+			var str:String = "";
+			for (var i:int = 0; i < 5; i++) 
+			{
+				var rd:int = int(Math.random() * arr.length);
+				str = str + arr[rd];
+			}
+			
+			myContent.rakingBg.codeCheck.text = str;
+		}
+		
+		public function showRank():void 
+		{
+			scrollView.visible = false;
+			scrollViewForRank.visible = true;
+			headerOn(0);
+			boardOn(0);
+			
+			loadTop(0);
+			allHeaderVisible();
+			showHeaderChose(0, 0);
+			
+		}
+		
+		
+		protected function format(number:int):String 
+		{
+			var numString:String = number.toString()
+			var result:String = ''
+
+			while (numString.length > 3)
+			{
+					var chunk:String = numString.substr(-3)
+					numString = numString.substr(0, numString.length - 3)
+					result = ',' + chunk + result
+			}
+
+			if (numString.length > 0)
+			{
+					result = numString + result
+			}
+
+			return result
 		}
 	}
 	

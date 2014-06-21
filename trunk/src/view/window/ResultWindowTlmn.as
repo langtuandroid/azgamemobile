@@ -273,9 +273,9 @@ package view.window
 					//TextField(arrUserResult[i]["user"].betResultTxt).defaultTextFormat = _textformatWin;
 					arrUserResult[i]["user"].noticeTxt.text = whiteWin(obj["whiteWinType"]) ;
 					var str:String = arrUserResult[count]["user"].noticeTxt.text;
-					if (str.length > 30) 
+					if (str.length > 25) 
 					{
-						str = str.slice(0, 30);
+						str = str.slice(0, 25);
 						str += "...";
 						arrUserResult[count]["user"].noticeTxt.text = str;
 					}
@@ -430,9 +430,9 @@ package view.window
 						arrUserResult[count]["user"].noticeTxt.text = typeOfReamain(arrResult[i]["description"]);
 						
 						var str:String = arrUserResult[count]["user"].noticeTxt.text;
-						if (str.length > 30) 
+						if (str.length > 25) 
 						{
-							str = str.slice(0, 30);
+							str = str.slice(0, 25);
 							str += "...";
 							arrUserResult[count]["user"].noticeTxt.text = str;
 						}

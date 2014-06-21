@@ -231,11 +231,11 @@ package view.screen
 			
 			GameDataTLMN.getInstance().playingData.addEventListener(PlayingData.UPDATE_PLAYING_SCREEN, onUpdatePlayingScreen);
 			
-			var textfield:TextField = new TextField();
+			/*var textfield:TextField = new TextField();
 			textfield.text = "test 13/06/2014 : 17h20m";
 			textfield.x = 20;
 			textfield.y = 520;
-			content.addChild(textfield);
+			content.addChild(textfield);*/
 			
 			if (heartbeart) 
 			{
@@ -4140,6 +4140,7 @@ package view.screen
 			
 			
 			checkShowTextNotice();
+			
 		}
 		
 		private function addPlayerInfo():void 
@@ -4334,6 +4335,11 @@ package view.screen
 				content.boardEvent.visible = false;
 			}
 			checkShowTextNotice();
+			
+			/*for (i = 0; i < _arrUserInfo.length; i++) 
+			{
+				_arrUserInfo[i].addCardDeck(13);
+			}*/
 		}
 		
 		/**
