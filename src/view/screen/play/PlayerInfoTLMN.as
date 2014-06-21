@@ -764,7 +764,7 @@ package view.screen.play
 			trace("ko load dc bg user con lai", _pos)
 		}
 		
-		private function addCardDeck(remainingCard:int):void 
+		public function addCardDeck(remainingCard:int):void 
 		{
 			var i:int
 			removeAllCards();
@@ -805,7 +805,7 @@ package view.screen.play
 				_arrCardDeck.push(_cardDeck);
 			}
 			
-			content.setChildIndex(content.numCard, content.numChildren - 1);
+			content.setChildIndex(content.numCardRemainTxt, content.numChildren - 1);
 			if (remainingCard > 0) 
 			{
 				content.numCardRemainTxt.visible = true;

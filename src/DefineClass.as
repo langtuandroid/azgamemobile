@@ -97,6 +97,8 @@ package
 			ContentMyAvatarMc;
 			ChoosePayMoneyTypeMc;
 			zSystemNoticeBar;
+			ContentUserTopList;
+			BuyTourSuccessMc;
 		}
 	}
 }

@@ -71,7 +71,8 @@ package view.window.shop
 				year = year + 1;
 			}
 			
-			content.itemLimitTxt.text = String(date.dateUTC) + "/" + String(month) + "/" + String(year);
+			//content.itemLimitTxt.text = String(date.dateUTC) + "/" + String(month) + "/" + String(year);
+			content.itemLimitTxt.text = "30 ngày";
 			
 			var image:ImageItem = new ImageItem();
 			content.containerImg.addChild(image);

@@ -62,6 +62,8 @@ package view
 		
 		private var avatar:Avatar;
 		private var exitButton:SimpleButton;
+		private var nextButton:SimpleButton;
+		private var backButton:SimpleButton;
 		private var displayNameTxt:TextField;
 		private var levelTxt:TextField;
 		private var money1Txt:TextField;
@@ -116,7 +118,7 @@ package view
 			shopTabDisable = content["shopTabDisable"];
 			inventoryTabDisable = content["inventoryTabDisable"];
 			
-			showTab(1);
+			
 			
 			zSelectGameWindow(content).loadingLayer.visible = false;
 			
@@ -133,10 +135,14 @@ package view
 			addChild(avatar);
 			
 			exitButton = content["exitButton"];
+			nextButton = content["nextBtn"];
+			backButton = content["backBtn"];
 			displayNameTxt = content["displayNameTxt"];
 			levelTxt = content["levelTxt"];
 			money1Txt = content["money1Txt"];
 			money2Txt = content["money2Txt"];
+			
+			showTab(1);
 			
 			exitButton.addEventListener(MouseEvent.CLICK, onExitButtonClick);
 		}
@@ -195,14 +201,14 @@ package view
 				case 1:
 					selectGameTabEnable.visible = false;
 					selectGameTabDisable.visible = true;
+					nextButton.visible = true;
+					backButton.visible = true;
 				break;
 				case 2:
 					rankTabEnable.visible = false;
 					rankTabDisable.visible = true;
-				break;
-				case 3:
-					addMoneyTabEnable.visible = false;
-					addMoneyTabDisable.visible = true;
+					nextButton.visible = false;
+					backButton.visible = false;
 					
 					if (_shopWindow) 
 					{
@@ -214,12 +220,33 @@ package view
 					addChild(_shopWindow);
 					_shopWindow.x = -470;
 					_shopWindow.y = -300;
-					_shopWindow.loadItem(0);
+					_shopWindow.showRank();
+					
+				break;
+				case 3:
+					addMoneyTabEnable.visible = false;
+					addMoneyTabDisable.visible = true;
+					nextButton.visible = false;
+					backButton.visible = false;
+					
+					if (_shopWindow) 
+					{
+						_shopWindow.removeAllEvent();
+						removeChild(_shopWindow);
+						_shopWindow = null;
+					}
+					_shopWindow = new Shop_Coffer_Item_Window();
+					addChild(_shopWindow);
+					_shopWindow.x = -470;
+					_shopWindow.y = -300;
+					_shopWindow.chooseAddMoney();
 					
 				break;
 				case 4:
 					shopTabEnable.visible = false;
 					shopTabDisable.visible = true;
+					nextButton.visible = false;
+					backButton.visible = false;
 					
 					if (_shopWindow) 
 					{
@@ -231,11 +258,13 @@ package view
 					addChild(_shopWindow);
 					_shopWindow.x = -470;
 					_shopWindow.y = -300;
-					_shopWindow.loadItem(0);
+					_shopWindow.onClickShowAvatar(null);
 				break;
 				case 5:
 					inventoryTabEnable.visible = false;
 					inventoryTabDisable.visible = true;
+					nextButton.visible = false;
+					backButton.visible = false;
 					
 					if (_shopWindow) 
 					{
@@ -247,7 +276,7 @@ package view
 					addChild(_shopWindow);
 					_shopWindow.x = -470;
 					_shopWindow.y = -300;
-					_shopWindow.loadMyItem(0);
+					_shopWindow.onClickShowMyAvatar(null);
 					
 				break;
 				default:

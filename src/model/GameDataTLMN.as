@@ -94,10 +94,10 @@ package model
 		//public var myName:String = "";
 		
 		public var channelId:int = -1;
-		public var gameName:String = "LobbyTLMN";
+		public var gameName:String = "TienLenMN";
 		public var gameRoomInfo:Object;
 		public var gameType:String = "TienLenMNPlugin";
-		public var lobbyName:String = "LobbyTLMN";
+		public var lobbyName:String = "TienLenMN";
 		public var lobbyPluginName:String = "LobbyTLMNPlugin";
 		public var gameZone:String = "tlmnZone";
 		public var isFirstLoad:Boolean;
