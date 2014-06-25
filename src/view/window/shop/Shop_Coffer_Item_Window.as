@@ -733,11 +733,12 @@ package view.window.shop
 			headerOn(3);
 			
 			
+			
 			switch (type) 
 			{
 				case 0:
 					url = "http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetListAvatarOfBuyer?nick_name=" + 
-						MainData.getInstance().chooseChannelData.myInfo.name + "&rowStart=0&rowEnd=20";
+						MainData.getInstance().chooseChannelData.myInfo.name + "&rowStart=0&rowEnd=50";
 						
 					obj = new Object();
 					trace("xem avâtr cua minh: ", url);
@@ -748,16 +749,16 @@ package view.window.shop
 									"?rowStart=0&rowEnd=10";
 					obj = new Object();
 					obj.it_group_id = String(1);
-					obj.it_type = String(1);
+					obj.it_type = String(2);
 					httpRequest.sendRequest(method, url, obj, loadMyItemGoldSuccess, true);
 				break;
 				case 2:
-					url = "http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+					/*url = "http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
 									"?rowStart=0&rowEnd=10";
 					obj = new Object();
 					obj.it_group_id = String(2);//loai 1: gold, 2 ve giai dau
 					obj.it_type = String(3);
-					httpRequest.sendRequest(method, url, obj, loadMyItemTourSuccess, true);
+					httpRequest.sendRequest(method, url, obj, loadMyItemTourSuccess, true);*/
 				break;
 				default:
 			}
@@ -765,10 +766,179 @@ package view.window.shop
 		
 		private function loadMyItemTourSuccess(obj:Object):void 
 		{
-			
+			if (obj["Msg"] == "Cập nhật thành công") 
+			{
+				var i:int;
+				var arrData:Array = obj.Data;
+				var countX:int;
+				var countY:int;
+
+				for (i = 0; i < _arrTour.length; i++ ) 
+				{
+					_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
+					
+				}
+				for (i = 0; i < _arrGift.length; i++ ) 
+				{
+					_arrGift[i].removeEventListener(ConstTlmn.BUY_ITEM, onChangeGift);
+					
+				}
+				for (i = 0; i < _arrItem.length; i++ ) 
+				{
+					_arrItem[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemNormal);
+					
+				}
+				for (i = 0; i < _arrGold.length; i++ ) 
+				{
+					_arrGold[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemGold);
+					
+				}
+				for (i = 0; i < _arrAvatar.length; i++ ) 
+				{
+					_arrAvatar[i].removeEventListener(ConstTlmn.BUY_AVATAR, onBuyAvatar);
+					
+				}
+				for (i = 0; i < _arrMyAvatar.length; i++ ) 
+				{
+					_arrMyAvatar[i].removeEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
+					
+				}
+				scrollView.removeAll();
+				_arrMyItem = [];
+				
+				if (arrData.length < 1) 
+				{
+					var buyAvatarWindow:ConfirmWindow;
+					buyAvatarWindow = new ConfirmWindow();
+					buyAvatarWindow.setNotice("Bạn chưa có đồ nào trong hòm đồ");
+					buyAvatarWindow.buttonStatus(false, true, false);
+					windowLayer.openWindow(buyAvatarWindow);
+				}
+				
+				for (i = 0; i < arrData.length; i++ ) 
+				{
+					var nameAvatar:String = arrData[i]['avt_name'];
+					
+					var linkAvatar:String = arrData[i]['avt_dir_path'];
+					var expireAvatar:String = arrData[i]['avt_sell_expire_dt'];
+					var sellRelease:String = arrData[i]['avt_sell_release_dt'];
+					var idAvt:String = arrData[i]['avt_id'];
+					var idAvtWeb:String = arrData[i]['avt_cd_wb'];
+					var idListAvt:String = arrData[i]['avt_lst_id'];
+					
+					var contentAvatar:ContentMyAvatar = new ContentMyAvatar();
+					_arrAvatar.push(contentAvatar);
+					//contentAvatar.x = 10 + countX * 440;
+					//contentAvatar.y = 5 + countY * 135;
+					
+					if (countX < 2) 
+					{
+						countX++;
+					}
+					else 
+					{
+						countY++;
+						countX = 0;
+					}
+					
+					
+					contentAvatar.addInfo(idAvt, idListAvt, nameAvatar, sellRelease, linkAvatar, expireAvatar, idAvtWeb);
+					scrollView.addRow(contentAvatar);
+					//_arrBoard[3].addChild(contentAvatar);
+					
+					contentAvatar.addEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
+				}
+			}
 		}
 		
 		private function loadMyItemGoldSuccess(obj:Object):void 
+		{
+			if (obj["Msg"] == "Cập nhật thành công") 
+			{
+				var i:int;
+				var arrData:Array = obj.Data;
+				var countX:int;
+				var countY:int;
+
+				for (i = 0; i < _arrTour.length; i++ ) 
+				{
+					_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
+					
+				}
+				for (i = 0; i < _arrGift.length; i++ ) 
+				{
+					_arrGift[i].removeEventListener(ConstTlmn.BUY_ITEM, onChangeGift);
+					
+				}
+				for (i = 0; i < _arrItem.length; i++ ) 
+				{
+					_arrItem[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemNormal);
+					
+				}
+				for (i = 0; i < _arrGold.length; i++ ) 
+				{
+					_arrGold[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemGold);
+					
+				}
+				for (i = 0; i < _arrAvatar.length; i++ ) 
+				{
+					_arrAvatar[i].removeEventListener(ConstTlmn.BUY_AVATAR, onBuyAvatar);
+					
+				}
+				for (i = 0; i < _arrMyAvatar.length; i++ ) 
+				{
+					_arrMyAvatar[i].removeEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
+					
+				}
+				scrollView.removeAll();
+				_arrMyGold = [];
+				
+				if (arrData.length < 1) 
+				{
+					var buyAvatarWindow:ConfirmWindow;
+					buyAvatarWindow = new ConfirmWindow();
+					buyAvatarWindow.setNotice("Bạn chưa có đồ nào trong hòm đồ");
+					buyAvatarWindow.buttonStatus(false, true, false);
+					windowLayer.openWindow(buyAvatarWindow);
+				}
+				
+				for (i = 0; i < arrData.length; i++ ) 
+				{
+					var nameAvatar:String = arrData[i]['avt_name'];
+					
+					var linkAvatar:String = arrData[i]['avt_dir_path'];
+					var expireAvatar:String = arrData[i]['avt_sell_expire_dt'];
+					var sellRelease:String = arrData[i]['avt_sell_release_dt'];
+					var idAvt:String = arrData[i]['avt_id'];
+					var idAvtWeb:String = arrData[i]['avt_cd_wb'];
+					var idListAvt:String = arrData[i]['avt_lst_id'];
+					
+					var contentAvatar:ContentMyItem = new ContentMyItem();
+					_arrMyGold.push(contentAvatar);
+					//contentAvatar.x = 10 + countX * 440;
+					//contentAvatar.y = 5 + countY * 135;
+					
+					if (countX < 2) 
+					{
+						countX++;
+					}
+					else 
+					{
+						countY++;
+						countX = 0;
+					}
+					
+					
+					contentAvatar.addInfo(idAvt, idListAvt, nameAvatar, sellRelease, linkAvatar, expireAvatar, idAvtWeb, true);
+					scrollView.addRow(contentAvatar);
+					//_arrBoard[3].addChild(contentAvatar);
+					
+					contentAvatar.addEventListener(ConstTlmn.USE_AVATAR, onUseMyItem);
+				}
+			}
+		}
+		
+		private function onUseMyItem(e:Event):void 
 		{
 			
 		}
@@ -783,36 +953,36 @@ package view.window.shop
 				var countX:int;
 				var countY:int;
 
-			for (i = 0; i < _arrTour.length; i++ ) 
-			{
-				_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
-				
-			}
-			for (i = 0; i < _arrGift.length; i++ ) 
-			{
-				_arrGift[i].removeEventListener(ConstTlmn.BUY_ITEM, onChangeGift);
-				
-			}
-			for (i = 0; i < _arrItem.length; i++ ) 
-			{
-				_arrItem[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemNormal);
-				
-			}
-			for (i = 0; i < _arrGold.length; i++ ) 
-			{
-				_arrGold[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemGold);
-				
-			}
-			for (i = 0; i < _arrAvatar.length; i++ ) 
-			{
-				_arrAvatar[i].removeEventListener(ConstTlmn.BUY_AVATAR, onBuyAvatar);
-				
-			}
-			for (i = 0; i < _arrMyAvatar.length; i++ ) 
-			{
-				_arrMyAvatar[i].removeEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
-				
-			}
+				for (i = 0; i < _arrTour.length; i++ ) 
+				{
+					_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
+					
+				}
+				for (i = 0; i < _arrGift.length; i++ ) 
+				{
+					_arrGift[i].removeEventListener(ConstTlmn.BUY_ITEM, onChangeGift);
+					
+				}
+				for (i = 0; i < _arrItem.length; i++ ) 
+				{
+					_arrItem[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemNormal);
+					
+				}
+				for (i = 0; i < _arrGold.length; i++ ) 
+				{
+					_arrGold[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemGold);
+					
+				}
+				for (i = 0; i < _arrAvatar.length; i++ ) 
+				{
+					_arrAvatar[i].removeEventListener(ConstTlmn.BUY_AVATAR, onBuyAvatar);
+					
+				}
+				for (i = 0; i < _arrMyAvatar.length; i++ ) 
+				{
+					_arrMyAvatar[i].removeEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
+					
+				}
 				scrollView.removeAll();
 				_arrMyAvatar = [];
 				
