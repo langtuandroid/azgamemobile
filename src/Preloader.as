@@ -29,7 +29,6 @@ package
 	 */
 	public class Preloader extends Sprite
 	{
-		private var loadingBar:Sprite;
 		private var _percentNumber:int;
 		private var countFirstLoad:int = 0;
 		private var loaderList:Array;
@@ -42,13 +41,14 @@ package
 		
 		public function Preloader() 
 		{
+			BoGameBaiMainView;
 			content = new zLoadingScreen();
 			addChild(content);
-			loadingBar = content.loadingBar;
 			
 			percentNumber = 0;
 			
 			loaderInfo.addEventListener(ProgressEvent.PROGRESS, progress);
+			loaderInfo.addEventListener(Event.COMPLETE, onLoadComplete);
 			loaderInfo.addEventListener(IOErrorEvent.IO_ERROR, ioError);
 			
 			// TODO show loader
@@ -57,35 +57,19 @@ package
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		}
 		
-		private function onAddedToStage(e:Event):void 
-		{
-			mainData.loadingData.addEventListener(LoadingData.UPDATE_LOADING, onUpdateLoading);
-			mainData.lobbyRoomData.addEventListener(LobbyRoomData.UPDATE_ROOM_LIST, onUpdateRoomList);
-			mainData.addEventListener(MainData.UPDATE_APP_DOMAIN_DATA, onUpdateAppDomainData);
-		}
-		
-		private function onUpdateAppDomainData(e:Event):void 
+		private function onLoadComplete(e:Event):void 
 		{
 			loadingFinished();
 		}
 		
+		private function onAddedToStage(e:Event):void 
+		{
+			
+		}
+		
 		private function onRemovedFromStage(e:Event):void 
 		{
-			mainData.loadingData.removeEventListener(LoadingData.UPDATE_LOADING, onUpdateLoading);
-			mainData.removeEventListener(MainData.UPDATE_APP_DOMAIN_DATA, onUpdateAppDomainData);
-			mainData.lobbyRoomData.removeEventListener(LobbyRoomData.UPDATE_ROOM_LIST, onUpdateRoomList);
-		}
-		
-		private function onUpdateRoomList(e:Event):void 
-		{
-			mainData.lobbyRoomData.removeEventListener(LobbyRoomData.UPDATE_ROOM_LIST, onUpdateRoomList);
-			if (content.parent)
-				content.parent.removeChild(content);
-		}
-		
-		private function onUpdateLoading(e:Event):void 
-		{
-			percentNumber = mainData.loadingData.loadingPercent;
+			
 		}
 		
 		private function ioError(e:IOErrorEvent):void 
@@ -97,25 +81,16 @@ package
 		{
 			// TODO update loader
 			percentNumber = (e.bytesLoaded / e.bytesTotal) * 100;
-			
-			if (e.bytesLoaded >= e.bytesTotal)
-			{
-				loaderInfo.removeEventListener(ProgressEvent.PROGRESS, progress);
-				loaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, ioError);
-				MainCommand.getInstance().initCommand.loadInit();
-			}
 		}
 		
 		private function loadingFinished():void 
 		{
-			mainData.loadingData.removeEventListener(LoadingData.UPDATE_LOADING, onUpdateLoading);
-			
 			// TODO hide loader
 			
-			var mainClass:Class = getDefinitionByName("view.Main") as Class;
+			var mainClass:Class = getDefinitionByName("BoGameBaiMainView") as Class;
 			addChild(new mainClass() as DisplayObject);
 			percentNumber = 100;
-			addChild(content);
+			removeChild(content);
 		}
 		
 		public function get percentNumber():int 
@@ -128,8 +103,7 @@ package
 			if (value > 100)
 				value = 100;
 			_percentNumber = value;
-			loadingBar["child"].x = -208 + 208 * (value / 100);
-			trace("aaaaaaaaaa", value);
+			content.percent.text = String(value) + "%";
 		}
 		
 	}

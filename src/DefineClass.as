@@ -99,6 +99,8 @@ package
 			zSystemNoticeBar;
 			ContentUserTopList;
 			BuyTourSuccessMc;
+			
+			BoGameBaiMainView;
 		}
 	}
 }
