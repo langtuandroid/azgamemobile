@@ -95,6 +95,7 @@ package
 			ContentItemMc;
 			ContentTourMc;
 			ContentMyAvatarMc;
+			ContentMyItemMc;
 			ChoosePayMoneyTypeMc;
 			zSystemNoticeBar;
 			ContentUserTopList;
