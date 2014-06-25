@@ -312,9 +312,47 @@ package view.window.shop
 					httpRequest.sendRequest(method, url, obj, loadTopSuccess, true);
 				break;
 				case 2:
-					
+					url = "http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserLevel";
+					obj = new Object();
+					obj.avt_group_id = String(0);
+					httpRequest.sendRequest(method, url, obj, loadRoyalTopSuccess, true);
 				break;
 				default:
+			}
+		}
+		
+		private function loadRoyalTopSuccess(obj:Object):void 
+		{
+			if (scrollViewForRank) 
+			{
+				scrollViewForRank.removeAll();
+				
+			}
+			var arr:Array = obj.Data;
+			trace("danh sahc top: ", arr.length)
+			for (var i:int = 0; i < arr.length; i++) 
+			{
+				var contentTop:MovieClip = new ContentUserTopList();
+				
+				var gold:int = arr[i].gold;
+				var nickname:String = arr[i].nick_name;
+				var level:int = 1;
+				var winNumber:int = 1000;
+				var loseNumber:int = 10000;
+				
+				
+				contentTop.sttTxt.text = String(i + 1);
+				contentTop.userNameTxt.text = nickname;
+				contentTop.moneyTxt.text = format(gold) + " G";
+				contentTop.levelTxt.text = format(level);
+				contentTop.winTxt.text = format(winNumber);
+				contentTop.loseTxt.text = format(loseNumber);
+				
+				//myContent.standingBg.addChild(contentTop);
+				
+				contentTop.gotoAndStop((i % 2) + 1);
+				scrollViewForRank.addRow(contentTop);
+				
 			}
 		}
 		
@@ -745,9 +783,14 @@ package view.window.shop
 				var countX:int;
 				var countY:int;
 
-				for (i = 0; i < _arrTour.length; i++ ) 
+			for (i = 0; i < _arrTour.length; i++ ) 
 			{
 				_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
+				
+			}
+			for (i = 0; i < _arrGift.length; i++ ) 
+			{
+				_arrGift[i].removeEventListener(ConstTlmn.BUY_ITEM, onChangeGift);
 				
 			}
 			for (i = 0; i < _arrItem.length; i++ ) 
@@ -1077,10 +1120,118 @@ package view.window.shop
 					obj.it_type = String(3);
 					httpRequest.sendRequest(method, url, obj, loadItemTourSuccess, true);
 				break;
+				case 4:
+					trace("load item doi thuong")
+					url = "http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+									"?rowStart=0&rowEnd=50";
+					obj = new Object();
+					obj.it_group_id = String(3);//loai 1: gold, 2 ve giai dau, 3 item doi thuong
+					obj.it_type = String(4);
+					httpRequest.sendRequest(method, url, obj, loadItemGiftSuccess, true);
+				break;
 				default:
 			}
 			
 			
+		}
+		
+		private function loadItemGiftSuccess(obj:Object):void 
+		{
+			trace("load dc qua doi thuong: ", obj.Data)
+			var arrData:Array = obj.Data;
+			var countX:int;
+			var countY:int;
+			var i:int;
+			
+			for (i = 0; i < _arrGift.length; i++ ) 
+			{
+				_arrGift[i].removeEventListener(ConstTlmn.BUY_ITEM, onChangeGift);
+				
+			}
+			for (i = 0; i < _arrTour.length; i++ ) 
+			{
+				_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
+				
+			}
+			for (i = 0; i < _arrGift.length; i++ ) 
+			{
+				_arrGift[i].removeEventListener(ConstTlmn.BUY_ITEM, onChangeGift);
+				
+			}
+			for (i = 0; i < _arrItem.length; i++ ) 
+			{
+				_arrItem[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemNormal);
+				
+			}
+			for (i = 0; i < _arrGold.length; i++ ) 
+			{
+				_arrGold[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemGold);
+				
+			}
+			for (i = 0; i < _arrAvatar.length; i++ ) 
+			{
+				_arrAvatar[i].removeEventListener(ConstTlmn.BUY_AVATAR, onBuyAvatar);
+				
+			}
+			for (i = 0; i < _arrMyAvatar.length; i++ ) 
+			{
+				_arrMyAvatar[i].removeEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
+				
+			}
+			
+			
+			scrollView.removeAll();
+			_arrGift = [];
+			
+			for (i = 0; i < arrData.length; i++ ) 
+			{
+				var nameAvatar:String = arrData[i]['it_name'];
+				var chipAvatar:String = "0";
+				var payGold:String = arrData[i]['it_buy_gold'];//arrData[i]['it_pay_gold'];
+				var linkAvatar:String = arrData[i]['it_dir_path'];
+				var expireAvatar:String = arrData[i]['it_sell_expire_dt'];
+				var idAvtWeb:String = arrData[i]['it_cd_wb'];
+				var idAvt:String = arrData[i]['it_id'];
+				
+				var soldOut:Boolean = true;
+				if (arrData[i]['it_buy_lmt_cnt'] == 0) 
+				{
+					soldOut = false;
+				}
+				
+				var contentAvatar:ContentItemGift = new ContentItemGift();
+				_arrGift.push(contentAvatar);
+				//contentAvatar.x = 10 + countX * 440;
+				//contentAvatar.y = 5 + countY * 135;
+				
+				if (countX < 2) 
+				{
+					countX++;
+				}
+				else 
+				{
+					countY++;
+					countX = 0;
+				}
+				
+				contentAvatar.addInfo(idAvt, nameAvatar, chipAvatar, payGold, linkAvatar, expireAvatar, idAvtWeb, soldOut);
+				scrollView.addRow(contentAvatar);
+				//_arrBoard[3].addChild(contentAvatar);
+				
+				contentAvatar.addEventListener(ConstTlmn.BUY_ITEM, onChangeGift);
+			}
+		}
+		
+		private function onChangeGift(e:Event):void 
+		{
+			var i:int;
+			choosePay = new ChoosePayMoneyType();
+			windowLayer.openWindow(choosePay);
+			choosePay.showChoose(1);
+			
+			choosePay.addEventListener("agree", onClickBuyGold);
+			
+			goldChoseBuy = e.currentTarget as ContentItemGift;
 		}
 		
 		private function loadItemTourSuccess(obj:Object):void 
@@ -1094,6 +1245,11 @@ package view.window.shop
 			for (i = 0; i < _arrTour.length; i++ ) 
 			{
 				_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
+				
+			}
+			for (i = 0; i < _arrGift.length; i++ ) 
+			{
+				_arrGift[i].removeEventListener(ConstTlmn.BUY_ITEM, onChangeGift);
 				
 			}
 			for (i = 0; i < _arrItem.length; i++ ) 
@@ -1177,6 +1333,11 @@ package view.window.shop
 			for (i = 0; i < _arrTour.length; i++ ) 
 			{
 				_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
+				
+			}
+			for (i = 0; i < _arrGift.length; i++ ) 
+			{
+				_arrGift[i].removeEventListener(ConstTlmn.BUY_ITEM, onChangeGift);
 				
 			}
 			for (i = 0; i < _arrItem.length; i++ ) 
@@ -1282,6 +1443,11 @@ package view.window.shop
 				_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
 				
 			}
+			for (i = 0; i < _arrGift.length; i++ ) 
+			{
+				_arrGift[i].removeEventListener(ConstTlmn.BUY_ITEM, onChangeGift);
+				
+			}
 			for (i = 0; i < _arrItem.length; i++ ) 
 			{
 				_arrItem[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemNormal);
@@ -1358,6 +1524,10 @@ package view.window.shop
 			{
 				buyTour.removeEventListener("agree", onClickBuyGold);
 			}
+			if (choosePay) 
+			{
+				choosePay.removeEventListener("agree", onClickBuyGold);
+			}
 			
 			
 			var myInfo:MyInfo = new MyInfo();
@@ -1384,7 +1554,25 @@ package view.window.shop
 			trace(obj)
 			var buyAvatarWindow:ConfirmWindow;
 			trace("mua item respone: ", obj["Msg"])
+			
 			if (obj["Msg"] == "Access Token Expired") 
+			{
+				if (goldChoseBuy is ContentItemTour) 
+				{
+					buyTour = new BuyTourTicket();
+					buyTour.noticeChoseItem(goldChoseBuy._nameAvt, "Giao dịch không thành công, xin vui lòng thử lại");
+					windowLayer.openWindow(buyTour);
+				}
+				else
+				{
+					buyAvatarWindow = new ConfirmWindow();
+					buyAvatarWindow.setNotice("Giao dịch không thành công, xin vui lòng thử lại");
+					
+					windowLayer.openWindow(buyAvatarWindow);
+				}
+				
+			}
+			else if (obj["Msg"] == "Cập nhật không thành công [SQLCODE:-12899]") 
 			{
 				if (goldChoseBuy is ContentItemTour) 
 				{
@@ -1449,6 +1637,11 @@ package view.window.shop
 			for (i = 0; i < _arrTour.length; i++ ) 
 			{
 				_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
+				
+			}
+			for (i = 0; i < _arrGift.length; i++ ) 
+			{
+				_arrGift[i].removeEventListener(ConstTlmn.BUY_ITEM, onChangeGift);
 				
 			}
 			for (i = 0; i < _arrItem.length; i++ ) 

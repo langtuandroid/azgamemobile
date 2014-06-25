@@ -320,27 +320,18 @@ package view.screen
 				case PlayingScreenActionTlmn.GAME_OVER: // ván kết thúc
 					listenGameOver(e.data[ModelFieldTLMN.DATA]);
 				break;
-				/*case PlayingScreenActionTlmn.LIST_BEFORE_START://lay danh sach cuoi cung
-					listenGetUserListLast(e.data[ModelFieldTLMN.DATA]);
-				break;*/
+				
 				case PlayingScreenActionTlmn.UPDATE_ROOM_MASTER: // Cập nhật thay đổi chủ phòng
 					listenUpdateRoomMaster(e.data[ModelFieldTLMN.DATA]);
 				break;
 				case PlayingScreenActionTlmn.ROOM_MASTER_KICK: // Bị chủ phòng kick
 					listenRoomMasterKick(e.data[ModelFieldTLMN.DATA]);
 				break;
-				case PlayingScreenActionTlmn.SORT_FINISH: // Có người xếp bài xong hoặc bỏ xếp bài xong
-					//listenHaveUserSortCard(e.data[ModelField.DATA]);
-				break;
-				case PlayingScreenActionTlmn.COMPARE_GROUP: // Đọ chi
-					//listenCompareGroup(e.data[ModelField.DATA]);
-				break;
+				
 				case PlayingScreenActionTlmn.WHITE_WIN: // Thắng trắng
 					listenWhiteWin(e.data[ModelFieldTLMN.DATA]);
 				break;
-				case PlayingScreenActionTlmn.DICE: // kết quả xúc xắc
-					//listenDice(e.data[ModelField.DATA]);
-				break;
+				
 				case PlayingScreenActionTlmn.UPDATE_MONEY: // update tiền
 					//listenUpdateMoneyUser(e.data[ModelFieldTLMN.DATA]);
 					listenUpdateMoneyUser(e.data[ModelFieldTLMN.DATA]);
@@ -349,18 +340,7 @@ package view.screen
 				case PlayingScreenActionTlmn.UPDATE_MONEY_SPECIAL: // update tiền
 					listenUpdateMoney(e.data[ModelFieldTLMN.DATA]);
 				break;
-				case PlayingScreenActionTlmn.HAVE_USER_REQUEST_TIME_CLOCK: // có người khác request time clock khi đang chơi
-					//listenHaveUserRequestTimeClock(e.data[ModelField.DATA]);
-				break;
-				case PlayingScreenActionTlmn.HAVE_USER_RESPOND_TIME_CLOCK: // có người khác respond time clock khi đang chơi
-					//listenHaveUserRespondTimeClock(e.data[ModelField.DATA]);
-				break;
-				case PlayingScreenActionTlmn.HAVE_USER_REQUEST_IS_COMPARE_GROUP: // có người khác hỏi xem có phải đang đọ chi không
-					//listenHaveUserRequestIsCompareGroup(e.data[ModelField.DATA]);
-				break;
-				case PlayingScreenActionTlmn.HAVE_USER_RESPOND_IS_COMPARE_GROUP: // có người khác trả lời có phải đang đọ chi không
-					//listenHaveUserRespondIsCompareGroup(e.data[ModelField.DATA]);
-				break;
+				
 				case PlayingScreenActionTlmn.ERROR:
 					listenErrorDiscard();
 				break;
@@ -418,6 +398,7 @@ package view.screen
 			if (obj[DataField.USER_NAME] == MyDataTLMN.getInstance().myId) 
 			{
 				MyDataTLMN.getInstance().myMoney[0] = int(obj[DataField.MONEY]);
+				mainData.chooseChannelData.myInfo.money = Number(obj[DataField.MONEY]);
 				_myInfo.addMyMoney();
 			}
 			else 
@@ -1306,42 +1287,6 @@ package view.screen
 			}
 			
 			_arrCardListOtherUser = [];
-		}
-		
-		private function listenGetUserListLast(obj:Object):void 
-		{
-			var i:int;
-			var arrPlayerList:Array = obj[DataField.PLAYER_LIST];
-			var count:int
-			
-			for (i = 0; i < arrPlayerList.length; i++) 
-			{
-				if (arrPlayerList[i]["userName"] == MyDataTLMN.getInstance().myId) 
-				{
-					count = arrPlayerList[i].position;
-					_arrUserList = converArrAgain(count, arrPlayerList);
-					MyDataTLMN.getInstance().myMoney[0] = String(_arrUserList[0].money);
-					if (_arrUserList[0]["isMaster"]) 
-					{
-						GameDataTLMN.getInstance().master = arrPlayerList[i]["userName"];
-					}
-					
-					break;
-				}
-			}
-			
-			if (GameDataTLMN.getInstance().master == _myInfo._userName) 
-			{
-				
-				checkShowTextNotice();
-				//content.startGame.addEventListener(MouseEvent.CLICK, onClickStartGame);
-			}
-			
-			if (int(MyDataTLMN.getInstance().myMoney[0]) > int(content.roomBet.text) * ConstTlmn.xBet) 
-			{
-				addUsersInfo();
-			}
-			
 		}
 		
 		private function onClickStartGame(e:MouseEvent):void 
@@ -4028,13 +3973,6 @@ package view.screen
 					{
 						count = obj.userList[i].position;
 						_myInfo.realPos = count;
-						if (!_myInfo) 
-						{
-							
-							
-							MyDataTLMN.getInstance().myMoney[0] = String(obj.userList[i].money);
-						}
-						
 						
 						break;
 					}
@@ -4276,6 +4214,7 @@ package view.screen
 									_arrUserList[0].ip);
 			//
 			MyDataTLMN.getInstance().myMoney[0] = String(_arrUserList[0].money);
+			mainData.chooseChannelData.myInfo.money = Number(_arrUserList[0].money);
 			if (_arrUserList[0].isMonster) 
 			{
 				checkEvent = true;

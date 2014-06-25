@@ -124,7 +124,6 @@ package view.window.shop
 				addChild(_bitmap);
 				trace("con lon nay", _bitmap.width, _bitmap.height)
 				
-				trace("con lon nay da scale", _bitmap.width, _bitmap.height)
 				_bitmap.smoothing = true;
 				
 				_bitmap.x = (65 - _bitmap.width) / 2;
