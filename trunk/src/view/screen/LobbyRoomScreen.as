@@ -114,6 +114,7 @@ package view.screen
 			addContent("zLobbyRoomScreen");
 			
 			gameLogo = content["gameLogo"];
+			gameLogo.gotoAndStop("empty");
 			
 			addRoomList();
 			addUserList();
@@ -203,6 +204,8 @@ package view.screen
 		
 		private function onSelectGame(e:Event):void 
 		{
+			updateGameType();
+			
 			if (selectGameWindow)
 			{
 				if (selectGameWindow.parent)
