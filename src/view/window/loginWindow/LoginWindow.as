@@ -308,11 +308,12 @@ package view.window.loginWindow
 			}
 			var mainRequest:MainRequest = new MainRequest();
 			var data:Object = new Object();
-			data.fbid = mainData.facebookData.uid;
-			data.udid = deviceId;
-			data.token = mainData.facebookData.accessToken;
+			data.access_token = mainData.facebookData.accessToken;
 			zLoginWindow(content).loadingLayer.visible = true;
-			mainRequest.sendRequest_Post("http://" + mainData.gameIp + "/user/login_mobile_facebook", data, onLoginFacebookRespond, true);
+			if (mainData.isTest)
+				mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/Facebook_GetUserInfo", data, onLoginFacebookRespond, true);
+			else
+				mainRequest.sendRequest_Post("http://wss.azgame.us/Service02/OnplayUserExt.asmx/Facebook_GetUserInfo", data, onLoginFacebookRespond, true);
 		}
 		
 		private function onLoginFacebookRespond(value:Object):void 
@@ -323,20 +324,20 @@ package view.window.loginWindow
 				WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại, link truy cập bị lỗi !!");
 				return;
 			}
-			if (value["login_status"] == "0")
+			if (value.TypeMsg == 2)
 			{
 				zLoginWindow(content).loadingLayer.visible = false;
 				WindowLayer.getInstance().openAlertWindow(value["msg"]);
 				return;
 			}
-			
-			mainData.loginData = value;
-			
-			zLoginWindow(content).loadingLayer.visible = false;
-			
-			excuteUserInfo(value);
-			
-			close(BaseWindow.MIDDLE_EFFECT);
+			if (value.TypeMsg == 1)
+			{
+				mainData.loginData = value;
+				zLoginWindow(content).loadingLayer.visible = false;
+				excuteUserInfo(value);
+				close(BaseWindow.MIDDLE_EFFECT);
+				return;
+			}
 		}
 		
 		private function onForgetPassClick(e:MouseEvent):void 
