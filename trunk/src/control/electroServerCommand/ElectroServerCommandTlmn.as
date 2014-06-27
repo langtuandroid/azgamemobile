@@ -46,6 +46,8 @@ package control.electroServerCommand
 		{
 			ipNumber = "203.162.121.120";//mainData.init.ipNumber;
 			portNumber = 5101;
+			if (mainData.isTest)
+				portNumber = 3101;
 			channelId = _channelId;
 			capacity = _capacity;
 			myUserName = _userName;
