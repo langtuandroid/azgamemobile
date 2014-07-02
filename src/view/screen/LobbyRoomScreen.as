@@ -818,6 +818,12 @@ package view.screen
 		
 		private function onUpdateMyInfo(e:Event):void 
 		{
+			if (mainCommand.electroServerCommand) 
+			{
+				mainCommand.electroServerCommand.updateMoney();
+			}
+			
+			
 			var userData:UserDataRLC = new UserDataRLC();
 			userData.moneyLogoUrl1 = mainData.init.requestLink.moneyIcon.@url;
 			userData.userName = mainData.chooseChannelData.myInfo.name;

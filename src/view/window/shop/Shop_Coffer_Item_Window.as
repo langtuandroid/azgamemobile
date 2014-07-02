@@ -62,10 +62,20 @@ package view.window.shop
 		private var avatarChoseBuy:*;
 		private var goldChoseBuy:*;
 		
+		private var basePath:String = "";
+		
 		public function Shop_Coffer_Item_Window() 
 		{
 			super();
 			
+			if (MainData.getInstance().isTest) 
+			{
+				basePath = "http://wss.test.azgame.us/";
+			}
+			else 
+			{
+				basePath = "http://wss.azgame.us/";
+			}
 			myContent = new Shop_Coffer_Item_Mc();
 			addChild(myContent);
 			myContent.mask = myContent.boardMask;
@@ -132,6 +142,8 @@ package view.window.shop
 			myContent.chooseInCofferMc.chooseAvatar.removeEventListener(MouseEvent.MOUSE_UP, onClickShowMyAvatar);
 			myContent.chooseInCofferMc.chooseGold.removeEventListener(MouseEvent.MOUSE_UP, onClickShowMyGold);
 			myContent.chooseInCofferMc.chooseItem.removeEventListener(MouseEvent.MOUSE_UP, onClickShowMyItem);
+			myContent.chooseInCofferMc.chooseTour.removeEventListener(MouseEvent.MOUSE_UP, onClickShowMyTour);
+			myContent.chooseInCofferMc.chooseGift.removeEventListener(MouseEvent.MOUSE_UP, onClickShowMyGift);
 			
 			myContent.chooseInAddMoneyMc.raking.removeEventListener(MouseEvent.MOUSE_UP, onClickShowAddMoneyRaking);
 			myContent.chooseInAddMoneyMc.sms.removeEventListener(MouseEvent.MOUSE_UP, onClickShowAddMoneySms);
@@ -163,6 +175,8 @@ package view.window.shop
 			myContent.chooseInCofferMc.chooseAvatar.gotoAndStop(2);
 			myContent.chooseInCofferMc.chooseGold.gotoAndStop(2);
 			myContent.chooseInCofferMc.chooseItem.gotoAndStop(2);
+			myContent.chooseInCofferMc.chooseTour.gotoAndStop(2);
+			myContent.chooseInCofferMc.chooseGift.gotoAndStop(2);
 			
 			myContent.chooseInAddMoneyMc.raking.gotoAndStop(2);
 			myContent.chooseInAddMoneyMc.sms.gotoAndStop(2);
@@ -198,6 +212,8 @@ package view.window.shop
 			myContent.chooseInCofferMc.chooseAvatar.addEventListener(MouseEvent.MOUSE_UP, onClickShowMyAvatar);
 			myContent.chooseInCofferMc.chooseGold.addEventListener(MouseEvent.MOUSE_UP, onClickShowMyGold);
 			myContent.chooseInCofferMc.chooseItem.addEventListener(MouseEvent.MOUSE_UP, onClickShowMyItem);
+			myContent.chooseInCofferMc.chooseTour.addEventListener(MouseEvent.MOUSE_UP, onClickShowMyTour);
+			myContent.chooseInCofferMc.chooseGift.addEventListener(MouseEvent.MOUSE_UP, onClickShowMyGift);
 			
 			
 			myContent.chooseInAddMoneyMc.raking.addEventListener(MouseEvent.MOUSE_UP, onClickShowAddMoneyRaking);
@@ -284,7 +300,7 @@ package view.window.shop
 			switch (type) 
 			{
 				case 0:
-					url = "http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserMoney?row_start=0&row_end=10";
+					url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserMoney?row_start=0&row_end=10";
 					obj = new Object();
 					obj.avt_group_id = String(0);
 					httpRequest.sendRequest(method, url, obj, loadRichTopSuccess, true);
@@ -292,17 +308,17 @@ package view.window.shop
 				case 1:
 					if (typeGame == 0) 
 					{
-						url = "http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserWin?"
+						url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserWin?"
 								+ "game_id=AZGB_TLMNrow_start=0&row_end=10";
 					}
 					else if (typeGame == 1) 
 					{
-						url = "http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserWin?"
+						url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserWin?"
 								+ "game_id=AZGB_BINHrow_start=0&row_end=10";
 					}
 					else if (typeGame == 2) 
 					{
-						url = "http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserWin?"
+						url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserWin?"
 								+ "game_id=AZGB_PHOMrow_start=0&row_end=10";
 					}
 					
@@ -721,7 +737,7 @@ package view.window.shop
 		}
 		
 		/**
-		 * type(0: avatar, 1:gold, 2:item)
+		 * type(0: avatar, 1:gold, 2:item, 3: tour, 4: doi thuong)
 		 */
 		public function loadMyItem(type:int):void 
 		{
@@ -737,7 +753,7 @@ package view.window.shop
 			switch (type) 
 			{
 				case 0:
-					url = "http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetListAvatarOfBuyer?nick_name=" + 
+					url = basePath + "Service02/OnplayUserExt.asmx/GetListAvatarOfBuyer?nick_name=" + 
 						MainData.getInstance().chooseChannelData.myInfo.name + "&rowStart=0&rowEnd=50";
 						
 					obj = new Object();
@@ -745,7 +761,7 @@ package view.window.shop
 					httpRequest.sendRequest(method, url, obj, loadMyAvatarSuccess, true);
 				break;
 				case 1:
-					url = "http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
 									"?rowStart=0&rowEnd=10";
 					obj = new Object();
 					obj.it_group_id = String(1);
@@ -753,7 +769,23 @@ package view.window.shop
 					httpRequest.sendRequest(method, url, obj, loadMyItemGoldSuccess, true);
 				break;
 				case 2:
-					/*url = "http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+					/*url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+									"?rowStart=0&rowEnd=10";
+					obj = new Object();
+					obj.it_group_id = String(2);//loai 1: gold, 2 ve giai dau
+					obj.it_type = String(3);
+					httpRequest.sendRequest(method, url, obj, loadMyItemTourSuccess, true);*/
+				break;
+				case 3: // tour
+					url = basePath + "/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTransactionInfo";
+					obj = new Object();
+					obj.it_group_id = String(2);//loai 1: gold, 2 ve giai dau
+					obj.type_item_id = String(6);
+					obj.access_token = MainData.getInstance().loginData["AccessToken"];
+					httpRequest.sendRequest(method, url, obj, loadMyItemTourSuccess, true);
+				break;
+				case 4: // doi thuong
+					/*url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
 									"?rowStart=0&rowEnd=10";
 					obj = new Object();
 					obj.it_group_id = String(2);//loai 1: gold, 2 ve giai dau
@@ -913,7 +945,7 @@ package view.window.shop
 					var idAvtWeb:String = arrData[i]['avt_cd_wb'];
 					var idListAvt:String = arrData[i]['avt_lst_id'];
 					
-					var contentAvatar:ContentMyItem = new ContentMyItem();
+					var contentAvatar:ContentMyItemGold = new ContentMyItemGold();
 					_arrMyGold.push(contentAvatar);
 					//contentAvatar.x = 10 + countX * 440;
 					//contentAvatar.y = 5 + countY * 135;
@@ -1035,7 +1067,7 @@ package view.window.shop
 		{
 			var avatar:ContentMyAvatar = e.currentTarget as ContentMyAvatar;
 			var myInfo:MyInfo = new MyInfo();
-			var url:String = "http://wss.azgame.us/Service02/OnplayShopExt.asmx/DressAvatarFromClientSide";
+			var url:String = basePath + "Service02/OnplayShopExt.asmx/DressAvatarFromClientSide";
 			var obj:Object = new Object();
 			var mainData:MainData = MainData.getInstance();
 			obj["access_token"] = mainData.loginData["AccessToken"];
@@ -1069,6 +1101,7 @@ package view.window.shop
 		
 		public function onClickShowMyAvatar(e:MouseEvent):void 
 		{
+			getNewAccessToken();
 			scrollView.visible = true;
 			scrollViewForRank.visible = false;
 			allHeaderVisible();
@@ -1088,6 +1121,20 @@ package view.window.shop
 			allHeaderVisible();
 			showHeaderChose(3, 2);
 			loadMyItem(2);
+		}
+		
+		public function onClickShowMyTour(e:MouseEvent):void 
+		{
+			allHeaderVisible();
+			showHeaderChose(3, 3);
+			loadMyItem(3);
+		}
+		
+		public function onClickShowMyGift(e:MouseEvent):void 
+		{
+			allHeaderVisible();
+			showHeaderChose(3, 4);
+			loadMyItem(4);
 		}
 		
 		public function onClickShowGift(e:MouseEvent):void 
@@ -1120,11 +1167,43 @@ package view.window.shop
 		
 		public function onClickShowAvatar(e:MouseEvent):void 
 		{
+			getNewAccessToken();
 			scrollView.visible = true;
 			scrollViewForRank.visible = false;
 			allHeaderVisible();
 			showHeaderChose(2, 0);
 			loadItem(0);
+		}
+		
+		private function getNewAccessToken():void 
+		{
+			var date:Date = new Date();
+			
+			var myInfo:MyInfo = new MyInfo();
+			var url:String = basePath + "Service02/OnplayUserExt.asmx/GetAccessTokenDirectly";
+			var obj:Object = new Object();
+			var mainData:MainData = MainData.getInstance();
+			obj["client_id"] = mainData.client_id;
+			obj["client_secret"] = mainData.client_secret;
+			obj["client_timestamp"] = String(date.getTime());
+			obj["nick_name"] = mainData.chooseChannelData.myInfo.name;
+			obj["client_hash"] = MD5.hash(obj.client_id + obj.client_timestamp + 
+												obj.client_secret + obj.nick_name);
+			
+			trace("get token: ", mainData.chooseChannelData.myInfo.token)
+			var httpReq:HTTPRequest = new HTTPRequest();
+			httpReq.sendRequest("POST", url, obj, getTokenRespone, true);
+		}
+		
+		private function getTokenRespone(obj:Object):void 
+		{
+			if (obj.TypeMsg == '1')
+			{
+				var mainData:MainData = MainData.getInstance();
+				mainData.chooseChannelData.myInfo.token = obj.Data.access_token;
+				mainData.loginData["AccessToken"] = obj.Data.access_token;
+				trace("new token: ", mainData.chooseChannelData.myInfo.token)
+			}
 		}
 		
 		private function showHeaderChose(header:int, type:int):void 
@@ -1181,7 +1260,7 @@ package view.window.shop
 				myContent.chooseInShopMc.chooseGift.gotoAndStop(1);
 				myContent.standingBg.boardContent.y = 0;
 			}
-			else if (header == 3 && type == 0) //trong hom do: avatar, gold, item
+			else if (header == 3 && type == 0) //trong hom do: avatar, gold, item, ve giai dau, giai thuong
 			{
 				myContent.chooseInCofferMc.chooseAvatar.gotoAndStop(1);
 				myContent.standingBg.boardContent.y = 0;
@@ -1194,6 +1273,16 @@ package view.window.shop
 			else if (header == 3 && type == 2) 
 			{
 				myContent.chooseInCofferMc.chooseItem.gotoAndStop(1);
+				myContent.standingBg.boardContent.y = 0;
+			}
+			else if (header == 3 && type == 3) 
+			{
+				myContent.chooseInCofferMc.chooseTour.gotoAndStop(1);
+				myContent.standingBg.boardContent.y = 0;
+			}
+			else if (header == 3 && type == 4) 
+			{
+				myContent.chooseInCofferMc.chooseGift.gotoAndStop(1);
 				myContent.standingBg.boardContent.y = 0;
 			}
 		}
@@ -1259,14 +1348,14 @@ package view.window.shop
 			switch (type) 
 			{
 				case 0:
-					url = "http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetListTwav00" + String(1)
+					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwav00" + String(1)
 									+ "?rowStart=0&rowEnd=62";
 					obj = new Object();
 					obj.avt_group_id = String(0);
 					httpRequest.sendRequest(method, url, obj, loadAvatarSuccess, true);
 				break;
 				case 1:
-					url = "http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
 									"?rowStart=0&rowEnd=10";
 					obj = new Object();
 					obj.it_group_id = String(1);
@@ -1274,7 +1363,7 @@ package view.window.shop
 					httpRequest.sendRequest(method, url, obj, loadItemGoldSuccess, true);
 				break;
 				case 2:
-					url = "http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
 									"?rowStart=0&rowEnd=10";
 					obj = new Object();
 					obj.it_group_id = String(1);
@@ -1283,7 +1372,7 @@ package view.window.shop
 				break;
 				case 3:
 					trace("load ve giai dau")
-					url = "http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
 									"?rowStart=0&rowEnd=10";
 					obj = new Object();
 					obj.it_group_id = String(2);//loai 1: gold, 2 ve giai dau
@@ -1292,7 +1381,7 @@ package view.window.shop
 				break;
 				case 4:
 					trace("load item doi thuong")
-					url = "http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
 									"?rowStart=0&rowEnd=50";
 					obj = new Object();
 					obj.it_group_id = String(3);//loai 1: gold, 2 ve giai dau, 3 item doi thuong
@@ -1352,6 +1441,12 @@ package view.window.shop
 			
 			scrollView.removeAll();
 			_arrGift = [];
+			
+			if (obj["Msg"] == "Access Token Expired") 
+			{
+				
+				return;
+			}
 			
 			for (i = 0; i < arrData.length; i++ ) 
 			{
@@ -1581,7 +1676,7 @@ package view.window.shop
 		private function onClickBuyItem(e:Event):void 
 		{
 			var myInfo:MyInfo = new MyInfo();
-			var url:String = "http://wss.azgame.us/Service02/OnplayShopExt.asmx/BuyItemFromClientSide";
+			var url:String = basePath + "Service02/OnplayShopExt.asmx/BuyItemFromClientSide";
 			var obj:Object = new Object();
 			var mainData:MainData = MainData.getInstance();
 			obj["access_token"] = mainData.loginData["AccessToken"];
@@ -1641,7 +1736,7 @@ package view.window.shop
 			scrollView.removeAll();
 			_arrGold = [];
 			
-			for (i = 0; i < arrData.length; i++ ) 
+			for (i = arrData.length - 1; i > -1; i-- ) 
 			{
 				var nameAvatar:String = arrData[i]['it_name'];
 				var chipAvatar:String = arrData[i]['it_buy_chip'];
@@ -1701,7 +1796,7 @@ package view.window.shop
 			
 			
 			var myInfo:MyInfo = new MyInfo();
-			var url:String = "http://wss.azgame.us/Service02/OnplayShopExt.asmx/BuyItemFromClientSide";
+			var url:String = basePath + "Service02/OnplayShopExt.asmx/BuyItemFromClientSide";
 			var obj:Object = new Object();
 			var mainData:MainData = MainData.getInstance();
 			obj["access_token"] = mainData.loginData["AccessToken"];
@@ -1891,7 +1986,7 @@ package view.window.shop
 			var mainData:MainData = MainData.getInstance();
 			trace("client id khi mua avatar: ", mainData.client_id , "--", mainData.client_secret)
 			var myInfo:MyInfo = new MyInfo();
-			var url:String = "http://wss.azgame.us/Service02/OnplayShopExt.asmx/BuyAvatarFromClientSide";
+			var url:String = basePath + "Service02/OnplayShopExt.asmx/BuyAvatarFromClientSide";
 			var obj:Object = new Object();
 			
 			obj["access_token"] = mainData.loginData["AccessToken"];
