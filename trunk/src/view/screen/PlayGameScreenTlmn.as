@@ -231,11 +231,11 @@ package view.screen
 			
 			GameDataTLMN.getInstance().playingData.addEventListener(PlayingData.UPDATE_PLAYING_SCREEN, onUpdatePlayingScreen);
 			
-			/*var textfield:TextField = new TextField();
-			textfield.text = "test 13/06/2014 : 17h20m";
+			var textfield:TextField = new TextField();
+			textfield.text = "test 30/06/2014 : 17h20m";
 			textfield.x = 20;
 			textfield.y = 520;
-			content.addChild(textfield);*/
+			content.addChild(textfield);
 			
 			if (heartbeart) 
 			{

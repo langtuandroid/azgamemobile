@@ -51,11 +51,13 @@ package view.window.shop
 				case 0:
 					contentMc.noticeTxt.text = "Chọn hình thức thanh toán";
 					contentMc.chooseTypeMoney.visible = true;
+					contentMc.noticeTxt.y = -106;
+					
 				break;
 				case 1:
 					contentMc.noticeTxt.text = "Bạn đồng ý thực hiện giao dịch?";
 					contentMc.chooseTypeMoney.visible = false;
-					
+					contentMc.noticeTxt.y = -36;
 					
 				break;
 				default:

@@ -34,9 +34,6 @@ package view.window.shop
 		
 		public function addImg(linkAvatar:String):void 
 		{
-			
-			trace("link avatar: " , linkAvatar, "=====================")
-			
 			//Security.allowDomain("*");
 			//Security.allowInsecureDomain("*");
 			var context:LoaderContext = new LoaderContext();
@@ -55,8 +52,6 @@ package view.window.shop
 			
 			/*Security.allowDomain('http://profile.ak.fbcdn.net');
 			Security.allowInsecureDomain('http://profile.ak.fbcdn.net');*/
-			trace("co check load policy file", _linkAvatar , "---", linkAvatar)
-			
 			
 			{
 				if (_bitmapData) 
@@ -122,7 +117,6 @@ package view.window.shop
 				_bitmapData.draw(loader);
 				_bitmap = new Bitmap(_bitmapData);
 				addChild(_bitmap);
-				trace("con lon nay", _bitmap.width, _bitmap.height)
 				
 				_bitmap.smoothing = true;
 				
