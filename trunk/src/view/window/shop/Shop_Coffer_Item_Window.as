@@ -676,7 +676,7 @@ package view.window.shop
 			{
 				var buyAvatarWindow:ConfirmWindow = new ConfirmWindow();
 				buyAvatarWindow.setNotice("Giao dịch không thành công, xin vui lòng thử lại");
-				
+				buyAvatarWindow.buttonStatus(false, true, false);
 				windowLayer.openWindow(buyAvatarWindow);
 			}
 			else if (obj.TypeMsg < 0) 
@@ -785,15 +785,20 @@ package view.window.shop
 					httpRequest.sendRequest(method, url, obj, loadMyItemTourSuccess, true);
 				break;
 				case 4: // doi thuong
-					/*url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
 									"?rowStart=0&rowEnd=10";
 					obj = new Object();
 					obj.it_group_id = String(2);//loai 1: gold, 2 ve giai dau
 					obj.it_type = String(3);
-					httpRequest.sendRequest(method, url, obj, loadMyItemTourSuccess, true);*/
+					httpRequest.sendRequest(method, url, obj, loadMyItemGiftSuccess, true);
 				break;
 				default:
 			}
+		}
+		
+		private function loadMyItemGiftSuccess(obj:Object):void 
+		{
+			
 		}
 		
 		private function loadMyItemTourSuccess(obj:Object):void 
@@ -1087,14 +1092,14 @@ package view.window.shop
 			{
 				buyAvatarWindow = new ConfirmWindow();
 				buyAvatarWindow.setNotice("Giao dịch không thành công, xin vui lòng thử lại");
-				
+				buyAvatarWindow.buttonStatus(false, true, false);
 				windowLayer.openWindow(buyAvatarWindow);
 			}
 			else if (obj["Msg"] == "Cập nhật thành công") 
 			{
 				buyAvatarWindow = new ConfirmWindow();
 				buyAvatarWindow.setNotice("Bạn đã đổi thành công avatar này!");
-				
+				buyAvatarWindow.buttonStatus(false, true, false);
 				windowLayer.openWindow(buyAvatarWindow);
 			}
 		}
@@ -1832,7 +1837,7 @@ package view.window.shop
 				{
 					buyAvatarWindow = new ConfirmWindow();
 					buyAvatarWindow.setNotice("Giao dịch không thành công, xin vui lòng thử lại");
-					
+					buyAvatarWindow.buttonStatus(false, true, false);
 					windowLayer.openWindow(buyAvatarWindow);
 				}
 				
@@ -1849,7 +1854,7 @@ package view.window.shop
 				{
 					buyAvatarWindow = new ConfirmWindow();
 					buyAvatarWindow.setNotice("Giao dịch không thành công, xin vui lòng thử lại");
-					
+					buyAvatarWindow.buttonStatus(false, true, false);
 					windowLayer.openWindow(buyAvatarWindow);
 				}
 				
@@ -1868,7 +1873,7 @@ package view.window.shop
 				{
 					buyAvatarWindow = new ConfirmWindow();
 					buyAvatarWindow.setNotice("Giao dịch thành công");
-					
+					buyAvatarWindow.buttonStatus(false, true, false);
 					windowLayer.openWindow(buyAvatarWindow);
 				}
 				
@@ -1885,7 +1890,7 @@ package view.window.shop
 				{
 					buyAvatarWindow = new ConfirmWindow();
 					buyAvatarWindow.setNotice("Tài khoản không có đủ CHIP");
-					
+					buyAvatarWindow.buttonStatus(false, true, false);
 					windowLayer.openWindow(buyAvatarWindow);
 				}
 				
@@ -1983,6 +1988,7 @@ package view.window.shop
 		
 		private function onClickBuyAvatar(e:Event):void 
 		{
+			trace(choosePay.typeOfPay)
 			var mainData:MainData = MainData.getInstance();
 			trace("client id khi mua avatar: ", mainData.client_id , "--", mainData.client_secret)
 			var myInfo:MyInfo = new MyInfo();
@@ -1991,7 +1997,7 @@ package view.window.shop
 			
 			obj["access_token"] = mainData.loginData["AccessToken"];
 			obj["game_code"] = avatarChoseBuy._goldAvt;
-			obj["payment_type"] = "1";
+			obj["payment_type"] = "1"; //String(choosePay.typeOfPay);
 			obj["nk_nm_receiver"] = mainData.loginData["Id"];
 			obj["item_id"] = avatarChoseBuy._idAvt;
 			obj["item_quantity"] = "1";
@@ -2014,14 +2020,14 @@ package view.window.shop
 			{
 				buyAvatarWindow = new ConfirmWindow();
 				buyAvatarWindow.setNotice("Giao dịch không thành công, xin vui lòng thử lại");
-				
+				buyAvatarWindow.buttonStatus(false, true, false);
 				windowLayer.openWindow(buyAvatarWindow);
 			}
 			else if (obj["Msg"] == "Cập nhật thành công") 
 			{
 				buyAvatarWindow = new ConfirmWindow();
 				buyAvatarWindow.setNotice("Giao dịch thành công");
-				
+				buyAvatarWindow.buttonStatus(false, true, false);
 				windowLayer.openWindow(buyAvatarWindow);
 			}
 		}
