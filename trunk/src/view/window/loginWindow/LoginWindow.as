@@ -24,6 +24,7 @@ package view.window.loginWindow
 	import view.window.ConfirmWindow;
 	import view.window.FillNameWindow;
 	import view.window.ForgetPassWindow;
+	import view.window.RegisterFacebookWindow;
 	import view.window.registerWindow.RegisterWindow;
 	import view.window.SpecialGroupWindow;
 	import view.window.windowLayer.WindowLayer;
@@ -95,6 +96,7 @@ package view.window.loginWindow
 			
 			zLoginWindow(content).userName.width = 261;
 			zLoginWindow(content).userName.height = 29;
+			zLoginWindow(content).userName.maxChars = 50;
 			
 			var textFormat:TextFormat = new TextFormat("Arial", 20, 0x000000);
 			zLoginWindow(content).pass.setStyle("textFormat", textFormat);
@@ -131,29 +133,6 @@ package view.window.loginWindow
 					{
 						
 					}
-					
-					/*if (mainData.isOnAndroid)
-					{
-						try 
-						{
-							AndroidSocialManager.getInstance().init();
-						}
-						catch (err:Error)
-						{
-							
-						}
-					}
-					else if (mainData.isOnIos)
-					{
-						try 
-						{
-							SocialManager.getInstance().init();
-						}
-						catch (err:Error)
-						{
-							
-						}
-					}*/
 					
 					if (timerToCloseLoadingLayer)
 					{
@@ -243,6 +222,8 @@ package view.window.loginWindow
 		
 		private function onAddedToStage(e:Event):void 
 		{
+			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			
 			mainData.addEventListener(MainData.UPDATE_FACEBOOK_DATA, onUpdateFacebookData);
 			mainData.addEventListener(MainData.LOGIN_FACEBOOK_FAIL, onLoginFacebookFail);
 			mainData.chooseChannelData.addEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
@@ -250,33 +231,15 @@ package view.window.loginWindow
 			
 			if (mainData.isFacebookVersion)
 			{
+				var mainRequest:MainRequest = new MainRequest();
+				var data:Object = new Object();
+				data.access_token = mainData.facebook_access_token;
 				zLoginWindow(content).loadingLayer.visible = true;
-				var tempRequest:MainRequest = new MainRequest();
 				if (mainData.isTest)
-					var url:String = "http://test.sanhbai.com/Handler/Game/azgame.ashx?op=azgame_bai_user_info";
+					mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/Facebook_GetUserInfo", data, onLoginFacebookRespond, true);
 				else
-					url = "http://sanhbai.com/Handler/Game/azgame.ashx?op=azgame_bai_user_info";
-				tempRequest.sendRequest_Post(url, null, getMyInfoFn, true);
+					mainRequest.sendRequest_Post("http://wss.azgame.us/Service02/OnplayUserExt.asmx/Facebook_GetUserInfo", data, onLoginFacebookRespond, true);
 			}
-		}
-		
-		private function getMyInfoFn(value:Object):void 
-		{
-			var myInfo:MyInfo = new MyInfo();
-			if (value == "")
-			{
-				zLoginWindow(content).loadingLayer.visible = false;
-				mainData.chooseChannelData.myInfo = null;
-				return;
-			}
-			if (value.TypeMsg == -1)
-			{
-				zLoginWindow(content).loadingLayer.visible = false;
-				WindowLayer.getInstance().openAlertWindow(value.Msg);
-				return;
-			}
-			zLoginWindow(content).loadingLayer.visible = false;
-			excuteUserInfo(value);
 		}
 		
 		private function onUpdateMyInfo(e:Event):void 
@@ -326,8 +289,9 @@ package view.window.loginWindow
 			}
 			if (value.TypeMsg == 2)
 			{
-				zLoginWindow(content).loadingLayer.visible = false;
-				WindowLayer.getInstance().openAlertWindow(value["msg"]);
+				var registerFacebookWindow:RegisterFacebookWindow = new RegisterFacebookWindow();
+				registerFacebookWindow.email = value.Data.email;
+				WindowLayer.getInstance().openWindow(registerFacebookWindow);
 				return;
 			}
 			if (value.TypeMsg == 1)
@@ -338,6 +302,7 @@ package view.window.loginWindow
 				close(BaseWindow.MIDDLE_EFFECT);
 				return;
 			}
+			WindowLayer.getInstance().openAlertWindow(value.Msg);
 		}
 		
 		private function onForgetPassClick(e:MouseEvent):void 
@@ -367,14 +332,7 @@ package view.window.loginWindow
 		private function onRegisterButtonClick(e:MouseEvent):void 
 		{
 			registerWindow = new RegisterWindow();
-			registerWindow.addEventListener(RegisterWindow.REGISTER_SUCCESS, onRegisterSuccess);
 			WindowLayer.getInstance().openWindow(registerWindow);
-		}
-		
-		private function onRegisterSuccess(e:Event):void 
-		{
-			zLoginWindow(content).userName.text = registerWindow.userName;
-			zLoginWindow(content).pass.text = registerWindow.pass;
 		}
 		
 		private function onLoginButtonClick(e:MouseEvent):void 

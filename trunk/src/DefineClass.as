@@ -105,6 +105,7 @@ package
 			BuyTourSuccessMc;
 			
 			BoGameBaiMainView;
+			zGiftCodeWindow;
 		}
 	}
 }

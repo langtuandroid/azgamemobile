@@ -33,7 +33,7 @@ package getFacebookInfo
 				mainData.isLoginFacebook = true;
 				GoViral.create();
 			
-				GoViral.goViral.initFacebook("265233976863346", "");
+				GoViral.goViral.initFacebook("252347141635661", "");
 				
 				// facebook events
 				GoViral.goViral.addEventListener(GVFacebookEvent.FB_DIALOG_CANCELED,onFacebookEvent);

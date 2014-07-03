@@ -25,7 +25,6 @@ package view.window.registerWindow
 	 */
 	public class RegisterWindow extends BaseWindow 
 	{
-		public static const REGISTER_SUCCESS:String = "registerSuccess";
 		public var userName:String;
 		public var pass:String;
 		private var mainData:MainData = MainData.getInstance();
