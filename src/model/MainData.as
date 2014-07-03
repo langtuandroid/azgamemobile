@@ -469,7 +469,7 @@ package model
 		public static const PHOM_ID:int = 2;
 		public static const TLMN_ID:int = 3;
 		
-		
+		public var facebook_access_token:String;
 		public var isLoginFacebook:Boolean;
 		public var isAutoReady:Boolean;
 		public var roomListState:int = 1; // Biến để check roomList ở lobby đang ở tab nào

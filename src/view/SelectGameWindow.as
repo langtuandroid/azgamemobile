@@ -18,6 +18,7 @@ package view
 	import view.itemContainer.ItemContainerYun;
 	import view.userInfo.avatar.Avatar;
 	import view.window.BaseWindow;
+	import view.window.GiftCodeWindow;
 	import view.window.shop.Shop_Coffer_Item_Window;
 	import view.window.windowLayer.WindowLayer;
 	
@@ -61,6 +62,7 @@ package view
 		private var windowLayer:WindowLayer = WindowLayer.getInstance();
 		
 		private var avatar:Avatar;
+		private var giftCodeButton:SimpleButton;
 		private var exitButton:SimpleButton;
 		private var nextButton:SimpleButton;
 		private var backButton:SimpleButton;
@@ -69,6 +71,7 @@ package view
 		private var money1Txt:TextField;
 		private var money2Txt:TextField;
 		private var gameContainer:ItemContainerYun;
+		private var giftCodeWindow:GiftCodeWindow;
 		
 		public function SelectGameWindow() 
 		{
@@ -134,7 +137,10 @@ package view
 			avatar.y = -276;
 			addChild(avatar);
 			
+			giftCodeButton = content["giftCodeButton"];
 			exitButton = content["exitButton"];
+			if (mainData.isFacebookVersion)
+				exitButton.visible = false;
 			nextButton = content["nextBtn"];
 			backButton = content["backBtn"];
 			displayNameTxt = content["displayNameTxt"];
@@ -145,6 +151,19 @@ package view
 			showTab(1);
 			
 			exitButton.addEventListener(MouseEvent.CLICK, onExitButtonClick);
+			giftCodeButton.addEventListener(MouseEvent.CLICK, onGiftCodeButtonClick);
+		}
+		
+		private function onGiftCodeButtonClick(e:MouseEvent):void 
+		{
+			if (!giftCodeWindow)
+				giftCodeWindow = new GiftCodeWindow();
+			
+			if (!giftCodeWindow.parent)
+			{
+				giftCodeWindow.type = GiftCodeWindow.INPUT_FORM;
+				windowLayer.openWindow(giftCodeWindow, null, "noEffect", true);
+			}
 		}
 		
 		private function onExitButtonClick(e:MouseEvent):void 
@@ -349,7 +368,7 @@ package view
 					mainData.gameName = 'PHỎM';
 					mainData.game_id = 'AZGB_PHOM';
 					mainData.portNumber = 5301;
-					mainData.minBetRate = 1;
+					mainData.minBetRate = 10;
 					mainData.resetMatchTime = 6.5;
 					if (mainData.isTest)
 						mainData.portNumber = 3301;
@@ -376,7 +395,7 @@ package view
 				break;
 				case 2:
 					mainData.gameType = MainData.PHOM;
-					mainData.minBetRate = 1;
+					mainData.minBetRate = 10;
 				break;
 				case 6:
 					mainData.gameType = MainData.MAUBINH;
@@ -384,7 +403,7 @@ package view
 				break;
 				case 5:
 					mainData.gameType = MainData.XITO;
-					mainData.minBetRate = 20;
+					mainData.minBetRate = 10;
 				break;
 				default:
 			}

@@ -165,6 +165,7 @@ package
 					if (keyStr == "gamepath")
 						mainData.path = paramObj[keyStr] + '/';
 				}
+				mainData.facebook_access_token = paramObj.facebook_access_token;
 			} 
 			catch (error:Error) {
 				

@@ -627,6 +627,7 @@ package view.screen
 				systemNoticeBar.x = 120;
 				systemNoticeBar.y = 5;
 				addChild(systemNoticeBar);
+				systemNoticeBar.mouseChildren = systemNoticeBar.mouseEnabled = false;
 			}
 		}
 		

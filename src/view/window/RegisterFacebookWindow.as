@@ -1,29 +1,81 @@
 package view.window 
 {
+	import com.gsolo.encryption.MD5;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.text.TextFormat;
+	import model.chooseChannelData.MyInfo;
+	import model.MainData;
+	import model.MyDataTLMN;
+	import request.MainRequest;
+	import view.window.windowLayer.WindowLayer;
 	/**
 	 * ...
 	 * @author Yun
 	 */
 	public class RegisterFacebookWindow extends BaseWindow 
 	{
+		public var userName:String;
+		private var mainData:MainData = MainData.getInstance();
+		public var email:String;
 		
 		public function RegisterFacebookWindow() 
 		{
-			super();
-			addEventListener(MouseEvent.CLICK, onConfirm);
+			addContent("zRegisterFacebookWindow");
+			zRegisterFacebookWindow(content).registerButton.addEventListener(MouseEvent.CLICK, onConfirm);
+			
+			zRegisterFacebookWindow(content).registerButton.addEventListener(MouseEvent.CLICK, onConfirm);
+			zRegisterFacebookWindow(content).loadingLayer.visible = false;
+			
+			zRegisterFacebookWindow(content).userName.width = 261;
+			zRegisterFacebookWindow(content).userName.height = 33;
+			
+			var textFormat:TextFormat = new TextFormat("Arial", 20, 0x000000);
+			zRegisterFacebookWindow(content).userName.setStyle("textFormat", textFormat);
+			
+			zRegisterFacebookWindow(content).maleSelectBox.gotoAndStop("selected");
+			zRegisterFacebookWindow(content).femaleSelectBox.gotoAndStop(1);
+			
+			zRegisterFacebookWindow(content).maleSelectBox.addEventListener(MouseEvent.CLICK, onSelectBoxClick);
+			zRegisterFacebookWindow(content).femaleSelectBox.addEventListener(MouseEvent.CLICK, onSelectBoxClick);
+		}
+		
+		private function onSelectBoxClick(e:MouseEvent):void 
+		{
+			switch (e.currentTarget) 
+			{
+				case zRegisterFacebookWindow(content).maleSelectBox:
+					zRegisterFacebookWindow(content).maleSelectBox.gotoAndStop("selected");
+					zRegisterFacebookWindow(content).femaleSelectBox.gotoAndStop(1);
+				break;
+				case zRegisterFacebookWindow(content).femaleSelectBox:
+					zRegisterFacebookWindow(content).femaleSelectBox.gotoAndStop("selected");
+					zRegisterFacebookWindow(content).maleSelectBox.gotoAndStop(1);
+				break;
+				default:
+			}
 		}
 		
 		private function onConfirm(e:MouseEvent):void 
 		{
 			var mainRequest:MainRequest = new MainRequest();
-			var data:Object = new Object();
-			data.access_token = mainData.facebookData.accessToken;
-			zLoginWindow(content).loadingLayer.visible = true;
-			if (mainData.isTest)
-				mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/Facebook_GetUserInfo", data, onLoginFacebookRespond, true);
+			var object:Object = new Object();
+			object.client_id = mainData.client_id
+			object.client_secret = mainData.client_secret
+			object.client_timestamp = (new Date()).getTime();
+			object.nick_name = zRegisterFacebookWindow(content).userName.text;
+			object.user_name = email;
+			object.password = '';
+			if (zRegisterFacebookWindow(content).maleSelectBox.currentLabel == "selected")
+				object.gender_code = 'M';
 			else
-				mainRequest.sendRequest_Post("http://wss.azgame.us/Service02/OnplayUserExt.asmx/Facebook_GetUserInfo", data, onLoginFacebookRespond, true);
+				object.gender_code = 'F';
+			object.client_hash = MD5.encrypt(object.client_id + object.client_timestamp + object.client_secret + object.user_name + object.nick_name + object.gender_code + object.password);
+			zRegisterFacebookWindow(content).loadingLayer.visible = true;
+			if (mainData.isTest)
+				mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileRegister", object, onRegisterRespond, true);
+			else
+				mainRequest.sendRequest_Post("http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileRegister", object, onRegisterRespond, true);
 		}
 		
 		private function onLoginFacebookRespond(value:Object):void 
@@ -42,6 +94,56 @@ package view.window
 				close(BaseWindow.MIDDLE_EFFECT);
 				return;
 			}
+		}
+		
+		private function onRegisterRespond(value:Object):void 
+		{
+			if (value.TypeMsg == '1')
+			{
+				var mainRequest:MainRequest = new MainRequest();
+				var data:Object = new Object();
+				data.client_id = mainData.client_id;
+				data.code = value.Data.Code;
+				data.client_hash = MD5.encrypt(mainData.client_id + mainData.client_secret + value.Data.Code);
+				if (mainData.isTest)
+					mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileGetUserInfo", data, onLoginRespond, true);
+				else
+					mainRequest.sendRequest_Post("http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileGetUserInfo", data, onLoginRespond, true);
+			}
+			else if (value.status == "IO_ERROR")
+			{
+				zRegisterFacebookWindow(content).loadingLayer.visible = false;
+				WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại, link truy cập bị lỗi !!");
+			}
+			else
+			{
+				zRegisterFacebookWindow(content).loadingLayer.visible = false;
+				WindowLayer.getInstance().openAlertWindow(value.Msg);
+			}
+		}
+		
+		private function onLoginRespond(value:Object):void 
+		{
+			if (value["status"] == "IO_ERROR")
+			{
+				zRegisterFacebookWindow(content).loadingLayer.visible = false;
+				WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại, link truy cập bị lỗi !!");
+				return;
+			}
+			if (value.TypeMsg < 1)
+			{
+				zRegisterFacebookWindow(content).loadingLayer.visible = false;
+				WindowLayer.getInstance().openAlertWindow(value.Msg);
+				return;
+			}
+			
+			mainData.loginData = value.Data;
+			
+			zRegisterFacebookWindow(content).loadingLayer.visible = false;
+			
+			excuteUserInfo(value);
+			
+			close(BaseWindow.MIDDLE_EFFECT);
 		}
 		
 		private function excuteUserInfo(value:Object):void
@@ -69,15 +171,6 @@ package view.window
 			MyDataTLMN.getInstance().sex = value.Data["GenderCode"];
 			
 			mainData.chooseChannelData.myInfo = myInfo;
-			
-			//if (!SoundManager.getInstance().isLoadSoundChung)
-				//SoundManager.getInstance().loadSoundChung();
-			//if (!SoundManager.getInstance().isLoadSoundMauBinh)
-				//SoundManager.getInstance().loadSoundMauBinh();
-			//if (!SoundManager.getInstance().isLoadSoundPhom)
-				//SoundManager.getInstance().loadSoundPhom();
-			//if (!SoundManager.getInstance().isLoadSoundTlmn)
-				//SoundManager.getInstance().addSound();
 		}
 	}
 

@@ -1476,7 +1476,7 @@ package view.userInfo.playerInfo
 						if (phomLogic.checkPlayCard(unLeaveCards[i], unLeaveCards))
 						{
 							electroServerCommand.playOneCard(CardPhom(unLeaveCards[i]).id, getNextPlayer().userName);
-							playOneCard(CardPhom(unLeaveCards[i]).id);
+							//playOneCard(CardPhom(unLeaveCards[i]).id);
 							i = -1;
 						}
 					}
@@ -2239,7 +2239,7 @@ package view.userInfo.playerInfo
 				{
 					setMyTurn(DO_NOTHING);
 					electroServerCommand.playOneCard(CardPhom(unLeaveCards[unLeaveCards.length - 1]).id, getNextPlayer().userName);
-					playOneCard(CardPhom(unLeaveCards[unLeaveCards.length - 1]).id);
+					//playOneCard(CardPhom(unLeaveCards[unLeaveCards.length - 1]).id);
 					currentSelectedCard = null;
 				}
 			}
