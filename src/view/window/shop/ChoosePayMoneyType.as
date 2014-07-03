@@ -12,6 +12,9 @@ package view.window.shop
 	 */
 	public class ChoosePayMoneyType extends BaseWindow 
 	{
+		/**
+		 * 2:gold, 1:chip
+		 */
 		public var typeOfPay:int;
 		
 		public function ChoosePayMoneyType()
@@ -88,7 +91,7 @@ package view.window.shop
 			var mc:MovieClip = e.currentTarget as MovieClip;
 			if (mc.name == "choosePay1") 
 			{
-				typeOfPay = 0;
+				typeOfPay = 2;
 				contentMc.chooseTypeMoney.choosePay1.gotoAndStop(2);
 				contentMc.chooseTypeMoney.choosePay2.gotoAndStop(1);
 			}
