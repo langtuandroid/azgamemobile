@@ -1098,7 +1098,7 @@ package view.window.shop
 			else if (obj["Msg"] == "Cập nhật thành công") 
 			{
 				buyAvatarWindow = new ConfirmWindow();
-				buyAvatarWindow.setNotice("Bạn đã đổi thành công avatar này!");
+				buyAvatarWindow.setNotice("Mặc avatar thành công!");
 				buyAvatarWindow.buttonStatus(false, true, false);
 				windowLayer.openWindow(buyAvatarWindow);
 			}
@@ -1799,6 +1799,8 @@ package view.window.shop
 				choosePay.removeEventListener("agree", onClickBuyGold);
 			}
 			
+			typeOfPay = choosePay.typeOfPay;
+			
 			
 			var myInfo:MyInfo = new MyInfo();
 			var url:String = basePath + "Service02/OnplayShopExt.asmx/BuyItemFromClientSide";
@@ -1873,8 +1875,17 @@ package view.window.shop
 				{
 					buyAvatarWindow = new ConfirmWindow();
 					buyAvatarWindow.setNotice("Giao dịch thành công");
-					buyAvatarWindow.buttonStatus(false, true, false);
+					buyAvatarWindow.buttonStatus(true, false, false);
 					windowLayer.openWindow(buyAvatarWindow);
+					if (typeOfPay == 1) 
+					{
+						MainData.getInstance().chooseChannelData.myInfo.cash = MainData.getInstance().chooseChannelData.myInfo.cash - Number(avatarChoseBuy._chipAvt);
+					}
+					else 
+					{
+						MainData.getInstance().chooseChannelData.myInfo.money = MainData.getInstance().chooseChannelData.myInfo.money - Number(avatarChoseBuy._goldAvt);
+					}
+					MainData.getInstance().chooseChannelData.myInfo = MainData.getInstance().chooseChannelData.myInfo;
 				}
 				
 			}
@@ -1988,7 +1999,8 @@ package view.window.shop
 		
 		private function onClickBuyAvatar(e:Event):void 
 		{
-			trace(choosePay.typeOfPay)
+			trace(choosePay.typeOfPay);
+			typeOfPay = choosePay.typeOfPay;
 			var mainData:MainData = MainData.getInstance();
 			trace("client id khi mua avatar: ", mainData.client_id , "--", mainData.client_secret)
 			var myInfo:MyInfo = new MyInfo();
@@ -2027,8 +2039,17 @@ package view.window.shop
 			{
 				buyAvatarWindow = new ConfirmWindow();
 				buyAvatarWindow.setNotice("Giao dịch thành công");
-				buyAvatarWindow.buttonStatus(false, true, false);
+				buyAvatarWindow.buttonStatus(true, false, false);
 				windowLayer.openWindow(buyAvatarWindow);
+				if (typeOfPay == 1) 
+				{
+					MainData.getInstance().chooseChannelData.myInfo.cash = MainData.getInstance().chooseChannelData.myInfo.cash - Number(avatarChoseBuy._chipAvt);
+				}
+				else 
+				{
+					MainData.getInstance().chooseChannelData.myInfo.money = MainData.getInstance().chooseChannelData.myInfo.money - Number(avatarChoseBuy._goldAvt);
+				}
+				MainData.getInstance().chooseChannelData.myInfo = MainData.getInstance().chooseChannelData.myInfo;
 			}
 		}
 		
