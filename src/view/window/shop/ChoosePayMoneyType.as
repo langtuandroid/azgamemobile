@@ -15,7 +15,7 @@ package view.window.shop
 		/**
 		 * 2:gold, 1:chip
 		 */
-		public var typeOfPay:int;
+		public var typeOfPay:int = 1;
 		
 		public function ChoosePayMoneyType()
 		{
@@ -67,7 +67,7 @@ package view.window.shop
 			}
 			
 			contentMc.chooseTypeMoney.choosePay1.gotoAndStop(1);
-			contentMc.chooseTypeMoney.choosePay2.gotoAndStop(1);
+			contentMc.chooseTypeMoney.choosePay2.gotoAndStop(2);
 			contentMc.chooseTypeMoney.choosePay1.addEventListener(MouseEvent.CLICK, onClickChooseTypeOfPay);
 			contentMc.chooseTypeMoney.choosePay2.addEventListener(MouseEvent.CLICK, onClickChooseTypeOfPay);
 			
