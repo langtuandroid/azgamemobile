@@ -18,6 +18,8 @@ package view.screen
 	import view.SelectGameWindow;
 	import view.SystemNoticeBar;
 	import view.window.AddFriendWindow;
+	import view.window.AddMoneyWindow;
+	import view.window.AddMoneyWindow2;
 	import view.window.BaseWindow;
 	import view.window.loginWindow.LoginWindow;
 	import view.window.ScoreWindow;
@@ -108,10 +110,16 @@ package view.screen
 		private var timerToGetSystemNoticeInfo:Timer;
 		private var systemNoticeBar:SystemNoticeBar;
 		
+		private var firstLayer:Sprite;
+		private var selectGameLayer:Sprite;
+		private var menuLayer:Sprite;
+		
 		public function LobbyRoomScreen() 
 		{
 			super();
 			addContent("zLobbyRoomScreen");
+			
+			createLayer();
 			
 			gameLogo = content["gameLogo"];
 			gameLogo.gotoAndStop("empty");
@@ -130,8 +138,8 @@ package view.screen
 			
 			lobbyBtn = content["lobbyBtn"];
 			friendBtn = content["friendBtn"];
-			addChild(lobbyBtn);
-			addChild(friendBtn);
+			firstLayer.addChild(lobbyBtn);
+			firstLayer.addChild(friendBtn);
 			
 			chatBox = new ChatBoxLobby();
 			chatBox.addEventListener(ChatBox.HAVE_CHAT, onHaveChat);
@@ -157,6 +165,17 @@ package view.screen
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 			
+			addSelectGameWindow();
+			
+			var loginWindow:LoginWindow = new LoginWindow();
+			windowLayer.openWindow(loginWindow);
+			
+			selectGameButton.addEventListener(MouseEvent.CLICK, onSelectGameButtonClick);
+			
+		}
+		
+		public function addSelectGameWindow():void
+		{
 			if (!selectGameWindow)
 			{	
 				selectGameWindow = new SelectGameWindow();
@@ -166,13 +185,17 @@ package view.screen
 				selectGameWindow.y = mainData.stageHeight / 2;
 				selectGameWindow.visible = true;
 			}
-			addChild(selectGameWindow);
-			
-			var loginWindow:LoginWindow = new LoginWindow();
-			windowLayer.openWindow(loginWindow);
-			
-			selectGameButton.addEventListener(MouseEvent.CLICK, onSelectGameButtonClick);
-			
+			selectGameLayer.addChild(selectGameWindow);
+		}
+		
+		private function createLayer():void 
+		{
+			firstLayer = new Sprite();
+			selectGameLayer = new Sprite();
+			menuLayer = new Sprite();
+			addChild(firstLayer);
+			addChild(selectGameLayer);
+			addChild(menuLayer);
 		}
 		
 		public function updateGameType():void
@@ -188,22 +211,14 @@ package view.screen
 		private function onSelectGameButtonClick(e:MouseEvent):void 
 		{
 			mainCommand.electroServerCommand.closeConnection();
-			if (!selectGameWindow)
-			{	
-				selectGameWindow = new SelectGameWindow();
-				selectGameWindow.addEventListener(SelectGameWindow.SELECT_GAME, onSelectGame);
-				selectGameWindow.addEventListener(SelectGameWindow.RE_LOGIN_CLICK, onReLoginClick);
-				selectGameWindow.x = mainData.stageWidth / 2;
-				selectGameWindow.y = mainData.stageHeight / 2;
-				selectGameWindow.visible = true;
-			}
-			addChild(selectGameWindow);
+			addSelectGameWindow();
 			smallButtonMenu.visible = true;
 			buttonMenu.visible = false;
 		}
 		
 		private function onSelectGame(e:Event):void 
 		{
+			WindowLayer.getInstance().openLoadingWindow();
 			updateGameType();
 			
 			if (selectGameWindow)
@@ -218,6 +233,7 @@ package view.screen
 		public function excuteWhenJoinLobby():void
 		{	
 			mainCommand.getInfoCommand.getChannelInfo();
+			mainCommand.getInfoCommand.getVirtualRoomInfo();
 			mainCommand.getInfoCommand.getMessageInfo();
 			
 			if (timerToGetChannelInfo)
@@ -248,6 +264,7 @@ package view.screen
 		private function onTimerToGetChannelInfo(e:TimerEvent):void 
 		{
 			mainCommand.getInfoCommand.getChannelInfo();
+			mainCommand.getInfoCommand.getVirtualRoomInfo();
 		}
 		
 		private function onReLoginClick(e:Event):void 
@@ -258,16 +275,7 @@ package view.screen
 		
 		public function showLoginWindow():void
 		{
-			if (!selectGameWindow)
-			{	
-				selectGameWindow = new SelectGameWindow();
-				selectGameWindow.addEventListener(SelectGameWindow.SELECT_GAME, onSelectGame);
-				selectGameWindow.addEventListener(SelectGameWindow.RE_LOGIN_CLICK, onReLoginClick);
-				selectGameWindow.x = mainData.stageWidth / 2;
-				selectGameWindow.y = mainData.stageHeight / 2;
-				selectGameWindow.visible = true;
-			}
-			addChild(selectGameWindow);
+			addSelectGameWindow();
 			
 			var loginWindow:LoginWindow = new LoginWindow();
 			windowLayer.openWindow(loginWindow);
@@ -296,7 +304,7 @@ package view.screen
 		{
 			smallButtonMenu.visible = false;
 			buttonMenu.visible = true;
-			addChild(buttonMenu);
+			firstLayer.addChild(buttonMenu);
 			e.stopImmediatePropagation();
 		}
 		
@@ -327,14 +335,14 @@ package view.screen
 			musicOnButton = content["musicOnButton"];
 			musicOffButton = content["musicOffButton"];
 			
-			addChild(userList);
-			addChild(soundOnButton);
-			addChild(soundOffButton);
-			addChild(musicOnButton);
-			addChild(musicOffButton);
-			addChild(chatButton);
-			addChild(messageButton);
-			addChild(helpButton);
+			firstLayer.addChild(userList);
+			menuLayer.addChild(soundOnButton);
+			menuLayer.addChild(soundOffButton);
+			menuLayer.addChild(musicOnButton);
+			menuLayer.addChild(musicOffButton);
+			firstLayer.addChild(chatButton);
+			firstLayer.addChild(messageButton);
+			menuLayer.addChild(helpButton);
 			
 			sharedObject = SharedObject.getLocal("soundConfig");
 			
@@ -365,7 +373,7 @@ package view.screen
 		
 		private function onChatButtonClick(e:MouseEvent):void 
 		{
-			addChild(chatBox);
+			firstLayer.addChild(chatBox);
 		}
 		
 		private function onCloseChatBox(e:Event):void 
@@ -378,21 +386,12 @@ package view.screen
 			messageButton.gotoAndStop(1);
 			mainData.messageObject[DataFieldMauBinh.UNREAD_MESSAGE] = 0;
 			messageButton["messNumberTxt"].text = '';
-			addChild(messageBox);
+			firstLayer.addChild(messageBox);
 		}
 		
 		private function onExitButtonClick(e:MouseEvent):void 
 		{
-			if (!selectGameWindow)
-			{	
-				selectGameWindow = new SelectGameWindow();
-				selectGameWindow.addEventListener(SelectGameWindow.SELECT_GAME, onSelectGame);
-				selectGameWindow.addEventListener(SelectGameWindow.RE_LOGIN_CLICK, onReLoginClick);
-				selectGameWindow.x = mainData.stageWidth / 2;
-				selectGameWindow.y = mainData.stageHeight / 2;
-				selectGameWindow.visible = true;
-			}
-			addChild(selectGameWindow);
+			addSelectGameWindow();
 			mainCommand.electroServerCommand.closeConnection();
 		}
 		
@@ -433,16 +432,31 @@ package view.screen
 		
 		private function onOtherButtonClick(e:MouseEvent):void 
 		{
-			/*switch (mainData.gameType) 
+			switch (e.currentTarget) 
 			{
-				case MainData.MAUBINH:
-					SoundManager.getInstance().soundManagerMauBinh.playExitGamePlayerSound(mainData.chooseChannelData.myInfo.sex);
+				case addMoneyButton:
+					addSelectGameWindow();
+					mainCommand.electroServerCommand.closeConnection();
+					selectGameWindow.showTab(3);
 				break;
-				case MainData.PHOM:
-					SoundManager.getInstance().soundManagerPhom.playExitGamePlayerSound(mainData.chooseChannelData.myInfo.sex);
+				case shopButton:
+					addSelectGameWindow();
+					mainCommand.electroServerCommand.closeConnection();
+					selectGameWindow.showTab(4);
+				break;
+				case inventoryButton:
+					addSelectGameWindow();
+					mainCommand.electroServerCommand.closeConnection();
+					selectGameWindow.showTab(5);
+				break;
+				case eventButton:
+					navigateToURL(new URLRequest("http://sanhbai.com/sanhbai-event.html"));
+				break;
+				case fanPageButton:
+					navigateToURL(new URLRequest("https://www.facebook.com/sanhbai"));
 				break;
 				default:
-			}*/
+			}
 		}
 		
 		private function onChannelButtonClick(e:MouseEvent):void 
@@ -617,6 +631,7 @@ package view.screen
 			mainData.chooseChannelData.addEventListener(ChooseChannelData.UPDATE_CHANNEL_INFO, onUpdateChannelInfo);
 			mainData.addEventListener(MainData.UPDATE_PUBLIC_CHAT, onUpdatePublicChat);
 			mainData.addEventListener(MainData.UPDATE_MESSAGE_LIST, onUpdateMessageList);
+			mainData.addEventListener(MainData.MOVE_TO_SHOP, onMoveToShop);
 			stage.addEventListener(MouseEvent.CLICK, onStageClick);
 			if (mainData.isOnAndroid)
 				NativeApplication.nativeApplication.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown, false, 0, true);
@@ -626,9 +641,16 @@ package view.screen
 				systemNoticeBar = new SystemNoticeBar();
 				systemNoticeBar.x = 120;
 				systemNoticeBar.y = 5;
-				addChild(systemNoticeBar);
+				firstLayer.addChild(systemNoticeBar);
 				systemNoticeBar.mouseChildren = systemNoticeBar.mouseEnabled = false;
 			}
+		}
+		
+		private function onMoveToShop(e:Event):void 
+		{
+			addSelectGameWindow();
+			mainCommand.electroServerCommand.closeConnection();
+			selectGameWindow.showTab(3);
 		}
 		
 		private function onStageClick(e:MouseEvent):void 
@@ -703,16 +725,7 @@ package view.screen
 				e.stopImmediatePropagation();
 				e.stopPropagation();
 				
-				if (!selectGameWindow)
-				{	
-					selectGameWindow = new SelectGameWindow();
-					selectGameWindow.addEventListener(SelectGameWindow.SELECT_GAME, onSelectGame);
-					selectGameWindow.addEventListener(SelectGameWindow.RE_LOGIN_CLICK, onReLoginClick);
-					selectGameWindow.x = mainData.stageWidth / 2;
-					selectGameWindow.y = mainData.stageHeight / 2;
-					selectGameWindow.visible = true;
-				}
-				addChild(selectGameWindow);
+				addSelectGameWindow();
 				mainCommand.electroServerCommand.closeConnection();
 				break;
 			}
@@ -723,7 +736,7 @@ package view.screen
 			if (mainData.isFirstJoinLobby)
 			{
 				var channelObject:Object = mainData.chooseChannelData.channelInfoArray[0];
-				WindowLayer.getInstance().openLoadingWindow();
+				//WindowLayer.getInstance().openLoadingWindow();
 				mainData.currentChannelId = channelObject[DataFieldMauBinh.CHANNEL_NUM];
 				mainCommand.electroServerCommand.startConnect("", channelObject[DataFieldMauBinh.CHANNEL_NUM]);
 				mainData.fee = channelObject[DataFieldMauBinh.DEALER_FEE];
@@ -1000,7 +1013,34 @@ package view.screen
 			{
 				if (!userList.isDraggingScroll && !roomList.isDraggingScroll)
 				{
-					roomList.roomDataList = mainData.lobbyRoomData.roomList.concat();
+					var tempArray:Array = mainData.lobbyRoomData.roomList.concat();
+					for (var i:int = 0; i < mainData.virtualRooms.length; i++) 
+					{
+						var roomData:RoomDataRLC = new RoomDataRLC();
+						roomData.moneyLogoUrl = mainData.init.requestLink.moneyIcon.@url;
+						roomData.rules = mainData.init.gameDescription.lobbyRoomScreen.sendCard;
+						roomData.ruleToggle = false;
+						roomData.male = mainData.virtualRooms[i].player_male_number;
+						roomData.betting = mainData.virtualRooms[i].bets;
+						roomData.channelId = mainData.playingData.gameRoomData.channelId;
+						if (mainData.virtualRooms[i].status == '2')
+							roomData.hasPassword = true;
+						else
+							roomData.hasPassword = false;
+						//roomData.maxPlayer = mainData.virtualRooms[i].player_limit_number;
+						roomData.maxPlayer = 4;
+						roomData.name = '';
+						roomData.id = mainData.virtualRooms[i].room_id;
+						roomData.gameId = mainData.virtualRooms[i].room_id;
+						roomData.userNumbers = mainData.virtualRooms[i].player_male_number + mainData.virtualRooms[i].player_female_number;
+						if (roomData.userNumbers > roomData.maxPlayer)
+							roomData.userNumbers = roomData.maxPlayer;
+						if (roomData.male > roomData.maxPlayer)
+							roomData.male = roomData.maxPlayer;
+						if (roomData.userNumbers != roomData.maxPlayer || mainData.showFullTable == 1)
+							tempArray.push(roomData);
+					}
+					roomList.roomDataList = tempArray;
 				}
 			}
 		}
@@ -1103,7 +1143,7 @@ package view.screen
 			roomList.addEventListener(MouseEvent.MOUSE_UP, onCompMouseUp);
 			roomList.addEventListener(RoomListRLCEvent.ENTER_ROOM, onRoomListSelect);
 			roomList.addEventListener(RoomListComponent.QUICK_PLAY, onQuickPlay);
-			addChild(roomList);
+			firstLayer.addChild(roomList);
 		}
 		
 		private function onCompMouseDown(e:MouseEvent):void 
@@ -1128,12 +1168,12 @@ package view.screen
 			
 			if (Number(e.betting) * mainData.minBetRate > mainData.chooseChannelData.myInfo.money)
 			{
-				var notEnoughMoneyWindow:AlertWindow = new AlertWindow();
+				var addMoneyWindow:AddMoneyWindow2 = new AddMoneyWindow2();
 				var string1:String = mainData.init.gameDescription.lobbyRoomScreen.notEnoughMoneyToCreate1;
 				var string2:String = mainData.init.gameDescription.lobbyRoomScreen.notEnoughMoneyToCreate2;
 				var minMoney:Number = Number(e.betting) * mainData.minBetRate;
-				notEnoughMoneyWindow.setNotice(string1 + " " + PlayingLogic.format(minMoney, 1) + " " + string2);
-				windowLayer.openWindow(notEnoughMoneyWindow);
+				addMoneyWindow.setNotice(string1 + " " + PlayingLogic.format(minMoney, 1) + " " + string2);
+				windowLayer.openWindow(addMoneyWindow);
 			}
 			else
 			{
@@ -1255,12 +1295,12 @@ package view.screen
 					{
 						if (Number(RoomDataRLC(roomList[i]).betting) * mainData.minBetRate > mainData.chooseChannelData.myInfo.money)
 						{
-							var notEnoughMoneyWindow:AlertWindow = new AlertWindow();
+							var addMoneyWindow:AddMoneyWindow2 = new AddMoneyWindow2();
 							var string1:String = mainData.init.gameDescription.lobbyRoomScreen.notEnoughMoneyToCreate1;
 							var string2:String = mainData.init.gameDescription.lobbyRoomScreen.notEnoughMoneyToCreate2;
 							var minMoney:Number = Number(RoomDataRLC(roomList[i]).betting) * mainData.minBetRate;
-							notEnoughMoneyWindow.setNotice(string1 + " " + PlayingLogic.format(minMoney, 1) + " " + string2);
-							windowLayer.openWindow(notEnoughMoneyWindow);
+							addMoneyWindow.setNotice(string1 + " " + PlayingLogic.format(minMoney, 1) + " " + string2);
+							windowLayer.openWindow(addMoneyWindow);
 						}
 						else
 						{

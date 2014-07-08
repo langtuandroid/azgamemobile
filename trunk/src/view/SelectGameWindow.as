@@ -143,6 +143,8 @@ package view
 				exitButton.visible = false;
 			nextButton = content["nextBtn"];
 			backButton = content["backBtn"];
+			nextButton.addEventListener(MouseEvent.CLICK, onButtonClick);
+			backButton.addEventListener(MouseEvent.CLICK, onButtonClick);
 			displayNameTxt = content["displayNameTxt"];
 			levelTxt = content["levelTxt"];
 			money1Txt = content["money1Txt"];
@@ -154,6 +156,20 @@ package view
 			giftCodeButton.addEventListener(MouseEvent.CLICK, onGiftCodeButtonClick);
 		}
 		
+		private function onButtonClick(e:MouseEvent):void 
+		{
+			switch (e.currentTarget) 
+			{
+				case nextButton:
+					gameContainer.moveToNext();
+				break;
+				case backButton:
+					gameContainer.moveToPrevivous();
+				break;
+				default:
+			}
+		}
+		
 		private function onGiftCodeButtonClick(e:MouseEvent):void 
 		{
 			if (!giftCodeWindow)
@@ -161,7 +177,7 @@ package view
 			
 			if (!giftCodeWindow.parent)
 			{
-				giftCodeWindow.type = GiftCodeWindow.INPUT_FORM;
+				giftCodeWindow.type = GiftCodeWindow.INPUT_CODE_FORM;
 				windowLayer.openWindow(giftCodeWindow, null, "noEffect", true);
 			}
 		}
@@ -194,7 +210,7 @@ package view
 			}
 		}
 		
-		private function showTab(index:int):void 
+		public function showTab(index:int):void 
 		{
 			selectGameTabEnable.visible = true;
 			rankTabEnable.visible = true;

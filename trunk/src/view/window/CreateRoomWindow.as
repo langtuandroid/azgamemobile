@@ -1,7 +1,7 @@
 package view.window 
 {
 	import control.MainCommand;
-	import event.DataFieldMauBinh;
+	import event.DataField;
 	import flash.display.SimpleButton;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -40,8 +40,6 @@ package view.window
 			createInputText();
 			createSelectBox();
 			hidePosition();
-			
-			trace(electroServerCommand);
 		}
 		
 		private function createSelectBox():void 
@@ -97,8 +95,8 @@ package view.window
 			for (i = 0; i < mainData.playingData.gameRoomData.betting.length; i++) 
 			{
 				var tempObject:Object = new Object();
-				tempObject[DataFieldMauBinh.VALUE] = mainData.playingData.gameRoomData.betting[i];
-				tempObject[DataFieldMauBinh.DESCRIPTION] = PlayingLogic.format(mainData.playingData.gameRoomData.betting[i], 1);
+				tempObject[DataField.VALUE] = mainData.playingData.gameRoomData.betting[i];
+				tempObject[DataField.DESCRIPTION] = PlayingLogic.format(mainData.playingData.gameRoomData.betting[i], 1);
 				betArray.push(tempObject);
 			}
 			betInputText.valueArray = betArray;
@@ -108,14 +106,14 @@ package view.window
 			addChild(betInputText);
 			
 			itemComboBox = new MyComboBox();
-			//var tempTextFormat:TextFormat = new TextFormat("Tahoma", 12, null, true);
-			//itemComboBox.mainTextFormat = tempTextFormat;
+			var tempTextFormat:TextFormat = new TextFormat("Tahoma", 12, null, true);
+			itemComboBox.mainTextFormat = tempTextFormat;
 			itemComboBox.x = content["itemPosition"].x;
 			itemComboBox.y = content["itemPosition"].y;
 			
 			tempObject = new Object();
-			tempObject[DataFieldMauBinh.VALUE] = 0;
-			tempObject[DataFieldMauBinh.DESCRIPTION] = "Hiện chưa có item nào";
+			tempObject[DataField.VALUE] = 0;
+			tempObject[DataField.DESCRIPTION] = "Hiện chưa có item nào";
 			itemComboBox.currentValue = tempObject;
 				
 			addChild(itemComboBox);
@@ -125,8 +123,8 @@ package view.window
 			for (i = 1; i < mainData.maxPlayer; i++) 
 			{
 				tempObject = new Object();
-				tempObject[DataFieldMauBinh.VALUE] = String(i + 1);
-				tempObject[DataFieldMauBinh.DESCRIPTION] = String(i + 1);
+				tempObject[DataField.VALUE] = String(i + 1);
+				tempObject[DataField.DESCRIPTION] = String(i + 1);
 				numberArray.push(tempObject);
 			}
 			playerNumberComboBox.valueArray = numberArray;
@@ -169,19 +167,19 @@ package view.window
 		{
 			mainData.playingData.gameRoomData.roomPassword = passInputText.text;
 			var gameOption:Object = new Object();
-			gameOption[DataFieldMauBinh.ROOM_NAME] = '';
-			gameOption[DataFieldMauBinh.ROOM_BET] = Number(betInputText.currentValue[DataFieldMauBinh.VALUE]);
-			gameOption[DataFieldMauBinh.IS_SEND_CARD] = true;
-			gameOption[DataFieldMauBinh.MAX_PLAYER] = playerNumberComboBox.currentValue[DataFieldMauBinh.VALUE];;
+			gameOption[DataField.ROOM_NAME] = '';
+			gameOption[DataField.ROOM_BET] = Number(betInputText.currentValue[DataField.VALUE]);
+			gameOption[DataField.IS_SEND_CARD] = true;
+			gameOption[DataField.MAX_PLAYER] = playerNumberComboBox.currentValue[DataField.VALUE];;
 			
-			if (int(gameOption[DataFieldMauBinh.ROOM_BET]) * mainData.minBetRate > mainData.chooseChannelData.myInfo.money)
+			if (int(gameOption[DataField.ROOM_BET]) * mainData.minBetRate > mainData.chooseChannelData.myInfo.money)
 			{
-				var notEnoughMoneyWindow:AlertWindow = new AlertWindow();
+				var addMoneyWindow:AddMoneyWindow2 = new AddMoneyWindow2();
 				var string1:String = mainData.init.gameDescription.lobbyRoomScreen.notEnoughMoneyToCreate1;
 				var string2:String = mainData.init.gameDescription.lobbyRoomScreen.notEnoughMoneyToCreate2;
-				var minMoney:Number = Number(gameOption[DataFieldMauBinh.ROOM_BET]) * mainData.minBetRate;
-				notEnoughMoneyWindow.setNotice(string1 + " " + PlayingLogic.format(minMoney, 1) + " " + string2);
-				windowLayer.openWindow(notEnoughMoneyWindow);
+				var minMoney:Number = Number(gameOption[DataField.ROOM_BET]) * mainData.minBetRate;
+				addMoneyWindow.setNotice(string1 + " " + PlayingLogic.format(minMoney, 1) + " " + string2);
+				windowLayer.openWindow(addMoneyWindow);
 			}
 			else
 			{
