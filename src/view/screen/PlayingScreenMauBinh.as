@@ -1239,19 +1239,19 @@ package view.screen
 			}
 			
 			// Nếu không đủ tiền để chơi ván mới
-			if (mainData.chooseChannelData.myInfo.money < Number(mainData.playingData.gameRoomData.roomBet))
+			if (mainData.chooseChannelData.myInfo.money < mainData.minMoney)
 			{
 				dispatchEvent(new Event(PlayerInfoMauBinh.EXIT));
-				windowLayer.isNoCloseAll = true;
+				//windowLayer.isNoCloseAll = true;
 				electroServerCommand.joinLobbyRoom();
 				
-				if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
-				{
-					var kickOutWindow:AlertWindow = new AlertWindow();
-					kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
-					kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
-					windowLayer.openWindow(kickOutWindow);
-				}
+				//if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
+				//{
+					//var kickOutWindow:AlertWindow = new AlertWindow();
+					//kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
+					//kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
+					//windowLayer.openWindow(kickOutWindow);
+				//}
 				
 				EffectLayer.getInstance().removeAllEffect();
 			}
@@ -1747,7 +1747,7 @@ package view.screen
 							else
 							{
 								effectLayer.addEffect(EffectLayer.GROUP_NAME_EFFECT_MAU_BINH, p1, time, groupNumber);
-								if (resultArray[i][DataFieldMauBinh.HE_SO_SAP] < 0)
+								if (resultArray[i][DataFieldMauBinh.HE_SO_SAP_LANG] < 0)
 									effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, p2, time, 1, '-17');
 							}
 						}
@@ -1984,19 +1984,19 @@ package view.screen
 			}
 			
 			// Nếu không đủ tiền để chơi ván mới
-			if (mainData.chooseChannelData.myInfo.money < Number(mainData.playingData.gameRoomData.roomBet))
+			if (mainData.chooseChannelData.myInfo.money < mainData.minMoney)
 			{
 				dispatchEvent(new Event(PlayerInfoMauBinh.EXIT));
-				windowLayer.isNoCloseAll = true;
+				//windowLayer.isNoCloseAll = true;
 				electroServerCommand.joinLobbyRoom();
 				
-				if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
-				{
-					var kickOutWindow:AlertWindow = new AlertWindow();
-					kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
-					kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
-					windowLayer.openWindow(kickOutWindow);
-				}
+				//if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
+				//{
+					//var kickOutWindow:AlertWindow = new AlertWindow();
+					//kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
+					//kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
+					//windowLayer.openWindow(kickOutWindow);
+				//}
 				
 				EffectLayer.getInstance().removeAllEffect();
 				return;

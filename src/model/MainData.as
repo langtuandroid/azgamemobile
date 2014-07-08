@@ -464,12 +464,38 @@ package model
 		public var isPhomGa:Boolean;
 		public var gaData:Object;
 		
+		private var _virtualRooms:Array;
+		public function get virtualRooms():Array 
+		{
+			if (!_virtualRooms)
+				_virtualRooms = new Array();
+			return _virtualRooms;
+		}
+		
+		public function set virtualRooms(value:Array):void 
+		{
+			_virtualRooms = value;
+		}
+		
+		public static const MOVE_TO_SHOP:String = "moveToShop";
+		private var _isMoveToShop:Boolean;
+		public function get isMoveToShop():Boolean 
+		{
+			return _isMoveToShop;
+		}
+		
+		public function set isMoveToShop(value:Boolean):void 
+		{
+			_isMoveToShop = value;
+			if (value)
+				dispatchEvent(new Event(MOVE_TO_SHOP));
+		}
 		
 		public static const MAUBINH_ID:int = 1;
 		public static const PHOM_ID:int = 2;
 		public static const TLMN_ID:int = 3;
 		
-		public var facebook_access_token:String;
+		public var facebook_access_token:String = 'facebook_access_token=CAADlgiW8vk0BAOQZAcSPfgh0Y9lTpZAbTMD6fJ8IFrBgZC19Lii9G1LEflZAkZCeUIGZCQip7MuXqbNGzWkyaZBmHdf5kZCpC69RfOkhwUQk5qb3FxUDReWoUmnSa4HVsWdjzZB4zdj7ALvuXtui13jpjP8lF8ul3MPf1CmaMk396JZCO90VzppbOd3opU79j1kJfMKT9JJGQLuAZDZD&amp';
 		public var isLoginFacebook:Boolean;
 		public var isAutoReady:Boolean;
 		public var roomListState:int = 1; // Biến để check roomList ở lobby đang ở tab nào
@@ -483,8 +509,10 @@ package model
 		public var electroServer:ElectroServer;
 		public var lobbyRoomId:int = -1;
 		public var currentChannelId:int = 0;
+		public var tokenTime:int = 0;
+		public var token:String;
 		public var isTest:Boolean = true; // biến để check xem đang chạy trên server test hay server thật
-		public var isFacebookVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào facebook không
+		public var isFacebookVersion:Boolean = true; // biến để check xem có phải là bản nhúng vào facebook không
 	}
 
 }

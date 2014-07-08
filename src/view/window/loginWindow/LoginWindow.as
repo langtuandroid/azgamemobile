@@ -53,12 +53,13 @@ package view.window.loginWindow
 			loginMobileBtn = zLoginWindow(content).fastLogin["loginMobileBtn"];
 			loginYahooBtn = zLoginWindow(content).fastLogin["loginYahooBtn"];
 			loginGmailBtn = zLoginWindow(content).fastLogin["loginGmailBtn"];
-			//loginFacebookBtn.addEventListener(MouseEvent.CLICK, onButtonClick);
+			loginFacebookBtn.addEventListener(MouseEvent.CLICK, onButtonClick);
 			loginMobileBtn.addEventListener(MouseEvent.CLICK, onButtonClick);
 			loginYahooBtn.addEventListener(MouseEvent.CLICK, onButtonClick);
 			loginGmailBtn.addEventListener(MouseEvent.CLICK, onButtonClick);
 			loginGmailBtn.visible = false;
 			loginYahooBtn.visible = false;
+			loginMobileBtn.visible = false;
 			
 			zLoginWindow(content).loginButton.addEventListener(MouseEvent.CLICK, onLoginButtonClick);
 			zLoginWindow(content).registerButton.addEventListener(MouseEvent.CLICK, onRegisterButtonClick);
@@ -66,7 +67,6 @@ package view.window.loginWindow
 			zLoginWindow(content).savePassword.addEventListener(MouseEvent.CLICK, onSavePasswordClick);
 			zLoginWindow(content).forgetPass.visible = false;
 			zLoginWindow(content).savePassword.visible = false;
-			zLoginWindow(content).fastLogin.visible = false;
 			
 			sharedObject = SharedObject.getLocal("userInfo");
 			if (sharedObject.data.hasOwnProperty("userName"))
@@ -231,8 +231,16 @@ package view.window.loginWindow
 			
 			if (mainData.isFacebookVersion)
 			{
+				if (mainData.isLoginFacebook)
+				{
+					close(BaseWindow.MIDDLE_EFFECT);
+					return;
+				}
+				mainData.isLoginFacebook = true;
 				var mainRequest:MainRequest = new MainRequest();
 				var data:Object = new Object();
+				if (!mainData.facebook_access_token)
+					mainData.facebook_access_token = 'CAADlgiW8vk0BAOQZAcSPfgh0Y9lTpZAbTMD6fJ8IFrBgZC19Lii9G1LEflZAkZCeUIGZCQip7MuXqbNGzWkyaZBmHdf5kZCpC69RfOkhwUQk5qb3FxUDReWoUmnSa4HVsWdjzZB4zdj7ALvuXtui13jpjP8lF8ul3MPf1CmaMk396JZCO90VzppbOd3opU79j1kJfMKT9JJGQLuAZDZD&amp';
 				data.access_token = mainData.facebook_access_token;
 				zLoginWindow(content).loadingLayer.visible = true;
 				if (mainData.isTest)
@@ -345,8 +353,6 @@ package view.window.loginWindow
 			zLoginWindow(content).loadingLayer.visible = true;
 			if (mainData.isTest)
 				mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileLogin", data, onLoginValidateRespond, true);
-				//mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/Azgamebai_AppMobileLogin", data, onLoginValidateRespond, true);
-				//mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/GetListTwav001", data, onLoginValidateRespond, true);
 			else
 				mainRequest.sendRequest_Post("http://wss.sanhbai.com/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileLogin", data, onLoginValidateRespond, true);
 			
@@ -446,14 +452,14 @@ package view.window.loginWindow
 			
 			mainData.chooseChannelData.myInfo = myInfo;
 			
-			//if (!SoundManager.getInstance().isLoadSoundChung)
-				//SoundManager.getInstance().loadSoundChung();
-			//if (!SoundManager.getInstance().isLoadSoundMauBinh)
-				//SoundManager.getInstance().loadSoundMauBinh();
-			//if (!SoundManager.getInstance().isLoadSoundPhom)
-				//SoundManager.getInstance().loadSoundPhom();
-			//if (!SoundManager.getInstance().isLoadSoundTlmn)
-				//SoundManager.getInstance().addSound();
+			if (!SoundManager.getInstance().isLoadSoundChung)
+				SoundManager.getInstance().loadSoundChung();
+			if (!SoundManager.getInstance().isLoadSoundMauBinh)
+				SoundManager.getInstance().loadSoundMauBinh();
+			if (!SoundManager.getInstance().isLoadSoundPhom)
+				SoundManager.getInstance().loadSoundPhom();
+			if (!SoundManager.getInstance().isLoadSoundTlmn)
+				SoundManager.getInstance().addSound();
 		}
 	}
 

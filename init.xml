@@ -19,15 +19,6 @@
 		<swfFile src="lib/swfList/faceIcon.swf" />
 	</swfList>
 	
-	<!--<requestLink>
-		<getMessageInfoLink url="http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/GetListChatMessage" />
-		<getAccessTokenLink url="http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/GetAccessTokenDirectly" />
-		<reNewAccessTokenLink url="http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/GetAccessToken" />
-		<sendMessageLink url="http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/SendChatMessage" />
-		<getPersonalInfoLink url="/javajson/user_info/" />
-		<getChannelLink url="http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetServerInfo" />
-	</requestLink>-->
-	
 	<requestLink> <!--danh sách các link request lên server PHP-->
 		<addMoneyLink url="http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_ChargeGoldFree" />
 		<getMessageInfoLink url="http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetListChatMessage" />
@@ -35,6 +26,7 @@
 		<reNewAccessTokenLink url="http://wss.azgame.us/Service02/OnplayUserExt.asmx/GetAccessToken" />
 		<sendMessageLink url="http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/SendChatMessage" />
 		<getPersonalInfoLink url="/javajson/user_info/" />
+		<getRoomLink url="http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetListVirtualRoomInfo" />
 		<getChannelLink url="http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetServerInfo" />
 	</requestLink>
 	
@@ -89,9 +81,9 @@
 				<node>Khi xếp được 6 đôi ở cả 3 chi. Thắng trắng và được 9 lần cược mỗi người</node>
 				<node>Khi xếp được 3 thùng ở cả 3 chi. Thắng trắng và được 9 lần cược mỗi người</node>
 				<node>Khi xếp được 3 sảnh ở cả 3 chi. Thắng trắng và được 9 lần cược mỗi người</node>
-				<node>Có thùng phá sảnh ở chi 1 hoặc 2. Thắng được thêm 5 hoặc 10 lần tiền cược</node>
-				<node>Có tứ quý ở chi 1 hoặc 2. Thắng được thêm 4 hoặc 8 lần tiền cược</node>
-				<node>Có cù lũ ở chi 2. Thắng được thêm 1 lần tiền cược</node>
+				<node>Có thùng phá sảnh ở chi 1 hoặc 2. Thắng được thêm 5 hoặc 10 lần gold</node>
+				<node>Có tứ quý ở chi 1 hoặc 2. Thắng được thêm 4 hoặc 8 lần gold</node>
+				<node>Có cù lũ ở chi 2. Thắng được thêm 1 lần gold</node>
 				<node>Có sám cô ở chi 3. Thắng được thêm 2 lần cược</node>
 			</specialGroupName>
 			<specialGroupButtonName>
@@ -160,7 +152,7 @@
 			<playCard>Hãy click chọn một quân bài để đánh</playCard>
 			<sendCard>Hãy chọn quân bài để gửi, gửi từng quân bài một</sendCard>
 			<kickOutReady>Bạn đã bị đẩy ra khỏi phòng do không ấn sẵn sàng</kickOutReady>
-			<kickOutMoney>Bạn đã bị đẩy ra khỏi phòng do không đủ tiền cược để chơi tiếp</kickOutMoney>
+			<kickOutMoney>Bạn đã bị đẩy ra khỏi phòng do không đủ gold để chơi tiếp</kickOutMoney>
 			<roomMasterKick>Bạn đã bị chủ bàn đuổi ra</roomMasterKick>
 			<userLeaveRoom>đã thoát ra khỏi phòng chơi</userLeaveRoom>
 			<userJoinRoom>vừa vào bàn chơi</userJoinRoom>
@@ -174,20 +166,20 @@
 			<notSendCardRule>Không gửi bài</notSendCardRule>
 			<gaRule>Có gà</gaRule>
 			<notGaRule>Không gà</notGaRule>
-			<potMoneyDes>Tiền gà:</potMoneyDes>
+			<potMoneyDes>gold gà:</potMoneyDes>
 			<potLevelDes>Cấp độ gà:</potLevelDes>
 			<confirmPlayGa1>Phòng cấp độ gà </confirmPlayGa1>
 			<confirmPlayGa2>, bạn sẽ phải trả </confirmPlayGa2>
-			<confirmPlayGa3> lần số tiền gà tương đương với </confirmPlayGa3>
+			<confirmPlayGa3> lần số gold gà tương đương với </confirmPlayGa3>
 			<confirmPlayGa4> để tham gia phòng gà.</confirmPlayGa4>
 			<confirmQuitGa1>vả</confirmQuitGa1>
-			<confirmQuitGa2>tiền gà bạn đã góp trong bàn.</confirmQuitGa2>
+			<confirmQuitGa2>gold gà bạn đã góp trong bàn.</confirmQuitGa2>
 			<confirmQuitGa3>Nếu thoát khỏi bàn bạn sẽ mất</confirmQuitGa3>
 		</playingScreen>
 		<lobbyRoomScreen>
 			<addFriendSentence>gửi lời mời kết bạn</addFriendSentence>
-			<addCiao_1>Bạn đã hết tiền và được hệ thống nạp cho 3.500 ciao, bạn còn</addCiao_1>
-			<addCiao_2>lần nạp tiền nữa.</addCiao_2>
+			<addCiao_1>Bạn đã hết gold và được hệ thống nạp cho 3.500 ciao, bạn còn</addCiao_1>
+			<addCiao_2>lần nạp gold nữa.</addCiao_2>
 			<acceptAddFriend>đã chấp nhận lời mời kết bạn</acceptAddFriend>
 			<rejectAddFriend>đã từ chối lời mời kết bạn</rejectAddFriend>
 			<sendAddFriendSuccess>Lời mời kết bạn đã được gửi đi</sendAddFriendSuccess>
@@ -202,9 +194,9 @@
 			<fullPlayer>Phòng chơi này hiện đã đầy, bạn không thể vào chơi.</fullPlayer>
 			<emptyRoomList>Hiện tại không có phòng chơi nào</emptyRoomList>
 			<fullRoomList>Tất cả các phòng chơi đều đã đầy</fullRoomList>
-			<notEnoughMoneyToCreate1>Bạn không đủ tiền, bạn phải có số tiền tối thiểu bằng</notEnoughMoneyToCreate1>
-			<notEnoughMoneyToCreate2>lần mức cược</notEnoughMoneyToCreate2>
-			
+			<notEnoughMoneyToCreate1>Bạn cần có số gold</notEnoughMoneyToCreate1>
+			<notEnoughMoneyToCreate2>để tham gia bàn này.</notEnoughMoneyToCreate2>
+			<notEnoughMoneyToJoin>Bạn không đủ gold để vào bàn</notEnoughMoneyToJoin>
 		</lobbyRoomScreen>
 		<alertSentence>
 			<closeConnection>Đứt kết nối với server</closeConnection>
@@ -890,6 +882,5 @@
 		<child>GB011</child>
 		<child>GB012</child>
 		<child>GB013</child>
-		<child>GB017</child>
 	</soundChungList>
 </data>

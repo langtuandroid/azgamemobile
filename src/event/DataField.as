@@ -142,7 +142,10 @@ package event
 		public static const TIME: String = "time";
 		public static const PASSWORD: String = "password";
 		public static const IP: String = "ip";
-		
+		public static const VALUE: String = "value";
+		public static const DESCRIPTION: String = "description";
+		public static const SENDER: String = "sender";
+		public static const MAX_PLAYER: String = "maxPlayer";
 		
 		public function DataField() 
 		{
