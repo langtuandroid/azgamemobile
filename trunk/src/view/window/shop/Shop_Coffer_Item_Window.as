@@ -1801,24 +1801,42 @@ package view.window.shop
 			
 			typeOfPay = choosePay.typeOfPay;
 			
+			var buyAvatarWindow:ConfirmWindow;
+			var check:Boolean = true;
 			
-			var myInfo:MyInfo = new MyInfo();
-			var url:String = basePath + "Service02/OnplayShopExt.asmx/BuyItemFromClientSide";
-			var obj:Object = new Object();
-			var mainData:MainData = MainData.getInstance();
-			obj["access_token"] = mainData.loginData["AccessToken"];
-			obj["game_code"] = goldChoseBuy._goldAvt;
-			obj["payment_type"] = "1";
-			obj["nk_nm_receiver"] = mainData.loginData["Id"];
-			obj["item_id"] = goldChoseBuy._idAvt;
-			obj["item_quantity"] = "1";
-			obj["client_hash"] = MD5.hash(obj["access_token"] + mainData.client_secret + obj["game_code"]
-			 + obj["payment_type"] + obj["nk_nm_receiver"] + obj["item_id"] +
-			 obj["item_quantity"]);
+			if (typeOfPay == 1) 
+			{
+				if (Number(goldChoseBuy._chipAvt) > mainData.chooseChannelData.myInfo.cash ) 
+				{
+					buyAvatarWindow = new ConfirmWindow();
+					buyAvatarWindow.setNotice("Tài khoản không có đủ CHIP");
+					buyAvatarWindow.buttonStatus(false, true, false);
+					windowLayer.openWindow(buyAvatarWindow);
+					check = false;
+				}
+			}
 			
-			trace("link mua item: ", obj["access_token"])
-			var httpReq:HTTPRequest = new HTTPRequest();
-			httpReq.sendRequest("POST", url, obj, buyItemRespone, true);
+			if (check) 
+			{
+				var myInfo:MyInfo = new MyInfo();
+				var url:String = basePath + "Service02/OnplayShopExt.asmx/BuyItemFromClientSide";
+				var obj:Object = new Object();
+				var mainData:MainData = MainData.getInstance();
+				obj["access_token"] = mainData.loginData["AccessToken"];
+				obj["game_code"] = goldChoseBuy._goldAvt;
+				obj["payment_type"] = "1";
+				obj["nk_nm_receiver"] = mainData.loginData["Id"];
+				obj["item_id"] = goldChoseBuy._idAvt;
+				obj["item_quantity"] = "1";
+				obj["client_hash"] = MD5.hash(obj["access_token"] + mainData.client_secret + obj["game_code"]
+				 + obj["payment_type"] + obj["nk_nm_receiver"] + obj["item_id"] +
+				 obj["item_quantity"]);
+				
+				trace("link mua item: ", obj["access_token"])
+				var httpReq:HTTPRequest = new HTTPRequest();
+				httpReq.sendRequest("POST", url, obj, buyItemRespone, true);
+			}
+			
 		}
 		
 		private function buyItemRespone(obj:Object):void 
@@ -2001,25 +2019,56 @@ package view.window.shop
 		{
 			trace(choosePay.typeOfPay);
 			typeOfPay = choosePay.typeOfPay;
-			var mainData:MainData = MainData.getInstance();
-			trace("client id khi mua avatar: ", mainData.client_id , "--", mainData.client_secret)
-			var myInfo:MyInfo = new MyInfo();
-			var url:String = basePath + "Service02/OnplayShopExt.asmx/BuyAvatarFromClientSide";
-			var obj:Object = new Object();
 			
-			obj["access_token"] = mainData.loginData["AccessToken"];
-			obj["game_code"] = avatarChoseBuy._goldAvt;
-			obj["payment_type"] = "1"; //String(choosePay.typeOfPay);
-			obj["nk_nm_receiver"] = mainData.loginData["Id"];
-			obj["item_id"] = avatarChoseBuy._idAvt;
-			obj["item_quantity"] = "1";
-			obj["client_hash"] = MD5.hash(obj["access_token"] + mainData.client_secret + obj["game_code"]
-			 + obj["payment_type"] + obj["nk_nm_receiver"] + obj["item_id"] +
-			 obj["item_quantity"]);
+			var buyAvatarWindow:ConfirmWindow;
+			var check:Boolean = true;
 			
-			trace("link mua avatar: ", obj["access_token"])
-			var httpReq:HTTPRequest = new HTTPRequest();
-			httpReq.sendRequest("POST", url, obj, buyAvatarRespone, true);
+			if (typeOfPay == 2) 
+			{
+				if (Number(avatarChoseBuy._goldAvt) > mainData.chooseChannelData.myInfo.money ) 
+				{
+					buyAvatarWindow = new ConfirmWindow();
+					buyAvatarWindow.setNotice("Tài khoản không có đủ GOLD");
+					buyAvatarWindow.buttonStatus(false, true, false);
+					windowLayer.openWindow(buyAvatarWindow);
+					check = false;
+				}
+			}
+			else if (typeOfPay == 1) 
+			{
+				if (Number(avatarChoseBuy._chipAvt) > mainData.chooseChannelData.myInfo.cash ) 
+				{
+					buyAvatarWindow = new ConfirmWindow();
+					buyAvatarWindow.setNotice("Tài khoản không có đủ CHIP");
+					buyAvatarWindow.buttonStatus(false, true, false);
+					windowLayer.openWindow(buyAvatarWindow);
+					check = false;
+				}
+			}
+			
+			if (check) 
+			{
+				var mainData:MainData = MainData.getInstance();
+				trace("client id khi mua avatar: ", mainData.client_id , "--", mainData.client_secret)
+				var myInfo:MyInfo = new MyInfo();
+				var url:String = basePath + "Service02/OnplayShopExt.asmx/BuyAvatarFromClientSide";
+				var obj:Object = new Object();
+				
+				obj["access_token"] = mainData.loginData["AccessToken"];
+				obj["game_code"] = avatarChoseBuy._goldAvt;
+				obj["payment_type"] = "1"; //String(choosePay.typeOfPay);
+				obj["nk_nm_receiver"] = mainData.loginData["Id"];
+				obj["item_id"] = avatarChoseBuy._idAvt;
+				obj["item_quantity"] = "1";
+				obj["client_hash"] = MD5.hash(obj["access_token"] + mainData.client_secret + obj["game_code"]
+				 + obj["payment_type"] + obj["nk_nm_receiver"] + obj["item_id"] +
+				 obj["item_quantity"]);
+				
+				trace("link mua avatar: ", obj["access_token"])
+				var httpReq:HTTPRequest = new HTTPRequest();
+				httpReq.sendRequest("POST", url, obj, buyAvatarRespone, true);
+			}
+			
 		}
 		
 		private function buyAvatarRespone(obj:Object):void 
