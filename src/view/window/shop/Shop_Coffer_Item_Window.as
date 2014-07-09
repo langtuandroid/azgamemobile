@@ -697,7 +697,7 @@ package view.window.shop
 		{
 			if (MainData.getInstance().isOnAndroid)
 			{
-				AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.uId, 
+				AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, 
 											MainData.getInstance().phone3);
 			}
 		}
@@ -705,7 +705,7 @@ package view.window.shop
 		{
 			if (MainData.getInstance().isOnAndroid)
 			{
-				AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.uId, 
+				AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, 
 											MainData.getInstance().phone4);
 			}
 		}
@@ -713,7 +713,7 @@ package view.window.shop
 		{
 			if (MainData.getInstance().isOnAndroid)
 			{
-				AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.uId, 
+				AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, 
 											MainData.getInstance().phone5);
 			}
 		}
