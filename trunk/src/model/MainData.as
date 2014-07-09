@@ -509,9 +509,11 @@ package model
 		public var electroServer:ElectroServer;
 		public var lobbyRoomId:int = -1;
 		public var currentChannelId:int = 0;
+
 		public var tokenTime:int = 0;
 		public var token:String;
 		public var isTest:Boolean = true; // biến để check xem đang chạy trên server test hay server thật
+
 		public var isFacebookVersion:Boolean = true; // biến để check xem có phải là bản nhúng vào facebook không
 	}
 
