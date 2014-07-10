@@ -178,8 +178,14 @@ package view
 			if (!giftCodeWindow.parent)
 			{
 				giftCodeWindow.type = GiftCodeWindow.INPUT_CODE_FORM;
+				giftCodeWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onCloseGiftCodeWindow);
 				windowLayer.openWindow(giftCodeWindow, null, "noEffect", true);
 			}
+		}
+		
+		private function onCloseGiftCodeWindow(e:Event):void 
+		{
+			giftCodeWindow = null;
 		}
 		
 		private function onExitButtonClick(e:MouseEvent):void 

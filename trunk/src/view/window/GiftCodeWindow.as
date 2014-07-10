@@ -218,8 +218,9 @@ package view.window
 			}
 			if (value.TypeMsg == 1)
 			{
-				giftCodeTxt.text = value.GiftcodeMessage;
-				mainData.chooseChannelData.myInfo.money = value.UserGold;
+				type = SUCCESS_FORM;
+				giftCodeTxt.text = value.Data.GiftcodeMessage;
+				mainData.chooseChannelData.myInfo.money = value.Data.UserGold;
 				mainData.chooseChannelData.myInfo = mainData.chooseChannelData.myInfo;
 				return;
 			}

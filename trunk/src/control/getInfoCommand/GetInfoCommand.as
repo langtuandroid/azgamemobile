@@ -96,7 +96,7 @@ package control.getInfoCommand
 			}
 			else
 			{
-				WindowLayer.getInstance().openAlertWindow("Lấy thông tin sảnh thất bại!!");
+				//WindowLayer.getInstance().openAlertWindow("Lấy thông tin sảnh thất bại!!");
 			}
 			
 			//getMyInfo();
