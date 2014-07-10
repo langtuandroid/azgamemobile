@@ -232,7 +232,7 @@ package view.screen
 			GameDataTLMN.getInstance().playingData.addEventListener(PlayingData.UPDATE_PLAYING_SCREEN, onUpdatePlayingScreen);
 			
 			var textfield:TextField = new TextField();
-			textfield.text = "test 30/06/2014 : 17h20m";
+			textfield.text = "";
 			textfield.x = 20;
 			textfield.y = 520;
 			content.addChild(textfield);
@@ -3279,7 +3279,7 @@ package view.screen
 			
 			content.startGame.addEventListener(MouseEvent.CLICK, onClickStartGame);
 			content.orderCard.addEventListener(MouseEvent.CLICK, onOrderCard);
-			
+			content.orderCard.visible = false;
 			checkShowTextNotice();
 			
 			content.chatBtn.addEventListener(MouseEvent.CLICK, onChatButtonClick);

@@ -328,7 +328,7 @@ package view.window.shop
 					httpRequest.sendRequest(method, url, obj, loadTopSuccess, true);
 				break;
 				case 2:
-					url = "http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserLevel";
+					url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserLevel";
 					obj = new Object();
 					obj.avt_group_id = String(0);
 					httpRequest.sendRequest(method, url, obj, loadRoyalTopSuccess, true);
@@ -628,7 +628,7 @@ package view.window.shop
 				var httpRequest:HTTPRequest = new HTTPRequest();
 				var obj:Object;
 				
-				url = "http://wss.azgame.us/Service01/Billings/OnplayMobile.asmx/CardCharging";
+				url = basePath + "Service01/Billings/OnplayMobile.asmx/CardCharging";
 				
 				obj = new Object();
 				obj.nick_name = MainData.getInstance().chooseChannelData.myInfo.id;
@@ -695,27 +695,39 @@ package view.window.shop
 		
 		private function onClickChoseSms1(e:MouseEvent):void 
 		{
-			if (MainData.getInstance().isOnAndroid)
+			if (!MainData.getInstance().isFacebookVersion) 
 			{
-				AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, 
-											MainData.getInstance().phone3);
+				if (MainData.getInstance().isOnAndroid)
+				{
+					AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, 
+												MainData.getInstance().phone3);
+				}
 			}
+			
 		}
 		private function onClickChoseSms2(e:MouseEvent):void 
 		{
-			if (MainData.getInstance().isOnAndroid)
+			if (!MainData.getInstance().isFacebookVersion) 
 			{
-				AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, 
-											MainData.getInstance().phone4);
+				if (MainData.getInstance().isOnAndroid)
+				{
+					AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, 
+												MainData.getInstance().phone4);
+				}
 			}
+			
 		}
 		private function onClickChoseSms3(e:MouseEvent):void 
 		{
-			if (MainData.getInstance().isOnAndroid)
+			if (!MainData.getInstance().isFacebookVersion) 
 			{
-				AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, 
-											MainData.getInstance().phone5);
+				if (MainData.getInstance().isOnAndroid)
+				{
+					AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, 
+												MainData.getInstance().phone5);
+				}
 			}
+			
 		}
 		
 		private function onClickShowAddMoneySms(e:MouseEvent):void 
