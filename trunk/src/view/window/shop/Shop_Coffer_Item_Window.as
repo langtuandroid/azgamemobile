@@ -1806,7 +1806,7 @@ package view.window.shop
 			
 			if (typeOfPay == 1) 
 			{
-				if (Number(goldChoseBuy._chipAvt) > mainData.chooseChannelData.myInfo.cash ) 
+				if (Number(goldChoseBuy._chipAvt) > MainData.getInstance().chooseChannelData.myInfo.cash ) 
 				{
 					buyAvatarWindow = new ConfirmWindow();
 					buyAvatarWindow.setNotice("Tài khoản không có đủ CHIP");
@@ -1897,11 +1897,11 @@ package view.window.shop
 					windowLayer.openWindow(buyAvatarWindow);
 					if (typeOfPay == 1) 
 					{
-						MainData.getInstance().chooseChannelData.myInfo.cash = MainData.getInstance().chooseChannelData.myInfo.cash - Number(avatarChoseBuy._chipAvt);
+						MainData.getInstance().chooseChannelData.myInfo.cash = MainData.getInstance().chooseChannelData.myInfo.cash - Number(goldChoseBuy._chipAvt);
 					}
 					else 
 					{
-						MainData.getInstance().chooseChannelData.myInfo.money = MainData.getInstance().chooseChannelData.myInfo.money - Number(avatarChoseBuy._goldAvt);
+						MainData.getInstance().chooseChannelData.myInfo.money = MainData.getInstance().chooseChannelData.myInfo.money - Number(goldChoseBuy._goldAvt);
 					}
 					MainData.getInstance().chooseChannelData.myInfo = MainData.getInstance().chooseChannelData.myInfo;
 				}
@@ -2025,7 +2025,7 @@ package view.window.shop
 			
 			if (typeOfPay == 2) 
 			{
-				if (Number(avatarChoseBuy._goldAvt) > mainData.chooseChannelData.myInfo.money ) 
+				if (Number(avatarChoseBuy._goldAvt) > MainData.getInstance().chooseChannelData.myInfo.money ) 
 				{
 					buyAvatarWindow = new ConfirmWindow();
 					buyAvatarWindow.setNotice("Tài khoản không có đủ GOLD");
@@ -2036,7 +2036,7 @@ package view.window.shop
 			}
 			else if (typeOfPay == 1) 
 			{
-				if (Number(avatarChoseBuy._chipAvt) > mainData.chooseChannelData.myInfo.cash ) 
+				if (Number(avatarChoseBuy._chipAvt) > MainData.getInstance().chooseChannelData.myInfo.cash ) 
 				{
 					buyAvatarWindow = new ConfirmWindow();
 					buyAvatarWindow.setNotice("Tài khoản không có đủ CHIP");
