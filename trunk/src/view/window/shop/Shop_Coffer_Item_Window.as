@@ -677,24 +677,31 @@ package view.window.shop
 		private function onAddMoneyRespone(obj:Object):void 
 		{
 			var addMoney:ConfirmWindow = new ConfirmWindow();
+			var buyAvatarWindow:ConfirmWindow;
 			
 			windowLayer.closeAllWindow();
-			
-			if (obj["Msg"] == "Access Token Expired") 
+			if (obj.description == "link bị sai rùi") 
 			{
-				var buyAvatarWindow:ConfirmWindow = new ConfirmWindow();
+				buyAvatarWindow = new ConfirmWindow();
 				buyAvatarWindow.setNotice("Giao dịch không thành công, xin vui lòng thử lại");
 				buyAvatarWindow.buttonStatus(false, true, false);
 				windowLayer.openWindow(buyAvatarWindow);
 			}
-			else if (obj.TypeMsg < 0) 
+			else if (obj["Msg"] == "Access Token Expired") 
+			{
+				buyAvatarWindow = new ConfirmWindow();
+				buyAvatarWindow.setNotice("Giao dịch không thành công, xin vui lòng thử lại");
+				buyAvatarWindow.buttonStatus(false, true, false);
+				windowLayer.openWindow(buyAvatarWindow);
+			}
+			else if (obj.TypeMsg != 0) 
 			{
 				addMoney.setNotice(obj.Msg);
 				addMoney.buttonStatus(false, true, false);
 			}
 			else 
 			{
-				addMoney.setNotice("Bạn đã nạp " + obj.Data.Amount + " k thành công");
+				addMoney.setNotice("Bạn đã nạp " + int(obj.Data.Amount / 1000) + " k thành công");
 				addMoney.buttonStatus(false, true, false);
 				
 				updateUserInfo();
@@ -1231,13 +1238,20 @@ package view.window.shop
 		
 		public function onClickShowMyTour(e:MouseEvent):void 
 		{
+			windowLayer.openAlertWindow("Giải đấu chưa bắt đầu!");
+			return;
+			
 			allHeaderVisible();
 			showHeaderChose(3, 3);
+			
 			loadMyItem(3);
 		}
 		
 		public function onClickShowMyGift(e:MouseEvent):void 
 		{
+			windowLayer.openAlertWindow("Giải đấu chưa bắt đầu!");
+			return;
+			
 			allHeaderVisible();
 			showHeaderChose(3, 4);
 			loadMyItem(4);
@@ -1245,6 +1259,8 @@ package view.window.shop
 		
 		public function onClickShowGift(e:MouseEvent):void 
 		{
+			windowLayer.openAlertWindow("Giải đấu chưa bắt đầu!");
+			return;
 			allHeaderVisible();
 			showHeaderChose(2, 4);
 			loadItem(4);
@@ -1252,6 +1268,10 @@ package view.window.shop
 		
 		public function onClickShowTour(e:MouseEvent):void 
 		{
+			
+			windowLayer.openAlertWindow("Giải đấu chưa bắt đầu!");
+			return;
+			
 			allHeaderVisible();
 			showHeaderChose(2, 3);
 			loadItem(3);

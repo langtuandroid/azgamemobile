@@ -57,7 +57,7 @@ package view.window
 				obj["cards"] = new Array();
 				arrUserResult.push(obj);
 			}
-			
+			content.close.visible = false;
 		}
 		
 		private function addEvent():void 
@@ -117,7 +117,7 @@ package view.window
 			content.bg.visible = true;
 			content.timeRemain.visible = true;
 			
-			content.close.visible = true;
+			//content.close.visible = true;
 			content.outGame.visible = true;
 			for (i = 0; i < showUser; i++) 
 			{
@@ -132,7 +132,7 @@ package view.window
 		private function onOutGameClick(e:MouseEvent):void 
 		{
 			dispatchEvent(new Event("out game"));
-			
+			onClose(null);
 		}
 		
 		private function onCoundDownToClose(e:TimerEvent):void 
@@ -279,6 +279,11 @@ package view.window
 						str += "...";
 						arrUserResult[count]["user"].noticeTxt.text = str;
 					}
+					if (arrUserResult[count]["user"].userNameTxt.text != MyDataTLMN.getInstance().myName) 
+					{
+						//arrUserResult[i].user.win.visible = true;
+						//arrUserResult[i].user.lose.visible = false;
+					}
 					else 
 					{
 						_win = true;
@@ -288,7 +293,7 @@ package view.window
 				else 
 				{
 					
-					arrUserResult[count]["user"].betResultTxt.text = format(int(arrResult[i][ConstTlmn.MONEY])) ;
+					arrUserResult[count]["user"].betResultTxt.text = "-" + format(int(arrResult[i][ConstTlmn.MONEY]) * -1) ;
 					
 				}
 				
@@ -372,9 +377,15 @@ package view.window
 					gameOverObject["subMoney"] = data.getString("subMoney"); :so tien bi tru
 					gameOverObject["description"] = data.getString("description"); : thong bao thoi nhung cai j`
 			 */
+					
+			for (i = 0; i < arrUserResult.length; i++) 
+			{
+				arrUserResult[i]["user"].myResult.visible = false;
+				arrUserResult[i]["user"].visible = true;
+			}
 			if (obj["resultArr"]) 
 			{
-				for (i = 0; i< arrUserResult.length; i++) 
+				for (i = 0; i < arrUserResult.length; i++) 
 				{
 					trace("setinfothuong")
 					trace(i, arrUserResult[i]["user"].myResult.visible)
@@ -420,7 +431,7 @@ package view.window
 					else 
 					{
 						//TextField(arrUserResult[i]["user"].betResultTxt).defaultTextFormat = _textformatLose;
-						arrUserResult[count]["user"].betResultTxt.text = format(int(arrResult[i][ConstTlmn.SUB_MONEY])) ;
+						arrUserResult[count]["user"].betResultTxt.text = "-" + format(int(arrResult[i][ConstTlmn.SUB_MONEY]) * -1) ;
 						
 					}
 					
@@ -469,6 +480,7 @@ package view.window
 			var str:String = "Thối ";
 			var arrSpecial:Array = [];
 			var checkcayle:Boolean = false;
+			var checkThoitrang:Boolean = false;
 			var count:int;
 			
 			string = string.split(",").join("");
@@ -477,6 +489,10 @@ package view.window
 				if (string.charAt(i) != ";") 
 				{
 					arrSpecial.push(string.charAt(i));
+					if (string.charAt(i) == "8") 
+					{
+						checkThoitrang = true;
+					}
 				}
 				else 
 				{
@@ -509,17 +525,16 @@ package view.window
 						str += "ba quân hai, ";
 						break;
 						case 5:
-						str += "ba đôi thông, ";
+						str += "3 đôi thông, ";
 						break;
 						case 6:
 						str += "tứ quý, ";
 						break;
 						case 7:
-						str += "bốn đôi thông, ";
+						str += "4 đôi thông, ";
 						break;
 						case 8:
 						str += "trắng, ";
-						checkcayle = false;
 						break;
 						default:
 						str += "";
@@ -534,26 +549,36 @@ package view.window
 			
 			if (checkcayle) 
 			{
-				var str1:String = "";
-				if (arrSpecial.length > 0) 
+				if (checkThoitrang) 
 				{
+					str = str.slice(0, str.length - 2);
 					
-					for (i = count + 1; i < string.length; i++) 
+				}
+				else
+				{
+					var str1:String = "";
+					if (arrSpecial.length > 0) 
 					{
-						str1 += string.charAt(i);
+						
+						for (i = count + 1; i < string.length; i++) 
+						{
+							str1 += string.charAt(i);
+						}
+						
+						str += str1 + " cây";
 					}
-					
-					str += str1 + " cây";
+					else 
+					{
+						str1 = string.split(";").join("");
+						str += str1 + " cây";
+					}
 				}
-				else 
-				{
-					str1 = string.split(";").join("");
-					str += str1 + " cây";
-				}
+				
 				
 			}
 			else 
 			{
+				
 				var string1:String = "";
 				var pos:int = str.indexOf(",");
 				for(i = 0; i < pos; i++)
