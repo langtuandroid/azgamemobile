@@ -137,6 +137,8 @@ package view.screen
 			}
 			
 			versionTxt = content["versionTxt"];
+			if (!mainData.isTest)
+				versionTxt.visible = false;
 			versionTxt.text = "10h20 - 04.04.2014";
 			setupButton();
 			setupTextField();

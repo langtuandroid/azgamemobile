@@ -113,6 +113,7 @@ package view.screen
 		private var firstLayer:Sprite;
 		private var selectGameLayer:Sprite;
 		private var menuLayer:Sprite;
+		private var firstChannelId:int;
 		
 		public function LobbyRoomScreen() 
 		{
@@ -492,7 +493,15 @@ package view.screen
 							var channelData:ChannelData = new ChannelData();
 							channelData.channelId = channelObject[DataFieldMauBinh.CHANNEL_NUM];
 							channelData.channelName = channelObject[DataFieldMauBinh.CHANNEL_NAME];
-							channelData.playerNumber = channelObject[DataFieldMauBinh.USERS_ONLINE];
+							var virtualPlayer:int = 0;
+							if (i == 0 && j == 0)
+							{
+								for (var k:int = 0; k < mainData.virtualRooms.length; k++) 
+								{
+									virtualPlayer += mainData.virtualRooms[k].player_male_number + mainData.virtualRooms[k].player_female_number;
+								}
+							}
+							channelData.playerNumber = channelObject[DataFieldMauBinh.USERS_ONLINE] + virtualPlayer;
 							channelData.fee = channelObject[DataFieldMauBinh.DEALER_FEE];
 							channelData.maxPlayer = 200;
 							dataList.push(channelData);
@@ -736,9 +745,10 @@ package view.screen
 			if (mainData.isFirstJoinLobby)
 			{
 				var channelObject:Object = mainData.chooseChannelData.channelInfoArray[0];
-				//WindowLayer.getInstance().openLoadingWindow();
+				
 				mainData.currentChannelId = channelObject[DataFieldMauBinh.CHANNEL_NUM];
-				mainCommand.electroServerCommand.startConnect("", channelObject[DataFieldMauBinh.CHANNEL_NUM]);
+				firstChannelId = mainData.currentChannelId;
+				mainCommand.electroServerCommand.startConnect("", mainData.currentChannelId);
 				mainData.fee = channelObject[DataFieldMauBinh.DEALER_FEE];
 				channelInfoTxt.text = mainData.gameName + " - " + channelObject[DataFieldMauBinh.CHANNEL_NAME];
 				mainData.playingData.gameRoomData.channelName = channelObject[DataFieldMauBinh.CHANNEL_NAME];
@@ -797,6 +807,15 @@ package view.screen
 							if (int(mainData.chooseChannelData.myInfo.level) < minLevel)
 								MovieClip(channelButtonArray[i]).gotoAndStop("disable");
 						}
+					}
+					if (i == 0)
+					{
+						var virtualPlayer:int = 0;
+						for (j = 0; j < mainData.virtualRooms.length; j++) 
+						{
+							virtualPlayer += mainData.virtualRooms[j].player_male_number + mainData.virtualRooms[j].player_female_number;
+						}
+						channelButtonArray[i]["playerNumberTxt"].text = PlayingLogic.format(onlinePlayer + virtualPlayer, 1);
 					}
 				}
 				else
@@ -1014,31 +1033,34 @@ package view.screen
 				if (!userList.isDraggingScroll && !roomList.isDraggingScroll)
 				{
 					var tempArray:Array = mainData.lobbyRoomData.roomList.concat();
-					for (var i:int = 0; i < mainData.virtualRooms.length; i++) 
+					if (mainData.currentChannelId == firstChannelId)
 					{
-						var roomData:RoomDataRLC = new RoomDataRLC();
-						roomData.moneyLogoUrl = mainData.init.requestLink.moneyIcon.@url;
-						roomData.rules = mainData.init.gameDescription.lobbyRoomScreen.sendCard;
-						roomData.ruleToggle = false;
-						roomData.male = mainData.virtualRooms[i].player_male_number;
-						roomData.betting = mainData.virtualRooms[i].bets;
-						roomData.channelId = mainData.playingData.gameRoomData.channelId;
-						if (mainData.virtualRooms[i].status == '2')
-							roomData.hasPassword = true;
-						else
-							roomData.hasPassword = false;
-						//roomData.maxPlayer = mainData.virtualRooms[i].player_limit_number;
-						roomData.maxPlayer = 4;
-						roomData.name = '';
-						roomData.id = mainData.virtualRooms[i].room_id;
-						roomData.gameId = mainData.virtualRooms[i].room_id;
-						roomData.userNumbers = mainData.virtualRooms[i].player_male_number + mainData.virtualRooms[i].player_female_number;
-						if (roomData.userNumbers > roomData.maxPlayer)
-							roomData.userNumbers = roomData.maxPlayer;
-						if (roomData.male > roomData.maxPlayer)
-							roomData.male = roomData.maxPlayer;
-						if (roomData.userNumbers != roomData.maxPlayer || mainData.showFullTable == 1)
-							tempArray.push(roomData);
+						for (var i:int = 0; i < mainData.virtualRooms.length; i++) 
+						{
+							var roomData:RoomDataRLC = new RoomDataRLC();
+							roomData.moneyLogoUrl = mainData.init.requestLink.moneyIcon.@url;
+							roomData.rules = mainData.init.gameDescription.lobbyRoomScreen.sendCard;
+							roomData.ruleToggle = false;
+							roomData.male = mainData.virtualRooms[i].player_male_number;
+							roomData.betting = mainData.virtualRooms[i].bets;
+							roomData.channelId = mainData.playingData.gameRoomData.channelId;
+							if (mainData.virtualRooms[i].status == '2')
+								roomData.hasPassword = true;
+							else
+								roomData.hasPassword = false;
+							//roomData.maxPlayer = mainData.virtualRooms[i].player_limit_number;
+							roomData.maxPlayer = 4;
+							roomData.name = '';
+							roomData.id = mainData.virtualRooms[i].room_id;
+							roomData.gameId = mainData.virtualRooms[i].room_id;
+							roomData.userNumbers = mainData.virtualRooms[i].player_male_number + mainData.virtualRooms[i].player_female_number;
+							if (roomData.userNumbers > roomData.maxPlayer)
+								roomData.userNumbers = roomData.maxPlayer;
+							if (roomData.male > roomData.maxPlayer)
+								roomData.male = roomData.maxPlayer;
+							if (roomData.userNumbers != roomData.maxPlayer || mainData.showFullTable == 1)
+								tempArray.push(roomData);
+						}
 					}
 					roomList.roomDataList = tempArray;
 				}

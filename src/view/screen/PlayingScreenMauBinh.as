@@ -177,6 +177,8 @@ package view.screen
 			setupCompareGroupStatus();
 			
 			versionTxt = content["versionTxt"];
+			if (!mainData.isTest)
+				versionTxt.visible = false;
 			versionTxt.text = "17.59.21.03.2014";
 			maubinh = content["maubinh"];
 			maubinh.visible = false;
