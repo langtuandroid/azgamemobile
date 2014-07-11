@@ -838,6 +838,13 @@ package control.electroServerCommand
 			if (coreAPI)
 				coreAPI.getFriendList();
 		}
+		
+		
+		public function addFriend(userName:String, roomType:String):void
+		{
+			coreAPI.addFriend(userName, roomType);
+		}
+		
 	}
 
 }
