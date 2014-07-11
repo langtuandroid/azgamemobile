@@ -12,11 +12,13 @@ package view.window.shop
 	import flash.text.TextField;
 	import model.chooseChannelData.MyInfo;
 	import model.MainData;
+	import model.MyDataTLMN;
 	import request.HTTPRequest;
 	import view.ScrollView.ScrollViewYun;
 	import view.window.AlertWindow;
 	import view.window.BaseWindow;
 	import view.window.ConfirmWindow;
+	import view.window.LoadingWindow;
 	import view.window.windowLayer.WindowLayer;
 	
 	/**
@@ -63,6 +65,9 @@ package view.window.shop
 		private var goldChoseBuy:*;
 		
 		private var basePath:String = "";
+		
+		private var changeGift:MovieClip;
+		private var tutorialAddMoney:MovieClip;
 		
 		public function Shop_Coffer_Item_Window() 
 		{
@@ -220,7 +225,7 @@ package view.window.shop
 			myContent.chooseInAddMoneyMc.sms.addEventListener(MouseEvent.MOUSE_UP, onClickShowAddMoneySms);
 			
 			
-			
+			myContent.rakingBg.userNameTxt.text = MainData.getInstance().chooseChannelData.myInfo.name;
 			myContent.rakingBg.userNameTxt.addEventListener(FocusEvent.FOCUS_IN, userNameFocusHandler);
 			myContent.rakingBg.userNameTxt.addEventListener(FocusEvent.FOCUS_OUT, userNameFocusOutHandler);
 			
@@ -598,9 +603,9 @@ package view.window.shop
 		private function userNameFocusOutHandler(e:FocusEvent):void 
 		{
 			var txt:TextField = e.currentTarget as TextField;
-			if (txt.text == "") 
+			if (txt.text == "" || txt.text == " ") 
 			{
-				txt.text = "nhập tên";
+				txt.text = MainData.getInstance().chooseChannelData.myInfo.name;
 			}
 		}
 		
@@ -623,6 +628,8 @@ package view.window.shop
 				&& myContent.rakingBg.codecheckTxt.text == myContent.rakingBg.codeCheck.text
 				) 
 			{
+				
+				windowLayer.openLoadingWindow();
 				var method:String = "POST";
 				var url:String;
 				var httpRequest:HTTPRequest = new HTTPRequest();
@@ -631,7 +638,7 @@ package view.window.shop
 				url = basePath + "Service01/Billings/OnplayMobile.asmx/CardCharging";
 				
 				obj = new Object();
-				obj.nick_name = MainData.getInstance().chooseChannelData.myInfo.id;
+				obj.nick_name = MainData.getInstance().chooseChannelData.myInfo.name;
 				obj.telco_code = _typOfNetwork;
 				obj.card_serial = myContent.rakingBg.serinumberTxt.text;
 				obj.card_id = myContent.rakingBg.codenumberTxt.text;
@@ -671,6 +678,7 @@ package view.window.shop
 		{
 			var addMoney:ConfirmWindow = new ConfirmWindow();
 			
+			windowLayer.closeAllWindow();
 			
 			if (obj["Msg"] == "Access Token Expired") 
 			{
@@ -688,9 +696,41 @@ package view.window.shop
 			{
 				addMoney.setNotice("Bạn đã nạp " + obj.Data.Amount + " k thành công");
 				addMoney.buttonStatus(false, true, false);
+				
+				updateUserInfo();
 			}
 			
 			windowLayer.openWindow(addMoney);
+		}
+		
+		private function updateUserInfo():void 
+		{
+			var method:String = "POST";
+			var url:String;
+			var httpRequest:HTTPRequest = new HTTPRequest();
+			var obj:Object;
+			
+			url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetUserInfo";
+			
+			obj = new Object();
+			obj.nick_name = MainData.getInstance().chooseChannelData.myInfo.name;
+			
+			httpRequest.sendRequest(method, url, obj, onUpdateUserInfo, true);
+		}
+		
+		private function onUpdateUserInfo(obj:Object):void 
+		{
+			trace(obj)
+			MainData.getInstance().chooseChannelData.myInfo.avatar = obj.Data["Avatar"];
+			MainData.getInstance().chooseChannelData.myInfo.money = obj.Data["Money"];
+			MainData.getInstance().chooseChannelData.myInfo.cash = obj.Data["Cash"];
+			MainData.getInstance().chooseChannelData.myInfo.level = obj.Data["Level"];
+			
+			MainData.getInstance().chooseChannelData.myInfo = MainData.getInstance().chooseChannelData.myInfo;
+			MyDataTLMN.getInstance().myMoney[0] = obj.Data["Money"];
+			MyDataTLMN.getInstance().myMoney[1] = obj.Data["Cash"];
+			MyDataTLMN.getInstance().myAvatar = obj.Data["Avatar"];
+			
 		}
 		
 		private function onClickChoseSms1(e:MouseEvent):void 
@@ -703,6 +743,28 @@ package view.window.shop
 												MainData.getInstance().phone3);
 				}
 			}
+			else 
+			{
+				tutorialAddMoney = new TutorialAddMoneyPopup();
+				myContent.addChild(tutorialAddMoney);
+				tutorialAddMoney.x = 47 + (865 - tutorialAddMoney.width) / 2;
+				tutorialAddMoney.y = 136 + (363 - tutorialAddMoney.height) / 2;
+				
+				tutorialAddMoney.contentMess.text = "SB G " + MainData.getInstance().chooseChannelData.myInfo.name;
+				tutorialAddMoney.numberTxt.text = MainData.getInstance().phone3;
+				
+				tutorialAddMoney.closeBtn.addEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);
+				
+			}
+			
+		}
+		
+		private function onCloseTutorial(e:MouseEvent):void 
+		{
+			
+			tutorialAddMoney.closeBtn.removeEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);
+			myContent.removeChild(tutorialAddMoney);
+			tutorialAddMoney = null;
 			
 		}
 		private function onClickChoseSms2(e:MouseEvent):void 
@@ -714,6 +776,19 @@ package view.window.shop
 					AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, 
 												MainData.getInstance().phone4);
 				}
+			}
+			else 
+			{
+				tutorialAddMoney = new TutorialAddMoneyPopup();
+				myContent.addChild(tutorialAddMoney);
+				tutorialAddMoney.x = 47 + (865 - tutorialAddMoney.width) / 2;
+				tutorialAddMoney.y = 136 + (363 - tutorialAddMoney.height) / 2;
+				
+				tutorialAddMoney.contentMess.text = "SB G " + MainData.getInstance().chooseChannelData.myInfo.name;
+				tutorialAddMoney.numberTxt.text = MainData.getInstance().phone4;
+				
+				tutorialAddMoney.closeBtn.addEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);
+				
 			}
 			
 		}
@@ -727,7 +802,19 @@ package view.window.shop
 												MainData.getInstance().phone5);
 				}
 			}
-			
+			else 
+			{
+				tutorialAddMoney = new TutorialAddMoneyPopup();
+				myContent.addChild(tutorialAddMoney);
+				tutorialAddMoney.x = 47 + (865 - tutorialAddMoney.width) / 2;
+				tutorialAddMoney.y = 136 + (363 - tutorialAddMoney.height) / 2;
+				
+				tutorialAddMoney.contentMess.text = "SB G " + MainData.getInstance().chooseChannelData.myInfo.name;
+				tutorialAddMoney.numberTxt.text = MainData.getInstance().phone5;
+				
+				tutorialAddMoney.closeBtn.addEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);
+				
+			}
 		}
 		
 		private function onClickShowAddMoneySms(e:MouseEvent):void 
@@ -1113,6 +1200,8 @@ package view.window.shop
 				buyAvatarWindow.setNotice("Mặc avatar thành công!");
 				buyAvatarWindow.buttonStatus(false, true, false);
 				windowLayer.openWindow(buyAvatarWindow);
+				
+				updateUserInfo();
 			}
 		}
 		
@@ -1507,13 +1596,67 @@ package view.window.shop
 		private function onChangeGift(e:Event):void 
 		{
 			var i:int;
-			choosePay = new ChoosePayMoneyType();
-			windowLayer.openWindow(choosePay);
-			choosePay.showChoose(1);
+			changeGift = new AgreeChangeGiftPopup();
+			myContent.addChild(changeGift);
+			changeGift.x = 47 + (865 - changeGift.width) / 2;
+			changeGift.y = 136 + (363 - changeGift.height) / 2;
+			changeGift.cancelBtn.addEventListener(MouseEvent.MOUSE_UP, onCloseChangeGift);
+			changeGift.agreeBtn.addEventListener(MouseEvent.MOUSE_UP, onAgreeChangeGift);
 			
-			choosePay.addEventListener("agree", onClickBuyGold);
+			
 			
 			goldChoseBuy = e.currentTarget as ContentItemGift;
+		}
+		
+		private function onAgreeChangeGift(e:MouseEvent):void 
+		{
+			
+			changeGift.cancelBtn.removeEventListener(MouseEvent.MOUSE_UP, onCloseChangeGift);
+			changeGift.agreeBtn.removeEventListener(MouseEvent.MOUSE_UP, onAgreeChangeGift);
+			
+			myContent.removeChild(changeGift);
+			
+			var check:Boolean = true;
+			if (Number(goldChoseBuy._goldAvt) > MainData.getInstance().chooseChannelData.myInfo.money ) 
+			{
+				var buyAvatarWindow:ConfirmWindow = new ConfirmWindow();
+				buyAvatarWindow.setNotice("Tài khoản không có đủ GOLD");
+				buyAvatarWindow.buttonStatus(false, true, false);
+				windowLayer.openWindow(buyAvatarWindow);
+				check = false;
+			}
+			
+			if (check) 
+			{
+				var myInfo:MyInfo = new MyInfo();
+				var url:String = basePath + "Service02/OnplayShopExt.asmx/BuyItemFromClientSide";
+				var obj:Object = new Object();
+				var mainData:MainData = MainData.getInstance();
+				obj["access_token"] = mainData.loginData["AccessToken"];
+				obj["game_code"] = goldChoseBuy._goldAvt;
+				obj["payment_type"] = "1";
+				obj["nk_nm_receiver"] = mainData.loginData["Id"];
+				obj["item_id"] = goldChoseBuy._idAvt;
+				obj["item_quantity"] = "1";
+				obj["client_hash"] = MD5.hash(obj["access_token"] + mainData.client_secret + obj["game_code"]
+				 + obj["payment_type"] + obj["nk_nm_receiver"] + obj["item_id"] +
+				 obj["item_quantity"]);
+				
+				trace("link mua item: ", obj["access_token"])
+				var httpReq:HTTPRequest = new HTTPRequest();
+				httpReq.sendRequest("POST", url, obj, buyItemRespone, true);
+			}
+		}
+		
+		private function onCloseChangeGift(e:MouseEvent):void 
+		{
+			
+			changeGift.cancelBtn.removeEventListener(MouseEvent.MOUSE_UP, onCloseChangeGift);
+			changeGift.agreeBtn.removeEventListener(MouseEvent.MOUSE_UP, onAgreeChangeGift);
+			
+			myContent.removeChild(changeGift);
+			
+			
 		}
 		
 		private function loadItemTourSuccess(obj:Object):void 
@@ -1916,6 +2059,8 @@ package view.window.shop
 						MainData.getInstance().chooseChannelData.myInfo.money = MainData.getInstance().chooseChannelData.myInfo.money - Number(goldChoseBuy._goldAvt);
 					}
 					MainData.getInstance().chooseChannelData.myInfo = MainData.getInstance().chooseChannelData.myInfo;
+					
+					updateUserInfo();
 				}
 				
 			}
@@ -2133,7 +2278,7 @@ package view.window.shop
 			var arr:Array = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", 
 			"T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 			var str:String = "";
-			for (var i:int = 0; i < 5; i++) 
+			for (var i:int = 0; i < 3; i++) 
 			{
 				var rd:int = int(Math.random() * arr.length);
 				str = str + arr[rd];

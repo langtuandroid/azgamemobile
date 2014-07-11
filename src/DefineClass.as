@@ -103,6 +103,8 @@ package
 			zSystemNoticeBar;
 			ContentUserTopList;
 			BuyTourSuccessMc;
+			TutorialAddMoneyPopup;
+			AgreeChangeGiftPopup;
 			
 			BoGameBaiMainView;
 			zGiftCodeWindow;
