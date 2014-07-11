@@ -833,7 +833,11 @@ package control.electroServerCommand
 			coreAPI.exitGame(type);
 			//joinLobbyRoom();
 		}
-		
+		public function getFriendList():void
+		{
+			if (coreAPI)
+				coreAPI.getFriendList();
+		}
 	}
 
 }
