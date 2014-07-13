@@ -672,6 +672,8 @@ package view.window.shop
 					windowLayer.openAlertWindow("Mã xác nhận không đúng");
 				}
 			}
+			
+			createCodeCheck();
 		}
 		
 		private function onAddMoneyRespone(obj:Object):void 
@@ -1999,7 +2001,7 @@ package view.window.shop
 				var mainData:MainData = MainData.getInstance();
 				obj["access_token"] = mainData.loginData["AccessToken"];
 				obj["game_code"] = goldChoseBuy._goldAvt;
-				obj["payment_type"] = "1";
+				obj["payment_type"] = String(typeOfPay);
 				obj["nk_nm_receiver"] = mainData.loginData["Id"];
 				obj["item_id"] = goldChoseBuy._idAvt;
 				obj["item_quantity"] = "1";
@@ -2080,9 +2082,9 @@ package view.window.shop
 					}
 					MainData.getInstance().chooseChannelData.myInfo = MainData.getInstance().chooseChannelData.myInfo;
 					
-					updateUserInfo();
+					
 				}
-				
+				updateUserInfo();
 			}
 			else if (obj["Msg"] == "Tài khoản không có đủ CHIP") 
 			{
@@ -2233,7 +2235,7 @@ package view.window.shop
 				
 				obj["access_token"] = mainData.loginData["AccessToken"];
 				obj["game_code"] = avatarChoseBuy._goldAvt;
-				obj["payment_type"] = "1"; //String(choosePay.typeOfPay);
+				obj["payment_type"] = String(typeOfPay);
 				obj["nk_nm_receiver"] = mainData.loginData["Id"];
 				obj["item_id"] = avatarChoseBuy._idAvt;
 				obj["item_quantity"] = "1";
@@ -2276,6 +2278,8 @@ package view.window.shop
 					MainData.getInstance().chooseChannelData.myInfo.money = MainData.getInstance().chooseChannelData.myInfo.money - Number(avatarChoseBuy._goldAvt);
 				}
 				MainData.getInstance().chooseChannelData.myInfo = MainData.getInstance().chooseChannelData.myInfo;
+				
+				updateUserInfo();
 			}
 		}
 		
