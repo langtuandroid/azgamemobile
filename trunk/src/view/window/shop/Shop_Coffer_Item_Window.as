@@ -696,17 +696,18 @@ package view.window.shop
 				buyAvatarWindow.buttonStatus(false, true, false);
 				windowLayer.openWindow(buyAvatarWindow);
 			}
-			else if (obj.TypeMsg != 0) 
-			{
-				addMoney.setNotice(obj.Msg);
-				addMoney.buttonStatus(false, true, false);
-			}
-			else 
+			else if (obj.TypeMsg == 1) 
 			{
 				addMoney.setNotice("Bạn đã nạp " + int(obj.Data.Amount / 1000) + " k thành công");
 				addMoney.buttonStatus(false, true, false);
 				
 				updateUserInfo();
+				
+			}
+			else 
+			{
+				addMoney.setNotice(obj.Msg);
+				addMoney.buttonStatus(false, true, false);
 			}
 			
 			windowLayer.openWindow(addMoney);
@@ -744,15 +745,8 @@ package view.window.shop
 		
 		private function onClickChoseSms1(e:MouseEvent):void 
 		{
-			if (!MainData.getInstance().isFacebookVersion) 
-			{
-				if (MainData.getInstance().isOnAndroid)
-				{
-					AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, 
-												MainData.getInstance().phone3);
-				}
-			}
-			else 
+			
+			if (MainData.getInstance().isFacebookVersion) 
 			{
 				tutorialAddMoney = new TutorialAddMoneyPopup();
 				myContent.addChild(tutorialAddMoney);
@@ -763,6 +757,15 @@ package view.window.shop
 				tutorialAddMoney.numberTxt.text = MainData.getInstance().phone3;
 				
 				tutorialAddMoney.closeBtn.addEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);
+			}
+			else 
+			{
+				/*if (MainData.getInstance().isOnAndroid)
+				{
+					AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, 
+												MainData.getInstance().phone3);
+				}*/
+				
 				
 			}
 			
@@ -780,11 +783,11 @@ package view.window.shop
 		{
 			if (!MainData.getInstance().isFacebookVersion) 
 			{
-				if (MainData.getInstance().isOnAndroid)
+				/*if (MainData.getInstance().isOnAndroid)
 				{
 					AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, 
 												MainData.getInstance().phone4);
-				}
+				}*/
 			}
 			else 
 			{
@@ -805,11 +808,11 @@ package view.window.shop
 		{
 			if (!MainData.getInstance().isFacebookVersion) 
 			{
-				if (MainData.getInstance().isOnAndroid)
+				/*if (MainData.getInstance().isOnAndroid)
 				{
 					AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, 
 												MainData.getInstance().phone5);
-				}
+				}*/
 			}
 			else 
 			{
