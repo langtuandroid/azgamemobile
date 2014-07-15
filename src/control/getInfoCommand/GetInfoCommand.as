@@ -198,7 +198,7 @@ package control.getInfoCommand
 				}
 				else
 				{
-					WindowLayer.getInstance().openAlertWindow("Lấy thông tin tin nhắn thất bại!! " + value.TypeMsg);
+					//WindowLayer.getInstance().openAlertWindow("Lấy thông tin tin nhắn thất bại!! " + value.TypeMsg);
 				}
 			}
 		}
@@ -382,7 +382,7 @@ package control.getInfoCommand
 				}
 				else
 				{
-					WindowLayer.getInstance().openAlertWindow("Lấy thông báo hệ thống thất bại: " + value.Msg);
+					//WindowLayer.getInstance().openAlertWindow("Lấy thông báo hệ thống thất bại: " + value.Msg);
 				}
 			}
 		}
