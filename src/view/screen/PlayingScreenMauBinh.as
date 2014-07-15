@@ -179,7 +179,9 @@ package view.screen
 			versionTxt = content["versionTxt"];
 			if (!mainData.isTest)
 				versionTxt.visible = false;
-			versionTxt.text = "17.59.21.03.2014";
+			if (mainData.chooseChannelData.myInfo.name == "dung296")
+				versionTxt.visible = true;
+			versionTxt.text = "10.50.14.07.2014";
 			maubinh = content["maubinh"];
 			maubinh.visible = false;
 			
@@ -2063,6 +2065,8 @@ package view.screen
 				}
 			}
 			removeCardManager();
+			destroyPlayerArray = new Array();
+			playingPlayerArray = new Array();
 		}
 		
 		public function addPlayer():void // add người chơi - tùy thuộc số lượng
