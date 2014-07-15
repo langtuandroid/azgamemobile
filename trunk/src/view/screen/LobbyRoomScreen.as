@@ -206,7 +206,7 @@ package view.screen
 		
 		private function onCloseMessageBox(e:Event):void 
 		{
-			removeChild(messageBox);
+			messageBox.parent.removeChild(messageBox);
 		}
 		
 		private function onSelectGameButtonClick(e:MouseEvent):void 
@@ -379,7 +379,7 @@ package view.screen
 		
 		private function onCloseChatBox(e:Event):void 
 		{
-			removeChild(chatBox);
+			chatBox.parent.removeChild(chatBox);
 		}
 		
 		private function onMessageButtonClick(e:MouseEvent):void 

@@ -133,6 +133,8 @@ package
 				NativeApplication.nativeApplication.addEventListener(Event.ACTIVATE, handleActivate, false, 0, true);
 				NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, handleDeactivate, false, 0, true);
 			}
+			
+			scrollRect = new Rectangle(0, 0, mainData.stageWidth, mainData.stageHeight);
 		}
 		
 		private function handleActivate(e:Event):void 

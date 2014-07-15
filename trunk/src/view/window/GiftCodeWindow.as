@@ -3,6 +3,7 @@ package view.window
 	import com.gsolo.encryption.MD5;
 	import flash.display.MovieClip;
 	import flash.display.SimpleButton;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import model.MainData;
@@ -32,10 +33,40 @@ package view.window
 		{
 			addContent("zGiftCodeWindow");
 			zGiftCodeWindow(content).loadingLayer.visible = false;
+			
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+		}
+		
+		private function onAddedToStage(e:Event):void 
+		{
+			stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUpStage);
+		}
+		
+		private function onRemovedFromStage(e:Event):void 
+		{
+			stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUpStage);
+		}
+		
+		private function onMouseUpStage(e:MouseEvent):void 
+		{
+			if (type != GIVE_CODE_FORM)
+				return;
+			if (stage.focus != inputTxt)
+			{
+				if (inputTxt.text == '')
+					inputTxt.text = "Nhập email để tặng Code";
+			}
+			else
+			{
+				if (inputTxt.text == "Nhập email để tặng Code")
+					inputTxt.text = '';
+			}
 		}
 		
 		private var _type:String;
 		private var mainData:MainData = MainData.getInstance();
+		private var giveCodeNumberTxt:TextField;
 		
 		public function set type(value:String):void 
 		{
@@ -58,9 +89,38 @@ package view.window
 					inputCodeButton = content["inputCodeButton"];
 					cancelButton = content["cancelButton"];
 					confirmButton = content["confirmButton"];
+					giveCodeNumberTxt = content["giveCodeNumberTxt"];
 					confirmButton.addEventListener(MouseEvent.CLICK, onButtonClick);
 					cancelButton.addEventListener(MouseEvent.CLICK, onButtonClick);
 					inputCodeButton.addEventListener(MouseEvent.CLICK, onButtonClick);
+					inputTxt.text = "Nhập email để tặng Code";
+					giveCodeNumberTxt.text = '';
+					
+					var tokenTime:Number = mainData.chooseChannelData.myInfo.tokenTime;
+					var mainRequest:MainRequest;
+					if (tokenTime == 0)
+					{
+						mainRequest = new MainRequest();
+						var url:String = mainData.init.requestLink.getAccessTokenLink.@url;
+						var object:Object = new Object();
+						object.client_id = mainData.client_id
+						object.client_secret = mainData.client_secret
+						object.client_timestamp = (new Date()).getTime();
+						object.nick_name = mainData.chooseChannelData.myInfo.name;
+						object.client_hash = MD5.encrypt(object.client_id + object.client_timestamp + object.client_secret + object.nick_name);
+						mainRequest.sendRequest_Post(url, object, getAccessTokenToGetGiveCodeNumberFn, true);
+					}
+					else
+					{
+						mainRequest = new MainRequest();
+						var data:Object = new Object();
+						data.type_gift_id = '1';
+						data.access_token = mainData.token;
+						if (mainData.isTest)
+							mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetGiftcodeLeftNumber", data, onGetGiveCodeNumberRespond, true);
+						else
+							mainRequest.sendRequest_Post("http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetGiftcodeLeftNumber", data, onGetGiveCodeNumberRespond, true);
+					}
 				break;
 				case SUCCESS_FORM:
 					giftCodeTxt = content["giftCodeTxt"];
@@ -114,6 +174,7 @@ package view.window
 							mainRequest = new MainRequest();
 							var data:Object = new Object();
 							data.giftcode = inputTxt.text;
+							data.access_token = mainData.token;
 							if (mainData.isTest)
 								mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_ActiveGiftcode", data, onInputCodeRespond, true);
 							else
@@ -140,6 +201,7 @@ package view.window
 							mainRequest = new MainRequest();
 							data = new Object();
 							data.giftcode = inputTxt.text;
+							data.access_token = mainData.token;
 							if (mainData.isTest)
 								mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_SendGiftcode", data, onGiveCodeRespond, true);
 							else
@@ -176,10 +238,32 @@ package view.window
 			{
 				
 			}
-			else
+		}
+		
+		private function getAccessTokenToGetGiveCodeNumberFn(value:Object):void 
+		{
+			if (value.TypeMsg == '1')
 			{
-				WindowLayer.getInstance().openAlertWindow("get access token from add money fail !!");
+				mainData.token = value.Data.access_token;
+				mainData.tokenTime = (new Date()).getTime();
+				var mainRequest:MainRequest = new MainRequest();
+				var data:Object = new Object();
+				data.type_gift_id = '1';
+				data.access_token = mainData.token;
+				if (mainData.isTest)
+					mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetGiftcodeLeftNumber", data, onGetGiveCodeNumberRespond, true);
+				else
+					mainRequest.sendRequest_Post("http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetGiftcodeLeftNumber", data, onGetGiveCodeNumberRespond, true);
 			}
+			else if (value.status == "IO_ERROR")
+			{
+				
+			}
+		}
+		
+		private function onGetGiveCodeNumberRespond(value:Object):void 
+		{
+			giveCodeNumberTxt.text = value.Data.GiftcodeLeftNumber + " lần";
 		}
 		
 		private function getAccessTokenToGiveCodeFn(value:Object):void 
@@ -200,10 +284,6 @@ package view.window
 			else if (value.status == "IO_ERROR")
 			{
 				
-			}
-			else
-			{
-				WindowLayer.getInstance().openAlertWindow("get access token from add money fail !!");
 			}
 		}
 		
