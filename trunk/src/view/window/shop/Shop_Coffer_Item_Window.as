@@ -108,7 +108,7 @@ package view.window.shop
 			scrollViewForRank.columnNumber = 1;
 			scrollViewForRank.isScrollVertical = true;
 			myContent.addChild(scrollViewForRank);
-			scrollViewForRank.y = 50;
+			scrollViewForRank.y = 0;
 			
 			
 			//scrollView.visible = false;
@@ -307,6 +307,7 @@ package view.window.shop
 			switch (type) 
 			{
 				case 0:
+					
 					url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserMoney?row_start=0&row_end=10";
 					obj = new Object();
 					obj.avt_group_id = String(0);
@@ -335,6 +336,7 @@ package view.window.shop
 					httpRequest.sendRequest(method, url, obj, loadTopSuccess, true);
 				break;
 				case 2:
+					
 					url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserLevel";
 					obj = new Object();
 					obj.avt_group_id = String(0);
@@ -456,7 +458,7 @@ package view.window.shop
 		
 		private function onClickShowRichTop(e:MouseEvent):void 
 		{
-			scrollViewForRank.y = 50;
+			scrollViewForRank.y = 0;
 			
 			allHeaderVisible();
 			showHeaderChose(0, 0);
@@ -465,7 +467,7 @@ package view.window.shop
 		
 		private function onClickShowTop(e:MouseEvent):void 
 		{
-			scrollViewForRank.y = 37;
+			scrollViewForRank.y = 50;
 			
 			allHeaderVisible();
 			showHeaderChose(0, 1);
@@ -474,7 +476,7 @@ package view.window.shop
 		
 		private function onClickShowRoyalTop(e:MouseEvent):void 
 		{
-			scrollViewForRank.y = 50;
+			scrollViewForRank.y = 0;
 			
 			allHeaderVisible();
 			showHeaderChose(0, 2);
