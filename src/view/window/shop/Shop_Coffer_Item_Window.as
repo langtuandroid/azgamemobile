@@ -302,6 +302,8 @@ package view.window.shop
 			var httpRequest:HTTPRequest = new HTTPRequest();
 			var obj:Object;
 			
+			windowLayer.openLoadingWindow();
+			
 			switch (type) 
 			{
 				case 0:
@@ -344,6 +346,7 @@ package view.window.shop
 		
 		private function loadRoyalTopSuccess(obj:Object):void 
 		{
+			windowLayer.closeAllWindow();
 			if (scrollViewForRank) 
 			{
 				scrollViewForRank.removeAll();
@@ -379,7 +382,7 @@ package view.window.shop
 		
 		private function loadRichTopSuccess(obj:Object):void 
 		{
-			
+			windowLayer.closeAllWindow();
 			if (scrollViewForRank) 
 			{
 				scrollViewForRank.removeAll();
@@ -416,7 +419,7 @@ package view.window.shop
 		
 		private function loadTopSuccess(obj:Object):void 
 		{
-			trace(obj)
+			windowLayer.closeAllWindow();
 			if (scrollViewForRank) 
 			{
 				scrollViewForRank.removeAll();
@@ -698,7 +701,7 @@ package view.window.shop
 			}
 			else if (obj.TypeMsg == 1) 
 			{
-				addMoney.setNotice("Bạn đã nạp " + int(obj.Data.Amount / 1000) + " k thành công");
+				addMoney.setNotice("Bạn đã nạp " + int(obj.Data.Amount / 1000) + "k thành công");
 				addMoney.buttonStatus(false, true, false);
 				
 				updateUserInfo();
@@ -859,7 +862,7 @@ package view.window.shop
 			
 			headerOn(3);
 			
-			
+			windowLayer.openLoadingWindow();
 			
 			switch (type) 
 			{
@@ -909,7 +912,7 @@ package view.window.shop
 		
 		private function loadMyItemGiftSuccess(obj:Object):void 
 		{
-			
+			windowLayer.closeAllWindow();
 		}
 		
 		private function loadMyItemTourSuccess(obj:Object):void 
@@ -920,7 +923,7 @@ package view.window.shop
 				var arrData:Array = obj.Data;
 				var countX:int;
 				var countY:int;
-
+				windowLayer.closeAllWindow();
 				for (i = 0; i < _arrTour.length; i++ ) 
 				{
 					_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
@@ -1007,7 +1010,7 @@ package view.window.shop
 				var arrData:Array = obj.Data;
 				var countX:int;
 				var countY:int;
-
+				windowLayer.closeAllWindow();
 				for (i = 0; i < _arrTour.length; i++ ) 
 				{
 					_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
@@ -1096,6 +1099,7 @@ package view.window.shop
 			trace(obj)
 			if (obj["Msg"] == "Cập nhật thành công") 
 			{
+				windowLayer.closeAllWindow();
 				var i:int;
 				var arrData:Array = obj.Data;
 				var countX:int;
@@ -1298,6 +1302,7 @@ package view.window.shop
 		
 		public function onClickShowAvatar(e:MouseEvent):void 
 		{
+			
 			getNewAccessToken();
 			scrollView.visible = true;
 			scrollViewForRank.visible = false;
@@ -1470,7 +1475,7 @@ package view.window.shop
 		private function loadItem(type:int):void 
 		{
 			headerOn(2);
-			
+			windowLayer.openLoadingWindow();
 			var method:String = "POST";
 			var url:String;
 			var httpRequest:HTTPRequest = new HTTPRequest();
@@ -1528,6 +1533,7 @@ package view.window.shop
 		private function loadItemGiftSuccess(obj:Object):void 
 		{
 			trace("load dc qua doi thuong: ", obj.Data)
+			windowLayer.closeAllWindow();
 			var arrData:Array = obj.Data;
 			var countX:int;
 			var countY:int;
@@ -1691,7 +1697,7 @@ package view.window.shop
 			var countX:int;
 			var countY:int;
 			var i:int;
-			
+			windowLayer.closeAllWindow();
 			for (i = 0; i < _arrTour.length; i++ ) 
 			{
 				_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
@@ -1779,7 +1785,7 @@ package view.window.shop
 			var countX:int;
 			var countY:int;
 			var i:int;
-			
+			windowLayer.closeAllWindow();
 			for (i = 0; i < _arrTour.length; i++ ) 
 			{
 				_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
@@ -1887,7 +1893,7 @@ package view.window.shop
 			var countX:int;
 			var countY:int;
 			var i:int;
-			
+			windowLayer.closeAllWindow();
 			for (i = 0; i < _arrTour.length; i++ ) 
 			{
 				_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
@@ -2147,6 +2153,8 @@ package view.window.shop
 			}
 			scrollView.removeAll();
 			_arrAvatar = [];
+			
+			windowLayer.closeAllWindow();
 			
 			for (i = 0; i < arrData.length; i++ ) 
 			{
