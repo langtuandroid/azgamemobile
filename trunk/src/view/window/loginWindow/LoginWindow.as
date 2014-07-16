@@ -11,6 +11,7 @@ package view.window.loginWindow
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.net.SharedObject;
+	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.utils.Timer;
 	import getFacebookInfo.GetFacebookInfo;
@@ -44,6 +45,7 @@ package view.window.loginWindow
 		private var loginGmailBtn:SimpleButton;
 		private var timerToCloseLoadingLayer:Timer;
 		private var deviceId:String;
+		private var versionTxt:TextField;
 		
 		public function LoginWindow() 
 		{
@@ -101,6 +103,8 @@ package view.window.loginWindow
 			var textFormat:TextFormat = new TextFormat("Arial", 20, 0x000000);
 			zLoginWindow(content).pass.setStyle("textFormat", textFormat);
 			zLoginWindow(content).userName.setStyle("textFormat", textFormat);
+			
+			zLoginWindow(content).versionTxt.text = "Version 1.0";
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
