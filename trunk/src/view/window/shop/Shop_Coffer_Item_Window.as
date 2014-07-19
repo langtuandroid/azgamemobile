@@ -317,17 +317,17 @@ package view.window.shop
 					if (typeGame == 0) 
 					{
 						url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserWin?"
-								+ "game_id=AZGB_TLMNrow_start=0&row_end=10";
+								+ "game_id=AZGB_TLMN&row_start=0&row_end=10";
 					}
 					else if (typeGame == 1) 
 					{
 						url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserWin?"
-								+ "game_id=AZGB_BINHrow_start=0&row_end=10";
+								+ "game_id=AZGB_BINH&row_start=0&row_end=10";
 					}
 					else if (typeGame == 2) 
 					{
 						url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserWin?"
-								+ "game_id=AZGB_PHOMrow_start=0&row_end=10";
+								+ "game_id=AZGB_PHOM&row_start=0&row_end=10";
 					}
 					
 					obj = new Object();
@@ -337,7 +337,7 @@ package view.window.shop
 				break;
 				case 2:
 					
-					url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserLevel";
+					url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserLevel?row_start=0&row_end=10";
 					obj = new Object();
 					obj.avt_group_id = String(0);
 					httpRequest.sendRequest(method, url, obj, loadRoyalTopSuccess, true);
