@@ -360,11 +360,11 @@ package view.window.shop
 			{
 				var contentTop:MovieClip = new ContentUserTopList();
 				
-				var gold:int = arr[i].gold;
+				var gold:int = arr[i].money;
 				var nickname:String = arr[i].nick_name;
-				var level:int = 1;
-				var winNumber:int = 1000;
-				var loseNumber:int = 10000;
+				var level:int = arr[i].level;
+				var winNumber:int = arr[i].win;
+				var loseNumber:int = arr[i].lose;
 				
 				
 				contentTop.sttTxt.text = String(i + 1);
@@ -396,11 +396,11 @@ package view.window.shop
 			{
 				var contentTop:MovieClip = new ContentUserTopList();
 				
-				var gold:int = arr[i].gold;
+				var gold:int = arr[i].money;
 				var nickname:String = arr[i].nick_name;
-				var level:int = 1;
-				var winNumber:int = 1000;
-				var loseNumber:int = 10000;
+				var level:int = arr[i].level;
+				var winNumber:int = arr[i].win;
+				var loseNumber:int = arr[i].lose;
 				
 				
 				contentTop.sttTxt.text = String(i + 1);
@@ -433,13 +433,13 @@ package view.window.shop
 			{
 				var contentTop:MovieClip = new ContentUserTopList();
 				
-				var gold:int = arr[i].gold;
+				var gold:int = arr[i].money;
 				var nickname:String = arr[i].nick_name;
-				var level:int = 1;
-				var winNumber:int = 1000;
-				var loseNumber:int = 10000;
+				var level:int = arr[i].level;
+				var winNumber:int = arr[i].win;
+				var loseNumber:int = arr[i].lose;
 				
-				trace(i, i + 1, arr[i].nick_name);
+				
 				contentTop.sttTxt.text = String(i + 1);
 				contentTop.userNameTxt.text = nickname;
 				contentTop.moneyTxt.text = format(gold) + " G";
@@ -451,7 +451,7 @@ package view.window.shop
 				
 				contentTop.gotoAndStop((i % 2) + 1);
 				scrollViewForRank.addRow(contentTop);
-				trace("addrow")
+				
 			}
 			
 		}
