@@ -47,6 +47,15 @@ package view.window.shop
 			Security.loadPolicyFile("http://graph.facebook.com/crossdomain.xml");
 			
 			
+			Security.loadPolicyFile("https://graph.facebook.com/crossdomain.xml");
+			Security.loadPolicyFile("http://profile.ak.fbcdn.net/crossdomain.xml");
+			Security.loadPolicyFile("https://profile.ak.fbcdn.net/crossdomain.xml");
+			Security.loadPolicyFile('http://profile.cc.fbcdn.net/crossdomain.xml');
+			Security.loadPolicyFile('https://profile.cc.fbcdn.net/crossdomain.xml');
+			Security.loadPolicyFile('http://fbcdn-profile-a.akamaihd.net/crossdomain.xml');
+			Security.loadPolicyFile('https://fbcdn-profile-a.akamaihd.net/crossdomain.xml');
+			Security.loadPolicyFile('http://fbcdn-sphotos-a.akamaihd.net/crossdomain.xml');
+			Security.loadPolicyFile('https://fbcdn-sphotos-a.akamaihd.net/crossdomain.xml');
 			Security.loadPolicyFile("http://profile.ak.fbcdn.net/crossdomain.xml");
 			//Security.loadPolicyFile('http://api.facebook.com/crossdomain.xml');
 			
