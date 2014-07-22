@@ -464,6 +464,7 @@ package model
 		public var isPhomGa:Boolean;
 		public var gaData:Object;
 		
+		public static const UPDATE_VIRTUAL_ROOMS:String = "updateVirtualRooms";
 		private var _virtualRooms:Array;
 		public function get virtualRooms():Array 
 		{
@@ -475,6 +476,7 @@ package model
 		public function set virtualRooms(value:Array):void 
 		{
 			_virtualRooms = value;
+			dispatchEvent(new Event(UPDATE_VIRTUAL_ROOMS));
 		}
 		
 		public static const MOVE_TO_SHOP:String = "moveToShop";
@@ -510,6 +512,7 @@ package model
 		public var lobbyRoomId:int = -1;
 		public var currentChannelId:int = 0;
 
+		public var isLoadSound:Boolean = false;
 		public var tokenTime:int = 0;
 		public var token:String;
 		public var isTest:Boolean = true; // biến để check xem đang chạy trên server test hay server thật
