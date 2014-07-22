@@ -349,6 +349,7 @@ package view.window.loginWindow
 		
 		private function onLoginButtonClick(e:MouseEvent):void 
 		{
+			trace("onLoginButtonClick",(new Date().getTime()));
 			var mainRequest:MainRequest = new MainRequest();
 			var data:Object = new Object();
 			data.user_name = zLoginWindow(content).userName.text;
@@ -369,6 +370,7 @@ package view.window.loginWindow
 		
 		private function onLoginValidateRespond(value:Object):void 
 		{
+			trace("aaaaaaaaa onLoginValidateRespond");
 			if (value["status"] == "IO_ERROR")
 			{
 				zLoginWindow(content).loadingLayer.visible = false;
@@ -395,6 +397,7 @@ package view.window.loginWindow
 		
 		private function onLoginRespond(value:Object):void 
 		{
+			trace("onLoginRespond",(new Date().getTime()));
 			if (value["status"] == "IO_ERROR")
 			{
 				zLoginWindow(content).loadingLayer.visible = false;
@@ -456,14 +459,17 @@ package view.window.loginWindow
 			
 			mainData.chooseChannelData.myInfo = myInfo;
 			
-			if (!SoundManager.getInstance().isLoadSoundChung)
-				SoundManager.getInstance().loadSoundChung();
-			if (!SoundManager.getInstance().isLoadSoundMauBinh)
-				SoundManager.getInstance().loadSoundMauBinh();
-			if (!SoundManager.getInstance().isLoadSoundPhom)
-				SoundManager.getInstance().loadSoundPhom();
-			if (!SoundManager.getInstance().isLoadSoundTlmn)
-				SoundManager.getInstance().addSound();
+			if (mainData.isLoadSound)
+			{
+				if (!SoundManager.getInstance().isLoadSoundChung)
+					SoundManager.getInstance().loadSoundChung();
+				if (!SoundManager.getInstance().isLoadSoundMauBinh)
+					SoundManager.getInstance().loadSoundMauBinh();
+				if (!SoundManager.getInstance().isLoadSoundPhom)
+					SoundManager.getInstance().loadSoundPhom();
+				if (!SoundManager.getInstance().isLoadSoundTlmn)
+					SoundManager.getInstance().addSound();
+			}
 		}
 	}
 

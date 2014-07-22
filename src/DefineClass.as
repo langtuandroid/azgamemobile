@@ -61,6 +61,7 @@ package
 			zGroupNameBar;
 			zRegisterWindow;
 			zAddMoneyWindow;
+			zAddMoneyWindow2;
 			zForgetPassWindow;
 			zTopMenu;
 			zFillNameWindow;

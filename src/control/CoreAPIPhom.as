@@ -125,6 +125,7 @@ package control
 		
 		public function onConnectionEvent(e:ConnectionResponse):void
 		{
+			trace("onConnectionEvent",(new Date().getTime()));
 			electroServer.engine.removeEventListener(MessageType.ConnectionResponse.name, onConnectionEvent);
 			if (e.successful)
 				this.dispatchEvent(new ElectroServerEvent(ElectroServerEvent.CONNECT_SUCCESS));
@@ -305,6 +306,7 @@ package control
 		// sau khi kết nối thành công với server thì login
 		public function login(userName:String, password:String = ""): void
 		{
+			trace("login",(new Date().getTime()));
 			electroServer.engine.addEventListener(MessageType.LoginResponse.name, onLoginResponse);
 			var loginRequest:LoginRequest = new LoginRequest();
 			loginRequest.userName = userName;
@@ -320,6 +322,7 @@ package control
 			electroServer.engine.removeEventListener(MessageType.LoginResponse.name, onLoginResponse);
 			if (e.successful)
 			{
+				trace("onLoginResponse",(new Date().getTime()));
 				this.dispatchEvent(new ElectroServerEvent(ElectroServerEvent.LOGIN_SUCCESS));
 				
 				var uuvr:UpdateUserVariableRequest = new UpdateUserVariableRequest();
@@ -367,6 +370,7 @@ package control
 				timerToGetRoomList.stop();
 				mainData.isNoRenderLobbyList = false;
 			}
+			trace("getRoomList",(new Date().getTime()));
 			getRoomList();
 			timerToGetRoomList = new Timer(4000);
 			timerToGetRoomList.addEventListener(TimerEvent.TIMER, onGetRoomList)
@@ -718,6 +722,7 @@ package control
 							object[DataFieldPhom.WIN] = 0;
 					}
 					
+					trace("UPDATE_ROOM_LIST",(new Date().getTime()));
 					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.UPDATE_USER_LIST, myData.userList));
 					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.UPDATE_ROOM_LIST, myData.roomList));
 				break;

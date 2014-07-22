@@ -516,6 +516,7 @@ package control.electroServerCommand
 		private function onLoginFail(e:ElectroServerEvent):void 
 		{
 			windowLayer.closeAllWindow();
+			mainData.isCloseConnection = true;
 			windowLayer.openAlertWindow(mainData.init.gameDescription.alertSentence.loginFail);
 		}
 		
