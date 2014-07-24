@@ -660,6 +660,7 @@ package control.electroServerCommand
 				userData.isMakeFriend = true;
 				if (allUserList[userName][DataField.USER_INFO])
 				{
+					trace("update info : ", allUserList[userName][DataField.USER_INFO][ModelField.DISPLAY_NAME])
 					userData.moneyLogoUrl = allUserList[userName][DataField.USER_INFO][DataField.LOGO];
 					userData.displayName = allUserList[userName][DataField.USER_INFO][ModelField.DISPLAY_NAME];
 					userData.levelName = allUserList[userName][DataField.USER_INFO].level;
