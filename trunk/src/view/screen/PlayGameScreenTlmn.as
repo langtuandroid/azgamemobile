@@ -431,10 +431,16 @@ package view.screen
 			timerDealCard.addEventListener(TimerEvent.TIMER, onCompleteDealCard);
 			timerDealCard.start();
 			
-			_myInfo.dealCard(obj[DataField.PLAYER_CARDS]);
-			timerDealcardForme = new Timer(100, 13);
-			timerDealcardForme.addEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcardForMe);
-			timerDealcardForme.start();
+			if (obj[DataField.PLAYER_CARDS].length > 0) 
+			{
+				canExitGame = false;
+				
+				_myInfo.dealCard(obj[DataField.PLAYER_CARDS]);
+				timerDealcardForme = new Timer(100, 13);
+				timerDealcardForme.addEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcardForMe);
+				timerDealcardForme.start();
+			}
+			
 			//addUsersInfo(true);
 			
 		}
@@ -1330,7 +1336,7 @@ package view.screen
 			dealcard = 0;
 			
 			_isPlaying = true;
-			canExitGame = false;
+			
 			
 			if (obj[DataField.MESSAGE] == "testGame") 
 			{
