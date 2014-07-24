@@ -927,14 +927,7 @@ package control
 						GameDataTLMN.getInstance().roomList[roomId][DataField.HAS_PASSWORD] = EsObject(roomList[i]).getBoolean(DataField.HAS_PASSWORD);
 						GameDataTLMN.getInstance().roomList[roomId][DataField.USERS_NUMBER] = EsObject(roomList[i]).getEsObjectArray(DataField.USER_LIST).length;
 						userList = EsObject(roomList[i]).getEsObjectArray(DataField.USER_LIST);
-						for (j = 0; j < userList.length; j++) 
-						{
-							userName = EsObject(userList[j]).getString(DataField.USER_NAME);
-							GameDataTLMN.getInstance().userList[userName] = new Object();
-							object = convertEsObject(EsObject(userList[j]).getEsObject(DataField.USER_INFO));
-							GameDataTLMN.getInstance().userList[userName][DataField.USER_INFO] = object;
-							GameDataTLMN.getInstance().userList[userName][DataField.ROOM_ID] = roomId;
-						}
+						
 					}
 					
 					trace("GameDataTLMN.getInstance().zoneId", GameDataTLMN.getInstance().zoneId)
