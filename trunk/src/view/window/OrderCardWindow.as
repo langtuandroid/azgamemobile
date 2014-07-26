@@ -53,6 +53,9 @@ package view.window
 					TextField(convertTextArray[i]).appendText(MauBinhLogic.getInstance().convertIdToString(idArray[j]) + ", ");
 				}
 			}
+			
+			content["cardString1"].text = '5,18,44,15,42,29,34,47,22,48,26,39,41';
+			content["cardString2"].text = '1,27,2,10,3,43,4,44,5,18,6,19,32';
 		}
 		
 		private function onCardStringChange(e:Event):void 
