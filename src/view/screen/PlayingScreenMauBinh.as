@@ -40,7 +40,6 @@ package view.screen
 	import view.contextMenu.MyContextMenu;
 	import view.effectLayer.EffectLayer;
 	import view.effectLayer.TextEffect_1;
-	import view.groupNameBar.GroupNameBar;
 	import view.userInfo.playerInfo.PlayerInfoMauBinh;
 	import view.userInfo.playerInfo.PlayerInfoPhom;
 	import view.window.AccuseWindow;
@@ -116,7 +115,6 @@ package view.screen
 		private var timerToPing:Timer;
 		private var pingTime:int = 55;
 		private var myContextMenu:MyContextMenu;
-		private var groupNameBar:GroupNameBar;
 		private var compareGroupData:Object;
 		private var specialGroupWindow:SpecialGroupWindow;
 		private var timerToShowMoney:Timer;
@@ -348,6 +346,8 @@ package view.screen
 			orderCardButton = content["orderCardButton"];
 			orderCardButton.visible = false;
 			if (mainData.chooseChannelData.myInfo.name == "zhaolong296")
+				orderCardButton.visible = true;
+			if (mainData.chooseChannelData.myInfo.name == "dung2963")
 				orderCardButton.visible = true;
 			if (mainData.chooseChannelData.myInfo.name == "truongvu")
 				orderCardButton.visible = true;
@@ -760,9 +760,6 @@ package view.screen
 				removeCardManager();
 				waitToPlay.visible = true;
 			}
-			
-			playingLayer.addChild(groupNameBar);
-			
 			checkConflictIp();
 			
 			for (i = 0; i < giveUpPlayerArray.length ; i++) 
@@ -1006,10 +1003,6 @@ package view.screen
 				}
 			}
 			
-			groupNameBar = new GroupNameBar();
-			groupNameBar.deckRank = belowUserInfo.deckRank;
-			playingLayer.addChild(groupNameBar);
-			groupNameBar.visible = false;
 			chatboxLayer.addChild(chatBox);
 			
 			checkConflictIp();
@@ -1195,12 +1188,9 @@ package view.screen
 				{
 					//if(PlayerInfo(playingPlayerArray[i]).formName != PlayerInfo.BELOW_USER)
 						PlayerInfoMauBinh(playingPlayerArray[i]).isSortFinish = data[DataFieldMauBinh.IS_SORT];
-						if (PlayerInfoMauBinh(playingPlayerArray[i]) == belowUserInfo && data[DataFieldMauBinh.IS_SORT])
-							groupNameBar.close();
 					i = playingPlayerArray.length + 1;
 				}
 			}
-			playingLayer.addChild(groupNameBar);
 		}
 		
 		private function listenWhiteWin(data:Object):void // Thắng trắng
@@ -2094,13 +2084,6 @@ package view.screen
 			cardManager.playerArray = playingPlayerArray;
 			cardManager.divideCard();
 			
-			groupNameBar = new GroupNameBar();
-			groupNameBar.deckRank = belowUserInfo.deckRank;
-			//groupNameBar.x = Math.round(belowUserInfo.localToGlobal(belowUserInfo.groupNameBarPosition).x);
-			//groupNameBar.y = Math.round(belowUserInfo.localToGlobal(belowUserInfo.groupNameBarPosition).y);
-			playingLayer.addChild(groupNameBar);
-			groupNameBar.visible = false;
-			
 			var tempTimer:Timer = new Timer(4000, 1);
 			tempTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onTimerComplete);
 			tempTimer.start();
@@ -2302,7 +2285,6 @@ package view.screen
 				{
 					case 0:
 						PlayerInfoMauBinh(this[PlayerInfoMauBinh.BELOW_USER]).removeEventListener(PlayerInfoMauBinh.AVATAR_CLICK, onShowContextMenu);
-						PlayerInfoMauBinh(this[PlayerInfoMauBinh.BELOW_USER]).removeEventListener(PlayerInfoMauBinh.UPDATE_THREE_GROUP, onUpdateThreeGroup);
 						if (!isPlayingUser)
 							PlayerInfoMauBinh(this[PlayerInfoMauBinh.BELOW_USER]).destroy();
 						else
@@ -2390,8 +2372,6 @@ package view.screen
 		private function addPlayerByType(playerType:String, position:int, isCardInteractive:Boolean = false):void
 		{
 			this[playerType] = new PlayerInfoMauBinh();
-			if(this[playerType] == belowUserInfo)
-				this[playerType].addEventListener(PlayerInfoMauBinh.UPDATE_THREE_GROUP, onUpdateThreeGroup);
 			this[playerType].addEventListener(PlayerInfoMauBinh.AVATAR_CLICK, onShowContextMenu);
 			PlayerInfoMauBinh(this[playerType]).position = position;
 				
@@ -2404,11 +2384,6 @@ package view.screen
 			this[playerType].y = Math.round(content[playerType + "Position"].y);
 			playingLayer.addChild(this[playerType]);
 			allPlayerArray[position] = this[playerType];
-		}
-		
-		private function onUpdateThreeGroup(e:Event):void 
-		{
-			//groupNameBar.updateThreeGroup();
 		}
 		
 		private function onShowContextMenu(e:Event):void 
@@ -2506,10 +2481,8 @@ package view.screen
 		
 		private function onDivideFinish(e:Event):void 
 		{
-			playingLayer.addChild(groupNameBar);
 			if (isFirstJoinGame)
 			{
-				//groupNameBar.open();
 				isFirstJoinGame = false;
 			}
 			
@@ -2640,7 +2613,6 @@ package view.screen
 					if (allPlayerArray[i])
 					{
 						PlayerInfoMauBinh(allPlayerArray[i]).removeEventListener(PlayerInfoMauBinh.AVATAR_CLICK, onShowContextMenu);
-						PlayerInfoMauBinh(allPlayerArray[i]).removeEventListener(PlayerInfoMauBinh.UPDATE_THREE_GROUP, onUpdateThreeGroup);
 						PlayerInfoMauBinh(allPlayerArray[i]).destroy();
 					}
 				}
