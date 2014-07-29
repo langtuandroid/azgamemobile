@@ -921,11 +921,13 @@ package control
 						var roomId:int = EsObject(roomList[i]).getInteger(DataField.ROOM_ID);
 						GameDataTLMN.getInstance().roomList[roomId] = new Object();
 						//GameDataTLMN.getInstance().roomList[roomId][DataField.IS_SEND_CARD] = gameDetails.getBoolean(DataField.IS_SEND_CARD);
-						GameDataTLMN.getInstance().roomList[roomId][DataField.ROOM_BET] = gameDetails.getString(DataField.ROOM_BET);
-						GameDataTLMN.getInstance().roomList[roomId][DataField.ROOM_NAME] = gameDetails.getString(DataField.ROOM_NAME);
-						GameDataTLMN.getInstance().roomList[roomId][DataField.GAME_ID] = EsObject(roomList[i]).getInteger(DataField.GAME_ID);
-						GameDataTLMN.getInstance().roomList[roomId][DataField.HAS_PASSWORD] = EsObject(roomList[i]).getBoolean(DataField.HAS_PASSWORD);
-						GameDataTLMN.getInstance().roomList[roomId][DataField.USERS_NUMBER] = EsObject(roomList[i]).getEsObjectArray(DataField.USER_LIST).length;
+						GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.ROOM_BET] = gameDetails.getString(DataFieldMauBinh.ROOM_BET);
+						GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.ROOM_NAME] = gameDetails.getString(DataFieldMauBinh.ROOM_NAME);
+						GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.GAME_ID] = EsObject(roomList[i]).getInteger(DataFieldMauBinh.GAME_ID);
+						GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.HAS_PASSWORD] = EsObject(roomList[i]).getBoolean(DataFieldMauBinh.HAS_PASSWORD);
+						GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.USERS_NUMBER] = EsObject(roomList[i]).getEsObjectArray(DataFieldMauBinh.USER_LIST).length;
+						GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.MALE] = 0;
+						GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.MAX_PLAYER] = gameDetails.getInteger(DataFieldMauBinh.MAX_PLAYER);
 						userList = EsObject(roomList[i]).getEsObjectArray(DataField.USER_LIST);
 						
 					}
@@ -1324,6 +1326,17 @@ package control
 					myData.roomList[roomId][DataFieldMauBinh.HAS_PASSWORD] = ServerGame(gameList[i]).passwordProtected;
 					myData.roomList[roomId][DataFieldMauBinh.ROOM_NAME] = ServerGame(gameList[i]).gameDetails.getString(DataFieldMauBinh.ROOM_NAME);
 					myData.roomList[roomId][DataFieldMauBinh.ROOM_BET] = ServerGame(gameList[i]).gameDetails.getString(DataFieldMauBinh.ROOM_BET);
+					myData.roomList[roomId][DataFieldMauBinh.USERS_NUMBER] = ServerGame(gameList[i]).gameDetails.getString(DataFieldMauBinh.USERS_NUMBER);
+					myData.roomList[roomId][DataFieldMauBinh.MALE] = 0;
+					myData.roomList[roomId][DataFieldMauBinh.MAX_PLAYER] = ServerGame(gameList[i]).gameDetails.getInteger(DataFieldMauBinh.MAX_PLAYER);
+					
+					//GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.ROOM_BET] = gameDetails.getString(DataFieldMauBinh.ROOM_BET);
+					//GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.ROOM_NAME] = gameDetails.getString(DataFieldMauBinh.ROOM_NAME);
+					//GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.GAME_ID] = EsObject(roomList[i]).getInteger(DataFieldMauBinh.GAME_ID);
+					//GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.HAS_PASSWORD] = EsObject(roomList[i]).getBoolean(DataFieldMauBinh.HAS_PASSWORD);
+					//GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.USERS_NUMBER] = EsObject(roomList[i]).getEsObjectArray(DataFieldMauBinh.USER_LIST).length;
+					//GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.MALE] = 0;
+					//GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.MAX_PLAYER] = gameDetails.getInteger(DataFieldMauBinh.MAX_PLAYER);
 					if (ServerGame(gameList[i]).gameDetails.doesPropertyExist(DataFieldMauBinh.IS_SEND_CARD))
 						myData.roomList[roomId][DataFieldMauBinh.IS_SEND_CARD] = ServerGame(gameList[i]).gameDetails.getBoolean(DataFieldMauBinh.IS_SEND_CARD);
 					getUserInRoom(roomId);
