@@ -56,6 +56,7 @@ package
 	import view.topMenu.TopMenu;
 	import view.userInfo.playerInfo.PlayerInfo;
 	import view.window.AlertWindow;
+	import view.window.BaseWindow;
 	import view.window.ConfirmWindow;
 	import view.window.windowLayer.WindowLayer;
 	/**
