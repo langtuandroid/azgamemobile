@@ -431,7 +431,7 @@ package view.screen
 			timerDealCard.addEventListener(TimerEvent.TIMER, onCompleteDealCard);
 			timerDealCard.start();
 			
-			if (obj[DataField.PLAYER_CARDS].length > 0) 
+			if (obj[DataField.PLAYER_CARDS] && obj[DataField.PLAYER_CARDS].length > 0) 
 			{
 				canExitGame = false;
 				
@@ -440,6 +440,7 @@ package view.screen
 				timerDealcardForme.addEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcardForMe);
 				timerDealcardForme.start();
 			}
+			
 			
 			//addUsersInfo(true);
 			
@@ -1359,7 +1360,11 @@ package view.screen
 					_arrUserInfo[j].dealCard(arr);
 					if (j == 2) 
 					{
-						
+						if (timerDealCard) 
+						{
+							timerDealCard.removeEventListener(TimerEvent.TIMER, onCompleteDealCard);
+							timerDealCard.stop();
+						}
 					}
 					dealcard = j + 1;
 					break;
@@ -3617,7 +3622,7 @@ package view.screen
 			}
 			if (canExitGame) 
 			{
-				if (_myInfo._isPlaying) 
+				if (_myInfo._ready && _isPlaying) 
 				{
 					
 					confirmExitWindow = new ConfirmWindow();

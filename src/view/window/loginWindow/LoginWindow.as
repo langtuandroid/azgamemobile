@@ -29,6 +29,7 @@ package view.window.loginWindow
 	import view.window.registerWindow.RegisterWindow;
 	import view.window.SpecialGroupWindow;
 	import view.window.windowLayer.WindowLayer;
+	import Date;
 	
 	/**
 	 * ...
@@ -397,6 +398,7 @@ package view.window.loginWindow
 		
 		private function onLoginRespond(value:Object):void 
 		{
+			
 			trace("onLoginRespond",(new Date().getTime()));
 			if (value["status"] == "IO_ERROR")
 			{

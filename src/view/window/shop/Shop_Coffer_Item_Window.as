@@ -84,6 +84,7 @@ package view.window.shop
 			myContent = new Shop_Coffer_Item_Mc();
 			addChild(myContent);
 			myContent.mask = myContent.boardMask;
+			//myContent.boardMask.visible = false;
 			
 						//bang xep hang, nap tien, shop, hom do
 			_arrHeaderTab = [myContent.chooseInStandingMc, myContent.chooseInAddMoneyMc, myContent.chooseInShopMc,
@@ -429,6 +430,11 @@ package view.window.shop
 			}
 			var arr:Array = obj.Data;
 			trace("danh sahc top: ", arr.length)
+			var mc:MovieClip = new MovieClip();
+			mc.graphics.beginFill(0x123456, 0);
+			mc.graphics.drawRect(0, 0, 100, 48);
+			mc.graphics.endFill();
+			scrollViewForRank.addRow(mc);
 			for (var i:int = 0; i < arr.length; i++) 
 			{
 				var contentTop:MovieClip = new ContentUserTopList();
@@ -467,7 +473,8 @@ package view.window.shop
 		
 		private function onClickShowTop(e:MouseEvent):void 
 		{
-			scrollViewForRank.y = 50;
+			//scrollViewForRank.y = 50;
+			scrollViewForRank.y = 0;
 			
 			allHeaderVisible();
 			showHeaderChose(0, 1);

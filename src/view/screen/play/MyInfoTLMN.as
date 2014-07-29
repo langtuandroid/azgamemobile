@@ -1,5 +1,6 @@
 package view.screen.play 
 {
+	import com.greensock.easing.Back;
 	import com.greensock.TweenMax;
 	import control.ConstTlmn;
 	import event.DataField;
@@ -95,6 +96,8 @@ package view.screen.play
 		public var myIp:String = "";
 		
 		public var realPos:int;
+		
+		private var _timerDealcard:Timer;
 		
 		public function MyInfoTLMN(playgame:PlayGameScreenTlmn) 
 		{
@@ -229,6 +232,13 @@ package view.screen.play
 		
 		public function showEffectGameOver(obj:Object, outGame:Boolean):void 
 		{
+			if (_timerDealcard) 
+			{
+				_timerDealcard.removeEventListener(TimerEvent.TIMER, onTimerDealCard);
+				_timerDealcard.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
+				_timerDealcard.stop();
+			}
+			
 			var rd:int;
 			if (int(obj[ConstTlmn.MONEY]) > 0) 
 			{
@@ -496,6 +506,13 @@ package view.screen.play
 			
 			_clock.removeEventListener(Clock.COUNT_TIME_FINISH, onOverTimer);
 			_avatar.addEventListener("loadError", onLoadAvatarError);
+			
+			if (_timerDealcard) 
+			{
+				_timerDealcard.removeEventListener(TimerEvent.TIMER, onTimerDealCard);
+				_timerDealcard.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
+				_timerDealcard.stop();
+			}
 			
 			if (_timerShowChatde) 
 			{
@@ -1041,7 +1058,32 @@ package view.screen.play
 			
 			content.confirmReady.visible = false;
 			
+			_timerDealcard = new Timer(50, arr.length);
+			_timerDealcard.addEventListener(TimerEvent.TIMER, onTimerDealCard);
+			_timerDealcard.addEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
+			_timerDealcard.start();
+			
+		}
+		
+		private function onCompleteDealcard(e:TimerEvent):void 
+		{
+			if (_timerDealcard) 
+			{
+				_timerDealcard.removeEventListener(TimerEvent.TIMER, onTimerDealCard);
+				_timerDealcard.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
+				_timerDealcard.stop();
+			}
+			
+			hideSortCard();
+			
+			addClickCard();
+			_parent.canExitGame = true;
+		}
+		
+		private function onTimerDealCard(e:TimerEvent):void 
+		{
 			effectDealCard(_countCard);
+			_countCard++;
 		}
 		
 		private function effectDealCard(type:int):void 
@@ -1061,7 +1103,10 @@ package view.screen.play
 			card.buttonMode = true;
 			card._posCardY = _distanceConstanY;
 			card.pos = _countCard;
-			TweenMax.to(card, .1, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, onComplete:onComplete } );
+			//TweenMax.to(card, .1, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, onComplete:onComplete } );
+			//TweenMax.to(card, .3, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, ease:Back.easeOut, onComplete:onComplete});
+			TweenMax.to(card, 1, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, ease:Back.easeOut});
+			
 		}
 		
 		private function onComplete():void 
@@ -1084,6 +1129,12 @@ package view.screen.play
 		
 		public function killAllTween():void 
 		{
+			if (_timerDealcard) 
+			{
+				_timerDealcard.removeEventListener(TimerEvent.TIMER, onTimerDealCard);
+				_timerDealcard.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
+				_timerDealcard.stop();
+			}
 			TweenMax.killChildTweensOf(this);
 			_clock.removeTween();
 			removeAllCard();
