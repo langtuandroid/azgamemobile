@@ -322,7 +322,22 @@ package
 		
 		private function onServerKickOut(e:Event):void 
 		{
-			debugText.appendText(" <--> " + mainData.serverKickOutData);
+			removePlayingScreen();
+			addLobbyRoomScreen();
+			lobbyRoomScreen.showLoginWindow();
+			
+			var kickOutWindow:AlertWindow = new AlertWindow();
+			kickOutWindow.setNotice("Bạn đã bị out ra khỏi phòng do độ trễ của mạng quá lâu !!");
+			kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onCloseKickOutWindow);
+			mainData.isOpeningKickOutWindow = true;
+			windowLayerChild.openWindow(kickOutWindow);
+		}
+		
+		private function onCloseKickOutWindow(e:Event):void 
+		{
+			mainData.isOpeningKickOutWindow = false;
+			//windowLayerChild.openLoadingWindow();
+			//electroServerCommand.startConnect("", mainData.currentChannelId);
 		}
 		
 		private function onLoadLoadingComplete(e:Event):void 
