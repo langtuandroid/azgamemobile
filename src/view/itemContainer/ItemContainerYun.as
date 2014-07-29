@@ -86,7 +86,6 @@ package view.itemContainer
 		private var bottomIndex:int = -100;
 		
 		private var startPosition:Number = 0; // Biến dùng để kiểm tra xem sau khi mouseDown vào scrollview thì có di chuyển ko
-		private var tweenAlphaScroll:GTween;
 		
 		public var isRecentMoving:Boolean;
 		private var timerToSavePosition:Timer;
@@ -174,9 +173,8 @@ package view.itemContainer
 			else
 			{
 				GTween.defaultDispatchEvents = true;
-				viewList[nextIndex].alpha = 0;
-				var tempTween1:GTween = new GTween(viewList[nextIndex], movingTime, { x:startX, alpha:1 }, { ease:Quintic.easeInOut } );
-				var tempTween2:GTween = new GTween(viewList[currentIndex], movingTime, { x:xNumber2, alpha:0 }, { ease:Quintic.easeInOut } );
+				var tempTween1:GTween = new GTween(viewList[nextIndex], movingTime, { x:startX}, { ease:Quintic.easeInOut } );
+				var tempTween2:GTween = new GTween(viewList[currentIndex], movingTime, { x:xNumber2}, { ease:Quintic.easeInOut } );
 				tempTween2.addEventListener(Event.COMPLETE, movingComplete);
 			}
 			currentIndex = nextIndex;
@@ -722,9 +720,8 @@ package view.itemContainer
 			else
 			{
 				GTween.defaultDispatchEvents = true;
-				viewList[nextIndex].alpha = 0;
-				var tempTween1:GTween = new GTween(viewList[nextIndex], movingTime, { x:startX, alpha:1 }, { ease:Quintic.easeInOut } );
-				var tempTween2:GTween = new GTween(viewList[currentIndex], movingTime, { x:xNumber2, alpha:0 }, { ease:Quintic.easeInOut } );
+				var tempTween1:GTween = new GTween(viewList[nextIndex], movingTime, { x:startX}, { ease:Quintic.easeInOut } );
+				var tempTween2:GTween = new GTween(viewList[currentIndex], movingTime, { x:xNumber2}, { ease:Quintic.easeInOut } );
 				tempTween2.addEventListener(Event.COMPLETE, movingComplete);
 			}
 			currentIndex = nextIndex;

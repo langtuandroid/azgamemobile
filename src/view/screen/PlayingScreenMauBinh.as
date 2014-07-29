@@ -243,8 +243,8 @@ package view.screen
 			
 			for (i = 0; i < mainData.maxPlayer; i++) 
 			{
-				TextField(ipBoard["displayNameTxt" + String(ipIndex + 1)]).text = '';
-				TextField(ipBoard["ipTxt" + String(ipIndex + 1)]).text = '';
+				TextField(ipBoard["displayNameTxt" + String(i + 1)]).text = '';
+				TextField(ipBoard["ipTxt" + String(i + 1)]).text = '';
 			}
 			
 			for (i = 0; i < allPlayerArray.length; i++) 
@@ -1233,7 +1233,7 @@ package view.screen
 			}
 			
 			// Nếu không đủ tiền để chơi ván mới
-			if (mainData.chooseChannelData.myInfo.money < mainData.minMoney)
+			if (mainData.chooseChannelData.myInfo.money < mainData.playingData.gameRoomData.roomBet * mainData.minBetRate)
 			{
 				dispatchEvent(new Event(PlayerInfoMauBinh.EXIT));
 				//windowLayer.isNoCloseAll = true;
@@ -1978,7 +1978,7 @@ package view.screen
 			}
 			
 			// Nếu không đủ tiền để chơi ván mới
-			if (mainData.chooseChannelData.myInfo.money < mainData.minMoney)
+			if (mainData.chooseChannelData.myInfo.money < mainData.playingData.gameRoomData.roomBet * mainData.minBetRate)
 			{
 				dispatchEvent(new Event(PlayerInfoMauBinh.EXIT));
 				//windowLayer.isNoCloseAll = true;

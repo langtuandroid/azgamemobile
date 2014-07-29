@@ -86,6 +86,7 @@ package view.window
 		private function resetInfo():void 
 		{
 			exitButton = content["exitButton"];
+			exitButton.visible = false;
 			exitButton.addEventListener(MouseEvent.CLICK, onExitButtonClick);
 			closeButton2 = content["closeButton"];
 			closeButton2.visible = false;

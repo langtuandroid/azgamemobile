@@ -109,6 +109,7 @@ package
 			
 			BoGameBaiMainView;
 			zGiftCodeWindow;
+			zCloseConnectionWindow;
 		}
 	}
 }

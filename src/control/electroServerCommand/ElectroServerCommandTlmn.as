@@ -462,13 +462,15 @@ package control.electroServerCommand
 		
 		private function onCloseConnection(e:ElectroServerEventTlmn):void 
 		{
+			if (mainData.isOpeningKickOutWindow)
+				return;
 			trace("ON CLOSE CONNECTION");
 			windowLayer.closeAllWindow();
 			mainData.isCloseConnection = true;
 			
 			var closeConnectionWindow:AlertWindow = new AlertWindow();
 			//closeConnectionWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onCloseConnectionWindowClose);
-			closeConnectionWindow.setNotice(mainData.init.gameDescription.alertSentence.closeConnection);
+			closeConnectionWindow.setNotice("Kết nối bị gián đoạn");
 			windowLayer.openWindow(closeConnectionWindow);
 		}
 		
