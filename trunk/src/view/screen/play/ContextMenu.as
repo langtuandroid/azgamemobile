@@ -73,11 +73,20 @@ package view.screen.play
 			dispatchEvent(new Event("kick"));
 		}
 		
-		public function setInfo(userName:String, money:String, level:String, linkAvatar:String, friend:Boolean):void 
+		public function setInfo(userName:String, money:String, level:String, linkAvatar:String, friend:Boolean, isMaster:Boolean):void 
 		{
 			content.userName.text = userName;
 			content.userMoney.text = money;
 			content.level.txt.text = level;
+			
+			if (isMaster) 
+			{
+				content.kickBtn.visible = true;
+			}
+			else 
+			{
+				content.kickBtn.visible = false;
+			}
 			
 			if (friend) 
 			{

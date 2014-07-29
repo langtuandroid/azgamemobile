@@ -58,6 +58,7 @@ package view.window
 				arrUserResult.push(obj);
 			}
 			content.close.visible = false;
+			content.outGame.visible = false;
 		}
 		
 		private function addEvent():void 

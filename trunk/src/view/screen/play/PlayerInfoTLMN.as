@@ -17,6 +17,7 @@ package view.screen.play
 	import flash.text.TextField;
 	import flash.utils.Timer;
 	import model.GameDataTLMN;
+	import model.MyDataTLMN;
 	import sound.SoundManager;
 	import view.Base;
 	import view.card.CardTlmn;
@@ -60,6 +61,7 @@ package view.screen.play
 		
 		private var distance:int = 10;
 		private var _level:String = "";
+		private var _timerDealcard:Timer;
 		public var _displayName:String = "";
 		
 		public function PlayerInfoTLMN(pos:int) 
@@ -299,7 +301,12 @@ package view.screen.play
 		
 		public function showEffectGameOver(obj:Object):void 
 		{
-			
+			if (_timerDealcard) 
+			{
+				_timerDealcard.removeEventListener(TimerEvent.TIMER, onTimerDealCard);
+				_timerDealcard.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
+				_timerDealcard.stop();
+			}
 			if (int(obj[ConstTlmn.MONEY]) > 0) 
 			{
 				content.resultGame.gotoAndStop(1);
@@ -548,7 +555,13 @@ package view.screen.play
 				}
 			}
 			
-			_contextMenu.setInfo(content.txtName.text, format(_money), "10", _linkAvatar, friend);
+			var ismaster:Boolean = false;
+			if (GameDataTLMN.getInstance().master == MyDataTLMN.getInstance().myId) 
+			{
+				ismaster = true;
+			}
+			
+			_contextMenu.setInfo(content.txtName.text, format(_money), "10", _linkAvatar, friend, ismaster);
 			//_contextMenu.setInfo(content.txtName.text, content.txtMoney.text, content.level.txt.text, _linkAvatar, false);
 			setPosContext();
 		}
@@ -780,7 +793,7 @@ package view.screen.play
 				if (_pos == 2) 
 				{
 					_cardDeck.x = 225;
-					_cardDeck.y = -25 + distance * i;
+					_cardDeck.y = -25 + (13 - remainingCard) * distance + distance * i;
 					_cardDeck.rotation = 90;
 				}
 				else 
@@ -789,14 +802,14 @@ package view.screen.play
 					if (_pos == 1) 
 					{
 						
-						_cardDeck.x = -200 + distance * i;
+						_cardDeck.x = -200 + (13 - remainingCard) * distance + distance * i;
 						_cardDeck.y = 30;
 					}
 					else 
 					{
 						_cardDeck.rotation = 90;
 						_cardDeck.x = -3;
-						_cardDeck.y = -25 + distance * i;
+						_cardDeck.y = -25 + (13 - remainingCard) * distance + distance * i;
 					}
 					
 					
@@ -893,6 +906,13 @@ package view.screen.play
 				_contextMenu.removeEventListener("kick", onClickKick);
 			}
 			
+			if (_timerDealcard) 
+			{
+				_timerDealcard.removeEventListener(TimerEvent.TIMER, onTimerDealCard);
+				_timerDealcard.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
+				_timerDealcard.stop();
+			}
+			
 			_clock.removeEventListener(Clock.COUNT_TIME_FINISH, onOverTimer);
 			content.showDetailUser.removeEventListener("onClick", onClickShowContex);
 			content.inviteBtn.removeEventListener(MouseEvent.CLICK, onClickInvite);
@@ -901,13 +921,52 @@ package view.screen.play
 		
 		public function removeCardDeck(num:int):void 
 		{
+			var i:int;
 			if (_arrCardDeck && _arrCardDeck.length > 0) 
 			{
-				for (var i:int = 0; i < num; i++) 
+				for (i = 0; i < num; i++) 
 				{
-					var cardDeck:CardDeck = _arrCardDeck.shift();
+					var cardDeck:CardDeck;
+					if (_pos == 0) 
+					{
+						cardDeck = _arrCardDeck.shift();
+						
+					}
+					else 
+					{
+						cardDeck = _arrCardDeck.shift();
+					}
+					
 					content.removeChild(cardDeck);
 					cardDeck = null;
+				}
+				
+				for (i = 0; i < _arrCardDeck.length; i++) 
+				{
+					if (_pos == 2) 
+					{
+						_arrCardDeck[i].x = 225;
+						_arrCardDeck[i].y = -25 + (13 - _arrCardDeck.length) * distance + distance * i;
+						
+					}
+					else 
+					{
+						
+						if (_pos == 1) 
+						{
+							
+							_arrCardDeck[i].x = -200 + (13 - _arrCardDeck.length) * distance + distance * i;
+							_arrCardDeck[i].y = 30;
+						}
+						else 
+						{
+							
+							_arrCardDeck[i].x = -3;
+							_arrCardDeck[i].y = -25 + (13 - _arrCardDeck.length) * distance + distance * i;
+						}
+						
+						
+					}
 				}
 			}
 			
@@ -942,14 +1001,39 @@ package view.screen.play
 			}
 			else 
 			{
-				trace("chia bai xem co cheater hay ko : ", _count)
-				startDeal(_count);
+				_timerDealcard = new Timer(100, 13);
+				_timerDealcard.addEventListener(TimerEvent.TIMER, onTimerDealCard);
+				_timerDealcard.addEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
+				_timerDealcard.start();
 			}
 			
 			content.confirmReady.visible = false;
 			////trace("chia bai cho cac info, ", type)
 			
 			
+		}
+		
+		private function onCompleteDealcard(e:TimerEvent):void 
+		{
+			if (_timerDealcard) 
+			{
+				_timerDealcard.removeEventListener(TimerEvent.TIMER, onTimerDealCard);
+				_timerDealcard.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
+				_timerDealcard.stop();
+			}
+			
+			if (_userName == "") 
+			{
+				_isPlaying = false;
+			}
+			content.numCardRemainTxt.visible = true;
+			content.setChildIndex(content.numCardRemainTxt, content.numChildren - 1);
+			content.numCardRemainTxt.text = String(_remainingCard);
+		}
+		
+		private function onTimerDealCard(e:TimerEvent):void 
+		{
+			startDeal( -1);
 		}
 		
 		private function startDeal(numCard:int):void 
@@ -1001,87 +1085,7 @@ package view.screen.play
 				//setChildIndex(
 				effectDealCard(cardDeck);
 			}
-			else 
-			{
-				trace("cac quan bai: ", numCard, "pos: ", _pos)
-				var card:CardTlmn = new CardTlmn(numCard);
-				card.scaleX = card.scaleY = .8;
-				if (_pos == 2) 
-				{
-					//trace("chia bai cho cac info, vị trí là: 2  ", _pos)
-					card.x = -40;
-					card.y = 150;
-					card.rotation = 0;
-					/*cardDeck.x = 0;
-						cardDeck.y = 0;*/
-					
-				}
-				else 
-				{
-					//card.rotation = 90;
-					if (_pos == 1) 
-					{
-						//trace("chia bai cho cac info, vị trí là: 1 ", _pos)
-						card.x = -300;
-						card.y = 0;
-						/*cardDeck.x = 0;
-						cardDeck.y = 0;*/
-					}
-					else
-					{
-						//trace("chia bai cho cac info, vị trí là:3  ", _pos)
-						card.x = 500;
-						card.y = 300;
-						/*cardDeck.x = 0;
-						cardDeck.y = 0;*/
-					}
-					
-					
-				}
-				content.addChildAt(card, 0);
-				//trace("check carddeck: ", cardDeck)
-				_arrCardDeck.push(card);
-				
-				//setChildIndex(
-				effectDealCardImage(card);
-			}
 			
-		}
-		
-		private function effectDealCardImage(card:CardTlmn):void 
-		{
-			if (card) 
-			{
-				trace("check carddeck khi bat dau tween: ", _pos)
-				if (_pos == 2) 
-				{
-					
-					TweenMax.to(card, .1, { bezierThrough:[ { x: -30 - distance * _count, y:content.numCard.y - 3} ], 
-								ease:Back.easeOut, onComplete:onComleteDealCard } ); 
-					//TweenMax.to(_arrCardDeck[type], 1, { x:0 * type, y:0} ); 
-					////trace("di chuyen den con , vị trí là:  ", _pos)
-				}
-				else 
-				{
-					if (_pos == 1) 
-					{
-						TweenMax.to(card, .1, { bezierThrough:[ { x: 65 - distance * _count, y: -80 } ], 
-								ease:Back.easeOut, onComplete:onComleteDealCard } ); 
-						
-					}
-					else 
-					{
-						TweenMax.to(card, .1, { bezierThrough:[ { x: 325 - distance * _count, y: 220 } ], 
-								ease:Back.easeOut, onComplete:onComleteDealCard } ); 
-						trace("toa do thang nay: ", card.x, card.y)
-					}
-					////trace("di chuyen den con , vị trí là:  ", _pos)
-					
-					//TweenMax.to(_arrCardDeck[type], 1, { x:0 * type, y:0} ); 
-				}
-				_count++;
-				
-			}
 		}
 		
 		private function effectDealCard(cardDeck:CardDeck):void 
@@ -1094,8 +1098,10 @@ package view.screen.play
 				if (_pos == 2) 
 				{
 					
-					TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: 225, y:-25 + distance * _remainingCard} ], 
-								ease:Back.easeOut, onComplete:onComleteDeal } ); 
+					/*TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: 225, y:-25 + distance * _remainingCard} ], 
+								ease:Back.easeOut, onComplete:onComleteDeal } ); */
+								
+					TweenMax.to(cardDeck, 1, { x:225, y:-25 + distance * _remainingCard, ease:Back.easeOut} ); 
 					//TweenMax.to(_arrCardDeck[type], 1, { x:0 * type, y:0} ); 
 					////trace("di chuyen den con , vị trí là:  ", _pos)
 				}
@@ -1103,15 +1109,15 @@ package view.screen.play
 				{
 					if (_pos == 1) 
 					{
-						TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: -200 + distance * _remainingCard, y:30} ], 
-								ease:Back.easeOut, onComplete:onComleteDeal } ); 
-						
+						/*TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: -200 + distance * _remainingCard, y:30} ], 
+								ease:Back.easeOut, onComplete:onComleteDeal } ); */
+						TweenMax.to(cardDeck, 1, {x:-200 + distance * _remainingCard, y:30, ease:Back.easeOut} ); 
 					}
 					else 
 					{
-						TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: -3, y: -25 + distance * _remainingCard} ], 
-								ease:Back.easeOut, onComplete:onComleteDeal} ); 
-						
+						/*TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: -3, y: -25 + distance * _remainingCard} ], 
+								ease:Back.easeOut, onComplete:onComleteDeal} ); */
+						TweenMax.to(cardDeck, 1, { x:-3, y:-25 + distance * _remainingCard, ease:Back.easeOut} ); 
 					}
 					////trace("di chuyen den con , vị trí là:  ", _pos)
 					
@@ -1173,6 +1179,12 @@ package view.screen.play
 		
 		public function killAllTween():void 
 		{
+			if (_timerDealcard) 
+			{
+				_timerDealcard.removeEventListener(TimerEvent.TIMER, onTimerDealCard);
+				_timerDealcard.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
+				_timerDealcard.stop();
+			}
 			TweenMax.killAll();
 			_clock.removeTween();
 			_clock.visible = false;
