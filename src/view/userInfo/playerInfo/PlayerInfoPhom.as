@@ -180,6 +180,7 @@ package view.userInfo.playerInfo
 		
 		public var levelNumber:Number;
 		public var winLoseIcon:MovieClip;
+		public var downCardAnim:MovieClip;
 		
 		public var downCards_1_index:int; // index phỏm 1 của server
 		public var downCards_2_index:int; // index phỏm 2 của server
@@ -563,6 +564,7 @@ package view.userInfo.playerInfo
 			removeAllButton();
 			addChild(arrangeCardButton);
 			arrangeCardButton.enable = true;
+			downCardAnim.visible = false;
 			var j:int
 			switch (status) 
 			{
@@ -611,6 +613,7 @@ package view.userInfo.playerInfo
 				break;
 				case PlayerInfoPhom.DOWN_CARD:
 					var deckCount:int = phomLogic.countDeck(unLeaveCards).length;
+					downCardAnim.visible = true;
 					if (deckCount > 0) // Nếu có phỏm hạ
 					{
 						checkDownCard();
@@ -1417,6 +1420,12 @@ package view.userInfo.playerInfo
 			giveUpIcon = content["giveUpIcon"];
 			if (giveUpIcon)
 				giveUpIcon.visible = false;
+				
+			if (formName == BELOW_USER)
+			{
+				downCardAnim = content["downCardAnim"];
+				downCardAnim.visible = false;
+			}
 		}
 		
 		public function setStatus(type:String):void
