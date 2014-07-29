@@ -1233,19 +1233,19 @@ package view.screen
 			}
 			
 			// Nếu không đủ tiền để chơi ván mới
-			if (mainData.chooseChannelData.myInfo.money < mainData.playingData.gameRoomData.roomBet * mainData.minBetRate)
+			if (mainData.chooseChannelData.myInfo.money < Number(mainData.playingData.gameRoomData.roomBet) * mainData.minBetRate)
 			{
 				dispatchEvent(new Event(PlayerInfoMauBinh.EXIT));
-				//windowLayer.isNoCloseAll = true;
 				electroServerCommand.joinLobbyRoom();
 				
-				//if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
-				//{
-					//var kickOutWindow:AlertWindow = new AlertWindow();
-					//kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
-					//kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
-					//windowLayer.openWindow(kickOutWindow);
-				//}
+				if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
+				{
+					windowLayer.isNoCloseAll = true;
+					var kickOutWindow:AlertWindow = new AlertWindow();
+					kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
+					kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
+					windowLayer.openWindow(kickOutWindow);
+				}
 				
 				EffectLayer.getInstance().removeAllEffect();
 			}
@@ -1978,19 +1978,19 @@ package view.screen
 			}
 			
 			// Nếu không đủ tiền để chơi ván mới
-			if (mainData.chooseChannelData.myInfo.money < mainData.playingData.gameRoomData.roomBet * mainData.minBetRate)
+			if (mainData.chooseChannelData.myInfo.money < Number(mainData.playingData.gameRoomData.roomBet) * mainData.minBetRate)
 			{
 				dispatchEvent(new Event(PlayerInfoMauBinh.EXIT));
-				//windowLayer.isNoCloseAll = true;
 				electroServerCommand.joinLobbyRoom();
 				
-				//if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
-				//{
-					//var kickOutWindow:AlertWindow = new AlertWindow();
-					//kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
-					//kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
-					//windowLayer.openWindow(kickOutWindow);
-				//}
+				if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
+				{
+					windowLayer.isNoCloseAll = true;
+					var kickOutWindow:AlertWindow = new AlertWindow();
+					kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
+					kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
+					windowLayer.openWindow(kickOutWindow);
+				}
 				
 				EffectLayer.getInstance().removeAllEffect();
 				return;
