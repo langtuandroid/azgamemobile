@@ -6,6 +6,7 @@ package control.electroServerCommand
 	import control.CoreAPITlmn;
 	import event.CommandTlmn;
 	import event.DataField;
+	import event.DataFieldMauBinh;
 	import event.ElectroServerEvent;
 	import event.ElectroServerEventTlmn;
 	import flash.events.Event;
@@ -555,23 +556,24 @@ package control.electroServerCommand
 			{
 				roomData = new RoomDataRLC();
 				roomData.moneyLogoUrl = mainData.init.requestLink.moneyIcon.@url;
-				if(roomList[roomId][DataField.IS_SEND_CARD])
+				if(roomList[roomId][DataFieldMauBinh.IS_SEND_CARD])
 					roomData.rules = mainData.init.gameDescription.lobbyRoomScreen.sendCard;
 				else
 					roomData.rules = mainData.init.gameDescription.lobbyRoomScreen.notSendCard;
 				roomData.ruleToggle = false;
-				roomData.betting = roomList[roomId][DataField.ROOM_BET];
+				roomData.male = roomList[roomId][DataFieldMauBinh.MALE];
+				roomData.betting = roomList[roomId][DataFieldMauBinh.ROOM_BET];
 				roomData.channelId = mainData.playingData.gameRoomData.channelId;
-				roomData.hasPassword = roomList[roomId][DataField.HAS_PASSWORD];
-				roomData.maxPlayer = mainData.maxPlayer;
-				roomData.name = roomList[roomId][DataField.ROOM_NAME];
+				roomData.hasPassword = roomList[roomId][DataFieldMauBinh.HAS_PASSWORD];
+				roomData.maxPlayer = roomList[roomId][DataFieldMauBinh.MAX_PLAYER];
+				roomData.name = roomList[roomId][DataFieldMauBinh.ROOM_NAME];
 				roomData.id = int(roomId);
-				roomData.gameId = roomList[roomId][DataField.GAME_ID];
+				roomData.gameId = roomList[roomId][DataFieldMauBinh.GAME_ID];
 				//if (roomList[roomId][DataField.USER_LIST])
 					//roomData.userNumbers = (roomList[roomId][DataField.USER_LIST] as Array).length;
 				//else
 					//roomData.userNumbers = 1;
-				roomData.userNumbers = roomList[roomId][DataField.USERS_NUMBER];
+				roomData.userNumbers = roomList[roomId][DataFieldMauBinh.USERS_NUMBER];
 				if (roomData.userNumbers != roomData.maxPlayer || mainData.showFullTable == 1)
 					tempRoomList.push(roomData);
 			}
