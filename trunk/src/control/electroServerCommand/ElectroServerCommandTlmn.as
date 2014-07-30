@@ -587,7 +587,7 @@ package control.electroServerCommand
 		
 		private function onInviteAddFriend(e:ElectroServerEventTlmn):void 
 		{
-			mainData.inviteAddFriendData = e.data;
+			//mainData.inviteAddFriendData = e.data;
 		}
 		
 		private function onRemoveFriend(e:ElectroServerEventTlmn):void 
