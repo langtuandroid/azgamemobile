@@ -60,8 +60,8 @@ package view.window
 		
 		private function onShopButtonClick(e:MouseEvent):void 
 		{
-			mainData.isMoveToShop = true;
 			close(BaseWindow.MIDDLE_EFFECT);
+			mainData.isMoveToShop = true;
 		}
 		
 		private function onCloseButtonClick(e:MouseEvent):void 

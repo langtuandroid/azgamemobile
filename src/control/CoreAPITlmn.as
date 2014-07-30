@@ -650,7 +650,7 @@ package control
 						userData.isMakeFriend = true;
 						userData.moneyLogoUrl = '';
 						userData.displayName = EsObject(friendList[i]).getString(DataFieldMauBinh.DISPLAY_NAME);
-						userData.levelName = '1';
+						userData.levelName = EsObject(friendList[i]).getString(DataFieldMauBinh.LEVEL);
 						userData.userID = EsObject(friendList[i]).getString(DataFieldMauBinh.USER_NAME);
 						userData.userName = EsObject(friendList[i]).getString(DataFieldMauBinh.USER_NAME);
 						userData.isOnline = EsObject(friendList[i]).getBoolean(DataFieldMauBinh.ONLINE);

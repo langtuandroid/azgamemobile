@@ -42,6 +42,7 @@ package view.screen
 	import view.effectLayer.TextEffect_1;
 	import view.userInfo.playerInfo.PlayerInfoPhom;
 	import view.window.AccuseWindow;
+	import view.window.AddMoneyWindow2;
 	import view.window.AlertWindow;
 	import view.window.BaseWindow;
 	import view.window.ConfirmWindow;
@@ -1259,7 +1260,7 @@ package view.screen
 								if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
 								{
 									windowLayer.isNoCloseAll = true;
-									var kickOutWindow:AlertWindow = new AlertWindow();
+									var kickOutWindow:AddMoneyWindow2 = new AddMoneyWindow2();
 									kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
 									kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
 									windowLayer.openWindow(kickOutWindow);
@@ -1505,7 +1506,7 @@ package view.screen
 				if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
 				{
 					windowLayer.isNoCloseAll = true;
-					var kickOutWindow:AlertWindow = new AlertWindow();
+					var kickOutWindow:AddMoneyWindow2 = new AddMoneyWindow2();
 					kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
 					kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
 					windowLayer.openWindow(kickOutWindow);

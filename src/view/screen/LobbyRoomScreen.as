@@ -867,6 +867,7 @@ package view.screen
 				}
 				else
 				{
+					MovieClip(channelButtonArray[i]).gotoAndStop("disable");
 					onlinePlayer = 0;
 					for (j = 0; j < mainData.chooseChannelData.channelInfoArray.length; j++) 
 					{
@@ -1017,7 +1018,7 @@ package view.screen
 				return;
 			
 			var inviteObject:Object = mainData.lobbyRoomData.invitePlayData;
-			var timerToRemoveInvite:Timer = new Timer(60000, 1);
+			var timerToRemoveInvite:Timer = new Timer(20000, 1);
 			timerToRemoveInvite.addEventListener(TimerEvent.TIMER_COMPLETE, onTimerToRemoveInvite);
 			timerToRemoveInvite.start();
 			mainData.inviteList[inviteObject[DataFieldMauBinh.USER_NAME]] = inviteObject;
