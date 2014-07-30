@@ -16,6 +16,7 @@ package view.screen
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
+	import view.window.AddMoneyWindow2;
 	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -1241,7 +1242,7 @@ package view.screen
 				if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
 				{
 					windowLayer.isNoCloseAll = true;
-					var kickOutWindow:AlertWindow = new AlertWindow();
+					var kickOutWindow:AddMoneyWindow2 = new AddMoneyWindow2();
 					kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
 					kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
 					windowLayer.openWindow(kickOutWindow);
@@ -1986,7 +1987,7 @@ package view.screen
 				if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
 				{
 					windowLayer.isNoCloseAll = true;
-					var kickOutWindow:AlertWindow = new AlertWindow();
+					var kickOutWindow:AddMoneyWindow2 = new AddMoneyWindow2();
 					kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
 					kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
 					windowLayer.openWindow(kickOutWindow);
