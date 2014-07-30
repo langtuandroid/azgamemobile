@@ -1101,7 +1101,7 @@ package view.screen.play
 					/*TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: 225, y:-25 + distance * _remainingCard} ], 
 								ease:Back.easeOut, onComplete:onComleteDeal } ); */
 								
-					TweenMax.to(cardDeck, 1, { x:225, y:-25 + distance * _remainingCard, ease:Back.easeOut} ); 
+					TweenMax.to(cardDeck, 1.5, { x:225, y:-25 + distance * _remainingCard, ease:Back.easeOut} ); 
 					//TweenMax.to(_arrCardDeck[type], 1, { x:0 * type, y:0} ); 
 					////trace("di chuyen den con , vị trí là:  ", _pos)
 				}
@@ -1111,13 +1111,13 @@ package view.screen.play
 					{
 						/*TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: -200 + distance * _remainingCard, y:30} ], 
 								ease:Back.easeOut, onComplete:onComleteDeal } ); */
-						TweenMax.to(cardDeck, 1, {x:-200 + distance * _remainingCard, y:30, ease:Back.easeOut} ); 
+						TweenMax.to(cardDeck, 1.5, {x:-200 + distance * _remainingCard, y:30, ease:Back.easeOut} ); 
 					}
 					else 
 					{
 						/*TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: -3, y: -25 + distance * _remainingCard} ], 
 								ease:Back.easeOut, onComplete:onComleteDeal} ); */
-						TweenMax.to(cardDeck, 1, { x:-3, y:-25 + distance * _remainingCard, ease:Back.easeOut} ); 
+						TweenMax.to(cardDeck, 1.5, { x:-3, y:-25 + distance * _remainingCard, ease:Back.easeOut} ); 
 					}
 					////trace("di chuyen den con , vị trí là:  ", _pos)
 					
