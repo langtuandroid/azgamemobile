@@ -938,12 +938,22 @@ package control
 					var userListInLobby:Array = room.users;
 					for (i = 0; i < userListInLobby.length; i++) 
 					{
+						
 						userName = User(userListInLobby[i]).userName;
-						object = convertEsObject(UserVariable(User(userListInLobby[i]).userVariableByName(DataField.USER_INFO)).value);
+						object = convertEsObject(UserVariable(User(userListInLobby[i]).userVariableByName(DataFieldMauBinh.USER_INFO)).value);
+						if (!object[DataFieldMauBinh.SEX])
+							object[DataFieldMauBinh.SEX] = 'M';
 						GameDataTLMN.getInstance().userList[userName] = new Object();
-						GameDataTLMN.getInstance().userList[userName][DataField.ROOM_ID] = 0;
-						GameDataTLMN.getInstance().userList[userName][DataField.USER_INFO] = object;
+						GameDataTLMN.getInstance().userList[userName][DataFieldMauBinh.ROOM_ID] = mainData.lobbyRoomId;
+						GameDataTLMN.getInstance().userList[userName][DataFieldMauBinh.USER_INFO] = object;
+						if (!object[DataFieldMauBinh.LOSE])
+							object[DataFieldMauBinh.LOSE] = 0;
+						if (!object[DataFieldMauBinh.WIN])
+							object[DataFieldMauBinh.WIN] = 0;
 					}
+					
+					myData.roomList = GameDataTLMN.getInstance().roomList;
+					myData.userList = GameDataTLMN.getInstance().userList;
 					
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST, GameDataTLMN.getInstance().userList));
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_ROOM_LIST, GameDataTLMN.getInstance().roomList));

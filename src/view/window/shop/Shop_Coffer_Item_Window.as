@@ -111,7 +111,11 @@ package view.window.shop
 			myContent.addChild(scrollViewForRank);
 			scrollViewForRank.y = 0;
 			
-			
+			/*var textfield:TextField = new TextField();
+			textfield.text = "31/07 - v1";
+			textfield.x = 50;
+			textfield.y = 420;
+			myContent.addChild(textfield);*/
 			//scrollView.visible = false;
 			addEvent();
 			

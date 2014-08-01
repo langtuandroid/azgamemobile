@@ -430,12 +430,12 @@ package view.screen.play
 			trace("day co phai luot danh dau tien ko: ", GameDataTLMN.getInstance().firstPlayer , _userName)
 			if (GameDataTLMN.getInstance().firstPlayer == _userName) 
 			{
-				_clock.countTime(15);
+				_clock.countTime(20);
 				
 			}
 			else 
 			{
-				_clock.countTime(10);
+				_clock.countTime(15);
 				
 			}
 		}
@@ -1001,7 +1001,7 @@ package view.screen.play
 			}
 			else 
 			{
-				_timerDealcard = new Timer(100, 13);
+				_timerDealcard = new Timer(150, 13);
 				_timerDealcard.addEventListener(TimerEvent.TIMER, onTimerDealCard);
 				_timerDealcard.addEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
 				_timerDealcard.start();
