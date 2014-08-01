@@ -659,28 +659,36 @@ package control.electroServerCommand
 			for (var userName:String in allUserList)
 			{
 				userData = new UserDataULC();
+				userData.isOnline = true;
+				userData.gameId = MainData.MAUBINH_ID;
 				userData.isJoinRoom = true;
 				userData.isViewPersonalInfo = true;
 				userData.isMakeFriend = true;
-				if (allUserList[userName][DataField.USER_INFO])
+				if (allUserList[userName][DataFieldMauBinh.USER_INFO])
 				{
-					trace("update info : ", allUserList[userName][DataField.USER_INFO][ModelField.DISPLAY_NAME])
-					userData.moneyLogoUrl = allUserList[userName][DataField.USER_INFO][DataField.LOGO];
-					userData.displayName = allUserList[userName][DataField.USER_INFO][ModelField.DISPLAY_NAME];
-					userData.levelName = allUserList[userName][DataField.USER_INFO].level;
+					userData.roomID = allUserList[userName][DataFieldMauBinh.ROOM_ID];
+					userData.moneyLogoUrl = allUserList[userName][DataFieldMauBinh.USER_INFO][DataFieldMauBinh.LOGO];
+					userData.displayName = allUserList[userName][DataFieldMauBinh.USER_INFO][ModelField.DISPLAY_NAME];
+					userData.win = allUserList[userName][DataFieldMauBinh.USER_INFO][DataFieldMauBinh.WIN];
+					userData.lose = allUserList[userName][DataFieldMauBinh.USER_INFO][DataFieldMauBinh.LOSE];
+					userData.levelName = allUserList[userName][DataFieldMauBinh.USER_INFO].level;
 					userData.userID = userName;
 					userData.userName = userName;
-					userData.roomID = allUserList[userName][DataField.ROOM_ID];
-					userData.money = allUserList[userName][DataField.USER_INFO][ModelField.MONEY];
+					userData.money = allUserList[userName][DataFieldMauBinh.USER_INFO][ModelField.MONEY];
 					
-					userData.avatar = allUserList[userName][DataField.USER_INFO][ModelField.AVATAR];
+					userData.avatar = allUserList[userName][DataFieldMauBinh.USER_INFO][ModelField.AVATAR];
 					
-					if (coreAPI.myData.friendList)
+					if (mainData.lobbyRoomData.friendList)
 					{
-						if (coreAPI.myData.friendList[userName])
-							userData.isFriend = true;
-						else
-							userData.isFriend = false;
+						userData.isFriend = false;
+						for (var i:int = 0; i < mainData.lobbyRoomData.friendList.length; i++) 
+						{
+							if (UserDataULC(mainData.lobbyRoomData.friendList[i]).userName == userName)
+							{
+								userData.isFriend = true;
+								break;
+							}
+						}
 					}
 					
 					if (userData.userID == mainData.chooseChannelData.myInfo.uId)
@@ -690,8 +698,8 @@ package control.electroServerCommand
 						userData.isAccuse = false;
 					}
 					
-					if (allUserList[userName][DataField.USER_INFO][DataField.LOGO])
-						userData.webLogoUrl = allUserList[userName][DataField.USER_INFO][DataField.LOGO];
+					if (allUserList[userName][DataFieldMauBinh.USER_INFO][DataFieldMauBinh.LOGO])
+						userData.webLogoUrl = allUserList[userName][DataFieldMauBinh.USER_INFO][DataFieldMauBinh.LOGO];
 					else
 						userData.webLogoUrl = '';
 				}
@@ -701,16 +709,16 @@ package control.electroServerCommand
 					userData.levelName = "unKnown";
 					isHaveUnknownUser = true;
 				}
-				if (allUserList[userName][DataField.ROOM_ID] == 0)
+				if (allUserList[userName][DataFieldMauBinh.ROOM_ID] == mainData.lobbyRoomId)
 				{
 					userData.isJoinRoom = false;
 					userData.description = "Phòng chờ";
 				}
 				else
 				{
-					userData.description = "Phòng " + allUserList[userName][DataField.ROOM_ID];
+					userData.description = "Phòng " + allUserList[userName][DataFieldMauBinh.ROOM_ID];
 				}
-				if (userData.userName != mainData.chooseChannelData.myInfo.uId)
+				if (userData.userName != mainData.chooseChannelData.myInfo.uId && userData.roomID == mainData.lobbyRoomId)
 					tempUserList.push(userData);
 			}
 			

@@ -231,11 +231,11 @@ package view.screen
 			
 			GameDataTLMN.getInstance().playingData.addEventListener(PlayingData.UPDATE_PLAYING_SCREEN, onUpdatePlayingScreen);
 			
-			var textfield:TextField = new TextField();
-			textfield.text = "";
+			/*var textfield:TextField = new TextField();
+			textfield.text = "31/07 - v1";
 			textfield.x = 20;
 			textfield.y = 520;
-			content.addChild(textfield);
+			content.addChild(textfield);*/
 			
 			if (heartbeart) 
 			{
@@ -440,7 +440,11 @@ package view.screen
 				timerDealcardForme.addEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcardForMe);
 				timerDealcardForme.start();
 			}
-			
+			else 
+			{
+				content.noc.visible = false;
+				_myInfo.hideready();
+			}
 			
 			//addUsersInfo(true);
 			

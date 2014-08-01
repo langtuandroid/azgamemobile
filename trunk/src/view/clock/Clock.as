@@ -56,7 +56,7 @@ package view.clock
 		public function countTime(timeNumber:int):void
 		{
 			content.seek.x = 0;
-			TweenMax.to(content.seek, timeNumber, { x: -77, onComplete:onCompleteCountTimer } );
+			TweenMax.to(content.seek, timeNumber, { x: -77, repeat:-1, onComplete:onCompleteCountTimer } );
 			if (timerCount) 
 			{
 				timerCount.removeEventListener(TimerEvent.TIMER_COMPLETE, onWaitOverTimer);

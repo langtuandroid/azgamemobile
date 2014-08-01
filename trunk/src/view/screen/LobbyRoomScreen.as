@@ -1,5 +1,6 @@
 package view.screen 
 {
+	import control.ConstTlmn;
 	import flash.desktop.NativeApplication;
 	import flash.display.MovieClip;
 	import flash.display.SimpleButton;
@@ -172,6 +173,7 @@ package view.screen
 			windowLayer.openWindow(loginWindow);
 			
 			selectGameButton.addEventListener(MouseEvent.CLICK, onSelectGameButtonClick);
+			
 			
 		}
 		
@@ -803,7 +805,16 @@ package view.screen
 						SoundManager.getInstance().soundManagerMauBinh.playLobbyPlayerSound(mainData.chooseChannelData.myInfo.sex);
 					break;
 					case MainData.PHOM:
+						//SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_HELLO_1);
 						SoundManager.getInstance().soundManagerPhom.playLobbyPlayerSound(mainData.chooseChannelData.myInfo.sex);
+					break;
+					case MainData.TLMN:
+						
+						if (SoundManager.getInstance().isSoundOn) 
+						{
+							var rd:int = int(Math.random() * 2) + 1;
+							SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_HELLO_ + String(rd));
+						}
 					break;
 					default:
 				}

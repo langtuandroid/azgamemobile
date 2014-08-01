@@ -64,6 +64,8 @@ package view.window.loginWindow
 			loginYahooBtn.visible = false;
 			loginMobileBtn.visible = false;
 			
+			
+			
 			zLoginWindow(content).loginButton.addEventListener(MouseEvent.CLICK, onLoginButtonClick);
 			zLoginWindow(content).registerButton.addEventListener(MouseEvent.CLICK, onRegisterButtonClick);
 			zLoginWindow(content).forgetPass.addEventListener(MouseEvent.CLICK, onForgetPassClick);
@@ -105,7 +107,7 @@ package view.window.loginWindow
 			zLoginWindow(content).pass.setStyle("textFormat", textFormat);
 			zLoginWindow(content).userName.setStyle("textFormat", textFormat);
 			
-			zLoginWindow(content).versionTxt.text = "Version 1.0";
+			zLoginWindow(content).versionTxt.text = "Version 1.3";
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
@@ -463,14 +465,15 @@ package view.window.loginWindow
 			
 			if (mainData.isLoadSound)
 			{
+				if (!SoundManager.getInstance().isLoadSoundTlmn)
+					SoundManager.getInstance().addSound();
 				if (!SoundManager.getInstance().isLoadSoundChung)
 					SoundManager.getInstance().loadSoundChung();
 				if (!SoundManager.getInstance().isLoadSoundMauBinh)
 					SoundManager.getInstance().loadSoundMauBinh();
 				if (!SoundManager.getInstance().isLoadSoundPhom)
 					SoundManager.getInstance().loadSoundPhom();
-				if (!SoundManager.getInstance().isLoadSoundTlmn)
-					SoundManager.getInstance().addSound();
+				
 			}
 		}
 	}

@@ -77,6 +77,8 @@ package view
 		{
 			addContent("zSelectGameWindow");
 			
+			
+			
 			tlmnIcon = content["tlmnIcon"];
 			phomIcon = content["phomIcon"];
 			maubinhIcon = content["maubinhIcon"];

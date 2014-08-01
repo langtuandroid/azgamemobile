@@ -197,6 +197,12 @@ package view.screen.play
 			content.confirmReady.visible = true;
 		}
 		
+		public function hideready():void 
+		{
+			content.readyBtn.visible = false;
+			content.confirmReady.visible = false;
+		}
+		
 		public function waitNewGame():void 
 		{
 			if (GameDataTLMN.getInstance().autoReady) 
@@ -367,12 +373,12 @@ package view.screen.play
 			
 			if (GameDataTLMN.getInstance().firstPlayer == MyDataTLMN.getInstance().myId) 
 			{
-				_clock.countTime(15);
+				_clock.countTime(20);
 				showPassTurn();
 			}
 			else 
 			{
-				_clock.countTime(10);
+				_clock.countTime(15);
 				hidePassTurn();
 			}
 			
@@ -1058,7 +1064,7 @@ package view.screen.play
 			
 			content.confirmReady.visible = false;
 			
-			_timerDealcard = new Timer(50, arr.length);
+			_timerDealcard = new Timer(150, arr.length);
 			_timerDealcard.addEventListener(TimerEvent.TIMER, onTimerDealCard);
 			_timerDealcard.addEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
 			_timerDealcard.start();
@@ -1105,7 +1111,7 @@ package view.screen.play
 			card.pos = _countCard;
 			//TweenMax.to(card, .1, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, onComplete:onComplete } );
 			//TweenMax.to(card, .3, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, ease:Back.easeOut, onComplete:onComplete});
-			TweenMax.to(card, 1, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, ease:Back.easeOut});
+			TweenMax.to(card, 2, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, ease:Back.easeOut});
 			
 		}
 		
