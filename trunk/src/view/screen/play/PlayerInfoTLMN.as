@@ -640,7 +640,7 @@ package view.screen.play
 		 */
 		public function getInfoPlayer(pos:int, userName:String, money:String, linkAvatar:String, remainingCard:int, level:String,
 										userPlaying:Boolean, gamePlaying:Boolean, isMaster:Boolean, displayName:String,
-										sex:Boolean, ip:String):void 
+										sex:Boolean, ip:String, device:String):void 
 		{
 			//_pos = pos;
 			_sex = sex;
@@ -664,7 +664,8 @@ package view.screen.play
 					}
 				}
 			}
-			
+			content.iconMobile.visible = true;
+			content.iconMobile.gotoAndStop(device);
 			userIp = newIp;
 			content.inviteBtn.visible = false;
 			_isPlaying = userPlaying;

@@ -4042,7 +4042,7 @@ package view.screen
 								
 								_arrUserInfo[i].getInfoPlayer(i + 1, obj[DataField.USER_NAME], obj[DataField.MONEY], obj[DataField.AVATAR], 
 								0, String(obj[DataField.LEVEL]), false, _isPlaying, false,
-								obj[DataField.DISPLAY_NAME], obj[DataField.SEX], obj[DataField.IP]);
+								obj[DataField.DISPLAY_NAME], obj[DataField.SEX], obj[DataField.IP], obj[DataField.DEVICE_ID]);
 								
 								objUser = new Object();
 								objUser[DataField.USER_NAME] = obj[DataField.USER_NAME];
@@ -4081,7 +4081,7 @@ package view.screen
 							
 							_arrUserInfo[i].getInfoPlayer(i + 1, obj[DataField.USER_NAME], obj[DataField.MONEY], obj[DataField.AVATAR], 
 								0, String(obj[DataField.LEVEL]), false, _isPlaying, false,
-								obj[DataField.DISPLAY_NAME], obj[DataField.SEX], obj[DataField.IP]);
+								obj[DataField.DISPLAY_NAME], obj[DataField.SEX], obj[DataField.IP], obj[DataField.DEVICE_ID]);
 							
 							
 							/*if (_stageId == 1) 
@@ -4392,7 +4392,7 @@ package view.screen
 			_myInfo.addInfoForMe(_arrUserList[0].userName, _arrUserList[0].money, _arrUserList[0].avatar, 
 									_arrUserList[0].remaningCard, _arrUserList[0].level,
 									_arrUserList[0].isMaster, _isPlaying, _arrUserList[0].displayName, _arrUserList[0].ready,
-									_arrUserList[0].ip);
+									_arrUserList[0].ip, _arrUserList[0].deviceId);
 			//
 			MyDataTLMN.getInstance().myMoney[0] = String(_arrUserList[0].money);
 			mainData.chooseChannelData.myInfo.money = Number(_arrUserList[0].money);
@@ -4418,9 +4418,10 @@ package view.screen
 					_arrUserInfo[i - 1].visible = true;
 					
 					_arrUserInfo[i - 1].getInfoPlayer(_arrUserList[i]["position"], _arrUserList[i].userName, 
-														_arrUserList[i].money, _arrUserList[i].avatar,
-													_arrUserList[i].numCard, String(_arrUserList[i].level), _arrUserList[i].ready, _isPlaying, 
-													_arrUserList[i].isMaster, _arrUserList[i].displayName, _arrUserList[i].sex, _arrUserList[i].ip
+														_arrUserList[i].money, _arrUserList[i].avatar, _arrUserList[i].numCard, 
+														String(_arrUserList[i].level), _arrUserList[i].ready, _isPlaying, 
+													_arrUserList[i].isMaster, _arrUserList[i].displayName, 
+													_arrUserList[i].sex, _arrUserList[i].ip, _arrUserList[i].deviceId
 													);
 					//checkPosClock();
 					if (!isMeJoinRoom) 

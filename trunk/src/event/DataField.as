@@ -146,6 +146,7 @@ package event
 		public static const DESCRIPTION: String = "description";
 		public static const SENDER: String = "sender";
 		public static const MAX_PLAYER: String = "maxPlayer";
+		public static const DEVICE_ID: String = "deviceId";
 		
 		public function DataField() 
 		{
