@@ -243,6 +243,16 @@ package control
 					publicChatObject[DataFieldMauBinh.USER_NAME] = e.userName;
 					publicChatObject[DataFieldMauBinh.DISPLAY_NAME] = e.esObject.getString(DataFieldMauBinh.DISPLAY_NAME);
 					publicChatObject[DataFieldMauBinh.CHAT_CONTENT] = e.esObject.getString(DataFieldMauBinh.CHAT_CONTENT);
+					if (e.esObject.doesPropertyExist(DataFieldMauBinh.EMO)) 
+					{
+						publicChatObject[DataFieldMauBinh.EMO] = e.esObject.getBoolean(DataFieldMauBinh.EMO);
+					}
+					else 
+					{
+						publicChatObject[DataFieldMauBinh.EMO] = false;
+					}
+					
+					
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.PUBLIC_CHAT,publicChatObject));
 				break;
 				case CommandTlmn.READY:
@@ -340,7 +350,11 @@ package control
 			var loginRequest:LoginRequest = new LoginRequest();
 			loginRequest.userName = userName;
 			loginRequest.password = password;
-			electroServer.engine.send(loginRequest);
+			if (electroServer.engine.connected) 
+			{
+				electroServer.engine.send(loginRequest);
+			}
+			
 		}
 		
 		public function onLoginResponse(e:LoginResponse):void
@@ -980,7 +994,11 @@ package control
 			message.setString(DataFieldMauBinh.SEX, infoObject[DataFieldMauBinh.SEX]);
 			
 			invitePlay.esObject = message;
-			electroServer.engine.send(invitePlay);
+			if (electroServer.engine.connected) 
+			{
+				electroServer.engine.send(invitePlay);
+			}
+			
 		}
 		
 		public function sendPrivateMessage(invitedNameArray:Array, command:String, esObject:EsObject):void
@@ -990,7 +1008,11 @@ package control
 			privateMessageRequest.message = command;
 			
 			privateMessageRequest.esObject = esObject;
-			electroServer.engine.send(privateMessageRequest);
+			if (electroServer.engine.connected) 
+			{
+				electroServer.engine.send(privateMessageRequest);
+			}
+			
 		}
 		
 		public function onLeaveRoomEvent(e:LeaveRoomEvent):void
@@ -1370,7 +1392,11 @@ package control
 			createGameRequest.createOnly = true;
 			createGameRequest.password = password;
 			electroServer.engine.addEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
-			electroServer.engine.send(createGameRequest);
+			if (electroServer.engine.connected) 
+			{
+				electroServer.engine.send(createGameRequest);
+			}
+			
 		}
 		
 		public function joinGameRoom(gameId:int, password:String):void
@@ -1396,7 +1422,11 @@ package control
 				joinGameRequest.gameId = myData.roomList[roomId][DataFieldMauBinh.GAME_ID];
 				joinGameRequest.password = password;
 				electroServer.engine.addEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
-				electroServer.engine.send(joinGameRequest);
+				if (electroServer.engine.connected) 
+				{
+					electroServer.engine.send(joinGameRequest);
+				}
+				
 			}
 		}
 		
@@ -1415,7 +1445,11 @@ package control
 			gameDetails.setBoolean(DataFieldMauBinh.IS_SEND_CARD, true);
 			quickJoinGameRequest.gameDetails = gameDetails;
 			electroServer.engine.addEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
-			electroServer.engine.send(quickJoinGameRequest);
+			if (electroServer.engine.connected) 
+			{
+				electroServer.engine.send(quickJoinGameRequest);
+			}
+			
 		}
 		
 		public function onCreateOrJoinGameResponse(e:CreateOrJoinGameResponse):void
@@ -1463,11 +1497,12 @@ package control
 			}
 		}
 		
-		public function sendPublicChat(displayName:String, chatContent:String):void
+		public function sendPublicChat(displayName:String, chatContent:String, emo:Boolean):void
 		{
 			var esObject:EsObject = new EsObject();
 			esObject.setString(DataFieldMauBinh.DISPLAY_NAME, displayName);
 			esObject.setString(DataFieldMauBinh.CHAT_CONTENT, chatContent);
+			esObject.setBoolean(DataFieldMauBinh.EMO, emo);
 			sendPublicMessage(CommandTlmn.PUBLIC_CHAT, esObject);
 		}
 		
@@ -1520,7 +1555,11 @@ package control
 				esObject = new EsObject();
 			esObject.setString(DataFieldMauBinh.COMMAND, command);
 			publicMessageRequest.esObject = esObject;
-			electroServer.engine.send(publicMessageRequest);
+			if (electroServer.engine.connected) 
+			{
+				electroServer.engine.send(publicMessageRequest);
+			}
+			
 		}
 		
 		// Gửi pluginRequest lên thông báo người chơi đã sẵn sàng chơi
@@ -1597,7 +1636,11 @@ package control
 			pluginRequest.roomId = _roomId;
 			pluginRequest.pluginName = pluginName;
 			pluginRequest.parameters = esObject;
-			electroServer.engine.send(pluginRequest);
+			if (electroServer.engine.connected) 
+			{
+				electroServer.engine.send(pluginRequest);
+			}
+			
 		}
 		
 		private function joinRoom(roomName: String, roomPassword: String = "", roomDescription: String = "", plugins: Array = null, roomCapacity: int = -1): void
@@ -1637,7 +1680,11 @@ package control
 			plugins.push(plugin);
 			createRoomRequest.plugins = plugins;
 			trace("test")
-			electroServer.engine.send(createRoomRequest);
+			if (electroServer.engine.connected) 
+			{
+				electroServer.engine.send(createRoomRequest);
+			}
+			
 		}
 		
 		/**
@@ -1650,7 +1697,11 @@ package control
 			var getUsersInRoomRequest:GetUsersInRoomRequest = new GetUsersInRoomRequest();
 			getUsersInRoomRequest.roomId = roomId;
 			getUsersInRoomRequest.zoneId = zoneId;
-			electroServer.engine.send(getUsersInRoomRequest);
+			if (electroServer.engine.connected) 
+			{
+				electroServer.engine.send(getUsersInRoomRequest);
+			}
+			
 		}
 		
 		public function onGetUsersInRoomResponse(e:GetUsersInRoomResponse): void
@@ -1767,7 +1818,11 @@ package control
 			getUserVariableRequest = new GetUserVariablesRequest();
 			getUserVariableRequest.userName = userName;
 			//getUserVariableRequest.userVariableNames.add(DataFieldMauBinh.USER_INFO);
-			electroServer.engine.send(getUserVariableRequest);
+			if (electroServer.engine.connected) 
+			{
+				electroServer.engine.send(getUserVariableRequest);
+			}
+			
 		}
 		
 		public function onGetUserInfoResponse(e:GetUserVariablesResponse):void
@@ -1865,7 +1920,11 @@ package control
 			leaveRoomRequest.zoneId = GameDataTLMN.getInstance().zoneId;
 			leaveRoomRequest.roomId = GameDataTLMN.getInstance().roomId;
 			myData.roomId = -1;
-			electroServer.engine.send(leaveRoomRequest);
+			if (electroServer.engine.connected) 
+			{
+				electroServer.engine.send(leaveRoomRequest);
+			}
+			
 			
 		}
 		
@@ -2024,7 +2083,7 @@ package control
 		public function pingToServer():void
 		{
 			var pingRequest:GetUserCountRequest = new GetUserCountRequest();
-			electroServer.engine.send(pingRequest);
+			//electroServer.engine.send(pingRequest);
 			sendPublicMessage(CommandTlmn.HEART_BEAT, null);
 		}
 		

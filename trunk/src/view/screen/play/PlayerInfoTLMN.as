@@ -55,6 +55,7 @@ package view.screen.play
 		public var ready:Boolean = false;
 		
 		private var _timerShowChatde:Timer;
+		private var _timerShowChatBubble:Timer;
 		
 		public var _sex:Boolean = true;
 		public var userIp:String = "";
@@ -97,13 +98,17 @@ package view.screen.play
 				//content.nextturn.y = 30;
 				content.chatde.x = 135;
 				content.chatde.y = 50;
-				content.effectMoney.y = 170;
+				content.effectMoney.y = 120;
 				content.level.x = 107;
 				content.iconMaster.x = 0;
-				content.effectMoneySpecial.y = 100;
+				content.effectMoneySpecial.y = 120;
 				content.numCardRemainTxt.x = 130;
 				content.numCardRemainTxt.y = 140;
 				
+				content.bubbleChatMc.x = 5;
+				content.bubbleChatMc.y = -85;
+				content.bubbleChatMc.chatRight.visible = false;
+				content.bubbleChatMc.chatLeft.visible = true;
 			}
 			else if (_pos == 1) 
 			{
@@ -112,12 +117,18 @@ package view.screen.play
 				//content.nextturn.y = -1;
 				content.chatde.x = -115;
 				content.chatde.y = 17;
-				content.effectMoney.y = 170;
+				content.effectMoney.y = 120;
 				content.level.x = -11;
 				content.iconMaster.x = 100;
-				content.effectMoneySpecial.y = 100;
+				content.effectMoneySpecial.y = 120;
 				content.numCardRemainTxt.x = -40;
 				content.numCardRemainTxt.y = 100;
+				
+				
+				content.bubbleChatMc.x = 85;
+				content.bubbleChatMc.y = 1;
+				content.bubbleChatMc.chatRight.visible = false;
+				content.bubbleChatMc.chatLeft.visible = true;
 			}
 			else
 			{
@@ -125,14 +136,21 @@ package view.screen.play
 				//content.nextturn.y = 30;
 				content.chatde.x = -81;
 				content.chatde.y = 50;
-				content.effectMoney.y = 170;
+				content.effectMoney.y = 120;
 				content.level.x = -11;
 				content.iconMaster.x = 100;
-				content.effectMoneySpecial.y = 100;
+				content.effectMoneySpecial.y = 120;
 				content.numCardRemainTxt.x = -37;
 				content.numCardRemainTxt.y = 140;
 				
+				content.bubbleChatMc.x = -24;
+				content.bubbleChatMc.y = -85;
+				content.bubbleChatMc.chatRight.visible = true;
+				content.bubbleChatMc.chatLeft.visible = false;
+				
 			}
+			
+			content.bubbleChatMc.visible = false;
 			
 			content.iconMobile.visible = false;
 			content.chatde.visible = false;
@@ -509,14 +527,14 @@ package view.screen.play
 			
 			_money = _money + int(money);
 			content.effectMoneySpecial.text = format(int(money));
-			TweenMax.to(content.effectMoneySpecial, 3, { y: content.effectMoneySpecial.y - 50, onComplete:onCompleteMoneySpecial } );
+			TweenMax.to(content.effectMoneySpecial, 3, { y: content.effectMoneySpecial.y - 130, onComplete:onCompleteMoneySpecial } );
 			//_moneyEffect.showEffect(money);
 		}
 		
 		private function onCompleteMoneySpecial():void 
 		{
 			content.effectMoneySpecial.visible = false;
-			content.effectMoneySpecial.y += 50;
+			content.effectMoneySpecial.y += 130;
 			content.txtMoney.text = format(_money);
 		}
 		
@@ -1101,7 +1119,7 @@ package view.screen.play
 					/*TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: 225, y:-25 + distance * _remainingCard} ], 
 								ease:Back.easeOut, onComplete:onComleteDeal } ); */
 								
-					TweenMax.to(cardDeck, 1.5, { x:225, y:-25 + distance * _remainingCard, ease:Back.easeOut} ); 
+					TweenMax.to(cardDeck, 1.2, { x:225, y:-25 + distance * _remainingCard, ease:Back.easeOut} ); 
 					//TweenMax.to(_arrCardDeck[type], 1, { x:0 * type, y:0} ); 
 					////trace("di chuyen den con , vị trí là:  ", _pos)
 				}
@@ -1111,13 +1129,13 @@ package view.screen.play
 					{
 						/*TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: -200 + distance * _remainingCard, y:30} ], 
 								ease:Back.easeOut, onComplete:onComleteDeal } ); */
-						TweenMax.to(cardDeck, 1.5, {x:-200 + distance * _remainingCard, y:30, ease:Back.easeOut} ); 
+						TweenMax.to(cardDeck, 1.2, {x:-200 + distance * _remainingCard, y:30, ease:Back.easeOut} ); 
 					}
 					else 
 					{
 						/*TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: -3, y: -25 + distance * _remainingCard} ], 
 								ease:Back.easeOut, onComplete:onComleteDeal} ); */
-						TweenMax.to(cardDeck, 1.5, { x:-3, y:-25 + distance * _remainingCard, ease:Back.easeOut} ); 
+						TweenMax.to(cardDeck, 1.2, { x:-3, y:-25 + distance * _remainingCard, ease:Back.easeOut} ); 
 					}
 					////trace("di chuyen den con , vị trí là:  ", _pos)
 					
@@ -1328,5 +1346,41 @@ package view.screen.play
 			}*/
 			return tempPositionArray[0];
 		}
+		
+		public function bubbleChat(chat:String):void 
+		{
+			/*if (_timerShowChatBubble) 
+			{
+				_timerShowChatBubble.removeEventListener(TimerEvent.TIMER_COMPLETE, onShowChatBubble);
+				_timerShowChatBubble.stop();
+			}
+			
+			content.bubbleChatMc.visible = true;
+			content.bubbleChatMc.txtChat.text = chat;
+			
+			_timerShowChatBubble = new Timer(1000, 5);
+			_timerShowChatBubble.addEventListener(TimerEvent.TIMER_COMPLETE, onShowChatBubble);
+			_timerShowChatBubble.start();*/
+			
+		}
+		
+		private function onShowChatBubble(e:TimerEvent):void 
+		{
+			content.bubbleChatMc.visible = false;
+			content.bubbleChatMc.txtChat.text = "";
+		}
+		
+		public function showEmo(nameEmo:String):void 
+		{
+			if (_timerShowChatBubble) 
+			{
+				_timerShowChatBubble.removeEventListener(TimerEvent.TIMER_COMPLETE, onShowChatBubble);
+				_timerShowChatBubble.stop();
+			}
+			
+			content.bubbleChatMc.visible = false;
+			content.bubbleChatMc.txtChat.text = "";
+		}
+		
 	}
 }

@@ -137,6 +137,65 @@ package control.electroServerCommand
 			coreAPI.addEventListener(ElectroServerEventTlmn.END_ROUND, onEndRound);
 		}
 		
+		private function removeEventForCoreAPI():void
+		{
+			coreAPI.removeEventListener(ElectroServerEvent.CLOSE_CONNECTION, onCloseConnection); // Đứt kết nối với server
+			
+			coreAPI.removeEventListener(ElectroServerEvent.CONNECT_SUCCESS, onConnectSuccess); // Lắng nghe connect thành công
+			coreAPI.removeEventListener(ElectroServerEvent.CONNECT_FAIL, onConnectFail); // Lắng nghe connect thất bại
+			
+			coreAPI.removeEventListener(ElectroServerEvent.LOGIN_SUCCESS, onLoginSuccess); // Lắng nghe login thành công
+			coreAPI.removeEventListener(ElectroServerEvent.LOGIN_FAIL, onLoginFail); // Lắng nghe login thành công
+			coreAPI.removeEventListener(ElectroServerEvent.PLUGIN_NOT_FOUND, onPluginNotFound); // Lỗi plugin not found
+			
+			coreAPI.removeEventListener(ElectroServerEvent.JOIN_GAME_ROOM_SUCCESS, onJoinGameRoomSuccess); // Lắng nghe connect thành công
+			coreAPI.removeEventListener(ElectroServerEvent.JOIN_GAME_ROOM_FAIL, onJoinGameRoomFail); // Lắng nghe connect thành công
+			coreAPI.removeEventListener(ElectroServerEvent.HAVE_USER_JOIN_ROOM, onHaveUserJoinRoom); // Lắng nghe có user vào phòng mình
+			coreAPI.removeEventListener(ElectroServerEvent.HAVE_USER_OUT_ROOM, onHaveUserOutRoom); // Lắng nghe có user rời phòng mình
+			coreAPI.removeEventListener(ElectroServerEvent.GAME_ROOM_INVALID, onGameRoomInvalid); // Lắng nghe có user vào phòng mình
+			
+			coreAPI.removeEventListener(ElectroServerEvent.PUBLIC_CHAT, onPublicChat); // Lắng nghe chat
+			coreAPI.removeEventListener(ElectroServerEvent.READY_SUCCESS, onReadyPlaySuccess); // Lắng nghe click nút ready thành công
+			coreAPI.removeEventListener(ElectroServerEvent.START_GAME_SUCCESS, onStartGameSuccess); // Lắng nghe click nút start thành công
+			coreAPI.removeEventListener(ElectroServerEvent.DEAL_CARD, onDealCard); // Lắng nghe chia bài
+			coreAPI.removeEventListener(ElectroServerEvent.HAVE_USER_DISCARD, onHaveUserDiscard); // Lắng nghe có user đánh bài
+			coreAPI.removeEventListener(ElectroServerEvent.GET_CARD_SUCCESS, onGetCardSuccess); // Lắng nghe bốc bài thành công
+			coreAPI.removeEventListener(ElectroServerEvent.HAVE_USER_GET_CARD, onHaveUserGetCard); // Lắng nghe có user bốc bài
+			coreAPI.removeEventListener(ElectroServerEvent.STEAL_CARD, onHaveUserStealCard); // Lắng nghe có user ăn bài
+			coreAPI.removeEventListener(ElectroServerEvent.HAVE_USER_DOWN_CARD, onHaveUserDownCard); // Lắng nghe có user hạ bài
+			coreAPI.removeEventListener(ElectroServerEvent.HAVE_USER_DOWN_CARD_FINISH, onHaveUserDownFinishCard); // Lắng nghe có user hạ bài xong
+			coreAPI.removeEventListener(ElectroServerEvent.HAVE_USER_SEND_CARD_FINISH, onHaveUserSendFinishCard); // Lắng nghe có user hạ bài xong
+			coreAPI.removeEventListener(ElectroServerEvent.GAME_OVER, onGameOver); // Lắng nghe ván bài kết thúc
+			coreAPI.removeEventListener(ElectroServerEvent.HAVE_USER_SEND_CARD, onHaveUserSendCard); // Lắng nghe có user gửi bài
+			coreAPI.removeEventListener(ElectroServerEvent.SORT_FINISH, onSortFinish); // Có người xếp bài xong hoặc bỏ xếp bài
+			coreAPI.removeEventListener(ElectroServerEvent.COMPARE_GROUP, onCompareGroup); // Đọ chi
+			coreAPI.removeEventListener(ElectroServerEvent.WHITE_WIN, onWhiteWin); // Đọ chi
+			coreAPI.removeEventListener(ElectroServerEvent.UPDATE_MONEY, onUpdateMoney); // Lắng nghe udpate tiền
+			
+			coreAPI.removeEventListener(ElectroServerEvent.JOIN_LOBBY_ROOM_SUCCESS, onJoinLobbyRoomSuccess); // Lắng nghe join phòng chờ thành công
+			coreAPI.removeEventListener(ElectroServerEvent.UPDATE_USER_LIST, onUpdateUserList); // Lắng nghe cập nhật danh sách người chơi trong phòng chờ
+			coreAPI.removeEventListener(ElectroServerEvent.UPDATE_USER_LIST_OF_LOBBY, onUpdateUserListOfLobby); // Lắng nghe cập nhật danh sách người chơi trong phòng chờ
+			coreAPI.removeEventListener(ElectroServerEvent.UPDATE_ROOM_LIST, onUpdateRoomList); // Lắng nghe cập nhật danh sách phòng chơi trong phòng chờ
+			coreAPI.removeEventListener(ElectroServerEvent.UPDATE_ROOM_MASTER, onUpdateRoomMaster); // Lắng nghe cập nhật thay đổi chủ phòng
+			coreAPI.removeEventListener(ElectroServerEvent.SEND_ADD_FRIEND_SUCCESS, onServerConfirmAddFriendInvite); // Server confirm là lệnh kết bạn hợp lệ
+			coreAPI.removeEventListener(ElectroServerEvent.FRIEND_CONFIRM_ADD_FRIEND_INVITE, onFriendConfirmAddFriendInvite); // Người khác trả lời yêu cầu kết bạn của mình
+			coreAPI.removeEventListener(ElectroServerEvent.REMOVE_FRIEND, onRemoveFriend); // Người khác xóa mình khỏi danh sách friend
+			coreAPI.removeEventListener(ElectroServerEvent.REQUEST_TIME_CLOCK, onRequestTimeClock); // Người khác request thời gian đếm ngược của đồng hồ khi đang chơi
+			coreAPI.removeEventListener(ElectroServerEvent.RESPOND_TIME_CLOCK, onRespondTimeClock); // Người khác respond thời gian đếm ngược của đồng hồ khi đang chơi
+			coreAPI.removeEventListener(ElectroServerEvent.REQUEST_IS_COMPARE_GROUP, onRequestIsCompareGroup); // Người khác hỏi xem có phải đang đọ chi không
+			coreAPI.removeEventListener(ElectroServerEvent.RESPOND_IS_COMPARE_GROUP, onRespondIsCompareGroup); // Người khác trả lời có phải đang đọ chi không
+			coreAPI.removeEventListener(ElectroServerEvent.COMPARE_GROUP_COMPLETE, onCompareGroupComplete); // Người khác thông báo đọ chi xong
+			coreAPI.removeEventListener(ElectroServerEvent.CONFIRM_FRIEND_REQUEST, onConfirmFriendRequest); // Xác nhận đồng ý hay từ chối kết bạn thành công
+			coreAPI.removeEventListener(ElectroServerEvent.ROOM_MASTER_KICK, onRoomMasterKick); // Lắng nghe chủ phòng kick mình
+			coreAPI.removeEventListener(ElectroServerEvent.TIME_OUT, onTimeOut); // Khi một user quá thời gian đánh bài
+			coreAPI.removeEventListener(ElectroServerEvent.HACKING, onHacking); // Đánh một quân bài không tồn tại
+			
+			coreAPI.removeEventListener(ElectroServerEvent.HAVE_INVITE_PLAY, onHaveInvitePlay); // Lắng nghe lời mời chơi từ user khác
+			coreAPI.removeEventListener(ElectroServerEvent.INVITE_ADD_FRIEND, onInviteAddFriend); // Lời mời kết bạn từ người khác
+			coreAPI.removeEventListener(ElectroServerEvent.CONFIRM_ADD_FRIEND, onServerConfirmAddFriendConfirm); // Server xác nhận lời đồng ý hay từ chối kết bạn của mình là hợp lệ
+			coreAPI.removeEventListener(ElectroServerEvent.ADD_MONEY, onAddMoney); // Server nạp tiền
+		}
+		
 		private function onUpdateMoneySpecial(e:ElectroServerEventTlmn):void 
 		{
 			callPlayingScreenAction(PlayingScreenActionTlmn.UPDATE_MONEY_SPECIAL, e.data);
@@ -461,11 +520,13 @@ package control.electroServerCommand
 			windowLayer.openAlertWindow(mainData.init.gameDescription.alertSentence.gameRoomInvalid);
 		}
 		
+		
 		private function onCloseConnection(e:ElectroServerEventTlmn):void 
 		{
 			if (mainData.isOpeningKickOutWindow)
 				return;
 			trace("ON CLOSE CONNECTION");
+			removeEventForCoreAPI();
 			windowLayer.closeAllWindow();
 			mainData.isCloseConnection = true;
 			
@@ -738,9 +799,9 @@ package control.electroServerCommand
 				coreAPI.getUserInLobby();
 		}
 		
-		public function sendPublicChat(userName:String, displayName:String, chatContent:String):void
+		public function sendPublicChat(userName:String, displayName:String, chatContent:String, emo:Boolean):void
 		{
-			coreAPI.sendPublicChat(displayName, chatContent);
+			coreAPI.sendPublicChat(displayName, chatContent, emo);
 		}
 		
 		public function pingToServer():void

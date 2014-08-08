@@ -1,6 +1,7 @@
 package view.clock 
 {
 	import com.electrotank.electroserver5.thrift.ThriftDHInitiateKeyExchangeRequest;
+	import com.greensock.easing.Linear;
 	import com.greensock.TweenMax;
 	import com.gskinner.motion.easing.Back;
 	import com.gskinner.motion.GTween;
@@ -56,7 +57,7 @@ package view.clock
 		public function countTime(timeNumber:int):void
 		{
 			content.seek.x = 0;
-			TweenMax.to(content.seek, timeNumber, { x: -77, repeat:-1, onComplete:onCompleteCountTimer } );
+			TweenMax.to(content.seek, timeNumber, { x: -77, ease:Linear.easeNone, onComplete:onCompleteCountTimer } );
 			if (timerCount) 
 			{
 				timerCount.removeEventListener(TimerEvent.TIMER_COMPLETE, onWaitOverTimer);
