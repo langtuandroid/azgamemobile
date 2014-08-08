@@ -244,6 +244,12 @@ package control
 					publicChatObject[DataFieldPhom.CHAT_CONTENT] = e.esObject.getString(DataFieldPhom.CHAT_CONTENT);
 					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.PUBLIC_CHAT,publicChatObject));
 				break;
+				case Command.SEND_EMO:
+					var sendEmoObject:Object = new Object();
+					sendEmoObject[DataFieldMauBinh.USER_NAME] = e.userName;
+					sendEmoObject[DataFieldMauBinh.EMO_TYPE] = e.esObject.getInteger(DataFieldMauBinh.EMO_TYPE);
+					mainData.emoChatData = sendEmoObject;
+				break;
 				case Command.READY:
 					var readyObject:Object = new Object();
 					readyObject[DataFieldPhom.USER_NAME] = e.userName;
@@ -313,6 +319,12 @@ package control
 			loginRequest.password = password;
 			var tempEsObject:EsObject = new EsObject();
 			tempEsObject.setString(DataFieldMauBinh.CHANNEL_ID, String(mainData.currentChannelId));
+			if (mainData.isFacebookVersion)
+				tempEsObject.setString(DataFieldMauBinh.DEVICE_ID, "fb");
+			else if (mainData.isOnAndroid)
+				tempEsObject.setString(DataFieldMauBinh.DEVICE_ID, "android");
+			else
+				tempEsObject.setString(DataFieldMauBinh.DEVICE_ID, "ios");
 			loginRequest.esObject = tempEsObject;
 			electroServer.engine.send(loginRequest);
 		}
@@ -488,6 +500,10 @@ package control
 						
 						var user:User = electroServer.managerHelper.userManager.userByName(userName);
 						
+						object[DataFieldPhom.DEVICE_ID] = 'none';
+						if (user.userVariableByName(DataFieldPhom.USER_INFO).value.doesPropertyExist(DataFieldPhom.DEVICE_ID))
+							object[DataFieldPhom.DEVICE_ID] = user.userVariableByName(DataFieldPhom.USER_INFO).value.getString(DataFieldPhom.DEVICE_ID);
+							
 						object[DataFieldPhom.LEVEL] = user.userVariableByName(DataFieldPhom.USER_INFO).value.getString(DataFieldPhom.LEVEL);
 						object[DataFieldPhom.MONEY] = user.userVariableByName(DataFieldPhom.USER_INFO).value.getString(DataFieldPhom.MONEY);
 						object[DataFieldPhom.AVATAR] = user.userVariableByName(DataFieldPhom.USER_INFO).value.getString(DataFieldPhom.AVATAR);
@@ -722,7 +738,6 @@ package control
 							object[DataFieldPhom.WIN] = 0;
 					}
 					
-					trace("UPDATE_ROOM_LIST",(new Date().getTime()));
 					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.UPDATE_USER_LIST, myData.userList));
 					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.UPDATE_ROOM_LIST, myData.roomList));
 				break;
@@ -802,6 +817,14 @@ package control
 			var esObject:EsObject = new EsObject();
 			esObject.setString(DataFieldPhom.USER_NAME, userName);
 			sendPublicMessage(Command.KICK_USER, esObject);
+		}
+		
+		public function sendEmo(userName:String, emoType:int):void
+		{
+			var esObject:EsObject = new EsObject();
+			esObject.setString(DataFieldMauBinh.USER_NAME, userName);
+			esObject.setInteger(DataFieldMauBinh.EMO_TYPE, emoType);
+			sendPublicMessage(Command.SEND_EMO, esObject);
 		}
 		
 		public function addFriend(userName:String, roomType:String):void
@@ -1519,6 +1542,10 @@ package control
 					userRecentlyJoinRoomObject[DataFieldPhom.SEX] = object[DataFieldPhom.SEX];
 				else
 					userRecentlyJoinRoomObject[DataFieldPhom.SEX] = 'M';
+				if (object[DataFieldPhom.DEVICE_ID])
+					userRecentlyJoinRoomObject[DataFieldPhom.DEVICE_ID] = object[DataFieldPhom.DEVICE_ID];
+				else
+					userRecentlyJoinRoomObject[DataFieldPhom.DEVICE_ID] = 'none';
 				userRecentlyJoinRoomObject[DataFieldPhom.DISPLAY_NAME] = object[DataFieldPhom.DISPLAY_NAME];
 				userRecentlyJoinRoomObject[DataFieldPhom.LOGO] = object[DataFieldPhom.LOGO];
 				userRecentlyJoinRoom = "";

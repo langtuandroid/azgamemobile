@@ -231,6 +231,9 @@ package view.screen
 			}
 			
 			excuteWhenJoinLobby();
+			
+			roomList.roomDataList = new Array();
+			roomList.inviteDataList = new Array();
 		}
 		
 		public function excuteWhenJoinLobby():void

@@ -176,6 +176,11 @@ package control.electroServerCommand
 			coreAPI.removeEventListener(ElectroServerEvent.ADD_MONEY, onAddMoney); // Server nạp tiền
 		}
 		
+		public function sendEmo(userName:String, emoType:int):void
+		{
+			coreAPI.sendEmo(userName, emoType);
+		}
+		
 		public function joinGameRoom(gameId:int, _password:String = ""):void
 		{
 			windowLayer.openLoadingWindow();
@@ -483,7 +488,7 @@ package control.electroServerCommand
 			
 			var closeConnectionWindow:AlertWindow = new AlertWindow();
 			//closeConnectionWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onCloseConnectionWindowClose);
-			closeConnectionWindow.setNotice("Kết nối bị gián đoạn");
+			closeConnectionWindow.setNotice("Kết nối bị gián đoạn. Vui lòng kiểm tra lại internet");
 			windowLayer.openWindow(closeConnectionWindow);
 		}
 		

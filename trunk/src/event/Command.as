@@ -39,6 +39,7 @@ package event
 		public static var UPDATED:String = "updated";
 		public static var HEART_BEAT:String = "heartBeat";
 		public static var KICK_USER:String = "kickUser";
+		public static var SEND_EMO:String = "sendEmo";
 		public static var ROOM_MASTER_KICK:String = "roomMasterKick";
 		public static var TIME_OUT:String = "timeOut";
 		public static var HACKING:String = "hacking";

@@ -345,6 +345,8 @@ package view.card
 					}
 					player.deckNumber = downCards.length;
 					player.reArrangeDownCard();
+					if (player.formName == PlayerInfoPhom.ABOVE_USER)
+						player.reAddLeavedCards();
 				}
 			}
 		}
