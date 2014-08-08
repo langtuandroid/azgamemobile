@@ -7,8 +7,11 @@ package view.screen
 	import control.ConstTlmn;
 	import control.electroServerCommand.ElectroServerCommandTlmn;
 	import control.electroServerCommand.ElectroServerCommandTlmn;
+	import event.DataFieldMauBinh;
+	import event.DataFieldPhom;
 	import flash.net.SharedObject;
 	import sound.SoundLib;
+	import view.window.BaseWindow;
 	
 	import logic.CardsTlmn;
 	import model.MainData;
@@ -157,6 +160,12 @@ package view.screen
 		private var _contanierCardOutUser:Sprite;
 		
 		private var _arrRealUser:Array = [];
+		private var timerToGetSystemNoticeInfo:Timer;
+		
+		private var _haveUserReady:Boolean = false;
+		private var _timerKickMaster:Timer;
+		private var _countTimerkick:int;
+		private var _timerKick:int = 15;
 		
 		public function PlayGameScreenTlmn() 
 		{
@@ -211,6 +220,7 @@ package view.screen
 			
 			
 			_glowFilter.color = 0x663311;
+			content.timeKickUserTxt.visible = false;
 			
 			addPlayerInfo();
 			addComponent();
@@ -417,8 +427,6 @@ package view.screen
 		private function listenDealCard(obj:Object):void 
 		{
 			
-			checkShowTextNotice();
-			
 			dealcard = 0;
 			content.noc.visible = true;
 			if (GameDataTLMN.getInstance().currentPlayer == MyDataTLMN.getInstance().myId) 
@@ -431,22 +439,23 @@ package view.screen
 			timerDealCard.addEventListener(TimerEvent.TIMER, onCompleteDealCard);
 			timerDealCard.start();
 			
-			if (obj[DataField.PLAYER_CARDS] && obj[DataField.PLAYER_CARDS].length > 0) 
+			if (obj[DataField.PLAYER_CARDS]) 
 			{
-				canExitGame = false;
-				
+				_myInfo._ready = true;
 				_myInfo.dealCard(obj[DataField.PLAYER_CARDS]);
-				timerDealcardForme = new Timer(100, 13);
-				timerDealcardForme.addEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcardForMe);
-				timerDealcardForme.start();
+				
 			}
 			else 
 			{
-				content.noc.visible = false;
-				_myInfo.hideready();
+				_isPlaying = false;
+				canExitGame = true;
+				
+				_myInfo.hideReady();
 			}
 			
-			//addUsersInfo(true);
+			timerDealcardForme = new Timer(250, 13);
+			timerDealcardForme.addEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcardForMe);
+			timerDealcardForme.start();
 			
 		}
 		
@@ -491,7 +500,68 @@ package view.screen
 				}
 			}
 			
+			if (!_haveUserReady && GameDataTLMN.getInstance().master == _myInfo._userName) 
+			{
+				_haveUserReady = true;
+				
+				_countTimerkick = _timerKick;
+				content.timeKickUserTxt.visible = true;
+				content.timeKickUserTxt.text = String(_countTimerkick);
+				_timerKickMaster = new Timer(1000, _timerKick);
+				_timerKickMaster.addEventListener(TimerEvent.TIMER_COMPLETE, onKickMaster);
+				_timerKickMaster.addEventListener(TimerEvent.TIMER, onTimerKickMaster);
+				_timerKickMaster.start();
+			}
+			
 			checkShowTextNotice();
+		}
+		
+		private function onTimerKickMaster(e:TimerEvent):void 
+		{
+			_countTimerkick--;
+			content.timeKickUserTxt.text = String(_countTimerkick);
+		}
+		
+		private function onKickMaster(e:TimerEvent):void 
+		{
+			if (_timerKickMaster) 
+			{
+				_timerKickMaster.removeEventListener(TimerEvent.TIMER_COMPLETE, onKickMaster);
+				_timerKickMaster.removeEventListener(TimerEvent.TIMER, onTimerKickMaster);
+				_timerKickMaster.stop();
+			}
+			_countTimerkick = 0;
+			content.timeKickUserTxt.visible = false;
+			if (SoundManager.getInstance().isSoundOn) 
+			{
+				var rd:int = int(Math.random() * 5);
+				if (MyDataTLMN.getInstance().sex) 
+				{
+					SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_BYE_ + String(rd + 1) );
+				}
+				else 
+				{
+					SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_BYE_ + String(rd + 1) );
+				}
+				
+			}
+			
+			_haveUserReady = false;
+			_myInfo._userName = "";
+			
+			okOut();
+			var kickOutWindow:AlertWindow = new AlertWindow();
+			kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.timerMasterKick);
+			windowLayer.openWindow(kickOutWindow);
+			kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
+			windowLayer.isNoCloseAll = true;
+			
+			EffectLayer.getInstance().removeAllEffect();
+		}
+		
+		private function onKickOutWindowCloseComplete(e:Event):void 
+		{
+			windowLayer.closeAllWindow();
 		}
 		
 		private function deleteCard(obj:Object):void 
@@ -523,11 +593,35 @@ package view.screen
 					checkShowTextNotice();
 					
 					
+					var checkKick:Boolean = false;
+					for (i = 0; i < _arrUserInfo.length; i++)
+					{
+						if (_arrUserInfo[i].ready)
+						{
+							checkKick = true;
+						}
+					}
+					
+					
+					if (!_haveUserReady && GameDataTLMN.getInstance().master == _myInfo._userName && checkKick) 
+					{
+						_haveUserReady = true;
+						
+						_countTimerkick = _timerKick;
+						content.timeKickUserTxt.visible = true;
+						content.timeKickUserTxt.text = String(_countTimerkick);
+						_timerKickMaster = new Timer(1000, _timerKick);
+						_timerKickMaster.addEventListener(TimerEvent.TIMER_COMPLETE, onKickMaster);
+						_timerKickMaster.addEventListener(TimerEvent.TIMER, onTimerKickMaster);
+						_timerKickMaster.start();
+					}
+					
+					
 					_myInfo.changeMaster(true);
 				}
 				else 
 				{
-					_myInfo.changeMaster(false);
+					//_myInfo.changeMaster(false);
 				}
 			}
 			else 
@@ -547,6 +641,7 @@ package view.screen
 							if (obj[ConstTlmn.MASTER] == _arrUserInfo[i]._userName) 
 							{
 								_arrUserInfo[i].content.iconMaster.visible = true;
+								_arrUserInfo[i].content.confirmReady.visible = false;
 							}
 							else 
 							{
@@ -683,6 +778,8 @@ package view.screen
 			}
 			canExitGame = true;
 			content.noc.visible = false;
+			
+			_haveUserReady = false;
 			
 			if (timerDealcardForme) 
 			{
@@ -1044,6 +1141,8 @@ package view.screen
 			var str:String;
 			content.userTurn.visible = false;
 			
+			_haveUserReady = false;
+			
 			var i:int;
 			var j:int;
 			var rd:int;
@@ -1337,6 +1436,16 @@ package view.screen
 				_containerSpecial = null;
 			}
 			
+			
+			if (_timerKickMaster) 
+			{
+				_timerKickMaster.removeEventListener(TimerEvent.TIMER_COMPLETE, onKickMaster);
+				_timerKickMaster.removeEventListener(TimerEvent.TIMER, onTimerKickMaster);
+				_timerKickMaster.stop();
+			}
+			
+			_countTimerkick = 0;
+			content.timeKickUserTxt.visible = false;
 			
 			dealcard = 0;
 			
@@ -3109,6 +3218,13 @@ package view.screen
 			content.settingBoard.offMusic.removeEventListener(MouseEvent.CLICK, onClickOnOffMusic);
 			
 			
+			if (_timerKickMaster) 
+			{
+				_timerKickMaster.removeEventListener(TimerEvent.TIMER_COMPLETE, onKickMaster);
+				_timerKickMaster.removeEventListener(TimerEvent.TIMER, onTimerKickMaster);
+				_timerKickMaster.stop();
+			}
+			
 			content.signOutBtn.removeEventListener(MouseEvent.CLICK, onClickSignOutGame);
 			content.settingBoard.fullBtn.removeEventListener(MouseEvent.CLICK, onClickFullGame);
 			content.settingBoard.ipBtn.removeEventListener(MouseEvent.CLICK, onClickIPGame);
@@ -3127,6 +3243,13 @@ package view.screen
 				_userInfo.removeEventListener("remove friend", onRemoveFriend);
 				_userInfo.removeEventListener(ConstTlmn.INVITE, onClickInvite);
 				_arrUserInfo[i].removeEventListener(ConstTlmn.INVITE, onClickInvite);
+			}
+			
+			mainData.removeEventListener(MainData.UPDATE_SYSTEM_NOTICE, onUpdateSystemNotice);
+			if (timerToGetSystemNoticeInfo)
+			{
+				timerToGetSystemNoticeInfo.removeEventListener(TimerEvent.TIMER, onGetSystemNoticeInfo);
+				timerToGetSystemNoticeInfo.stop();
 			}
 			
 			if (heartbeart) 
@@ -3150,6 +3273,8 @@ package view.screen
 			
 			_resultWindow.removeEventListener("close", onCloseResultWindow);
 			_resultWindow.removeEventListener("out game", onOutGame);
+			
+			GameDataTLMN.getInstance().autoReady = false;
 			
 			if (timerShowResult) 
 			{
@@ -3225,6 +3350,22 @@ package view.screen
 			chatLayer.addChild(_chatBox);
 			_chatBox.visible = false;
 			
+			mainData.addEventListener(MainData.UPDATE_SYSTEM_NOTICE, onUpdateSystemNotice);
+			if (timerToGetSystemNoticeInfo)
+			{
+				timerToGetSystemNoticeInfo.removeEventListener(TimerEvent.TIMER, onGetSystemNoticeInfo);
+				timerToGetSystemNoticeInfo.stop();
+			}
+			timerToGetSystemNoticeInfo = new Timer(30000);
+			timerToGetSystemNoticeInfo.addEventListener(TimerEvent.TIMER, onGetSystemNoticeInfo);
+			timerToGetSystemNoticeInfo.start();
+			for (var j:int = 0; j < mainData.systemNoticeList.length; j++) 
+			{
+				var textField:TextField = new TextField();
+				textField.htmlText = mainData.systemNoticeList[j][DataFieldPhom.MESSAGE];
+				_chatBox.addChatSentence(textField.text, "Thông báo");
+			}
+			
 			//_waitToPlay = content["waitToPlay"]; = _waitToPlay.visible
 			_waitToReady = content["waitToReady"];
 			_waitToStart = content["waitToStart"];
@@ -3299,6 +3440,21 @@ package view.screen
 			
 			content.chatBtn.addEventListener(MouseEvent.CLICK, onChatButtonClick);
 			
+		}
+		
+		private function onGetSystemNoticeInfo(e:TimerEvent):void 
+		{
+			mainCommand.getInfoCommand.getSystemNoticeInfo();
+		}
+		
+		private function onUpdateSystemNotice(e:Event):void 
+		{
+			for (var j:int = 0; j < mainData.systemNoticeList.length; j++) 
+			{
+				var textField:TextField = new TextField();
+				textField.htmlText = mainData.systemNoticeList[j][DataFieldPhom.MESSAGE];
+				_chatBox.addChatSentence(textField.text, "Thông báo");
+			}
 		}
 		
 		private function onShowSettingBoard(e:MouseEvent):void 
@@ -3571,7 +3727,7 @@ package view.screen
 			//trace("co emo gui len ne: ", e.target.nameOfEmo)
 			_emoBoard.visible = false;
 			electroServerCommand.sendPublicChat(MyDataTLMN.getInstance().myId, MyDataTLMN.getInstance().myDisplayName,
-													e.target.nameOfEmo);
+													e.target.nameOfEmo, true);
 		}
 		
 		private function onClickInvite(e:Event):void 
@@ -3743,7 +3899,7 @@ package view.screen
 		
 		private function onUpdatePublicChat(e:Event):void 
 		{
-			
+			var i:int;
 			var isMe:Boolean;
 			var notEmo:Boolean = false;
 			if (GameDataTLMN.getInstance().publicChat[DataField.USER_NAME] == MyDataTLMN.getInstance().myId) 
@@ -3751,7 +3907,7 @@ package view.screen
 				isMe = true;
 			}
 			
-			for (var i:int = 0; i < arrChat.length; i++) 
+			for (i = 0; i < arrChat.length; i++) 
 			{
 				if (GameDataTLMN.getInstance().publicChat[DataField.CHAT_CONTENT] == arrChat[i]) 
 				{
@@ -3760,7 +3916,11 @@ package view.screen
 				}
 			}
 			
-			if (!notEmo) 
+			if (GameDataTLMN.getInstance().publicChat[DataFieldMauBinh.EMO]) 
+			{
+				//showEmo(e.target.publicChatData.chatContent, e.target.publicChatData.displayName, isMe);
+			}
+			else 
 			{
 				var isNotice:Boolean = false;
 				if (GameDataTLMN.getInstance().publicChat[DataField.DISPLAY_NAME] == "Hệ thống") 
@@ -3769,10 +3929,16 @@ package view.screen
 				}
 				_chatBox.addChatSentence(GameDataTLMN.getInstance().publicChat[DataField.CHAT_CONTENT],
 										GameDataTLMN.getInstance().publicChat[DataField.DISPLAY_NAME], isMe);
-			}
-			else 
-			{
-				//showEmo(e.target.publicChatData.chatContent, e.target.publicChatData.displayName, isMe);
+				if (!isMe) 
+				{
+					for (i = 0; i < _arrUserInfo.length; i++) 
+					{
+						if (_arrUserInfo[i]._userName == GameDataTLMN.getInstance().publicChat[DataField.USER_NAME]) 
+						{
+							_arrUserInfo[i].bubbleChat(GameDataTLMN.getInstance().publicChat[DataField.CHAT_CONTENT]);
+						}
+					}
+				}
 			}
 			
 			
@@ -3850,7 +4016,7 @@ package view.screen
 		{
 			//trace(e.target.inputText.text);
 			electroServerCommand.sendPublicChat(MyDataTLMN.getInstance().myId, MyDataTLMN.getInstance().myDisplayName,
-												e.target.zInputText.text);
+												e.target.zInputText.text, false);
 			
 		}
 		

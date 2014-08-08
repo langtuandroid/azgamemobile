@@ -197,7 +197,7 @@ package view.screen.play
 			content.confirmReady.visible = true;
 		}
 		
-		public function hideready():void 
+		public function hideReady():void 
 		{
 			content.readyBtn.visible = false;
 			content.confirmReady.visible = false;
@@ -211,6 +211,7 @@ package view.screen.play
 			}
 			else 
 			{
+
 				content.readyBtn.visible = true;
 			}
 			
@@ -1111,7 +1112,7 @@ package view.screen.play
 			card.pos = _countCard;
 			//TweenMax.to(card, .1, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, onComplete:onComplete } );
 			//TweenMax.to(card, .3, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, ease:Back.easeOut, onComplete:onComplete});
-			TweenMax.to(card, 2, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, ease:Back.easeOut});
+			TweenMax.to(card, 1.5, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, ease:Back.easeOut});
 			
 		}
 		

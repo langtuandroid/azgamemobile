@@ -154,6 +154,7 @@
 			<kickOutReady>Bạn đã bị đẩy ra khỏi phòng do không ấn sẵn sàng</kickOutReady>
 			<kickOutMoney>Bạn đã bị đẩy ra khỏi phòng do không đủ gold để chơi tiếp</kickOutMoney>
 			<roomMasterKick>Bạn đã bị chủ bàn đuổi ra</roomMasterKick>
+			<timerMasterKick>Ban bị mất quyền Chủ bàn do không bắt đầu ván chơi!</timerMasterKick>
 			<userLeaveRoom>đã thoát ra khỏi phòng chơi</userLeaveRoom>
 			<userJoinRoom>vừa vào bàn chơi</userJoinRoom>
 			<roomNameDefault>

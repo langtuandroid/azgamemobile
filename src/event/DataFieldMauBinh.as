@@ -113,6 +113,7 @@ package event
 		public static const BAT_SAP_HAM: String = "batSapHam";
 		
 		public static const CHAT_CONTENT: String = "chatContent";
+		public static const EMO: String = "emo";
 		public static const USER_UPDATE_EVENT_TYPE:String = "userUpdateEventType";
 		
 		public static const VARIABLE_NAME: String = "variableName";
