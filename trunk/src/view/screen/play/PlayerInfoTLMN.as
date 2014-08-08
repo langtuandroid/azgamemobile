@@ -1350,7 +1350,7 @@ package view.screen.play
 		
 		public function bubbleChat(chat:String):void 
 		{
-			/*if (_timerShowChatBubble) 
+			if (_timerShowChatBubble) 
 			{
 				_timerShowChatBubble.removeEventListener(TimerEvent.TIMER_COMPLETE, onShowChatBubble);
 				_timerShowChatBubble.stop();
@@ -1361,7 +1361,7 @@ package view.screen.play
 			
 			_timerShowChatBubble = new Timer(1000, 5);
 			_timerShowChatBubble.addEventListener(TimerEvent.TIMER_COMPLETE, onShowChatBubble);
-			_timerShowChatBubble.start();*/
+			_timerShowChatBubble.start();
 			
 		}
 		

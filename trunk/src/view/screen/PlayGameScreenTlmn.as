@@ -10,7 +10,9 @@ package view.screen
 	import event.DataFieldMauBinh;
 	import event.DataFieldPhom;
 	import flash.net.SharedObject;
+	import flash.utils.getDefinitionByName;
 	import sound.SoundLib;
+	import view.ScrollView.ScrollViewYun;
 	import view.window.BaseWindow;
 	
 	import logic.CardsTlmn;
@@ -142,7 +144,7 @@ package view.screen
 		private var gameLayer:Sprite;
 		
 		private var _containerChatEmo:Sprite;
-		private var timerShow:Timer;
+		
 		private var confirmExitWindow:ConfirmWindow;
 		private var _numUser:int;
 		private var sharedObject:SharedObject;
@@ -167,6 +169,12 @@ package view.screen
 		private var _countTimerkick:int;
 		private var _timerKick:int = 15;
 		
+		private var emoWindow:Sprite;
+		private var emoArray:Array;
+		private var playingLayer:Sprite;
+		private var _arrEmoForUser:Array = [];
+		private var _timerShowEmo:Timer;
+		
 		public function PlayGameScreenTlmn() 
 		{
 			addEventListener(Event.ADDED_TO_STAGE, onAddToStage);
@@ -181,6 +189,13 @@ package view.screen
 			addChild(gameLayer);
 			chatLayer = new Sprite();
 			addChild(chatLayer);
+			
+			
+			_containerChatEmo = new Sprite();
+			addChild(_containerChatEmo);
+			
+			playingLayer = new Sprite();
+			addChild(playingLayer);
 			
 			content = new PlayScreenTlmnMc();
 			gameLayer.addChild(content);
@@ -246,6 +261,8 @@ package view.screen
 			textfield.x = 20;
 			textfield.y = 520;
 			content.addChild(textfield);*/
+			content.emoBtn.buttonMode = true;
+			content.emoBtn.addEventListener(MouseEvent.CLICK, onEmoticonButtonClick);
 			
 			if (heartbeart) 
 			{
@@ -259,7 +276,65 @@ package view.screen
 			heartbeart.addEventListener(TimerEvent.TIMER_COMPLETE, onSendHeartBeat);
 			
 			heartbeart.start();
+			
+			createEmo();
 		}
+		
+		
+		private function onEmoClick(e:MouseEvent):void 
+		{
+			for (var i:int = 0; i < emoArray.length; i++) 
+			{
+				if (e.currentTarget == emoArray[i])
+				{
+					electroServerCommand.sendPublicChat(_myInfo._userName, _myInfo._displayName, emoArray[i].name, true);
+					emoWindow.parent.removeChild(emoWindow);
+					return;
+				}
+			}
+		}
+		
+		
+		private function onEmoticonButtonClick(e:MouseEvent):void 
+		{
+			playingLayer.addChild(emoWindow);
+		}
+		
+		
+		private function onEmoWindowCloseButtonClick(e:MouseEvent):void 
+		{
+			emoWindow.parent.removeChild(emoWindow);
+		}
+		
+		
+		private function createEmo():void 
+		{
+			emoWindow = content.emoWindow;
+			emoWindow["closeButton"].addEventListener(MouseEvent.CLICK, onEmoWindowCloseButtonClick);
+			emoWindow.parent.removeChild(emoWindow);
+			var emoScrollView:ScrollViewYun = new ScrollViewYun();
+			emoScrollView.distanceInRow = 6;
+			emoScrollView.distanceInColumn = 10;
+			emoScrollView.setData(emoWindow["container"]);
+			emoWindow.addChild(emoScrollView);
+			emoScrollView.columnNumber = 4;
+			emoScrollView.removeAll();
+			emoArray = new Array();
+			for (var i:int = 0; i < 16; i++) 
+			{
+				var tempClass:Class;
+				tempClass = Class(getDefinitionByName("Emo" + String(i+1)));
+				var emo:Sprite = Sprite(new tempClass());
+				emo.name = "Emo" + String(i + 1);
+				emo.scaleX = emo.scaleY = 0.7;
+				emo.addEventListener(MouseEvent.MOUSE_UP, onEmoClick);
+				emoArray.push(emo);
+				emoScrollView.addRow(emo);
+			}
+			emoScrollView.updateScroll();
+			emoScrollView.recheckTopAndBottom();
+		}
+		
 		
 		
 		public function effectOpen():void
@@ -3216,7 +3291,23 @@ package view.screen
 			content.settingBoard.offSoundEffect.removeEventListener(MouseEvent.CLICK, onClickOnOffSoundEffect);
 			content.settingBoard.onMusic.removeEventListener(MouseEvent.CLICK, onClickOnOffMusic);
 			content.settingBoard.offMusic.removeEventListener(MouseEvent.CLICK, onClickOnOffMusic);
+			content.emoBtn.removeEventListener(MouseEvent.CLICK, onEmoticonButtonClick);
+			var i:int;
+			for (i = 0; i < emoArray.length; i++) 
+			{
+				
+				emoArray[i].removeEventListener(MouseEvent.MOUSE_UP, onEmoClick);
+				
+			}
 			
+			for (i = 0; i < _arrEmoForUser.length; i++) 
+			{
+				var timer:Timer = _arrEmoForUser[i][1];
+				timer.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteShowEmo);
+				timer.stop();
+				
+				_arrEmoForUser[i][0].parent.removeChild(_arrEmoForUser[i][0]);
+			}
 			
 			if (_timerKickMaster) 
 			{
@@ -3234,7 +3325,7 @@ package view.screen
 			
 			_arrRealUser = [];
 			
-			for (var i:int = 0; i < _arrUserInfo.length; i++) 
+			for (i = 0; i < _arrUserInfo.length; i++) 
 			{
 				_arrUserInfo[i].removeAllEvent();
 				_userInfo.removeEventListener("showInfo", onShowInfo);
@@ -3300,12 +3391,6 @@ package view.screen
 				timerShowChatDe.stop();
 			}
 			
-			if (timerShow) 
-			{
-				timerShow.stop();
-				timerShow.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteShow);
-			}
-			
 			if (timerDealCard) 
 			{
 				timerDealCard.removeEventListener(TimerEvent.TIMER, onCompleteDealCard);
@@ -3344,6 +3429,7 @@ package view.screen
 			_chatBox.addEventListener(ChatBox.BACK_BUTTON_CLICK, onChatBoxBackButtonClick);
 			_chatBox.x = 0;
 			_chatBox.y = 0;
+			_chatBox.maxCharsChat = 50;
 			
 			//_chatBox.loadEmo("http://183.91.14.52/gamebai/bimkute/phom/emoticon.swf");
 			
@@ -3907,18 +3993,19 @@ package view.screen
 				isMe = true;
 			}
 			
-			for (i = 0; i < arrChat.length; i++) 
+			/*for (i = 0; i < emoArray.length; i++) 
 			{
-				if (GameDataTLMN.getInstance().publicChat[DataField.CHAT_CONTENT] == arrChat[i]) 
+				if (GameDataTLMN.getInstance().publicChat[DataField.CHAT_CONTENT] == arrChat[i].name) 
 				{
 					notEmo = true;
 					break;
 				}
-			}
+			}*/
 			
 			if (GameDataTLMN.getInstance().publicChat[DataFieldMauBinh.EMO]) 
 			{
-				//showEmo(e.target.publicChatData.chatContent, e.target.publicChatData.displayName, isMe);
+				showEmo(GameDataTLMN.getInstance().publicChat[DataFieldMauBinh.CHAT_CONTENT], 
+							GameDataTLMN.getInstance().publicChat[DataFieldMauBinh.USER_NAME], isMe);
 			}
 			else 
 			{
@@ -3947,69 +4034,82 @@ package view.screen
 		
 		private function showEmo(str:String, userChat:String, isMe:Boolean):void 
 		{
-			/*if (!_containerChatEmo) 
+			var i:int;
+			for (i = 0; i < _arrEmoForUser.length; i++) 
 			{
-				_containerChatEmo = new Sprite();
-				addChild(_containerChatEmo);
-			}
-			else 
-			{
-				for (var i:int = 0; i < _containerChatEmo.numChildren; i++) 
+				if (userChat == _arrEmoForUser[i][2]) 
 				{
-					_containerChatEmo.removeChild(_containerChatEmo.getChildAt(i));
+					var timer:Timer = _arrEmoForUser[i][1];
+					timer.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteShowEmo);
+					timer.stop();
+					
+					_containerChatEmo.removeChild(_arrEmoForUser[i][0]);
+					
+					_arrEmoForUser.splice(i, 1);
+					
+					break;
 				}
 			}
 			
-			var arr:Array = MainData.getInstance().arrEmoticonChat;
-			var myClass:Class;
-			var mc:MovieClip;
-			var loader:Loader;
+			for (i = 0; i < emoArray.length; i++) 
+			{
+				if (emoArray[i].name == str) 
+				{
+					var tempClass:Class;
+					tempClass = Class(getDefinitionByName(emoArray[i].name));
+					var emo:Sprite = Sprite(new tempClass());
+					_containerChatEmo.addChild(emo);
+					if (isMe) 
+					{
+						_containerChatEmo.x = 92;
+						_containerChatEmo.y = 424;
+					}
+					else if (_arrUserInfo[0]._userName == userChat) 
+					{
+						_containerChatEmo.x = 866;
+						_containerChatEmo.y = 190;
+					}
+					else if (_arrUserInfo[1]._userName == userChat) 
+					{
+						_containerChatEmo.x = 620;
+						_containerChatEmo.y = 86;
+					}
+					else if (_arrUserInfo[2]._userName == userChat) 
+					{
+						_containerChatEmo.x = 25;
+						_containerChatEmo.y = 188;
+					}
+					
+					_timerShowEmo = new Timer(1000, 5);
+					_timerShowEmo.addEventListener(TimerEvent.TIMER_COMPLETE, onCompleteShowEmo);
+					_timerShowEmo.start();
+					
+					_arrEmoForUser.push([emo, _timerShowEmo, userChat]);
+					
+					break;
+				}
+			}
 			
-			loader = arr[str][0];
-			myClass = loader.contentLoaderInfo.applicationDomain.getDefinition(str) as Class;
-			mc = new myClass();
 			
-			_containerChatEmo.addChild(mc);
-			
-			mc.scaleX = mc.scaleY = .75;
-			if (isMe) 
-			{
-				_containerChatEmo.x = 300;
-				_containerChatEmo.y = 410;
-			}
-			else if (_arrUserInfo[0]._userName == userChat) 
-			{
-				_containerChatEmo.x = 745;
-				_containerChatEmo.y = 350;
-			}
-			else if (_arrUserInfo[1]._userName == userChat) 
-			{
-				_containerChatEmo.x = 430;
-				_containerChatEmo.y = 60;
-			}
-			else if (_arrUserInfo[2]._userName == userChat) 
-			{
-				_containerChatEmo.x = 200;
-				_containerChatEmo.y = 270;
-			}
-			if (timerShow) 
-			{
-				timerShow.stop();
-				timerShow.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteShow);
-			}
-			timerShow = new Timer(1000, 2);
-			timerShow.addEventListener(TimerEvent.TIMER_COMPLETE, onCompleteShow);
-			timerShow.start();*/
 		}
 		
-		private function onCompleteShow(e:TimerEvent):void 
+		private function onCompleteShowEmo(e:TimerEvent):void 
 		{
-			for (var i:int = 0; i < _containerChatEmo.numChildren; i++) 
+			var timer:Timer = e.currentTarget as Timer;
+			for (var i:int = 0; i < _arrEmoForUser.length; i++) 
 			{
-				_containerChatEmo.removeChild(_containerChatEmo.getChildAt(i));
+				if (timer == _arrEmoForUser[i][1]) 
+				{
+					timer.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteShowEmo);
+					timer.stop();
+					
+					_containerChatEmo.removeChild(_arrEmoForUser[i][0]);
+					
+					_arrEmoForUser.splice(i, 1);
+					
+					break;
+				}
 			}
-			content.removeChild(_containerChatEmo);
-			_containerChatEmo = null;
 		}
 		
 		private function onHaveChat(e:Event):void 
