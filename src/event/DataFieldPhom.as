@@ -152,6 +152,7 @@ package event
 		public static const POT_LEVEL: String = "potLevel";
 		public static const POT: String = "pot";
 		public static const DESTINATION_USER:String = "destinationUser";
+		public static const DEVICE_ID: String = "deviceId";
 		
 		public function DataFieldPhom() 
 		{

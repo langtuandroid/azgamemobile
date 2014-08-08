@@ -350,11 +350,16 @@ package control
 			var loginRequest:LoginRequest = new LoginRequest();
 			loginRequest.userName = userName;
 			loginRequest.password = password;
-			if (electroServer.engine.connected) 
-			{
-				electroServer.engine.send(loginRequest);
-			}
-			
+			var tempEsObject:EsObject = new EsObject();
+			tempEsObject.setString(DataFieldMauBinh.CHANNEL_ID, String(mainData.currentChannelId));
+			if (mainData.isFacebookVersion)
+				tempEsObject.setString(DataFieldMauBinh.DEVICE_ID, "fb");
+			else if (mainData.isOnAndroid)
+				tempEsObject.setString(DataFieldMauBinh.DEVICE_ID, "android");
+			else
+				tempEsObject.setString(DataFieldMauBinh.DEVICE_ID, "ios");
+			loginRequest.esObject = tempEsObject;
+			electroServer.engine.send(loginRequest);
 		}
 		
 		public function onLoginResponse(e:LoginResponse):void

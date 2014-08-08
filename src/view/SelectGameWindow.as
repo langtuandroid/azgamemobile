@@ -328,6 +328,7 @@ package view
 		
 		private function onAddedToStage(e:Event):void 
 		{
+			SoundManager.getInstance().stopBackgroundMusicMauBinh();
 			mainData.isOnSelectGameWindow = true;
 			
 			if (mainData.chooseChannelData.myInfo)
@@ -432,7 +433,10 @@ package view
 				default:
 			}
 			MainCommand.getInstance().initVar();
+			mainData.lobbyRoomData.invitePlayData = new Object();
 			dispatchEvent(new Event(SELECT_GAME));
+			
+			SoundManager.getInstance().playBackgroundMusicMauBinh();
 		}
 	}
 

@@ -70,7 +70,7 @@ package view.window.loginWindow
 			zLoginWindow(content).registerButton.addEventListener(MouseEvent.CLICK, onRegisterButtonClick);
 			zLoginWindow(content).forgetPass.addEventListener(MouseEvent.CLICK, onForgetPassClick);
 			zLoginWindow(content).savePassword.addEventListener(MouseEvent.CLICK, onSavePasswordClick);
-			zLoginWindow(content).forgetPass.visible = false;
+			//zLoginWindow(content).forgetPass.visible = false;
 			zLoginWindow(content).savePassword.visible = false;
 			
 			sharedObject = SharedObject.getLocal("userInfo");
@@ -229,6 +229,8 @@ package view.window.loginWindow
 		
 		private function onAddedToStage(e:Event):void 
 		{
+			SoundManager.getInstance().stopBackgroundMusicMauBinh();
+			
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			
 			mainData.addEventListener(MainData.UPDATE_FACEBOOK_DATA, onUpdateFacebookData);

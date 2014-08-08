@@ -95,6 +95,13 @@
 			}
 		}
 		
+		public function stopBackgroundMusicMauBinh():void
+		{
+			stopMusic(SoundLibChung.BACKGROUND_SOUND_1);
+			stopMusic(SoundLibChung.BACKGROUND_SOUND_2);
+			stopMusic(SoundLibChung.BACKGROUND_SOUND_3);
+		}
+		
 		public function playSound(_name:String,loop:int = 1):void
 		{
 			var tempSound:Sound = soundDictionary[_name];

@@ -7,6 +7,7 @@ package view.screen
 	import control.electroServerCommand.ElectroServerCommandPhom;
 	import control.MainCommand;
 	import event.Command;
+	import event.DataFieldMauBinh;
 	import event.DataFieldPhom;
 	import event.PlayingScreenEvent;
 	import flash.display.MovieClip;
@@ -24,6 +25,7 @@ package view.screen
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.utils.Dictionary;
+	import flash.utils.getDefinitionByName;
 	import flash.utils.Timer;
 	import logic.PhomLogic;
 	import logic.PlayingLogic;
@@ -40,6 +42,7 @@ package view.screen
 	import view.contextMenu.MyContextMenu;
 	import view.effectLayer.EffectLayer;
 	import view.effectLayer.TextEffect_1;
+	import view.ScrollView.ScrollViewYun;
 	import view.userInfo.playerInfo.PlayerInfoPhom;
 	import view.window.AccuseWindow;
 	import view.window.AddMoneyWindow2;
@@ -97,6 +100,7 @@ package view.screen
 		private var pingTime:int = 55;
 		private var myContextMenu:MyContextMenu;
 		
+		private var countToKickTxt:TextField;
 		private var autoStartTimeTxt:TextField;
 		private var isFirstJoin:Boolean;
 		private var timerToAutoStart:Timer;
@@ -118,12 +122,15 @@ package view.screen
 		private var playingLayer:Sprite;
 		private var chatboxLayer:Sprite;
 		private var chatButton:SimpleButton;
+		private var emoticonButton:SimpleButton;
 		private var isResetDone:Boolean = true;
 		
 		private var _giveUpPlayerArray:Array;
 		
 		public function PlayingScreenPhom() 
 		{
+			mainData.isAutoReady = false;
+			
 			super();
 			addContent("zPlayingScreenPhom");
 			createLayer();
@@ -163,6 +170,10 @@ package view.screen
 			autoStartTimeTxt.text = '';
 			autoStartTimeTxt.visible = false;
 			
+			countToKickTxt = content["countToKickTxt"];
+			countToKickTxt.text = '';
+			countToKickTxt.visible = false;
+			
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			
@@ -175,11 +186,58 @@ package view.screen
 			ipBoard.addEventListener(MouseEvent.CLICK, onIpBoardClick);
 			ipBoard.visible = false;
 			
+			createEmo();
+			
 			for (var j:int = 0; j < mainData.systemNoticeList.length; j++) 
 			{
 				var textField:TextField = new TextField();
 				textField.htmlText = mainData.systemNoticeList[j][DataFieldPhom.MESSAGE];
 				chatBox.addChatSentence(textField.text, "Thông báo");
+			}
+		}
+		
+		private function createEmo():void 
+		{
+			emoWindow = content["emoWindow"];
+			emoWindow["closeButton"].addEventListener(MouseEvent.CLICK, onEmoWindowCloseButtonClick);
+			emoWindow.parent.removeChild(emoWindow);
+			var emoScrollView:ScrollViewYun = new ScrollViewYun();
+			emoScrollView.distanceInRow = 6;
+			emoScrollView.distanceInColumn = 10;
+			emoScrollView.setData(emoWindow["container"]);
+			emoWindow.addChild(emoScrollView);
+			emoScrollView.columnNumber = 4;
+			emoScrollView.removeAll();
+			emoArray = new Array();
+			for (var i:int = 0; i < 16; i++) 
+			{
+				var tempClass:Class;
+				tempClass = Class(getDefinitionByName("Emo" + String(i+1)));
+				var emo:Sprite = Sprite(new tempClass());
+				emo.scaleX = emo.scaleY = 0.7;
+				emo.addEventListener(MouseEvent.MOUSE_UP, onEmoClick);
+				emoArray.push(emo);
+				emoScrollView.addRow(emo);
+			}
+			emoScrollView.updateScroll();
+			emoScrollView.recheckTopAndBottom();
+		}
+		
+		private function onEmoWindowCloseButtonClick(e:MouseEvent):void 
+		{
+			emoWindow.parent.removeChild(emoWindow);
+		}
+		
+		private function onEmoClick(e:MouseEvent):void 
+		{
+			for (var i:int = 0; i < emoArray.length; i++) 
+			{
+				if (e.currentTarget == emoArray[i])
+				{
+					electroServerCommand.sendEmo(belowUserInfo.userName, i + 1);
+					emoWindow.parent.removeChild(emoWindow);
+					return;
+				}
 			}
 		}
 		
@@ -309,8 +367,12 @@ package view.screen
 		private var playerCompensateAll:PlayerInfoPhom;
 		private var playerWin:PlayerInfoPhom;
 		private var timerToResetMatch:Timer;
+		private var timerToKickRoomMaster:Timer;
+		private var emoWindow:Sprite;
+		private var emoArray:Array;
 		private function setupButton():void 
 		{
+			emoticonButton = content["emoticonButton"];
 			chatButton = content["chatButton"];
 			settingBoard = content["settingBoard"];
 			settingBoard.visible = false;
@@ -353,6 +415,12 @@ package view.screen
 			musicOffButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
 			orderCardButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
 			chatButton.addEventListener(MouseEvent.CLICK, onChatButtonClick);
+			emoticonButton.addEventListener(MouseEvent.CLICK, onEmoticonButtonClick);
+		}
+		
+		private function onEmoticonButtonClick(e:MouseEvent):void 
+		{
+			playingLayer.addChild(emoWindow);
 		}
 		
 		private function onChatButtonClick(e:MouseEvent):void 
@@ -483,6 +551,7 @@ package view.screen
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			stage.addEventListener(MouseEvent.CLICK, onStageClick);
 			mainData.addEventListener(MainData.UPDATE_PUBLIC_CHAT, onUpdatePublicChat);
+			mainData.addEventListener(MainData.UPDATE_EMO_CHAT, onUpdateEmoChat);
 			
 			isFirstJoin = true;
 			//addPlayer();
@@ -505,6 +574,21 @@ package view.screen
 			if (mainData.chooseChannelData.myInfo.uId == mainData.publicChatData.userName)
 				isMe = true;
 			chatBox.addChatSentence(mainData.publicChatData.chatContent, mainData.publicChatData.displayName, isMe);
+		}
+		
+		private function onUpdateEmoChat(e:Event):void 
+		{
+			for (var i:int = 0; i < allPlayerArray.length; i++) 
+			{
+				if (allPlayerArray[i])
+				{
+					if (PlayerInfoPhom(allPlayerArray[i]).userName == mainData.emoChatData[DataFieldMauBinh.USER_NAME])
+					{
+						PlayerInfoPhom(allPlayerArray[i]).showEmo(mainData.emoChatData[DataFieldMauBinh.EMO_TYPE]);
+						return;
+					}
+				}
+			}
 		}
 		
 		private function onTimerToCheckTime(e:TimerEvent):void 
@@ -571,6 +655,7 @@ package view.screen
 			mainData.removeEventListener(MainData.CONFIRM_FRIEND_REQUEST, onConfirmFriendRequest);
 			mainData.removeEventListener(MainData.FRIEND_CONFIRM_ADD_FRIEND_INVITE, onFriendConfirmAddFriendInvite);
 			mainData.removeEventListener(MainData.UPDATE_PUBLIC_CHAT, onUpdatePublicChat);
+			mainData.removeEventListener(MainData.UPDATE_EMO_CHAT, onUpdateEmoChat);
 			var tempTween1:GTween = new GTween(this, effectTime, { alpha:0 } );
 			mainData.removeEventListener(MainData.UPDATE_SYSTEM_NOTICE, onUpdateSystemNotice);
 			//tempTween1.addEventListener(Event.COMPLETE, closeComplete);
@@ -810,6 +895,24 @@ package view.screen
 					//isHaveUserReady = false;
 					hideReadyButton();
 				}
+				var countReady:int = 0;
+				for (i = 0; i < allPlayerArray.length; i++) 
+				{
+					if (allPlayerArray[i])
+					{
+						if (PlayerInfoPhom(allPlayerArray[i]).isReadyPlay)
+							countReady++;
+					}
+				}
+				if (countReady == 0)
+				{
+					if (timerToKickRoomMaster)
+					{
+						timerToKickRoomMaster.removeEventListener(TimerEvent.TIMER, onTimerToKickRoomMaster)
+						timerToKickRoomMaster.stop();
+						countToKickTxt.visible = false;
+					}
+				}
 				if (belowUserInfo.isRoomMaster)
 				{
 					for (i = 0; i < allPlayerArray.length; i++) 
@@ -927,6 +1030,13 @@ package view.screen
 		
 		private function listenDealCard(data:Object):void 
 		{
+			if (timerToKickRoomMaster)
+			{
+				timerToKickRoomMaster.removeEventListener(TimerEvent.TIMER, onTimerToKickRoomMaster)
+				timerToKickRoomMaster.stop();
+				countToKickTxt.visible = false;
+			}
+			
 			//isHaveUserReady = false;
 			giveUpPlayerArray = new Array();
 			giveUpPlayerArray = new Array();
@@ -1194,6 +1304,8 @@ package view.screen
 								belowUserInfo.isReadyPlay = false;
 								hideReadyButton();
 								showStartButton();
+								
+								countTimeToKickRoomMaster();
 								return;
 							}
 						}
@@ -1204,17 +1316,64 @@ package view.screen
 				}
 				else
 				{
+					var countReady:int = 0;
 					for (i = 0; i < allPlayerArray.length; i++)
 					{
 						if (allPlayerArray[i])
 						{
 							if (PlayerInfoPhom(allPlayerArray[i]).isRoomMaster)
-							{
 								PlayerInfoPhom(allPlayerArray[i]).isReadyPlay = false;
-								return;
-							}
+							else if (PlayerInfoPhom(allPlayerArray[i]).isReadyPlay)
+								countReady++;
 						}
 					}
+					if (countReady > 0)
+						countTimeToKickRoomMaster();
+				}
+			}
+		}
+		
+		private function countTimeToKickRoomMaster():void
+		{
+			if (timerToKickRoomMaster)
+			{
+				timerToKickRoomMaster.removeEventListener(TimerEvent.TIMER, onTimerToKickRoomMaster)
+				timerToKickRoomMaster.stop();
+			}
+			countToKickTxt.text = String(mainData.kickTime);
+			countToKickTxt.visible = true;
+			timerToKickRoomMaster = new Timer(1000, mainData.kickTime);
+			timerToKickRoomMaster.addEventListener(TimerEvent.TIMER, onTimerToKickRoomMaster)
+			timerToKickRoomMaster.start();
+		}
+		
+		private function onTimerToKickRoomMaster(e:TimerEvent):void 
+		{
+			if (!stage || isPlaying)
+			{
+				if (timerToKickRoomMaster)
+				{
+					timerToKickRoomMaster.removeEventListener(TimerEvent.TIMER, onTimerToKickRoomMaster)
+					timerToKickRoomMaster.stop();
+				}
+				return;
+			}
+			var timeNumber:int = int(countToKickTxt.text);
+			timeNumber--;
+			countToKickTxt.text = String(timeNumber);
+			if (timeNumber == 0)
+			{
+				countToKickTxt.visible = false;
+				if (belowUserInfo.isRoomMaster)
+				{
+					dispatchEvent(new Event(PlayerInfoPhom.EXIT));
+					windowLayer.isNoCloseAll = true;
+					electroServerCommand.joinLobbyRoom();
+					
+					var kickOutWindow:AlertWindow = new AlertWindow();
+					kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
+					kickOutWindow.setNotice("Bạn bị mất quyền Chủ bàn do không bắt đầu ván chơi!");
+					windowLayer.openWindow(kickOutWindow);
 				}
 			}
 		}
@@ -2195,6 +2354,7 @@ package view.screen
 				showStartButton();
 			}
 			
+			var countReady:int = 0;
 			for (var i:int = 0; i < allPlayerArray.length; i++) 
 			{
 				if (allPlayerArray[i])
@@ -2208,10 +2368,14 @@ package view.screen
 							if (!isPlaying)
 								waitToStart.visible = true;
 						}
-						return;
 					}
+					if (PlayerInfoPhom(allPlayerArray[i]).isReadyPlay)
+						countReady++;
 				}
 			}
+			
+			if (countReady == 1)
+				countTimeToKickRoomMaster();
 		}
 		
 		private function setupTextField():void

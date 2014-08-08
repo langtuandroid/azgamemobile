@@ -1,5 +1,7 @@
 package view.window 
 {
+	import com.gsolo.encryption.MD5;
+	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import model.MainData;
@@ -11,6 +13,7 @@ package view.window
 	 */
 	public class ForgetPassWindow extends BaseWindow 
 	{
+		private var mainData:MainData = MainData.getInstance();
 		
 		public function ForgetPassWindow() 
 		{
@@ -27,10 +30,19 @@ package view.window
 			{
 				case zForgetPassWindow(content).confirmButton:
 					var mainRequest:MainRequest = new MainRequest();
-					var data:Object = new Object();
-					data.Email = zForgetPassWindow(content).email.text;
+					var object:Object = new Object();
+					object.client_id = mainData.client_id
+					object.client_secret = mainData.client_secret
+					object.client_timestamp = (new Date()).getTime();
+					object.nick_name = '';
+					object.user_name = zForgetPassWindow(content).email.text;
+					object.email = zForgetPassWindow(content).email.text;
+					object.client_hash = MD5.encrypt(object.client_id + object.client_timestamp + object.client_secret + object.email + object.nick_name);
 					zForgetPassWindow(content).loadingLayer.visible = true;
-					mainRequest.sendRequest_Post("http://" + MainData.getInstance().gameIp + "/user/forgot_mobile", data, onForgetRespond, false);
+					if (mainData.isTest)
+						mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileRecoverPassword", object, onForgetRespond, true);
+					else
+						mainRequest.sendRequest_Post("http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileRecoverPassword", object, onForgetRespond, true);
 				break;
 				case zForgetPassWindow(content).cancelButton:
 					close(BaseWindow.MIDDLE_EFFECT);
@@ -42,22 +54,14 @@ package view.window
 		{
 			zForgetPassWindow(content).loadingLayer.visible = false;
 			
-			switch (value) 
-			{
-				case "SUCCESS":
-					WindowLayer.getInstance().openAlertWindow("Khai báo quên mật khẩu thành công, bạn hãy vào email để nhận lại mật khẩu.");
-				break;
-				case "NOT_EXIT":
-					WindowLayer.getInstance().openAlertWindow("Email này không tồn tại.");
-				break;
-				case "NOT_ACTIVATE":
-					WindowLayer.getInstance().openAlertWindow("Email này chưa được kích hoạt.");
-				break;
-				case "NOT_ABLE_SEND_EMAIL":
-					WindowLayer.getInstance().openAlertWindow("Không thể gửi đến email này.");
-				break;
-				default:
-			}
+			MovieClip(content).gotoAndStop(2);
+			zForgetPassWindow(content).alertTxt.text = value.Msg;
+			zForgetPassWindow(content).closeButton.addEventListener(MouseEvent.CLICK, onCloseWindow);
+		}
+		
+		private function onCloseWindow(e:MouseEvent):void 
+		{
+			close(BaseWindow.MIDDLE_EFFECT);
 		}
 	}
 

@@ -152,6 +152,23 @@ package model
 			dispatchEvent(new Event(UPDATE_PUBLIC_CHAT));
 		}
 		
+		// emo chat
+		public static const UPDATE_EMO_CHAT:String = "updateEmoChat";
+		private var _emoChatData:Object;
+		
+		public function get emoChatData():Object 
+		{
+			if (!_emoChatData)
+				_emoChatData = new Object();
+			return _emoChatData;
+		}
+		
+		public function set emoChatData(value:Object):void 
+		{
+			_emoChatData = value;
+			dispatchEvent(new Event(UPDATE_EMO_CHAT));
+		}
+		
 		// close connection
 		public static const CLOSE_CONNECTION:String = "closeConnection";
 		private var _isCloseConnection:Boolean;
@@ -512,6 +529,7 @@ package model
 		public var lobbyRoomId:int = -1;
 		public var currentChannelId:int = 0;
 
+		public var kickTime:int = 15;
 		public var isOpeningKickOutWindow:Boolean;
 		public var isLoadSound:Boolean = true;
 		public var tokenTime:int = 0;

@@ -532,7 +532,7 @@ package control.electroServerCommand
 			
 			var closeConnectionWindow:AlertWindow = new AlertWindow();
 			//closeConnectionWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onCloseConnectionWindowClose);
-			closeConnectionWindow.setNotice("Kết nối bị gián đoạn");
+			closeConnectionWindow.setNotice("Kết nối bị gián đoạn. Vui lòng kiểm tra lại internet");
 			windowLayer.openWindow(closeConnectionWindow);
 		}
 		

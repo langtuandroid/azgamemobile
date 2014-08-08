@@ -100,6 +100,7 @@ package view.userInfo.playerInfo
 		private var playerName:TextField;
 		private var money:TextField;
 		private var level:TextField;
+		private var deviceIcon:MovieClip;
 		private var homeIcon:Sprite;
 		private var readyIcon:Sprite;
 		private var arrangeFinishIcon:Sprite;
@@ -158,6 +159,40 @@ package view.userInfo.playerInfo
 			maubinhLogic = new MauBinhLogic();
 			deckRank = new Array();
 			deckRank[0] = -1;
+		}
+		
+		public function showEmo(emoType:int):void
+		{
+			if (timerToHideEmo)
+			{
+				timerToHideEmo.removeEventListener(TimerEvent.TIMER_COMPLETE, onHideEmo);
+				timerToHideEmo.stop();
+			}
+			if (emo)
+			{
+				if (emo.parent)
+					emo.parent.removeChild(emo);
+			}
+			var tempClass:Class;
+			tempClass = Class(getDefinitionByName("Emo" + String(emoType)));
+			emo = Sprite(new tempClass());
+			emo.x = content["emoPosition"].x;
+			emo.y = content["emoPosition"].y;
+			addChild(emo);
+			timerToHideEmo = new Timer(5000, 1);
+			timerToHideEmo.addEventListener(TimerEvent.TIMER_COMPLETE, onHideEmo);
+			timerToHideEmo.start();
+		}
+		
+		private function onHideEmo(e:TimerEvent):void 
+		{
+			if (!stage)
+				return;
+			if (emo)
+			{
+				if (emo.parent)
+					emo.parent.removeChild(emo);
+			}
 		}
 		
 		public function updateMoneyNumber(value:Number):void
@@ -258,6 +293,8 @@ package view.userInfo.playerInfo
 		{
 			playerName = content["playerName"];
 			level = content["level"];
+			deviceIcon = content["deviceIcon"];
+			deviceIcon.gotoAndStop("none");
 			money = content["money"];
 			money.autoSize = TextFieldAutoSize.CENTER;
 			playerName.text = '';
@@ -316,6 +353,7 @@ package view.userInfo.playerInfo
 		public function updatePersonalInfo(infoObject:Object):void
 		{
 			sex = infoObject[DataFieldMauBinh.SEX];
+			deviceIcon.gotoAndStop(infoObject[DataFieldMauBinh.DEVICE_ID]);
 			userName = infoObject[ModelField.USER_NAME];
 			displayName = infoObject[ModelField.DISPLAY_NAME];
 			ip = infoObject[DataFieldMauBinh.IP];
@@ -341,6 +379,7 @@ package view.userInfo.playerInfo
 			contextMenuPosition.x = content["contextMenuPosition"].x;
 			contextMenuPosition.y = content["contextMenuPosition"].y;
 			content["contextMenuPosition"].visible = false;
+			content["emoPosition"].visible = false;
 		}
 		
 		public function updateMoney(value:Number):void
@@ -1560,6 +1599,8 @@ package view.userInfo.playerInfo
 		public var isFirstClick:Boolean = true;
 		
 		private var _isGiveUp:Boolean;
+		private var emo:Sprite;
+		private var timerToHideEmo:Timer;
 		public function get isGiveUp():Boolean 
 		{
 			return _isGiveUp;

@@ -102,6 +102,7 @@ package event
 		public static const MALE: String = "male";
 		public static const FEMALE: String = "female";
 		public static const CHANNEL_ID: String = "channelId";
+		public static const DEVICE_ID: String = "deviceId";
 		public static const IS_DICE: String = "isDice";
 		
 		public static const PLUGIN_NAME: String = "pluginName";
@@ -122,6 +123,7 @@ package event
 		public static const ACTION:String = "action";
 		public static const ACCEPT_FRIEND:String="acceptFriendFeedFacebook";
 		public static const EMPTY_MONEY:String="emptyMoneyFeedFacebook";
+		public static const EMO_TYPE:String="emoType";
 		public static const LOGO:String = "logo";
 		public static const ROOM:String = "room";
 		public static const CURRENT_GAME_ID:String = "currentGameId";
