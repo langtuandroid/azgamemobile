@@ -521,6 +521,15 @@ package control
 							object[DataField.SEX] = false;
 						}
 						
+						if (EsObject(tempUserList[i]).doesPropertyExist(DataField.DEVICE_ID))
+						{
+							object[DataField.DEVICE_ID] = EsObject(tempUserList[i]).getString(DataField.DEVICE_ID);
+						}
+						else 
+						{
+							object[DataField.DEVICE_ID] = "web";
+						}
+					
 						object[DataField.READY] = false;
 						if (EsObject(tempUserList[i]).doesPropertyExist(DataField.POSITION))
 							object[DataField.POSITION] = EsObject(tempUserList[i]).getInteger(DataField.POSITION);
@@ -1192,6 +1201,14 @@ package control
 					userRecentlyJoinRoomObject[DataField.SEX] = userJoinRoom.getString(DataField.SEX);
 					//userRecentlyJoinRoomObject[DataField.LOGO] = object[DataField.LOGO];
 					//userRecentlyJoinRoomObject[DataField.DEVICE] = object[DataField.DEVICE];
+					if (userJoinRoom.doesPropertyExist(DataField.DEVICE_ID)) 
+					{
+						userRecentlyJoinRoomObject[DataField.DEVICE_ID] = userJoinRoom.getString[DataField.DEVICE_ID];
+					}
+					else 
+					{
+						userRecentlyJoinRoomObject[DataField.DEVICE_ID] = "web"
+					}
 					userRecentlyJoinRoom = "";
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.HAVE_USER_JOIN_ROOM, userRecentlyJoinRoomObject));
 					

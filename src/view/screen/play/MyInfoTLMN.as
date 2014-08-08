@@ -898,7 +898,8 @@ package view.screen.play
 		 * so bai con lai
 		 */
 		public function addInfoForMe(userName:String, money:String, linkAvatar:String, remainingCard:int, level:String,
-										isMaster:Boolean, isPlaying:Boolean, displayName:String, ready:Boolean, ip:String):void 
+										isMaster:Boolean, isPlaying:Boolean, displayName:String, ready:Boolean, ip:String,
+										device:String):void 
 		{
 			_userName = userName;
 			
@@ -922,7 +923,8 @@ package view.screen.play
 				}
 			}
 			myIp = newIp;
-			
+			content.iconMobile.visible = true;
+			content.iconMobile.gotoAndStop(device);
 			_clock.setParent(MyDataTLMN.getInstance().sex);
 			_ready = ready;
 			_isPlaying = isPlaying;
