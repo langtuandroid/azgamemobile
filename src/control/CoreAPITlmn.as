@@ -253,7 +253,7 @@ package control
 					}
 					
 					
-					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.PUBLIC_CHAT,publicChatObject));
+					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.PUBLIC_CHAT, publicChatObject));
 				break;
 				case CommandTlmn.READY:
 					var readyObject:Object = new Object();
