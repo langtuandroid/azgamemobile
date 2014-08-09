@@ -29,6 +29,7 @@ package view.userInfo.playerInfo
 	import logic.PlayingLogic;
 	import model.MainData;
 	import model.modelField.ModelField;
+	import view.BubbleChat;
 	import view.button.BigButton;
 	import view.card.CardMauBinh;
 	import view.card.CardManagerMauBinh;
@@ -151,6 +152,9 @@ package view.userInfo.playerInfo
 		
 		public var binhlungIcon:Sprite;
 		public var sex:String;
+		
+		private var bubbleChat:BubbleChat;
+		private var timerToHideBubbleChat:Timer;
 		
 		public function PlayerInfoMauBinh() 
 		{
@@ -955,6 +959,8 @@ package view.userInfo.playerInfo
 			giveUpIcon = content["giveUpIcon"];
 			if (giveUpIcon)
 				giveUpIcon.visible = false;
+				
+			content["bubbleChatPosition"].visible = false;
 		}
 		
 		public function setStatus(type:String):void
@@ -1235,6 +1241,12 @@ package view.userInfo.playerInfo
 		
 		public function destroy():void
 		{
+			if (bubbleChat)
+			{
+				if (bubbleChat.parent)
+					bubbleChat.parent.removeChild(bubbleChat);
+			}
+			
 			if (arrangeFinishIcon)
 			{
 				if (arrangeFinishIcon.parent)
@@ -1291,6 +1303,47 @@ package view.userInfo.playerInfo
 				clock.removeEventListener(TimeBarMauBinh.COUNT_TIME_FINISH, onCountTimeFinish);
 				clock = null;
 			}
+		}
+		
+		public function addChatSentence(sentence:String):void
+		{
+			if (timerToHideBubbleChat)
+			{
+				timerToHideBubbleChat.removeEventListener(TimerEvent.TIMER_COMPLETE, onHideBubbleChat);
+				timerToHideBubbleChat.stop();	
+			}
+			
+			if (!bubbleChat)
+			{
+				if (formName == BELOW_USER)
+					bubbleChat = new BubbleChat(BubbleChat.RIGHT);
+				else
+					bubbleChat = new BubbleChat(BubbleChat.LEFT);
+			}
+			bubbleChat.addString(sentence);
+			bubbleChat.x = content["bubbleChatPosition"].x;
+			bubbleChat.y = content["bubbleChatPosition"].y;
+			var globalPosition:Point = new Point(bubbleChat.x, bubbleChat.y);
+			globalPosition = localToGlobal(globalPosition);
+			if (globalPosition.x + bubbleChat.width > mainData.stageWidth)
+				bubbleChat.x = - (globalPosition.x + bubbleChat.width - mainData.stageWidth);
+				
+			bubbleChat.x = globalPosition.x;
+			bubbleChat.y = globalPosition.y;
+			
+			parent.addChild(bubbleChat);
+			bubbleChat.visible = true;
+			
+			timerToHideBubbleChat = new Timer(5000, 1);
+			timerToHideBubbleChat.addEventListener(TimerEvent.TIMER_COMPLETE, onHideBubbleChat);
+			timerToHideBubbleChat.start();
+		}
+		
+		private function onHideBubbleChat(e:TimerEvent):void 
+		{
+			if (!stage)
+				return;
+			bubbleChat.visible = false;
 		}
 		
 		public function hideAllInfo():void

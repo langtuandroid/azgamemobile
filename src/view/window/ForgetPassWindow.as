@@ -22,6 +22,39 @@ package view.window
 			zForgetPassWindow(content).confirmButton.addEventListener(MouseEvent.CLICK, onButtonClick);
 			zForgetPassWindow(content).cancelButton.addEventListener(MouseEvent.CLICK, onButtonClick);
 			zForgetPassWindow(content).loadingLayer.visible = false;
+			//zForgetPassWindow(content).email.text = "Email đăng ký";
+			
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+		}
+		
+		private function onAddedToStage(e:Event):void 
+		{
+			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			//stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUpStage);
+		}
+		
+		private function onRemovedFromStage(e:Event):void 
+		{
+			removeEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+			//stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUpStage);
+		}
+		
+		private function onMouseUpStage(e:MouseEvent):void 
+		{
+			trace("aaaaaaaaaaaaaaaaaaaaaaaaaa");
+			if (!stage || !zForgetPassWindow(content).email)
+				return;
+			if (stage.focus != zForgetPassWindow(content).email)
+			{
+				if (zForgetPassWindow(content).email.text == '')
+					zForgetPassWindow(content).email.text = "Email đăng ký";
+			}
+			else
+			{
+				if (zForgetPassWindow(content).email.text == "Email đăng ký")
+					zForgetPassWindow(content).email.text = '';
+			}
 		}
 		
 		private function onButtonClick(e:MouseEvent):void 

@@ -80,6 +80,24 @@ package
 			zAirFullDeckEffect;
 			zFinishFullDeckEffect;
 			zResultWindowPhom;
+			zBubbleChat;
+			Emo;
+			Emo1;
+			Emo2;
+			Emo3;
+			Emo4;
+			Emo5;
+			Emo6;
+			Emo7;
+			Emo8;
+			Emo9;
+			Emo10;
+			Emo11;
+			Emo12;
+			Emo13;
+			Emo14;
+			Emo15;
+			Emo16;
 			
 			MyInfoTlmnMc;
 			MyClock;
