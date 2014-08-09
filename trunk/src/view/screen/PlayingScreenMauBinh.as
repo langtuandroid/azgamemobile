@@ -168,6 +168,7 @@ package view.screen
 			createVariable();
 			mainData.playingData.addEventListener(PlayingData.UPDATE_PLAYING_SCREEN, onUpdatePlayingScreen);
 			chatBox = new ChatBox();
+			chatBox.maxCharsChat = 50;
 			chatBox.visible = false;
 			chatBox.addEventListener(ChatBox.HAVE_CHAT, onHaveChat);
 			chatBox.addEventListener(ChatBox.BACK_BUTTON_CLICK, onChatBoxBackButtonClick);
@@ -542,6 +543,18 @@ package view.screen
 			if (mainData.chooseChannelData.myInfo.uId == mainData.publicChatData.userName)
 				isMe = true;
 			chatBox.addChatSentence(mainData.publicChatData.chatContent, mainData.publicChatData.displayName, isMe);
+			
+			for (var i:int = 0; i < allPlayerArray.length; i++) 
+			{
+				if (allPlayerArray[i])
+				{
+					if (allPlayerArray[i].userName == mainData.publicChatData.userName)
+					{
+						PlayerInfoMauBinh(allPlayerArray[i]).addChatSentence(mainData.publicChatData.chatContent);
+						return;
+					}
+				}
+			}
 		}
 		
 		private function onUpdateEmoChat(e:Event):void 

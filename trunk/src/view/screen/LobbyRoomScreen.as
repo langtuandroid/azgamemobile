@@ -645,7 +645,6 @@ package view.screen
 			mainData.chooseChannelData.addEventListener(ChooseChannelData.UPDATE_CHANNEL_INFO, onUpdateChannelInfo);
 			mainData.addEventListener(MainData.UPDATE_PUBLIC_CHAT, onUpdatePublicChat);
 			mainData.addEventListener(MainData.UPDATE_MESSAGE_LIST, onUpdateMessageList);
-			//mainData.addEventListener(MainData.UPDATE_VIRTUAL_ROOMS, onUpdateVirtualRooms);
 			mainData.addEventListener(MainData.MOVE_TO_SHOP, onMoveToShop);
 			stage.addEventListener(MouseEvent.CLICK, onStageClick);
 			if (mainData.isOnAndroid)
@@ -665,7 +664,7 @@ package view.screen
 		{
 			addSelectGameWindow();
 			mainCommand.electroServerCommand.closeConnection();
-			selectGameWindow.showTab(3);
+			selectGameWindow.showTab(4);
 		}
 		
 		private function onStageClick(e:MouseEvent):void 
@@ -689,7 +688,7 @@ package view.screen
 			mainData.chooseChannelData.removeEventListener(ChooseChannelData.UPDATE_CHANNEL_INFO, onUpdateChannelInfo);
 			mainData.removeEventListener(MainData.UPDATE_PUBLIC_CHAT, onUpdatePublicChat);
 			mainData.removeEventListener(MainData.UPDATE_MESSAGE_LIST, onUpdateMessageList);
-			mainData.removeEventListener(MainData.UPDATE_VIRTUAL_ROOMS, onUpdateVirtualRooms);
+			mainData.removeEventListener(MainData.MOVE_TO_SHOP, onMoveToShop);
 			if (mainData.isOnAndroid)
 				NativeApplication.nativeApplication.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown, false);
 				
@@ -697,47 +696,6 @@ package view.screen
 			{
 				timerToGetChannelInfo.removeEventListener(TimerEvent.TIMER, onTimerToGetChannelInfo);
 				timerToGetChannelInfo.start();
-			}
-		}
-		
-		private function onUpdateVirtualRooms(e:Event):void 
-		{
-			if (roomList)
-			{
-				if (!userList.isDraggingScroll && !roomList.isDraggingScroll)
-				{
-					var tempArray:Array = mainData.lobbyRoomData.roomList.concat();
-					if (mainData.currentChannelId == firstChannelId)
-					{
-						for (var i:int = 0; i < mainData.virtualRooms.length; i++) 
-						{
-							var roomData:RoomDataRLC = new RoomDataRLC();
-							roomData.moneyLogoUrl = mainData.init.requestLink.moneyIcon.@url;
-							roomData.rules = mainData.init.gameDescription.lobbyRoomScreen.sendCard;
-							roomData.ruleToggle = false;
-							roomData.male = mainData.virtualRooms[i].player_male_number;
-							roomData.betting = mainData.virtualRooms[i].bets;
-							roomData.channelId = mainData.playingData.gameRoomData.channelId;
-							if (mainData.virtualRooms[i].status == '2')
-								roomData.hasPassword = true;
-							else
-								roomData.hasPassword = false;
-							//roomData.maxPlayer = mainData.virtualRooms[i].player_limit_number;
-							roomData.maxPlayer = 4;
-							roomData.name = '';
-							roomData.id = mainData.virtualRooms[i].room_id;
-							roomData.gameId = mainData.virtualRooms[i].room_id;
-							roomData.userNumbers = mainData.virtualRooms[i].player_male_number + mainData.virtualRooms[i].player_female_number;
-							if (roomData.userNumbers > roomData.maxPlayer)
-								roomData.userNumbers = roomData.maxPlayer;
-							if (roomData.male > roomData.maxPlayer)
-								roomData.male = roomData.maxPlayer;
-							if (roomData.userNumbers != roomData.maxPlayer || mainData.showFullTable == 1)
-								tempArray.push(roomData);
-						}
-					}
-					roomList.roomDataList = tempArray;
-				}
 			}
 		}
 		

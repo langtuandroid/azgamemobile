@@ -229,7 +229,7 @@ package view.userInfo.playerInfo
 			}
 			
 			if (!bubbleChat)
-				bubbleChat = new BubbleChat();
+				bubbleChat = new BubbleChat("");
 			bubbleChat.addString(sentence);
 			bubbleChat.x = avatar.x;
 			bubbleChat.y = avatar.y;

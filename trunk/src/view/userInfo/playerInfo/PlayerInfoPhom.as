@@ -33,6 +33,7 @@ package view.userInfo.playerInfo
 	import sound.SoundLibChung;
 	import sound.SoundLibPhom;
 	import sound.SoundManager;
+	import view.BubbleChat;
 	import view.button.MobileButton;
 	import view.card.CardPhom;
 	import view.card.CardManagerPhom;
@@ -188,6 +189,9 @@ package view.userInfo.playerInfo
 		public var downCards_3_index:int; // index phỏm 3 của server
 		
 		public var sex:String;
+		
+		private var bubbleChat:BubbleChat;
+		private var timerToHideBubbleChat:Timer;
 		
 		public function PlayerInfoPhom() 
 		{
@@ -1473,6 +1477,8 @@ package view.userInfo.playerInfo
 				downCardAnim = content["downCardAnim"];
 				downCardAnim.visible = false;
 			}
+			
+			content["bubbleChatPosition"].visible = false;
 		}
 		
 		public function setStatus(type:String):void
@@ -1719,6 +1725,12 @@ package view.userInfo.playerInfo
 		
 		public function destroy():void
 		{
+			if (bubbleChat)
+			{
+				if (bubbleChat.parent)
+					bubbleChat.parent.removeChild(bubbleChat);
+			}
+			
 			removeAllCards();
 			unLeaveCardPosition = null;
 			leavedCardPosition = null;
@@ -1776,6 +1788,47 @@ package view.userInfo.playerInfo
 			
 			if (parent)
 				parent.removeChild(this);
+		}
+		
+		public function addChatSentence(sentence:String):void
+		{
+			if (timerToHideBubbleChat)
+			{
+				timerToHideBubbleChat.removeEventListener(TimerEvent.TIMER_COMPLETE, onHideBubbleChat);
+				timerToHideBubbleChat.stop();	
+			}
+			
+			if (!bubbleChat)
+			{
+				if (formName == RIGHT_USER)
+					bubbleChat = new BubbleChat(BubbleChat.RIGHT);
+				else
+					bubbleChat = new BubbleChat(BubbleChat.LEFT);
+			}
+			bubbleChat.addString(sentence);
+			bubbleChat.x = content["bubbleChatPosition"].x;
+			bubbleChat.y = content["bubbleChatPosition"].y;
+			var globalPosition:Point = new Point(bubbleChat.x, bubbleChat.y);
+			globalPosition = localToGlobal(globalPosition);
+			if (globalPosition.x + bubbleChat.width > mainData.stageWidth)
+				bubbleChat.x = - (globalPosition.x + bubbleChat.width - mainData.stageWidth);
+				
+			bubbleChat.x = globalPosition.x;
+			bubbleChat.y = globalPosition.y;
+			
+			parent.addChild(bubbleChat);
+			bubbleChat.visible = true;
+			
+			timerToHideBubbleChat = new Timer(5000, 1);
+			timerToHideBubbleChat.addEventListener(TimerEvent.TIMER_COMPLETE, onHideBubbleChat);
+			timerToHideBubbleChat.start();
+		}
+		
+		private function onHideBubbleChat(e:TimerEvent):void 
+		{
+			if (!stage)
+				return;
+			bubbleChat.visible = false;
 		}
 		
 		private function getPointByCardType(cardType:String):Point 

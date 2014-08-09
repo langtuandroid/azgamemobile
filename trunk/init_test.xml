@@ -145,17 +145,17 @@
 			<confirmKickOut>Bạn có chắc chắn muốn kick người chơi</confirmKickOut>
 			<confirmSendCardFinish>Bạn vẫn còn bài chưa gửi, bạn có chắc chắn muốn bỏ qua ?</confirmSendCardFinish>
 			<confirmExit>Ván chơi chưa kết thúc. Nếu thoát ra bạn sẽ bị xử thua.</confirmExit>
-			<waitOtherPlayer>Chờ người khác vào phòng chơi</waitOtherPlayer>
+			<waitOtherPlayer>Chờ người khác vào bàn chơi</waitOtherPlayer>
 			<readyAlert>Bạn có 20s để sẵn sàng</readyAlert>
 			<playWrongCard>Quân bài bạn đánh không hợp lệ</playWrongCard>
 			<downCard>Hãy chọn phỏm để hạ, hạ theo từng phỏm một</downCard>
 			<playCard>Hãy click chọn một quân bài để đánh</playCard>
 			<sendCard>Hãy chọn quân bài để gửi, gửi từng quân bài một</sendCard>
-			<kickOutReady>Bạn đã bị đẩy ra khỏi phòng do không ấn sẵn sàng</kickOutReady>
-			<kickOutMoney>Bạn đã bị đẩy ra khỏi phòng do không đủ gold để chơi tiếp</kickOutMoney>
+			<kickOutReady>Bạn đã bị đẩy ra khỏi bàn do không ấn sẵn sàng</kickOutReady>
+			<kickOutMoney>Bạn đã bị đẩy ra khỏi bàn do không đủ gold để chơi tiếp</kickOutMoney>
 			<roomMasterKick>Bạn đã bị chủ bàn đuổi ra</roomMasterKick>
 			<timerMasterKick>Ban bị mất quyền Chủ bàn do không bắt đầu ván chơi!</timerMasterKick>
-			<userLeaveRoom>đã thoát ra khỏi phòng chơi</userLeaveRoom>
+			<userLeaveRoom>đã thoát ra khỏi bàn chơi</userLeaveRoom>
 			<userJoinRoom>vừa vào bàn chơi</userJoinRoom>
 			<roomNameDefault>
 				<node>Làm 1 ván nào!!!</node>
@@ -169,10 +169,10 @@
 			<notGaRule>Không gà</notGaRule>
 			<potMoneyDes>gold gà:</potMoneyDes>
 			<potLevelDes>Cấp độ gà:</potLevelDes>
-			<confirmPlayGa1>Phòng cấp độ gà </confirmPlayGa1>
+			<confirmPlayGa1>Bàn cấp độ gà </confirmPlayGa1>
 			<confirmPlayGa2>, bạn sẽ phải trả </confirmPlayGa2>
 			<confirmPlayGa3> lần số gold gà tương đương với </confirmPlayGa3>
-			<confirmPlayGa4> để tham gia phòng gà.</confirmPlayGa4>
+			<confirmPlayGa4> để tham gia bàn gà.</confirmPlayGa4>
 			<confirmQuitGa1>vả</confirmQuitGa1>
 			<confirmQuitGa2>gold gà bạn đã góp trong bàn.</confirmQuitGa2>
 			<confirmQuitGa3>Nếu thoát khỏi bàn bạn sẽ mất</confirmQuitGa3>
@@ -187,14 +187,14 @@
 			<removeFriendSuccess>Bỏ kết bạn thành công</removeFriendSuccess>
 			<sendCard>Tái gửi</sendCard>
 			<notSendCard>Không gửi</notSendCard>
-			<createRoomButton>Tạo phòng</createRoomButton>
-			<joinRoomButton>Vào phòng</joinRoomButton>
+			<createRoomButton>Tạo bàn</createRoomButton>
+			<joinRoomButton>Vào bàn</joinRoomButton>
 			<closeButton>Đóng</closeButton>
 			<feedButton>Chia sẻ</feedButton>
 			<confirmButton>Đồng ý</confirmButton>
-			<fullPlayer>Phòng chơi này hiện đã đầy, bạn không thể vào chơi.</fullPlayer>
-			<emptyRoomList>Hiện tại không có phòng chơi nào</emptyRoomList>
-			<fullRoomList>Tất cả các phòng chơi đều đã đầy</fullRoomList>
+			<fullPlayer>Bàn chơi này hiện đã đầy, bạn không thể vào chơi.</fullPlayer>
+			<emptyRoomList>Hiện tại không có bàn chơi nào</emptyRoomList>
+			<fullRoomList>Tất cả các bàn chơi đều đã đầy</fullRoomList>
 			<notEnoughMoneyToCreate1>Bạn cần có số gold</notEnoughMoneyToCreate1>
 			<notEnoughMoneyToCreate2>để tham gia bàn này.</notEnoughMoneyToCreate2>
 			<notEnoughMoneyToJoin>Bạn không đủ gold để vào bàn</notEnoughMoneyToJoin>
@@ -205,8 +205,8 @@
 			<removeFriendFail>Bỏ bạn thất bại</removeFriendFail>
 			<loginFail>Đăng nhập server game thất bại</loginFail>
 			<pluginNotFound>Plugin not found</pluginNotFound>
-			<joinGameRoomFail>Tham gia phòng chơi thất bại, bạn hãy thử lại xem</joinGameRoomFail>
-			<gameRoomInvalid>Không tồn tại phòng chơi này</gameRoomInvalid>
+			<joinGameRoomFail>Tham gia bàn chơi thất bại, bạn hãy thử lại xem</joinGameRoomFail>
+			<gameRoomInvalid>Không tồn tại bàn chơi này</gameRoomInvalid>
 		</alertSentence>
 	</gameDescription>
 	
