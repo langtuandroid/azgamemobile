@@ -136,6 +136,7 @@ package view.screen.play
 			content.effectMoneySpecial.y = 100;
 			content.nextturn.visible = false;
 			content.chatde.visible = false;
+			content.readyBtn.buttonMode = true;
 			content.readyBtn.visible = false;
 			content.confirmReady.visible = false;
 			content.resultGame.visible = false;

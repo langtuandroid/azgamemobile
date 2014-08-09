@@ -165,6 +165,7 @@ package view.screen
 		private var timerToGetSystemNoticeInfo:Timer;
 		
 		private var _haveUserReady:Boolean = false;
+		private var haveUserReady:Boolean = false; //da co nguoi choi san sang, chi tinh khi get playing info
 		private var _timerKickMaster:Timer;
 		private var _countTimerkick:int;
 		private var _timerKick:int = 15;
@@ -575,7 +576,7 @@ package view.screen
 				}
 			}
 			
-			if (!_haveUserReady && GameDataTLMN.getInstance().master == _myInfo._userName) 
+			if (!_haveUserReady && !haveUserReady) 
 			{
 				_haveUserReady = true;
 				
@@ -607,31 +608,35 @@ package view.screen
 			}
 			_countTimerkick = 0;
 			content.timeKickUserTxt.visible = false;
-			if (SoundManager.getInstance().isSoundOn) 
+			if (GameDataTLMN.getInstance().master == _myInfo._userName) 
 			{
-				var rd:int = int(Math.random() * 5);
-				if (MyDataTLMN.getInstance().sex) 
+				if (SoundManager.getInstance().isSoundOn) 
 				{
-					SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_BYE_ + String(rd + 1) );
-				}
-				else 
-				{
-					SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_BYE_ + String(rd + 1) );
+					var rd:int = int(Math.random() * 5);
+					if (MyDataTLMN.getInstance().sex) 
+					{
+						SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_BYE_ + String(rd + 1) );
+					}
+					else 
+					{
+						SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_BYE_ + String(rd + 1) );
+					}
+					
 				}
 				
+				_haveUserReady = false;
+				_myInfo._userName = "";
+				
+				okOut();
+				var kickOutWindow:AlertWindow = new AlertWindow();
+				kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.timerMasterKick);
+				windowLayer.openWindow(kickOutWindow);
+				kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
+				windowLayer.isNoCloseAll = true;
+				
+				EffectLayer.getInstance().removeAllEffect();
 			}
 			
-			_haveUserReady = false;
-			_myInfo._userName = "";
-			
-			okOut();
-			var kickOutWindow:AlertWindow = new AlertWindow();
-			kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.timerMasterKick);
-			windowLayer.openWindow(kickOutWindow);
-			kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
-			windowLayer.isNoCloseAll = true;
-			
-			EffectLayer.getInstance().removeAllEffect();
 		}
 		
 		private function onKickOutWindowCloseComplete(e:Event):void 
@@ -647,6 +652,17 @@ package view.screen
 		private function listenUpdateRoomMaster(obj:Object):void 
 		{
 			var i:int;
+			if (_timerKickMaster) 
+			{
+				_timerKickMaster.removeEventListener(TimerEvent.TIMER_COMPLETE, onKickMaster);
+				_timerKickMaster.removeEventListener(TimerEvent.TIMER, onTimerKickMaster);
+				_timerKickMaster.stop();
+			}
+			_haveUserReady = false;
+			haveUserReady = false;
+			
+			_countTimerkick = 0;
+			content.timeKickUserTxt.visible = false;
 			
 			trace(obj[ConstTlmn.MASTER], "la chu phong moi")
 			if (!_isPlaying)
@@ -665,38 +681,65 @@ package view.screen
 						
 					}
 					
-					checkShowTextNotice();
-					
-					
-					var checkKick:Boolean = false;
-					for (i = 0; i < _arrUserInfo.length; i++)
+					if (check) 
 					{
-						if (_arrUserInfo[i].ready)
-						{
-							checkKick = true;
-						}
+						checkShowTextNotice();
+					}
+					else 
+					{
+						checkShowTextNotice();
 					}
 					
-					
-					if (!_haveUserReady && GameDataTLMN.getInstance().master == _myInfo._userName && checkKick) 
-					{
-						_haveUserReady = true;
-						
-						_countTimerkick = _timerKick;
-						content.timeKickUserTxt.visible = true;
-						content.timeKickUserTxt.text = String(_countTimerkick);
-						_timerKickMaster = new Timer(1000, _timerKick);
-						_timerKickMaster.addEventListener(TimerEvent.TIMER_COMPLETE, onKickMaster);
-						_timerKickMaster.addEventListener(TimerEvent.TIMER, onTimerKickMaster);
-						_timerKickMaster.start();
-					}
 					
 					
 					_myInfo.changeMaster(true);
 				}
 				else 
 				{
-					//_myInfo.changeMaster(false);
+					_myInfo.changeMaster(false);
+					if (!_myInfo._ready && obj[ConstTlmn.MASTER] != _myInfo._userName) 
+					{
+						_myInfo.content.readyBtn.visible = true;
+					}
+					
+					
+					for (i = 0; i < _arrUserInfo.length; i++)
+					{
+						if (_arrUserInfo[i]._userName != "" || _arrUserInfo[i]._userName != " ")
+						{
+							if (obj[ConstTlmn.MASTER] == _arrUserInfo[i]._userName) 
+							{
+								_arrUserInfo[i].content.iconMaster.visible = true;
+								_arrUserInfo[i].content.confirmReady.visible = false;
+							}
+							else 
+							{
+								_arrUserInfo[i].content.iconMaster.visible = false;
+							}
+						}
+					}
+				}
+				
+				var checkKick:Boolean = false;
+				for (i = 0; i < _arrUserInfo.length; i++)
+				{
+					if (_arrUserInfo[i].ready)
+					{
+						checkKick = true;
+					}
+				}
+				
+				if (!_haveUserReady && checkKick && _numUser > 1) 
+				{
+					_haveUserReady = true;
+					
+					_countTimerkick = _timerKick;
+					content.timeKickUserTxt.visible = true;
+					content.timeKickUserTxt.text = String(_countTimerkick);
+					_timerKickMaster = new Timer(1000, _timerKick);
+					_timerKickMaster.addEventListener(TimerEvent.TIMER_COMPLETE, onKickMaster);
+					_timerKickMaster.addEventListener(TimerEvent.TIMER, onTimerKickMaster);
+					_timerKickMaster.start();
 				}
 			}
 			else 
@@ -3207,6 +3250,34 @@ package view.screen
 					}
 				}
 			}
+			
+			
+			var count:int = 0;
+			for (i = 0; i < _arrUserInfo.length; i++) 
+			{
+				if (_arrUserInfo[i])
+				{
+					if (_arrUserInfo[i].ready)
+					{
+						count++;
+					}
+				}
+			}
+			
+			if (count == 0 || _numUser == 1) 
+			{
+				if (_timerKickMaster) 
+				{
+					_timerKickMaster.removeEventListener(TimerEvent.TIMER_COMPLETE, onKickMaster);
+					_timerKickMaster.removeEventListener(TimerEvent.TIMER, onTimerKickMaster);
+					_timerKickMaster.stop();
+				}
+				_haveUserReady = false;
+				
+				_countTimerkick = 0;
+				content.timeKickUserTxt.visible = false;
+			}
+			
 			trace("co user out room: ", _arrUserList)
 			trace("co user out room: ", _isPlaying, MyDataTLMN.getInstance().myId , data["master"])
 			if (!_isPlaying && MyDataTLMN.getInstance().myId == GameDataTLMN.getInstance().master) 
@@ -3308,6 +3379,8 @@ package view.screen
 				
 				_arrEmoForUser[i][0].parent.removeChild(_arrEmoForUser[i][0]);
 			}
+			
+			haveUserReady = false;
 			
 			if (_timerKickMaster) 
 			{
@@ -4517,6 +4590,10 @@ package view.screen
 					//_arrUserInfo[i - 1].removeAllCards();
 					_arrUserInfo[i - 1].visible = true;
 					
+					if (_arrUserList[i].ready) 
+					{
+						haveUserReady = true;
+					}
 					_arrUserInfo[i - 1].getInfoPlayer(_arrUserList[i]["position"], _arrUserList[i].userName, 
 														_arrUserList[i].money, _arrUserList[i].avatar, _arrUserList[i].numCard, 
 														String(_arrUserList[i].level), _arrUserList[i].ready, _isPlaying, 
