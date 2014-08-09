@@ -100,6 +100,7 @@ package view.screen.play
 				content.chatde.y = 50;
 				content.effectMoney.y = 120;
 				content.level.x = 107;
+				content.iconMobile.x = 110;
 				content.iconMaster.x = 0;
 				content.effectMoneySpecial.y = 120;
 				content.numCardRemainTxt.x = 130;
@@ -119,6 +120,8 @@ package view.screen.play
 				content.chatde.y = 17;
 				content.effectMoney.y = 120;
 				content.level.x = -11;
+				content.iconMobile.x = -8;
+				
 				content.iconMaster.x = 100;
 				content.effectMoneySpecial.y = 120;
 				content.numCardRemainTxt.x = -40;
@@ -138,6 +141,8 @@ package view.screen.play
 				content.chatde.y = 50;
 				content.effectMoney.y = 120;
 				content.level.x = -11;
+				content.iconMobile.x = -8;
+				
 				content.iconMaster.x = 100;
 				content.effectMoneySpecial.y = 120;
 				content.numCardRemainTxt.x = -37;
@@ -153,6 +158,7 @@ package view.screen.play
 			content.bubbleChatMc.visible = false;
 			
 			content.iconMobile.visible = false;
+			content.iconMobile.stop();
 			content.chatde.visible = false;
 			content.nextturn.visible = false;
 			content.effectMoneySpecial.visible = false;
@@ -213,7 +219,7 @@ package view.screen.play
 			content.specialAvatar.visible = false;
 			content.showDetailUser.visible = false;
 			_clock.visible = false;
-			
+			content.iconMobile.visible = false;
 			
 			content.txtName.visible = false;
 			content.txtMoney.visible = false;
