@@ -526,15 +526,6 @@ package control
 							object[DataField.SEX] = false;
 						}
 						
-						if (EsObject(tempUserList[i]).doesPropertyExist(DataField.DEVICE_ID))
-						{
-							object[DataField.DEVICE_ID] = EsObject(tempUserList[i]).getString(DataField.DEVICE_ID);
-						}
-						else 
-						{
-							object[DataField.DEVICE_ID] = "web";
-						}
-					
 						object[DataField.READY] = false;
 						if (EsObject(tempUserList[i]).doesPropertyExist(DataField.POSITION))
 							object[DataField.POSITION] = EsObject(tempUserList[i]).getInteger(DataField.POSITION);
@@ -549,6 +540,7 @@ package control
 						//if (EsObject(tempUserList[i]).doesPropertyExist(DataField.LEVEL))
 						object[DataField.LEVEL] = user.userVariableByName(DataField.USER_INFO).value.getString(DataField.LEVEL);
 						object[DataField.MONEY] = user.userVariableByName(DataField.USER_INFO).value.getString(DataField.MONEY);
+						object[DataField.DEVICE_ID] = user.userVariableByName(DataField.USER_INFO).value.getString(DataField.DEVICE_ID);
 						//object[DataField.CASH] = myData.userList[userName][DataField.USER_INFO][DataField.CASH];
 						object[DataField.IP] = user.userVariableByName(DataField.USER_INFO).value.getString(DataField.IP);
 						object[DataField.AVATAR] = user.userVariableByName(DataField.USER_INFO).value.getString(DataField.AVATAR);
@@ -1198,6 +1190,7 @@ package control
 					userRecentlyJoinRoomObject[DataField.USER_NAME] = userRecentlyJoinRoom;
 					userRecentlyJoinRoomObject[DataField.LEVEL] = userJoinRoom.getString(DataField.LEVEL);
 					userRecentlyJoinRoomObject[DataField.MONEY] = userJoinRoom.getString(DataField.MONEY);
+					userRecentlyJoinRoomObject[DataField.DEVICE_ID] = userJoinRoom.getString(DataField.DEVICE_ID);
 					userRecentlyJoinRoomObject[DataField.IP] = userJoinRoom.getString(DataField.IP);
 					//userRecentlyJoinRoomObject[DataField.IP] = "123.123.123.123";
 					//userRecentlyJoinRoomObject[DataField.CASH] = object[DataField.CASH];
@@ -1206,14 +1199,7 @@ package control
 					userRecentlyJoinRoomObject[DataField.SEX] = userJoinRoom.getString(DataField.SEX);
 					//userRecentlyJoinRoomObject[DataField.LOGO] = object[DataField.LOGO];
 					//userRecentlyJoinRoomObject[DataField.DEVICE] = object[DataField.DEVICE];
-					if (userJoinRoom.doesPropertyExist(DataField.DEVICE_ID)) 
-					{
-						userRecentlyJoinRoomObject[DataField.DEVICE_ID] = userJoinRoom.getString[DataField.DEVICE_ID];
-					}
-					else 
-					{
-						userRecentlyJoinRoomObject[DataField.DEVICE_ID] = "web"
-					}
+					
 					userRecentlyJoinRoom = "";
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.HAVE_USER_JOIN_ROOM, userRecentlyJoinRoomObject));
 					

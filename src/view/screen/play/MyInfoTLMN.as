@@ -196,6 +196,7 @@ package view.screen.play
 		{
 			content.readyBtn.visible = false;
 			content.confirmReady.visible = true;
+			_ready = true;
 		}
 		
 		public function hideReady():void 
@@ -246,6 +247,8 @@ package view.screen.play
 				_timerDealcard.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
 				_timerDealcard.stop();
 			}
+			
+			_ready = false;
 			
 			var rd:int;
 			if (int(obj[ConstTlmn.MONEY]) > 0) 
@@ -888,7 +891,7 @@ package view.screen.play
 				content.iconMaster.visible = false;
 				content.autoReadyBtn.visible = true;
 				content.readyBtn.visible = false;
-				content.confirmReady.visible = false;
+				
 			}
 		}
 		
