@@ -711,6 +711,7 @@ package view.screen
 							{
 								_arrUserInfo[i].content.iconMaster.visible = true;
 								_arrUserInfo[i].content.confirmReady.visible = false;
+								_arrUserInfo[i].ready = false;
 							}
 							else 
 							{
@@ -724,6 +725,14 @@ package view.screen
 				for (i = 0; i < _arrUserInfo.length; i++)
 				{
 					if (_arrUserInfo[i].ready)
+					{
+						checkKick = true;
+					}
+				}
+				
+				if (!checkKick) 
+				{
+					if (GameDataTLMN.getInstance().master != _myInfo._userName && _myInfo._ready) 
 					{
 						checkKick = true;
 					}
@@ -3262,6 +3271,10 @@ package view.screen
 						count++;
 					}
 				}
+			}
+			if (_myInfo._ready) 
+			{
+				count++;
 			}
 			
 			if (count == 0 || _numUser == 1) 
