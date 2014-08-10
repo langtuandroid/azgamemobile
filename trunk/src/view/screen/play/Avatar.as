@@ -175,6 +175,12 @@ package view.screen.play
 			loader.y = (100 - loader.height) / 2; 
 		}
 		
+		public function removeAvatar():void 
+		{
+			content.removeChild(loader);
+			loader = null;
+		}
+		
 		private function onCompleteStartLoader(e:TimerEvent):void 
 		{
 			e.currentTarget.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteStartLoader);

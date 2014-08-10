@@ -516,7 +516,8 @@ package view.screen.play
 			content.readyBtn.removeEventListener(MouseEvent.CLICK, onClickready);
 			
 			_clock.removeEventListener(Clock.COUNT_TIME_FINISH, onOverTimer);
-			_avatar.addEventListener("loadError", onLoadAvatarError);
+			_avatar.removeEventListener("loadError", onLoadAvatarError);
+			_avatar.removeAvatar();
 			
 			if (_timerDealcard) 
 			{
