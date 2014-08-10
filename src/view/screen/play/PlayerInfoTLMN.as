@@ -905,6 +905,8 @@ package view.screen.play
 			
 			ready = false;
 			
+			_avatar.removeAvatar();
+			
 			if (_isPlaying) 
 			{
 				content.outRoom.visible = true;
