@@ -177,8 +177,12 @@ package view.screen.play
 		
 		public function removeAvatar():void 
 		{
-			content.removeChild(loader);
-			loader = null;
+			if (loader) 
+			{
+				content.removeChild(loader);
+				loader = null;
+			}
+			
 		}
 		
 		private function onCompleteStartLoader(e:TimerEvent):void 

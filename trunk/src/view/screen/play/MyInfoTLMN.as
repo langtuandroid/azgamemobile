@@ -517,7 +517,11 @@ package view.screen.play
 			
 			_clock.removeEventListener(Clock.COUNT_TIME_FINISH, onOverTimer);
 			_avatar.removeEventListener("loadError", onLoadAvatarError);
-			_avatar.removeAvatar();
+			if (_avatar	) 
+			{
+				_avatar.removeAvatar();
+			}
+			
 			
 			if (_timerDealcard) 
 			{
