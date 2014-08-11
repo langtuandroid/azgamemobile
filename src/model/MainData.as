@@ -536,7 +536,7 @@ package model
 		public var token:String;
 		public var isTest:Boolean = false; // biến để check xem đang chạy trên server test hay server thật
 
-		public var isFacebookVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào facebook không
+		public var isFacebookVersion:Boolean = true	; // biến để check xem có phải là bản nhúng vào facebook không
 	}
 
 }
