@@ -107,7 +107,7 @@ package view.screen.play
 				content.numCardRemainTxt.y = 140;
 				
 				content.bubbleChatMc.x = 5;
-				content.bubbleChatMc.y = -85;
+				content.bubbleChatMc.y = 15;
 				content.bubbleChatMc.chatRight.visible = false;
 				content.bubbleChatMc.chatLeft.visible = true;
 			}
@@ -128,8 +128,8 @@ package view.screen.play
 				content.numCardRemainTxt.y = 100;
 				
 				
-				content.bubbleChatMc.x = 85;
-				content.bubbleChatMc.y = 1;
+				content.bubbleChatMc.x = 5;
+				content.bubbleChatMc.y = 15;
 				content.bubbleChatMc.chatRight.visible = false;
 				content.bubbleChatMc.chatLeft.visible = true;
 			}
@@ -149,7 +149,7 @@ package view.screen.play
 				content.numCardRemainTxt.y = 140;
 				
 				content.bubbleChatMc.x = -24;
-				content.bubbleChatMc.y = -85;
+				content.bubbleChatMc.y = 15;
 				content.bubbleChatMc.chatRight.visible = true;
 				content.bubbleChatMc.chatLeft.visible = false;
 				
