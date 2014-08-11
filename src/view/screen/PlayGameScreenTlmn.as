@@ -266,7 +266,7 @@ package view.screen
 			txtFormat.size = 13;
 			textfield.defaultTextFormat = txtFormat;
 			
-			textfield.text = "1.0.0";
+			textfield.text = "v1.0.0";
 			
 			content.addChild(textfield);
 			content.emoBtn.buttonMode = true;
