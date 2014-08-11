@@ -172,7 +172,7 @@ package view.window
 			gameOption[DataField.IS_SEND_CARD] = true;
 			gameOption[DataField.MAX_PLAYER] = playerNumberComboBox.currentValue[DataField.VALUE];;
 			
-			if (int(gameOption[DataField.ROOM_BET]) * mainData.minBetRate < mainData.chooseChannelData.myInfo.money)
+			if (int(gameOption[DataField.ROOM_BET]) * mainData.minBetRate > mainData.chooseChannelData.myInfo.money)
 			{
 				var addMoneyWindow:AddMoneyWindow2 = new AddMoneyWindow2();
 				var string1:String = mainData.init.gameDescription.lobbyRoomScreen.notEnoughMoneyToCreate1;
