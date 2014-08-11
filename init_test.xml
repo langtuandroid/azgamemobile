@@ -193,7 +193,7 @@
 			<feedButton>Chia sẻ</feedButton>
 			<confirmButton>Đồng ý</confirmButton>
 			<fullPlayer>Bàn chơi này hiện đã đầy, bạn không thể vào chơi.</fullPlayer>
-			<emptyRoomList>Hiện tại không có bàn chơi nào</emptyRoomList>
+			<emptyRoomList>Hiện không có bàn chơi nào phù hợp!</emptyRoomList>
 			<fullRoomList>Tất cả các bàn chơi đều đã đầy</fullRoomList>
 			<notEnoughMoneyToCreate1>Bạn cần có số gold</notEnoughMoneyToCreate1>
 			<notEnoughMoneyToCreate2>để tham gia bàn này.</notEnoughMoneyToCreate2>
