@@ -866,7 +866,7 @@ package view.screen
 		
 		private function onHaveChat(e:Event):void 
 		{
-			mainCommand.electroServerCommand.sendPublicChat(mainData.chooseChannelData.myInfo.name, chatBox.currentText);
+			mainCommand.electroServerCommand.sendPublicChat(mainData.chooseChannelData.myInfo.uId, mainData.chooseChannelData.myInfo.name, chatBox.currentText, false);
 		}
 		
 		private function onUpdateMyInfo(e:Event):void 
