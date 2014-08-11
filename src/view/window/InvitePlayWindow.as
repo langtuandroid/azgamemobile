@@ -110,7 +110,7 @@ package view.window
 			
 			if (mainData.gameType == MainData.TLMN) 
 			{
-				infoObject[DataFieldMauBinh.ROOM_PASSWORD] = GameDataTLMN.getInstance().gameRoomInfo[DataField.PASSWORD];
+				infoObject[DataFieldMauBinh.ROOM_PASSWORD] = mainData.playingData.gameRoomData.roomPassword;
 				infoObject[DataFieldMauBinh.AVATAR] = mainData.chooseChannelData.myInfo.avatar;
 				infoObject[DataFieldMauBinh.ROOM_BET] = GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET];
 				infoObject[DataFieldMauBinh.MONEY] = mainData.chooseChannelData.myInfo.money;
