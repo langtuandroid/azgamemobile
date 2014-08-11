@@ -232,35 +232,26 @@ package control.electroServerCommand
 			var roomId:int;
 			var gameId:int = -1;
 			var roomList:Array = mainData.lobbyRoomData.roomList;
-			if (roomList.length == 0)
-			{
-				var waitingWindow:AlertWindow = new AlertWindow();
-				waitingWindow.setNotice(mainData.init.gameDescription.lobbyRoomScreen.emptyRoomList);
-				windowLayer.openWindow(waitingWindow);
-				
-				return;
-			}
-			
 			for (var i:int = 0; i < roomList.length; i++) 
 			{
-				if (RoomDataRLC(roomList[i]).userNumbers < mainData.maxPlayer)
+				if (RoomDataRLC(roomList[i]).userNumbers < mainData.maxPlayer && !RoomDataRLC(roomList[i]).hasPassword)
 				{
-					waitingWindow = new AlertWindow();
-					waitingWindow.hideConfirmButton();
-					waitingWindow.showLoadingCircle();
-					waitingWindow.setNotice(mainData.init.gameDescription.waitingSentence);
-					windowLayer.openWindow(waitingWindow);
-					
-					gameId = RoomDataRLC(roomList[i]).gameId;
-					mainData.isRecentlyClickQuickPlay = true;
-					joinGameRoom(gameId, "")
-					return;
+					if (Number(RoomDataRLC(roomList[i]).betting) * mainData.minBetRate <= mainData.chooseChannelData.myInfo.money)
+					{
+						windowLayer.openLoadingWindow();
+
+						gameId = RoomDataRLC(roomList[i]).gameId;
+						mainData.isRecentlyClickQuickPlay = true;
+						joinGameRoom(gameId, "")
+						return;
+					}
 				}
 			}
-			
-			waitingWindow = new AlertWindow();
-			waitingWindow.setNotice(mainData.init.gameDescription.lobbyRoomScreen.fullRoomList);
+
+			var waitingWindow:AlertWindow = new AlertWindow();
+			waitingWindow.setNotice(mainData.init.gameDescription.lobbyRoomScreen.emptyRoomList);
 			windowLayer.openWindow(waitingWindow);
+  
 		}
 		
 		public function findGameRoom(roomId:int,password:String):void
