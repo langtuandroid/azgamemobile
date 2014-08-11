@@ -257,11 +257,18 @@ package view.screen
 			
 			GameDataTLMN.getInstance().playingData.addEventListener(PlayingData.UPDATE_PLAYING_SCREEN, onUpdatePlayingScreen);
 			
-			/*var textfield:TextField = new TextField();
-			textfield.text = "31/07 - v1";
-			textfield.x = 20;
-			textfield.y = 520;
-			content.addChild(textfield);*/
+			var textfield:TextField = new TextField();
+			
+			textfield.x = 850;
+			textfield.y = 20;
+			var txtFormat:TextFormat = new TextFormat();
+			txtFormat.color = 0xffffff;
+			txtFormat.size = 13;
+			textfield.defaultTextFormat = txtFormat;
+			
+			textfield.text = "1.0.0";
+			
+			content.addChild(textfield);
 			content.emoBtn.buttonMode = true;
 			content.emoBtn.addEventListener(MouseEvent.CLICK, onEmoticonButtonClick);
 			
