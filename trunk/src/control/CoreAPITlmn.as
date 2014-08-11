@@ -1210,7 +1210,11 @@ package control
 			{
 				if (e.roomId == GameDataTLMN.getInstance().lobbyRoomId) // Tình huống có user vừa out ra khỏi lobby room 
 				{
-					delete GameDataTLMN.getInstance().userList[e.userName];
+					if (GameDataTLMN.getInstance().userList[e.userName] != null) 
+					{
+						delete GameDataTLMN.getInstance().userList[e.userName];
+					}
+					
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST, GameDataTLMN.getInstance().userList));
 				}
 				else // Tình huống có user vừa out ra khỏi game
