@@ -181,11 +181,11 @@ package view.screen
 			setupCompareGroupStatus();
 			
 			versionTxt = content["versionTxt"];
-			if (!mainData.isTest)
-				versionTxt.visible = false;
-			if (mainData.chooseChannelData.myInfo.name == "dung296")
-				versionTxt.visible = true;
-			versionTxt.text = "10.50.14.07.2014";
+			//if (!mainData.isTest)
+				//versionTxt.visible = false;
+			//if (mainData.chooseChannelData.myInfo.name == "dung296")
+				//versionTxt.visible = true;
+			versionTxt.text = "v1.0.0";
 			maubinh = content["maubinh"];
 			maubinh.visible = false;
 			
