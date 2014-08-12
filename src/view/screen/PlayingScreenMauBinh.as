@@ -185,7 +185,7 @@ package view.screen
 				//versionTxt.visible = false;
 			//if (mainData.chooseChannelData.myInfo.name == "dung296")
 				//versionTxt.visible = true;
-			versionTxt.text = "v1.0.0";
+			versionTxt.text = mainData.version;
 			maubinh = content["maubinh"];
 			maubinh.visible = false;
 			

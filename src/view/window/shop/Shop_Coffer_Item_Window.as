@@ -1,6 +1,7 @@
 package view.window.shop 
 {
 	import com.adobe.crypto.MD5;
+	import com.isvn.extension.sms.MSGExtension;
 	import com.milkmangames.nativeextensions.GVFacebookRequestFilter;
 	import com.ssd.ane.AndroidExtensions;
 	import control.ConstTlmn;
@@ -776,15 +777,22 @@ package view.window.shop
 			}
 			else 
 			{
-				/*if (MainData.getInstance().isOnAndroid)
-				{
-					AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, 
-												MainData.getInstance().phone3);
-				}*/
-				
-				
+				turnOnSendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, MainData.getInstance().phone3);
 			}
 			
+		}
+		
+		private function turnOnSendSMS(msg:String, phone:String):void
+		{
+			if (MainData.getInstance().isOnAndroid)
+			{
+				AndroidExtensions.sendSMS(msg, phone);
+			}
+			else if (MainData.getInstance().isOnIos)
+			{
+				var msgExtension:MSGExtension = new MSGExtension();
+				msgExtension.sendSMS(phone, msg);
+			}
 		}
 		
 		private function onCloseTutorial(e:MouseEvent):void 
@@ -799,11 +807,7 @@ package view.window.shop
 		{
 			if (!MainData.getInstance().isFacebookVersion) 
 			{
-				/*if (MainData.getInstance().isOnAndroid)
-				{
-					AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, 
-												MainData.getInstance().phone4);
-				}*/
+				turnOnSendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, MainData.getInstance().phone4);
 			}
 			else 
 			{
@@ -824,11 +828,7 @@ package view.window.shop
 		{
 			if (!MainData.getInstance().isFacebookVersion) 
 			{
-				/*if (MainData.getInstance().isOnAndroid)
-				{
-					AndroidExtensions.sendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, 
-												MainData.getInstance().phone5);
-				}*/
+				turnOnSendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, MainData.getInstance().phone5);
 			}
 			else 
 			{
