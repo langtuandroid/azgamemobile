@@ -147,7 +147,7 @@ package view.screen
 			versionTxt = content["versionTxt"];
 			//if (!mainData.isTest)
 				//versionTxt.visible = false;
-			versionTxt.text = "v1.0.0";
+			versionTxt.text = mainData.version;
 			setupButton();
 			setupTextField();
 			hidePosition();

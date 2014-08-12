@@ -107,7 +107,7 @@ package view.window.loginWindow
 			zLoginWindow(content).pass.setStyle("textFormat", textFormat);
 			zLoginWindow(content).userName.setStyle("textFormat", textFormat);
 			
-			zLoginWindow(content).versionTxt.text = "v1.0.0";
+			zLoginWindow(content).versionTxt.text = mainData.version;
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
