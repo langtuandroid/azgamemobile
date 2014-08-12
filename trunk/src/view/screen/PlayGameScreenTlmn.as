@@ -56,14 +56,12 @@ package view.screen
 	import view.card.CardDeck;
 	import view.clock.Clock;
 	import view.screen.play.Emoticon;
-	import view.screen.play.Setting;
-	//import view.window.NoticePopup;
-	//import view.screen.play.BigButton;
+	
 	import view.screen.play.ContextMenu;
 	import view.screen.play.MoneyEffect;
 	import view.screen.play.MyInfoTLMN;
 	import view.screen.play.PlayerInfoTLMN;
-	//import view.screen.play.SmallButton;
+	
 	import view.window.InvitePlayWindow;
 	import view.window.ResultWindow;
 	
@@ -106,8 +104,6 @@ package view.screen
 		
 		public var _arrLastCard:Array = []; // nhung quan bai duoc danh ra truoc do
 		public var _userLastDisCard:String = ""; // nhung quan bai duoc danh ra truoc do
-		
-		private var _settingWindow:Setting;
 		
 		private var _resultWindow:ResultWindowTlmn;
 		
