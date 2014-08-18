@@ -164,7 +164,7 @@ package view.screen
 		private var haveUserReady:Boolean = false; //da co nguoi choi san sang, chi tinh khi get playing info
 		private var _timerKickMaster:Timer;
 		private var _countTimerkick:int;
-		private var _timerKick:int = 30;
+		private var _timerKick:int = 15;
 		
 		private var emoWindow:Sprite;
 		private var emoArray:Array;
