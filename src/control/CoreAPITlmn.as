@@ -57,6 +57,7 @@ package control
 	import event.CommandTlmn;
 	import event.DataField;
 	import event.DataFieldMauBinh;
+	import event.DataFieldPhom;
 	import model.GameDataTLMN;
 	import model.MyDataTLMN;
 	
@@ -587,6 +588,12 @@ package control
 						var cardArray:Array = dealCardObject[DataField.PLAYER_CARDS];
 						
 					}
+					
+					if (e.parameters.doesPropertyExist("isFirst"))
+					{
+						GameDataTLMN.getInstance().firstPlayer = MyDataTLMN.getInstance().myId;
+						GameDataTLMN.getInstance().firstGame = e.parameters.getBoolean("isFirst");
+					}
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.DEAL_CARD, dealCardObject));
 				break;
 				case CommandTlmn.GAME_OVER: // Ván chơi kết thúc
@@ -949,6 +956,17 @@ package control
 						GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.MALE] = 0;
 						GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.MAX_PLAYER] = gameDetails.getInteger(DataFieldMauBinh.MAX_PLAYER);
 						userList = EsObject(roomList[i]).getEsObjectArray(DataField.USER_LIST);
+						
+						for (j = 0; j < userList.length; j++) 
+						{
+							userName = EsObject(userList[j]).getString(DataFieldPhom.USER_NAME);
+							GameDataTLMN.getInstance().userList[userName] = new Object();
+							object = convertEsObject(EsObject(userList[j]).getEsObject(DataFieldPhom.USER_INFO));
+							if (object[DataFieldPhom.SEX] == 'M')
+								GameDataTLMN.getInstance().roomList[roomId][DataFieldPhom.MALE]++;
+							GameDataTLMN.getInstance().userList[userName][DataFieldPhom.USER_INFO] = object;
+							GameDataTLMN.getInstance().userList[userName][DataFieldPhom.ROOM_ID] = roomId;
+						}
 						
 					}
 					

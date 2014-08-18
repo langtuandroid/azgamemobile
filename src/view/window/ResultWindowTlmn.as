@@ -239,18 +239,23 @@ package view.window
 		{
 			var i:int;
 			var arrResult:Array = obj[ConstTlmn.PLAYER_LIST];
-			arrResult.sortOn(ConstTlmn.SUB_MONEY, Array.NUMERIC);
+			arrResult.sortOn(ConstTlmn.MONEY, Array.NUMERIC);
 			var count:int = 0;
+			
 			for (i = 0; i < arrUserResult.length; i++) 
 			{
 				trace("setinfowhitewin")
 				trace(i, arrUserResult[i]["user"].myResult.visible)
 				arrUserResult[i]["user"].myResult.visible = false;
 				trace(i, arrUserResult[i]["user"].myResult.visible)
+				
 			}
+			
 			for (i = arrResult.length - 1; i > -1; i--) 
+			//for (i = 0; i < arrResult.length; i++) 
 			{
 				trace("den thang nao duoc ghi ten: ", arrResult[i][ConstTlmn.DISPLAY_NAME])
+				trace("tien: ", int(arrResult[i][ConstTlmn.MONEY]))
 				if (arrResult[i][ConstTlmn.PLAYER_NAME] == MyDataTLMN.getInstance().myId) 
 				{
 					TextField(arrUserResult[count]["user"].userNameTxt).defaultTextFormat = _textformatUser;
@@ -272,11 +277,12 @@ package view.window
 				{
 					arrUserResult[count]["user"].betResultTxt.text = "+" + format(int(arrResult[i][ConstTlmn.MONEY])) ;
 					//TextField(arrUserResult[i]["user"].betResultTxt).defaultTextFormat = _textformatWin;
-					arrUserResult[i]["user"].noticeTxt.text = whiteWin(obj["whiteWinType"]) ;
+					trace("chi thang thang moi ddc add : ", obj["whiteWinType"])
+					arrUserResult[count]["user"].noticeTxt.text = whiteWin(obj["whiteWinType"]) ;
 					var str:String = arrUserResult[count]["user"].noticeTxt.text;
-					if (str.length > 25) 
+					if (str.length > 30) 
 					{
-						str = str.slice(0, 25);
+						str = str.slice(0, 30);
 						str += "...";
 						arrUserResult[count]["user"].noticeTxt.text = str;
 					}
@@ -293,15 +299,14 @@ package view.window
 				}
 				else 
 				{
-					
+					trace("thang thua ko add wintype")
 					arrUserResult[count]["user"].betResultTxt.text = "-" + format(int(arrResult[i][ConstTlmn.MONEY]) * -1) ;
-					
+					arrUserResult[count]["user"].noticeTxt.text = "";
 				}
 				
 				count++;
 				//addImageCard(arrResult[i]["cards"], arrUserResult[i]);
 			}
-			
 		}
 		
 		private function whiteWin(type:String):String 

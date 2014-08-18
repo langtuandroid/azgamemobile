@@ -164,7 +164,7 @@ package view.screen
 		private var haveUserReady:Boolean = false; //da co nguoi choi san sang, chi tinh khi get playing info
 		private var _timerKickMaster:Timer;
 		private var _countTimerkick:int;
-		private var _timerKick:int = 15;
+		private var _timerKick:int = 30;
 		
 		private var emoWindow:Sprite;
 		private var emoArray:Array;
@@ -253,20 +253,22 @@ package view.screen
 			
 			GameDataTLMN.getInstance().playingData.addEventListener(PlayingData.UPDATE_PLAYING_SCREEN, onUpdatePlayingScreen);
 			
-			var textfield:TextField = new TextField();
-			
-			textfield.x = 850;
-			textfield.y = 20;
+			var textfieldVer:TextField = new TextField();
 			var txtFormat:TextFormat = new TextFormat();
 			txtFormat.color = 0xffffff;
-			txtFormat.size = 13;
-			textfield.defaultTextFormat = txtFormat;
+			txtFormat.size = 11;
+			textfieldVer.defaultTextFormat = txtFormat;
+			textfieldVer.text = mainData.version;
+			textfieldVer.x = 840;
+			textfieldVer.y = 5;
+			textfieldVer.width = 40;
+			textfieldVer.mouseEnabled = false;
+			content.addChild(textfieldVer);
 			
-			textfield.text = mainData.version;
-			
-			content.addChild(textfield);
 			content.emoBtn.buttonMode = true;
 			content.emoBtn.addEventListener(MouseEvent.CLICK, onEmoticonButtonClick);
+			
+			content.noticeMc.visible = false;
 			
 			if (heartbeart) 
 			{
@@ -513,7 +515,7 @@ package view.screen
 				_myInfo._isMyTurn = true;
 			}
 			
-			timerDealCard = new Timer(200);
+			timerDealCard = new Timer(200, 3);
 			//timer.addEventListener(TimerEvent.TIMER, dealingCard);
 			timerDealCard.addEventListener(TimerEvent.TIMER, onCompleteDealCard);
 			timerDealCard.start();
@@ -1177,6 +1179,14 @@ package view.screen
 				trace(GameDataTLMN.getInstance().currentPlayer, MyDataTLMN.getInstance().myId, "thằng nào có đồng hồ chạy", _isPlaying)
 				if (GameDataTLMN.getInstance().currentPlayer == MyDataTLMN.getInstance().myId && _isPlaying) 
 				{
+					if (GameDataTLMN.getInstance().firstGame) 
+					{
+						//content.noticeForUserTxt.text = "Đánh lá bài hoặc bộ bài bé nhất!";
+						//content.txtNotice.text = "Đánh cây hoặc bộ bé nhất!";
+						//content.noticeForUserTxt.visible = true;
+						content.noticeMc.visible = true;
+						content.noticeMc.gotoAndPlay(1);
+					}
 					_myInfo.checkPosClock();
 					content.userTurn.x = _myInfo.x + 20;
 					content.userTurn.y = _myInfo.y - 80;
@@ -1605,34 +1615,15 @@ package view.screen
 					{
 						if (timerDealCard) 
 						{
-							timerDealCard.removeEventListener(TimerEvent.TIMER, onCompleteDealCard);
 							timerDealCard.stop();
+							timerDealCard.removeEventListener(TimerEvent.TIMER, onCompleteDealCard);
+							
 						}
 					}
 					dealcard = j + 1;
 					break;
 				}
-				/*trace("co phai la cheater ko: ", _arrCardListOtherUser.length, _myInfo._cheater)
-				if (_arrCardListOtherUser.length > 0) 
-				{
-					_myInfo._cheater = true;
-					//content.setChildIndex(_arrUserInfo[2], content.numChildren - 1);
-					for (var i:int = 0; i < _arrCardListOtherUser.length; i++) 
-					{
-						if (_arrCardListOtherUser[i]["userName"] == _arrUserInfo[j]._userName) 
-						{
-							arr = _arrCardListOtherUser[i]["cardList"];
-							_arrUserInfo[j].dealCard(arr);
-						}
-					}
-				}
-				else
-				{
-					//content.setChildIndex(_chatBox, content.numChildren - 1);
-					trace("mang khi ko co j` ", arr.length)
-					_arrUserInfo[j].dealCard(arr);
-					
-				}*/
+				
 			}
 		}
 		
@@ -2976,6 +2967,9 @@ package view.screen
 			}
 			
 			GameDataTLMN.getInstance().firstPlayer = "";
+			content.noticeForUserTxt.text = "";
+			GameDataTLMN.getInstance().firstGame = false;
+			content.noticeMc.visible = false;
 			
 			checkPosClock();
 			
@@ -3264,35 +3258,7 @@ package view.screen
 			}
 			
 			
-			var count:int = 0;
-			for (i = 0; i < _arrUserInfo.length; i++) 
-			{
-				if (_arrUserInfo[i])
-				{
-					if (_arrUserInfo[i].ready)
-					{
-						count++;
-					}
-				}
-			}
-			if (_myInfo._ready) 
-			{
-				count++;
-			}
 			
-			if (count == 0 || _numUser == 1) 
-			{
-				if (_timerKickMaster) 
-				{
-					_timerKickMaster.removeEventListener(TimerEvent.TIMER_COMPLETE, onKickMaster);
-					_timerKickMaster.removeEventListener(TimerEvent.TIMER, onTimerKickMaster);
-					_timerKickMaster.stop();
-				}
-				_haveUserReady = false;
-				
-				_countTimerkick = 0;
-				content.timeKickUserTxt.visible = false;
-			}
 			
 			trace("co user out room: ", _arrUserList)
 			trace("co user out room: ", _isPlaying, MyDataTLMN.getInstance().myId , data["master"])
@@ -3370,6 +3336,35 @@ package view.screen
 				
 			}
 			
+			var count:int = 0;
+			for (i = 0; i < _arrUserInfo.length; i++) 
+			{
+				if (_arrUserInfo[i])
+				{
+					if (_arrUserInfo[i].ready)
+					{
+						count++;
+					}
+				}
+			}
+			if (_myInfo._ready) 
+			{
+				count++;
+			}
+			
+			if (count == 0 || _numUser == 1) 
+			{
+				if (_timerKickMaster) 
+				{
+					_timerKickMaster.removeEventListener(TimerEvent.TIMER_COMPLETE, onKickMaster);
+					_timerKickMaster.removeEventListener(TimerEvent.TIMER, onTimerKickMaster);
+					_timerKickMaster.stop();
+				}
+				_haveUserReady = false;
+				
+				_countTimerkick = 0;
+				content.timeKickUserTxt.visible = false;
+			}
 		}
 		
 		public function removeAllEvent():void 
@@ -3610,7 +3605,14 @@ package view.screen
 			
 			content.startGame.addEventListener(MouseEvent.CLICK, onClickStartGame);
 			content.orderCard.addEventListener(MouseEvent.CLICK, onOrderCard);
+			
 			content.orderCard.visible = false;
+			
+			if (mainData.chooseChannelData.myInfo.name == "bim15" || mainData.chooseChannelData.myInfo.name == "haonam01")
+			{
+				content.orderCard.visible = true;
+			}
+			
 			checkShowTextNotice();
 			
 			content.chatBtn.addEventListener(MouseEvent.CLICK, onChatButtonClick);

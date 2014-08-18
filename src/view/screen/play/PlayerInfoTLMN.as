@@ -103,8 +103,8 @@ package view.screen.play
 				content.iconMobile.x = 110;
 				content.iconMaster.x = 0;
 				content.effectMoneySpecial.y = 120;
-				content.numCardRemainTxt.x = 140;
-				content.numCardRemainTxt.y = 140;
+				content.numCardRemainTxt.x = 200;
+				content.numCardRemainTxt.y = 150;
 				
 				content.bubbleChatMc.x = 5;
 				content.bubbleChatMc.y = 15;
@@ -124,7 +124,7 @@ package view.screen.play
 				
 				content.iconMaster.x = 100;
 				content.effectMoneySpecial.y = 120;
-				content.numCardRemainTxt.x = -50;
+				content.numCardRemainTxt.x = -45;
 				content.numCardRemainTxt.y = 100;
 				
 				
@@ -146,7 +146,7 @@ package view.screen.play
 				content.iconMaster.x = 100;
 				content.effectMoneySpecial.y = 120;
 				content.numCardRemainTxt.x = -52;
-				content.numCardRemainTxt.y = 140;
+				content.numCardRemainTxt.y = 150;
 				
 				content.bubbleChatMc.x = -24;
 				content.bubbleChatMc.y = 15;
@@ -818,7 +818,7 @@ package view.screen.play
 				if (_pos == 2) 
 				{
 					_cardDeck.x = 235;
-					_cardDeck.y = -25 + (13 - remainingCard) * distance + distance * i;
+					_cardDeck.y = -25 + (14 - remainingCard) * distance + distance * i;
 					_cardDeck.rotation = 90;
 				}
 				else 
@@ -827,14 +827,14 @@ package view.screen.play
 					if (_pos == 1) 
 					{
 						
-						_cardDeck.x = -210 + (13 - remainingCard) * distance + distance * i;
+						_cardDeck.x = -215 + (14 - remainingCard) * distance + distance * i;
 						_cardDeck.y = 30;
 					}
 					else 
 					{
 						_cardDeck.rotation = 90;
 						_cardDeck.x = -15;
-						_cardDeck.y = -25 + (13 - remainingCard) * distance + distance * i;
+						_cardDeck.y = -25 + (14 - remainingCard) * distance + distance * i;
 					}
 					
 					
@@ -973,7 +973,7 @@ package view.screen.play
 					if (_pos == 2) 
 					{
 						_arrCardDeck[i].x = 235;
-						_arrCardDeck[i].y = -25 + (13 - _arrCardDeck.length) * distance + distance * i;
+						_arrCardDeck[i].y = -25 + (14 - _arrCardDeck.length) * distance + distance * i;
 						
 					}
 					else 
@@ -982,14 +982,14 @@ package view.screen.play
 						if (_pos == 1) 
 						{
 							
-							_arrCardDeck[i].x = -210 + (13 - _arrCardDeck.length) * distance + distance * i;
+							_arrCardDeck[i].x = -215 + (14 - _arrCardDeck.length) * distance + distance * i;
 							_arrCardDeck[i].y = 30;
 						}
 						else 
 						{
 							
 							_arrCardDeck[i].x = -15;
-							_arrCardDeck[i].y = -25 + (13 - _arrCardDeck.length) * distance + distance * i;
+							_arrCardDeck[i].y = -25 + (14 - _arrCardDeck.length) * distance + distance * i;
 						}
 						
 						
@@ -1028,10 +1028,14 @@ package view.screen.play
 			}
 			else 
 			{
-				_timerDealcard = new Timer(150, 13);
-				_timerDealcard.addEventListener(TimerEvent.TIMER, onTimerDealCard);
-				_timerDealcard.addEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
-				_timerDealcard.start();
+				if (_remainingCard < 1) 
+				{
+					_timerDealcard = new Timer(150, 13);
+					_timerDealcard.addEventListener(TimerEvent.TIMER, onTimerDealCard);
+					_timerDealcard.addEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
+					_timerDealcard.start();
+				}
+				
 			}
 			
 			content.confirmReady.visible = false;
@@ -1060,7 +1064,11 @@ package view.screen.play
 		
 		private function onTimerDealCard(e:TimerEvent):void 
 		{
-			startDeal( -1);
+			if (ready || _userName == GameDataTLMN.getInstance().master) 
+			{
+				startDeal( -1);
+			}
+			
 		}
 		
 		private function startDeal(numCard:int):void 
@@ -1138,7 +1146,7 @@ package view.screen.play
 					{
 						/*TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: -200 + distance * _remainingCard, y:30} ], 
 								ease:Back.easeOut, onComplete:onComleteDeal } ); */
-						TweenMax.to(cardDeck, 1.2, {x:-210 + distance * _remainingCard, y:30, ease:Back.easeOut} ); 
+						TweenMax.to(cardDeck, 1.2, {x:-215 + distance * _remainingCard, y:30, ease:Back.easeOut} ); 
 					}
 					else 
 					{
