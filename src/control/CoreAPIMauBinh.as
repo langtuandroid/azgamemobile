@@ -660,7 +660,7 @@ package control
 					playerList[0][DataFieldMauBinh.USER_NAME] = e.parameters.getString(DataFieldMauBinh.USER_NAME);
 					playerList[0][DataFieldMauBinh.DISPLAY_NAME] = e.parameters.getString(DataFieldMauBinh.DISPLAY_NAME);
 					playerList[0][DataFieldMauBinh.OTHER_USER_QUIT] = true;
-					playerList[0][DataFieldMauBinh.MONEY] = 0;
+					playerList[0][DataFieldMauBinh.MONEY] = Number(e.parameters.getString(DataFieldMauBinh.MONEY));
 					playerList[0][DataFieldMauBinh.NO_COMPARE_GROUP] = true;
 					gameOverObject[DataFieldMauBinh.PLAYER_LIST] = playerList;
 					gameOverObject[DataFieldMauBinh.QUITERS] = quiterList;

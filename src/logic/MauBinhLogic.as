@@ -917,7 +917,11 @@ package logic
 				else
 					tempArray[convertIdToRank(cards[i].id)]++;
 				if (tempArray[convertIdToRank(cards[i].id)] == 2 || tempArray[convertIdToRank(cards[i].id)] == 4)
+				{
+					if (tempArray[convertIdToRank(cards[i].id)] == 4)
+						countTriple--;
 					countDouble++;
+				}
 				if (tempArray[convertIdToRank(cards[i].id)] == 3)
 					countTriple++;
 			}
@@ -1030,6 +1034,18 @@ package logic
 							cards[i + 1] = tempCard;
 							isArrangeFinish = false;
 						}
+					}
+				}
+				if (convertIdToRank(cards[0].id) == 1)
+				{
+					if (convertIdToRank(cards[1].id) == 12 && convertIdToRank(cards[2].id) == 13)
+					{
+						tempCard = cards[0];
+						cards[0] = cards[1];
+						cards[1] = tempCard;
+						tempCard = cards[1];
+						cards[1] = cards[2];
+						cards[2] = tempCard;
 					}
 				}
 				
