@@ -108,7 +108,7 @@ package view.userInfo.avatar
 						var urlRequest:URLRequest = new URLRequest(imgSrc);
 						loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadImgComplete);
 						loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
-						loader.load(urlRequest);
+						loader.load(urlRequest,context);
 						trace("chay xuong day")
 					}
 				}

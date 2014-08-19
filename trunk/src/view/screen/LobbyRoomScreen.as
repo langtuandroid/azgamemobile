@@ -866,7 +866,10 @@ package view.screen
 		
 		private function onHaveChat(e:Event):void 
 		{
-			mainCommand.electroServerCommand.sendPublicChat(mainData.chooseChannelData.myInfo.uId, mainData.chooseChannelData.myInfo.name, chatBox.currentText, false);
+			if (mainData.gameType == MainData.TLMN)
+				mainCommand.electroServerCommand.sendPublicChat(mainData.chooseChannelData.myInfo.uId, mainData.chooseChannelData.myInfo.name, chatBox.currentText, false);
+			else
+				mainCommand.electroServerCommand.sendPublicChat(mainData.chooseChannelData.myInfo.name, chatBox.currentText);
 		}
 		
 		private function onUpdateMyInfo(e:Event):void 

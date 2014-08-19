@@ -2079,11 +2079,11 @@ package view.screen
 			{
 				if (!playerList[i][DataFieldMauBinh.TOTAL])
 					playerList[i][DataFieldMauBinh.TOTAL] = 0;
-				if (addMoneyObject)
+				/*if (addMoneyObject)
 				{
 					playerList[i][DataFieldMauBinh.MONEY] += addMoneyObject[DataFieldMauBinh.MONEY];
 					playerList[i][DataFieldMauBinh.TOTAL] += addMoneyObject[DataFieldMauBinh.TOTAL];
-				}
+				}*/
 			}
 			
 			playerList = playerList.concat(quiterList);
@@ -2201,6 +2201,18 @@ package view.screen
 				if (!belowUserInfo.isRoomMaster)
 				{
 					showReadyButton();
+					
+					for (j = 0; j < allPlayerArray.length; j++) 
+					{
+						if (allPlayerArray[j])
+						{
+							if (PlayerInfoMauBinh(allPlayerArray[j]).isReadyPlay)
+							{
+								j = allPlayerArray.length + 1;
+								countTimeToKickRoomMaster();
+							}
+						}
+					}
 				}
 				else
 				{
@@ -2214,6 +2226,8 @@ package view.screen
 								showStartButton();
 								waitToPlay.visible = false;
 								j = allPlayerArray.length + 1;
+								
+								countTimeToKickRoomMaster();
 							}
 						}
 					}
@@ -2738,7 +2752,7 @@ package view.screen
 				}
 			}
 			
-			if (countReady == 1)
+			if (countReady == 1 && isResetDone)
 				countTimeToKickRoomMaster();
 		}
 		
