@@ -853,6 +853,7 @@ package control
 						myData.roomList[roomId][DataFieldMauBinh.GAME_ID] = EsObject(roomList[i]).getInteger(DataFieldMauBinh.GAME_ID);
 						myData.roomList[roomId][DataFieldMauBinh.HAS_PASSWORD] = EsObject(roomList[i]).getBoolean(DataFieldMauBinh.HAS_PASSWORD);
 						myData.roomList[roomId][DataFieldMauBinh.USERS_NUMBER] = EsObject(roomList[i]).getEsObjectArray(DataFieldMauBinh.USER_LIST).length;
+						myData.roomList[roomId][DataFieldMauBinh.MALE] = 0;
 						myData.roomList[roomId][DataFieldMauBinh.MAX_PLAYER] = gameDetails.getInteger(DataFieldMauBinh.MAX_PLAYER);
 						userList = EsObject(roomList[i]).getEsObjectArray(DataFieldMauBinh.USER_LIST);
 						for (j = 0; j < userList.length; j++) 
