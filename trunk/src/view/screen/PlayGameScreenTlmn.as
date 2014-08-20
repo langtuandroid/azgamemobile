@@ -1261,7 +1261,7 @@ package view.screen
 				
 			}
 			
-			//checkPosClock();
+			checkPosClock();
 			
 				
 			
@@ -1587,7 +1587,6 @@ package view.screen
 			_countTimerkick = 0;
 			content.timeKickUserTxt.visible = false;
 			
-			dealcard = 0;
 			
 			_isPlaying = true;
 			
@@ -1604,7 +1603,7 @@ package view.screen
 			
 			var arr:Array = [];
 			
-			trace("1 lan vao thang chia bai")
+			trace("1 lan vao thang chia bai", dealcard)
 			for (var j:int = dealcard; j < _arrUserInfo.length; j++) 
 			{
 				trace("xem thang nao vua dc chia: ", j, _arrUserInfo[j].ready, _arrUserInfo[j]._userName , GameDataTLMN.getInstance().master)
@@ -1615,12 +1614,14 @@ package view.screen
 					{
 						if (timerDealCard) 
 						{
+							trace("da di du qua 3 thang")
 							timerDealCard.stop();
 							timerDealCard.removeEventListener(TimerEvent.TIMER, onCompleteDealCard);
 							
 						}
 					}
 					dealcard = j + 1;
+					trace("co 1 thang duowc chia: ", dealcard)
 					break;
 				}
 				
