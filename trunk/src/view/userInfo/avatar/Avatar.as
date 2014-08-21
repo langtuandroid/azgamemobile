@@ -79,10 +79,11 @@ package view.userInfo.avatar
 			context.applicationDomain = ApplicationDomain.currentDomain;
 			
 			
-			context.securityDomain = SecurityDomain.currentDomain;
+			//context.securityDomain = SecurityDomain.currentDomain;
 			
 			Security.loadPolicyFile("http://graph.facebook.com/crossdomain.xml");
 			Security.loadPolicyFile("http://profile.ak.fbcdn.net/crossdomain.xml");
+			Security.loadPolicyFile("http://azgamebai.com/crossdomain.xml");
 			
 			{
 				if (_bitmapData) 
