@@ -484,6 +484,9 @@ package view.userInfo.playerInfo
 				timerToAlertNoDeck.addEventListener(TimerEvent.TIMER, onAlertNoDeck);
 				timerToAlertNoDeck.start();
 			}
+			
+			if (leavedCards.length == 4)
+				stopCountTime();
 		}
 		
 		private function onAlertNoDeck(e:TimerEvent):void 
