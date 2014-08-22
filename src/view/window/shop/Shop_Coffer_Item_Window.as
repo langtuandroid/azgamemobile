@@ -762,7 +762,15 @@ package view.window.shop
 		
 		private function onClickChoseSms1(e:MouseEvent):void 
 		{
-			
+			/*tutorialAddMoney = new TutorialAddMoneyPopup();
+				myContent.addChild(tutorialAddMoney);
+				tutorialAddMoney.x = 47 + (865 - tutorialAddMoney.width) / 2;
+				tutorialAddMoney.y = 136 + (363 - tutorialAddMoney.height) / 2;
+				
+				tutorialAddMoney.contentMess.text = "SB G " + MainData.getInstance().chooseChannelData.myInfo.name;
+				tutorialAddMoney.numberTxt.text = MainData.getInstance().phone3;
+				
+				tutorialAddMoney.closeBtn.addEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);*/
 			if (MainData.getInstance().isFacebookVersion) 
 			{
 				tutorialAddMoney = new TutorialAddMoneyPopup();

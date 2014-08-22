@@ -911,6 +911,11 @@ package view.screen
 			canExitGame = true;
 			content.noc.visible = false;
 			
+			content.noticeForUserTxt.text = "";
+			content.noticeForUserTxt.visible = false;
+			GameDataTLMN.getInstance().firstGame = false;
+			content.noticeMc.visible = false;
+			
 			_haveUserReady = false;
 			
 			if (timerDealcardForme) 
@@ -1280,7 +1285,10 @@ package view.screen
 			
 			var str:String;
 			content.userTurn.visible = false;
-			
+			content.noticeForUserTxt.text = "";
+			content.noticeForUserTxt.visible = false;
+			GameDataTLMN.getInstance().firstGame = false;
+			content.noticeMc.visible = false;
 			_haveUserReady = false;
 			
 			var i:int;
