@@ -172,6 +172,9 @@ package view.screen
 		private var _arrEmoForUser:Array = [];
 		private var _timerShowEmo:Timer;
 		
+		private var _stageGame:int = 0;
+		
+		
 		public function PlayGameScreenTlmn() 
 		{
 			addEventListener(Event.ADDED_TO_STAGE, onAddToStage);
@@ -910,6 +913,7 @@ package view.screen
 			}
 			canExitGame = true;
 			content.noc.visible = false;
+			_stageGame = 2;
 			
 			content.noticeForUserTxt.text = "";
 			content.noticeForUserTxt.visible = false;
@@ -1085,6 +1089,8 @@ package view.screen
 		
 		private function onResetGame(e:TimerEvent):void 
 		{
+			_stageGame = 0;
+			
 			_isPlaying = false;
 			removeAllDisCard();
 			content.specialCard.visible = false;
@@ -1275,6 +1281,7 @@ package view.screen
 		private function listenGameOver(obj:Object):void 
 		{
 			_isPlaying = false;
+			_stageGame = 2;
 			GameDataTLMN.getInstance().finishRound = false;
 			
 			if (timerDealCard) 
@@ -1474,6 +1481,7 @@ package view.screen
 		
 		private function onCloseResultWindow(e:Event):void 
 		{
+			_stageGame = 0;
 			if (SoundManager.getInstance().isSoundOn) 
 			{
 				var rd:int = int(Math.random() * 5);
@@ -1594,7 +1602,7 @@ package view.screen
 			
 			_countTimerkick = 0;
 			content.timeKickUserTxt.visible = false;
-			
+			_stageGame = 1;
 			
 			_isPlaying = true;
 			
