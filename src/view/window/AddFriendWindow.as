@@ -30,13 +30,16 @@ package view.window
 		private var _gold:Number;
 		private var _level:int;
 		private var _isFriend:Boolean;
+		private var _isShowKickOut:Boolean;
 		
+		private var kickoutButton:SimpleButton;
 		private var messageButton:SimpleButton;
 		private var addFriendButton:SimpleButton;
 		private var removeFriendButton:SimpleButton;
 		private var closeButton:SimpleButton;
 		private var avatar:Avatar;
 		private var _data:UserDataULC;
+		private var _isInGame:Boolean;
 		
 		private var mainData:MainData = MainData.getInstance();
 		private var electroServerCommand:* = MainCommand.getInstance().electroServerCommand;
@@ -56,6 +59,8 @@ package view.window
 			roomTxt = content["roomTxt"];
 			addFriendButton = content["addFriendButton"];
 			messageButton = content["messageButton"];
+			kickoutButton = content["kickoutButton"];
+			kickoutButton.visible = false;
 			removeFriendButton = content["removeFriendButton"];
 			closeButton = content["closeButton"];
 			
@@ -65,6 +70,7 @@ package view.window
 			addFriendButton.addEventListener(MouseEvent.CLICK, onButtonClick);
 			removeFriendButton.addEventListener(MouseEvent.CLICK, onButtonClick);
 			closeButton.addEventListener(MouseEvent.CLICK, onButtonClick);
+			kickoutButton.addEventListener(MouseEvent.CLICK, onButtonClick);
 			
 			avatar = new Avatar();
 			avatar.setForm(Avatar.MY_AVATAR);
@@ -100,22 +106,28 @@ package view.window
 				{
 					if (UserDataULC(mainData.lobbyRoomData.friendList[i]).isOnline)
 					{
-						content["statusIcon"].visible = true;
 						removeFriendButton.visible = true;
-						switch (UserDataULC(mainData.lobbyRoomData.friendList[i]).gameId) 
+						if (!isInGame)
 						{
-							case MainData.MAUBINH_ID:
-								gameTxt.text = "BINH";
-							break;
-							case MainData.PHOM_ID:
-								gameTxt.text = "PHỎM";
-							break;
-							default:
+							content["statusIcon"].visible = true;
+							switch (UserDataULC(mainData.lobbyRoomData.friendList[i]).gameId) 
+							{
+								case MainData.MAUBINH_ID:
+									gameTxt.text = "BINH";
+								break;
+								case MainData.PHOM_ID:
+									gameTxt.text = "PHỎM";
+								break;
+								case MainData.TLMN_ID:
+									gameTxt.text = "TLMN";
+								break;
+								default:
+							}
+							if (UserDataULC(mainData.lobbyRoomData.friendList[i]).roomID == mainData.lobbyRoomId)
+								roomTxt.text = "Phòng chờ";
+							else
+								roomTxt.text = "Bàn số " + String(UserDataULC(mainData.lobbyRoomData.friendList[i]).roomID);
 						}
-						if (UserDataULC(mainData.lobbyRoomData.friendList[i]).roomID == mainData.lobbyRoomId)
-							roomTxt.text = "Phòng chờ";
-						else
-							roomTxt.text = "Bàn số " + String(UserDataULC(mainData.lobbyRoomData.friendList[i]).roomID);
 					}
 					break;
 				}
@@ -130,7 +142,8 @@ package view.window
 					electroServerCommand.addFriend(userName, "inLobby");
 					electroServerCommand.getFriendList();
 					addFriendButton.visible = false;
-					content["statusIcon"].visible = true;
+					if (!isInGame)
+						content["statusIcon"].visible = true;
 				break;
 				case removeFriendButton:
 					electroServerCommand.removeFriend(userName, "inLobby");
@@ -150,8 +163,20 @@ package view.window
 				case closeButton:
 					close();
 				break;
+				case kickoutButton:
+					var confirmKickOutWindow:ConfirmWindow = new ConfirmWindow();
+					confirmKickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.confirmKickOut + " " + displayName);
+					confirmKickOutWindow.addEventListener(ConfirmWindow.CONFIRM, onConfirmKickOut);
+					WindowLayer.getInstance().openWindow(confirmKickOutWindow);
+					close();
+				break;
 				default:
 			}
+		}
+		
+		private function onConfirmKickOut(e:Event):void 
+		{
+			electroServerCommand.kickUser(userName);
 		}
 		
 		public function get level():int 
@@ -198,6 +223,14 @@ package view.window
 			avatar.addImg(avatarString);
 		}
 		
+		public function set isShowKickOut(value:Boolean):void 
+		{
+			_isShowKickOut = value;
+			if (userName == mainData.chooseChannelData.myInfo.uId)
+				return;
+			kickoutButton.visible = value;
+		}
+		
 		public function get isFriend():Boolean 
 		{
 			return _isFriend;
@@ -206,6 +239,8 @@ package view.window
 		public function set isFriend(value:Boolean):void 
 		{
 			_isFriend = value;
+			if (userName == mainData.chooseChannelData.myInfo.uId)
+				return;
 			removeFriendButton.visible = value;
 			addFriendButton.visible = !value;	
 		}
@@ -222,40 +257,58 @@ package view.window
 			gold = Number(data.money);
 			displayName = data.displayName;
 			avatarString = data.avatar;
-			isFriend = data.isFriend;
 			userName = data.userName;
+			isFriend = data.isFriend;
 			winTxt.text = "+" + PlayingLogic.format(data.win, 1) + " thắng";
 			loseTxt.text = "+" + PlayingLogic.format(data.lose, 1) + " thua";
 			
 			if (isFriend)
 			{
-				content["statusIcon"].visible = true;
-				if (data.isOnline)
+				if (!isInGame)
 				{
-					switch (data.gameId) 
+					content["statusIcon"].visible = true;
+					if (data.isOnline)
 					{
-						case MainData.MAUBINH_ID:
-							gameTxt.text = "BINH";
-						break;
-						case MainData.PHOM_ID:
-							gameTxt.text = "PHỎM";
-						break;
-						default:
+						switch (data.gameId) 
+						{
+							case MainData.MAUBINH_ID:
+								gameTxt.text = "BINH";
+							break;
+							case MainData.PHOM_ID:
+								gameTxt.text = "PHỎM";
+							break;
+							case MainData.TLMN_ID:
+								gameTxt.text = "TLMN";
+							break;
+							default:
+						}
+						if (data.roomID == mainData.lobbyRoomId)
+							roomTxt.text = "Phòng chờ";
+						else
+							roomTxt.text = "Bàn số " + String(data.roomID);
 					}
-					if (data.roomID == mainData.lobbyRoomId)
-						roomTxt.text = "Phòng chờ";
 					else
-						roomTxt.text = "Bàn số " + String(data.roomID);
-				}
-				else
-				{
-					gameTxt.text = "Offline";
+					{
+						gameTxt.text = "Offline";
+					}
 				}
 			}
 			else
 			{
 				content["statusIcon"].visible = false;
 			}
+		}
+		
+		public function get isInGame():Boolean 
+		{
+			return _isInGame;
+		}
+		
+		public function set isInGame(value:Boolean):void 
+		{
+			_isInGame = value;
+			if (value)
+				messageButton.visible = false;
 		}
 		
 	}

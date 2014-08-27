@@ -487,6 +487,8 @@ package control
 						object[DataFieldMauBinh.AVATAR] = user.userVariableByName(DataFieldMauBinh.USER_INFO).value.getString(DataFieldMauBinh.AVATAR);
 						object[DataFieldMauBinh.DISPLAY_NAME] = user.userVariableByName(DataFieldMauBinh.USER_INFO).value.getString(DataFieldMauBinh.DISPLAY_NAME);
 						object[DataFieldMauBinh.IP] = user.userVariableByName(DataFieldMauBinh.USER_INFO).value.getString(DataFieldMauBinh.IP);
+						object[DataFieldMauBinh.WIN] = user.userVariableByName(DataFieldMauBinh.USER_INFO).value.getInteger(DataFieldMauBinh.WIN);
+						object[DataFieldMauBinh.LOSE] = user.userVariableByName(DataFieldMauBinh.USER_INFO).value.getInteger(DataFieldMauBinh.LOSE);
 						if (user.userVariableByName(DataFieldMauBinh.USER_INFO).value.doesPropertyExist(DataFieldMauBinh.SEX))
 							object[DataFieldMauBinh.SEX] = user.userVariableByName(DataFieldMauBinh.USER_INFO).value.getString(DataFieldMauBinh.SEX);
 						else
@@ -1683,6 +1685,8 @@ package control
 				userRecentlyJoinRoomObject[DataFieldMauBinh.MONEY] = object[DataFieldMauBinh.MONEY];
 				userRecentlyJoinRoomObject[DataFieldMauBinh.AVATAR] = object[DataFieldMauBinh.AVATAR];
 				userRecentlyJoinRoomObject[DataFieldMauBinh.IP] = object[DataFieldMauBinh.IP];
+				userRecentlyJoinRoomObject[DataFieldMauBinh.WIN] = object[DataFieldMauBinh.WIN];
+				userRecentlyJoinRoomObject[DataFieldMauBinh.LOSE] = object[DataFieldMauBinh.LOSE];
 				if (object[DataFieldMauBinh.SEX])
 					userRecentlyJoinRoomObject[DataFieldMauBinh.SEX] = object[DataFieldMauBinh.SEX];
 				else

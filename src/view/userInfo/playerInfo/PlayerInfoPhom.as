@@ -309,6 +309,8 @@ package view.userInfo.playerInfo
 		// update text tên, cấp độ và số tiền
 		public function updatePersonalInfo(infoObject:Object):void
 		{
+			win = infoObject[DataFieldPhom.WIN];
+			lose = infoObject[DataFieldPhom.LOSE];
 			sex = infoObject[DataFieldPhom.SEX];
 			deviceIcon.gotoAndStop(infoObject[DataFieldPhom.DEVICE_ID]);
 			userName = infoObject[ModelField.USER_NAME];
@@ -343,8 +345,8 @@ package view.userInfo.playerInfo
 		
 		private function onAvatarClick(e:MouseEvent):void 
 		{
-			if (formName == BELOW_USER)
-				return;
+			//if (formName == BELOW_USER)
+				//return;
 			e.stopPropagation();
 			dispatchEvent(new Event(AVATAR_CLICK));
 		}
@@ -2393,6 +2395,9 @@ package view.userInfo.playerInfo
 		private var _isGiveUp:Boolean;
 		private var emo:Sprite;
 		private var timerToHideEmo:Timer;
+		public var win:int;
+		public var lose:int;
+		
 		public function get isGiveUp():Boolean 
 		{
 			return _isGiveUp;
