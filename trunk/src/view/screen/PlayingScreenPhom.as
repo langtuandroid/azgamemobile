@@ -45,6 +45,7 @@ package view.screen
 	import view.ScrollView.ScrollViewYun;
 	import view.userInfo.playerInfo.PlayerInfoPhom;
 	import view.window.AccuseWindow;
+	import view.window.AddFriendWindow;
 	import view.window.AddMoneyWindow2;
 	import view.window.AlertWindow;
 	import view.window.BaseWindow;
@@ -2194,26 +2195,32 @@ package view.screen
 		
 		private function onShowContextMenu(e:Event):void 
 		{
-			var userProfileWindow:UserProfileWindow = new UserProfileWindow();
-			userProfileWindow.displayName = PlayerInfoPhom(e.currentTarget).displayName;
-			userProfileWindow.userName = PlayerInfoPhom(e.currentTarget).userName;
-			userProfileWindow.gold = PlayerInfoPhom(e.currentTarget).moneyNumber;
-			userProfileWindow.level = PlayerInfoPhom(e.currentTarget).levelNumber;
-			userProfileWindow.avatarString = PlayerInfoPhom(e.currentTarget).avatarString;
-			userProfileWindow.isFriend = false;
+			var userData:UserDataULC = new UserDataULC();
+			userData.levelName = String(PlayerInfoPhom(e.currentTarget).levelNumber);
+			userData.money = String(PlayerInfoPhom(e.currentTarget).moneyNumber);
+			userData.displayName = PlayerInfoPhom(e.currentTarget).displayName;
+			userData.avatar = PlayerInfoPhom(e.currentTarget).avatarString;
+			userData.userName = PlayerInfoPhom(e.currentTarget).userName;
+			userData.isFriend = false;
 			for (var i:int = 0; i < mainData.lobbyRoomData.friendList.length; i++) 
 			{
-				if (UserDataULC(mainData.lobbyRoomData.friendList[i]).userName == userProfileWindow.userName)
+				if (UserDataULC(mainData.lobbyRoomData.friendList[i]).userName == userData.userName)
 				{
-					userProfileWindow.isFriend = true;
+					userData.isFriend = true;
 					break;
 				}
 			}
+			userData.win = PlayerInfoPhom(e.currentTarget).win;
+			userData.lose = PlayerInfoPhom(e.currentTarget).lose;
+			
+			var addFriendWindow:AddFriendWindow = new AddFriendWindow();
+			addFriendWindow.isInGame = true;
+			addFriendWindow.data = userData;
 			if (belowUserInfo.isRoomMaster && !isPlaying)
-				userProfileWindow.isShowKickOut = true;
+				addFriendWindow.isShowKickOut = true;
 			else
-				userProfileWindow.isShowKickOut = false;
-			windowLayer.openWindow(userProfileWindow);
+				addFriendWindow.isShowKickOut = false;
+			windowLayer.openWindow(addFriendWindow);
 		}
 		
 		private function onKickOutClick(e:Event):void 

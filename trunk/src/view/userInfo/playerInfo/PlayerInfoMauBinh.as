@@ -271,11 +271,11 @@ package view.userInfo.playerInfo
 			content["avatarPosition"].visible = false;
 			content.addChild(avatar);
 			
-			if (formName != BELOW_USER)
-			{
+			//if (formName != BELOW_USER)
+			//{
 				avatar.buttonMode = true;
 				avatar.addEventListener(MouseEvent.CLICK, onAvatarClick);
-			}
+			//}
 		}
 		
 		private function onAvatarClick(e:MouseEvent):void 
@@ -356,6 +356,8 @@ package view.userInfo.playerInfo
 		// update text tên, cấp độ và số tiền
 		public function updatePersonalInfo(infoObject:Object):void
 		{
+			win = infoObject[DataFieldMauBinh.WIN];
+			lose = infoObject[DataFieldMauBinh.LOSE];
 			sex = infoObject[DataFieldMauBinh.SEX];
 			deviceIcon.gotoAndStop(infoObject[DataFieldMauBinh.DEVICE_ID]);
 			userName = infoObject[ModelField.USER_NAME];
@@ -1654,6 +1656,9 @@ package view.userInfo.playerInfo
 		private var _isGiveUp:Boolean;
 		private var emo:Sprite;
 		private var timerToHideEmo:Timer;
+		public var win:int;
+		public var lose:int;
+		
 		public function get isGiveUp():Boolean 
 		{
 			return _isGiveUp;

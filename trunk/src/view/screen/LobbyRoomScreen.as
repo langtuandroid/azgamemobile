@@ -1164,7 +1164,7 @@ package view.screen
 					return;
 			}
 			createRoomWindow = new CreateRoomWindow();
-			windowLayer.openWindow(createRoomWindow, null, BaseWindow.NO_EFFECT, true);
+			windowLayer.openWindow(createRoomWindow, null, BaseWindow.NO_EFFECT, false);
 		}
 		
 		private function onFindRoom(e:Event):void 
