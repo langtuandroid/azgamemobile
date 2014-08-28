@@ -99,6 +99,12 @@ package view.screen.play
 		
 		private var _timerDealcard:Timer;
 		
+		public var _winCount:int;
+		public var _loseCount:int;
+		
+		private var _contextMenu:ContextMenu;
+		private var _level:String = "";
+		
 		public function MyInfoTLMN(playgame:PlayGameScreenTlmn) 
 		{
 			_glowFilter.color = 0x663311;
@@ -147,9 +153,47 @@ package view.screen.play
 			
 			content.autoReadyBtn.gotoAndStop(1);
 			content.autoReadyBtn.addEventListener(MouseEvent.CLICK, onClickAutoReady);
-			
+			content.showDetailUser.addEventListener(MouseEvent.CLICK, onClickShowContex);
 			buttonForMe();
 			//addMoneyEffect();
+		}
+		
+		private function onClickShowContex(e:MouseEvent):void 
+		{
+			if (!_contextMenu) 
+			{
+				_contextMenu = new ContextMenu();
+				addChild(_contextMenu);
+				
+				_contextMenu.addEventListener("close", onClose);
+			}
+			else 
+			{
+				if (_contextMenu.visible == true) 
+				{
+					_contextMenu.visible = false;
+				}
+				else 
+				{
+					_contextMenu.visible = true;
+				}
+				
+			}
+			
+			_contextMenu.x = 135;
+			_contextMenu.y = -175;
+			
+			_contextMenu.setInfo(MyDataTLMN.getInstance().myDisplayName, String(MyDataTLMN.getInstance().myMoney[0]), 
+								_level, _linkAvatar, 
+											false, false, _winCount, _loseCount, true);
+		}
+		
+		public function onClose(e:Event):void 
+		{
+			if (_contextMenu) 
+			{
+				_contextMenu.visible = false;
+			}
 		}
 		
 		private function onLoadAvatarError(e:Event):void 
@@ -908,10 +952,13 @@ package view.screen.play
 		 */
 		public function addInfoForMe(userName:String, money:String, linkAvatar:String, remainingCard:int, level:String,
 										isMaster:Boolean, isPlaying:Boolean, displayName:String, ready:Boolean, ip:String,
-										device:String):void 
+										device:String, win:int, lose:int):void 
 		{
 			_userName = userName;
+			_winCount = win;
+			_loseCount = lose;
 			
+			_level = level;
 			var count:int = 0;
 			var i:int = 0;
 			var j:int = 0;

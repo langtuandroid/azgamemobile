@@ -272,6 +272,7 @@ package view.screen
 			content.emoBtn.addEventListener(MouseEvent.CLICK, onEmoticonButtonClick);
 			
 			content.noticeMc.visible = false;
+			content.noticeSpecialCard.visible = false;
 			
 			if (heartbeart) 
 			{
@@ -815,7 +816,7 @@ package view.screen
 				_userLastDisCard = "";
 				removeAllDisCard();
 				_myInfo._isPassTurn = false;
-				
+				_cardsName = "";
 				_myInfo.onCompleteNextturn();
 				
 				for (var j:int = 0; j < _arrUserInfo.length; j++) 
@@ -1185,6 +1186,7 @@ package view.screen
 			{
 				_arrUserInfo[i].stopTimer();
 			}
+			content.noticeSpecialCard.visible = false;
 			{
 				
 				trace(GameDataTLMN.getInstance().currentPlayer, MyDataTLMN.getInstance().myId, "thằng nào có đồng hồ chạy", _isPlaying)
@@ -1198,6 +1200,17 @@ package view.screen
 						content.noticeMc.visible = true;
 						content.noticeMc.gotoAndPlay(1);
 					}
+					
+					if (_cardsName == "Đôi 2" || _cardsName == "Hai" || _cardsName == "3 đôi thông" ||
+						_cardsName == "4 đôi thông" || _cardsName == "Tứ quí") 
+					{
+						content.noticeSpecialCard.visible = true;
+					}
+					else 
+					{
+						content.noticeSpecialCard.visible = false;
+					}
+					
 					_myInfo.checkPosClock();
 					content.userTurn.x = _myInfo.x + 20;
 					content.userTurn.y = _myInfo.y - 80;
@@ -1283,7 +1296,7 @@ package view.screen
 			_isPlaying = false;
 			_stageGame = 2;
 			GameDataTLMN.getInstance().finishRound = false;
-			
+			_cardsName = "";
 			if (timerDealCard) 
 			{
 				timerDealCard.stop();
@@ -2931,8 +2944,8 @@ package view.screen
 					//content.specialCard.visible = true;
 					content.setChildIndex(content.specialCard, content.numChildren - 1);
 				}
+				
 			}
-			
 			
 			if (checkAnimationChat2) 
 			{
@@ -2962,6 +2975,10 @@ package view.screen
 					_arrUserInfo[j].onCompleteNextturn();
 				}
 			}
+			else 
+			{
+				_cardsName = "";
+			}
 			
 			if (GameDataTLMN.getInstance().finishRound) 
 			{
@@ -2972,6 +2989,7 @@ package view.screen
 				removeAllDisCard();
 				_myInfo._isPassTurn = false;
 				_userLastDisCard = "";
+				_cardsName = "";
 				
 				_myInfo.onCompleteNextturn();
 				
@@ -3976,7 +3994,7 @@ package view.screen
 			}
 			if (canExitGame) 
 			{
-				if (_myInfo._ready && _isPlaying) 
+				if (_myInfo._ready && _stageGame == 1) 
 				{
 					
 					confirmExitWindow = new ConfirmWindow();
@@ -3984,7 +4002,7 @@ package view.screen
 					confirmExitWindow.addEventListener(ConfirmWindow.CONFIRM, onConfirmWindow);
 					windowLayer.openWindow(confirmExitWindow);
 				}
-				else 
+				else if (_stageGame == 0)
 				{
 					/*if (SoundManager.getInstance().isSoundOn) 
 					{
@@ -4250,7 +4268,8 @@ package view.screen
 								
 								_arrUserInfo[i].getInfoPlayer(i + 1, obj[DataField.USER_NAME], obj[DataField.MONEY], obj[DataField.AVATAR], 
 								0, String(obj[DataField.LEVEL]), false, _isPlaying, false,
-								obj[DataField.DISPLAY_NAME], obj[DataField.SEX], obj[DataField.IP], obj[DataField.DEVICE_ID]);
+								obj[DataField.DISPLAY_NAME], obj[DataField.SEX], obj[DataField.IP], obj[DataField.DEVICE_ID],
+								obj[DataField.WIN], obj[DataField.LOSE]);
 								
 								objUser = new Object();
 								objUser[DataField.USER_NAME] = obj[DataField.USER_NAME];
@@ -4289,7 +4308,8 @@ package view.screen
 							
 							_arrUserInfo[i].getInfoPlayer(i + 1, obj[DataField.USER_NAME], obj[DataField.MONEY], obj[DataField.AVATAR], 
 								0, String(obj[DataField.LEVEL]), false, _isPlaying, false,
-								obj[DataField.DISPLAY_NAME], obj[DataField.SEX], obj[DataField.IP], obj[DataField.DEVICE_ID]);
+								obj[DataField.DISPLAY_NAME], obj[DataField.SEX], obj[DataField.IP], obj[DataField.DEVICE_ID],
+								obj[DataField.WIN], obj[DataField.LOSE]);
 							
 							
 							/*if (_stageId == 1) 
@@ -4600,7 +4620,7 @@ package view.screen
 			_myInfo.addInfoForMe(_arrUserList[0].userName, _arrUserList[0].money, _arrUserList[0].avatar, 
 									_arrUserList[0].remaningCard, _arrUserList[0].level,
 									_arrUserList[0].isMaster, _isPlaying, _arrUserList[0].displayName, _arrUserList[0].ready,
-									_arrUserList[0].ip, _arrUserList[0].deviceId);
+									_arrUserList[0].ip, _arrUserList[0].deviceId, _arrUserList[0].win, _arrUserList[0].lose);
 			//
 			MyDataTLMN.getInstance().myMoney[0] = String(_arrUserList[0].money);
 			mainData.chooseChannelData.myInfo.money = Number(_arrUserList[0].money);
@@ -4634,6 +4654,7 @@ package view.screen
 														String(_arrUserList[i].level), _arrUserList[i].ready, _isPlaying, 
 													_arrUserList[i].isMaster, _arrUserList[i].displayName, 
 													_arrUserList[i].sex, _arrUserList[i].ip, _arrUserList[i].deviceId
+													, _arrUserList[i].win, _arrUserList[i].lose
 													);
 					//checkPosClock();
 					if (!isMeJoinRoom) 

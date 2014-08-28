@@ -65,6 +65,9 @@ package view.screen.play
 		private var _timerDealcard:Timer;
 		public var _displayName:String = "";
 		
+		public var _win:int;
+		public var _lose:int;
+		
 		public function PlayerInfoTLMN(pos:int) 
 		{
 			
@@ -585,7 +588,7 @@ package view.screen.play
 				ismaster = true;
 			}
 			
-			_contextMenu.setInfo(content.txtName.text, format(_money), "10", _linkAvatar, friend, ismaster);
+			_contextMenu.setInfo(content.txtName.text, String(_money), _level, _linkAvatar, friend, ismaster, _win, _lose, false);
 			//_contextMenu.setInfo(content.txtName.text, content.txtMoney.text, content.level.txt.text, _linkAvatar, false);
 			setPosContext();
 		}
@@ -646,11 +649,12 @@ package view.screen.play
 		 */
 		public function getInfoPlayer(pos:int, userName:String, money:String, linkAvatar:String, remainingCard:int, level:String,
 										userPlaying:Boolean, gamePlaying:Boolean, isMaster:Boolean, displayName:String,
-										sex:Boolean, ip:String, device:String):void 
+										sex:Boolean, ip:String, device:String, win:int, lose:int):void 
 		{
 			//_pos = pos;
 			_sex = sex;
-			
+			_win = win;
+			_lose = lose;
 			var count:int = 0;
 			var i:int = 0;
 			var j:int = 0;
