@@ -308,7 +308,10 @@ package view.window
 		{
 			_isInGame = value;
 			if (value)
+			{
+				content["statusIcon"].visible = false;
 				messageButton.visible = false;
+			}
 		}
 		
 	}
