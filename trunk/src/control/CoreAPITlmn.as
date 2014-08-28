@@ -546,7 +546,8 @@ package control
 						object[DataField.IP] = user.userVariableByName(DataField.USER_INFO).value.getString(DataField.IP);
 						object[DataField.AVATAR] = user.userVariableByName(DataField.USER_INFO).value.getString(DataField.AVATAR);
 						object[DataField.DISPLAY_NAME] = EsObject(tempUserList[i]).getString(DataField.DISPLAY_NAME);
-						
+						object[DataField.WIN] = user.userVariableByName(DataField.USER_INFO).value.getInteger(DataField.WIN);
+						object[DataField.LOSE] = user.userVariableByName(DataField.USER_INFO).value.getInteger(DataField.LOSE);
 						//object[DataField.DEVICE] = myData.userList[userName][DataField.USER_INFO][DataField.DEVICE];
 						userList.push(object);
 					}
@@ -1215,6 +1216,8 @@ package control
 					userRecentlyJoinRoomObject[DataField.AVATAR] = userJoinRoom.getString(DataField.AVATAR);
 					userRecentlyJoinRoomObject[DataField.DISPLAY_NAME] = userJoinRoom.getString(DataField.DISPLAY_NAME);
 					userRecentlyJoinRoomObject[DataField.SEX] = userJoinRoom.getString(DataField.SEX);
+					userRecentlyJoinRoomObject[DataField.WIN] = userJoinRoom.getInteger(DataField.WIN);
+					userRecentlyJoinRoomObject[DataField.LOSE] = userJoinRoom.getInteger(DataField.LOSE);
 					//userRecentlyJoinRoomObject[DataField.LOGO] = object[DataField.LOGO];
 					//userRecentlyJoinRoomObject[DataField.DEVICE] = object[DataField.DEVICE];
 					

@@ -73,11 +73,16 @@ package view.screen.play
 			dispatchEvent(new Event("kick"));
 		}
 		
-		public function setInfo(userName:String, money:String, level:String, linkAvatar:String, friend:Boolean, isMaster:Boolean):void 
+		public function setInfo(userName:String, money:String, level:String, linkAvatar:String, friend:Boolean, 
+								isMaster:Boolean, win:int, lose:int, isMe:Boolean):void 
 		{
 			content.userName.text = userName;
-			content.userMoney.text = money;
+			content.userMoney.text = format(int(money));
+			content.winTxt.text = format(win);
+			content.loseTxt.text = format(lose);
 			content.level.txt.text = level;
+			
+			
 			
 			if (isMaster) 
 			{
@@ -95,6 +100,13 @@ package view.screen.play
 			else 
 			{
 				content.removeFriendBtn.visible = false;
+			}
+			
+			if (isMe) 
+			{
+				content.addFriendBtn.visible = false;
+				content.removeFriendBtn.visible = false;
+				content.kickBtn.visible = false;
 			}
 			
 			avatar.addImg(linkAvatar);
