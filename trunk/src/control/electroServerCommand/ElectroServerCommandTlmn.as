@@ -623,14 +623,19 @@ package control.electroServerCommand
 				roomData.name = roomList[roomId][DataFieldMauBinh.ROOM_NAME];
 				roomData.id = int(roomId);
 				roomData.gameId = roomList[roomId][DataFieldMauBinh.GAME_ID];
+				
 				//if (roomList[roomId][DataField.USER_LIST])
 					//roomData.userNumbers = (roomList[roomId][DataField.USER_LIST] as Array).length;
 				//else
 					//roomData.userNumbers = 1;
 				roomData.userNumbers = roomList[roomId][DataFieldMauBinh.USERS_NUMBER];
+				
 				if (roomData.userNumbers != roomData.maxPlayer || mainData.showFullTable == 1)
 					tempRoomList.push(roomData);
 			}
+			
+			//tempRoomList.sortOn("rateRoom", Array.CASEINSENSITIVE);
+			
 			mainData.lobbyRoomData.roomList = tempRoomList;
 		}
 		
