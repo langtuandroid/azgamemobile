@@ -1316,6 +1316,10 @@ package view.window.shop
 		
 		public function onClickShowGold(e:MouseEvent):void 
 		{
+			getNewAccessToken();
+			scrollView.visible = true;
+			scrollViewForRank.visible = false;
+			
 			allHeaderVisible();
 			showHeaderChose(2, 1);
 			loadItem(1);

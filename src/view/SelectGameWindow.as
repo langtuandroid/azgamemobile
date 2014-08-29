@@ -301,7 +301,7 @@ package view
 					addChild(_shopWindow);
 					_shopWindow.x = -470;
 					_shopWindow.y = -300;
-					_shopWindow.onClickShowAvatar(null);
+					_shopWindow.onClickShowGold(null);
 				break;
 				case 5:
 					inventoryTabEnable.visible = false;
