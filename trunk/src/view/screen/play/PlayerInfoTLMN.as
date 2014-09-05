@@ -553,7 +553,7 @@ package view.screen.play
 			{
 				_contextMenu = new ContextMenu();
 				addChild(_contextMenu);
-				dispatchEvent(new Event("showInfo"));
+				
 				
 				_contextMenu.addEventListener("kick", onClickKick);
 				_contextMenu.addEventListener("close", onClose);
@@ -581,7 +581,7 @@ package view.screen.play
 					friend = true;
 				}
 			}
-			
+			dispatchEvent(new Event("showInfo"));
 			var ismaster:Boolean = false;
 			if (GameDataTLMN.getInstance().master == MyDataTLMN.getInstance().myId) 
 			{
@@ -598,7 +598,12 @@ package view.screen.play
 			dispatchEvent(new Event("remove friend"));
 		}
 		
-		private function onClose(e:Event):void 
+		public function showContextMenu():void 
+		{
+			_contextMenu.visible = true;
+		}
+		
+		public function onClose(e:Event):void 
 		{
 			if (_contextMenu) 
 			{

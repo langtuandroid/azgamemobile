@@ -179,13 +179,18 @@ package view.screen.play
 				}
 				
 			}
-			
-			_contextMenu.x = 135;
+			dispatchEvent(new Event("showInfo"));
+			_contextMenu.x = 235;
 			_contextMenu.y = -175;
 			
 			_contextMenu.setInfo(MyDataTLMN.getInstance().myDisplayName, String(MyDataTLMN.getInstance().myMoney[0]), 
 								_level, _linkAvatar, 
 											false, false, _winCount, _loseCount, true);
+		}
+		
+		public function showContextMenu():void 
+		{
+			_contextMenu.visible = true;
 		}
 		
 		public function onClose(e:Event):void 

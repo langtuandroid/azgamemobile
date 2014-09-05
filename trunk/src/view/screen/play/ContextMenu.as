@@ -110,6 +110,7 @@ package view.screen.play
 			}
 			
 			avatar.addImg(linkAvatar);
+			avatar.visible = true;
 		}
 		
 	}

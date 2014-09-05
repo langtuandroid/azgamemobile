@@ -695,7 +695,7 @@ package view.window.shop
 		
 		private function onAddMoneyRespone(obj:Object):void 
 		{
-			var addMoney:ConfirmWindow = new ConfirmWindow();
+			var addMoney:ShopNoticeWindow = new ShopNoticeWindow();
 			var buyAvatarWindow:ConfirmWindow;
 			
 			windowLayer.closeAllWindow();
@@ -715,19 +715,27 @@ package view.window.shop
 			}
 			else if (obj.TypeMsg == 1) 
 			{
-				addMoney.setNotice("Bạn đã nạp " + int(obj.Data.Amount / 1000) + "k thành công");
-				addMoney.buttonStatus(false, true, false);
-				
+				addMoney.addWindow("AddMoneySuccessWindow", "Bạn đã nạp " + int(obj.Data.Amount / 1000) + "k thành công");
+				windowLayer.openWindow(addMoney);
 				updateUserInfo();
-				
+				addMoney.addEventListener(ShopNoticeWindow.CHANGE_MONEY, onShowShopGold);
 			}
 			else 
 			{
-				addMoney.setNotice(obj.Msg);
-				addMoney.buttonStatus(false, true, false);
+				buyAvatarWindow = new ConfirmWindow();
+				buyAvatarWindow.setNotice(obj.Msg);
+				buyAvatarWindow.buttonStatus(false, true, false);
+				windowLayer.openWindow(buyAvatarWindow);
 			}
 			
-			windowLayer.openWindow(addMoney);
+			
+		}
+		
+		private function onShowShopGold(e:Event):void 
+		{
+			e.currentTarget.removeEventListener(ShopNoticeWindow.CHANGE_MONEY, onShowShopGold);
+			
+			onClickShowGold(null);
 		}
 		
 		private function updateUserInfo():void 
@@ -2019,10 +2027,11 @@ package view.window.shop
 			{
 				if (Number(goldChoseBuy._chipAvt) > MainData.getInstance().chooseChannelData.myInfo.cash ) 
 				{
-					buyAvatarWindow = new ConfirmWindow();
-					buyAvatarWindow.setNotice("Tài khoản không có đủ CHIP");
-					buyAvatarWindow.buttonStatus(false, true, false);
-					windowLayer.openWindow(buyAvatarWindow);
+					var notEnoughMoneyWindow:ShopNoticeWindow = new ShopNoticeWindow();
+					notEnoughMoneyWindow.addWindow("BuyItemUnSuccessWindown", "Tài khoản không có đủ CHIP");
+					windowLayer.openWindow(notEnoughMoneyWindow);
+					notEnoughMoneyWindow.addEventListener(ShopNoticeWindow.ADD_MONEY, onShowShopAddMoney);
+					
 					check = false;
 				}
 			}
@@ -2048,6 +2057,13 @@ package view.window.shop
 				httpReq.sendRequest("POST", url, obj, buyItemRespone, true);
 			}
 			
+		}
+		
+		private function onShowShopAddMoney(e:Event):void 
+		{
+			e.currentTarget.removeEventListener(ShopNoticeWindow.ADD_MONEY, onShowShopAddMoney);
+			
+			onClickShowAddMoneyRaking(null);
 		}
 		
 		private function buyItemRespone(obj:Object):void 
@@ -2235,17 +2251,17 @@ package view.window.shop
 			trace(choosePay.typeOfPay);
 			typeOfPay = choosePay.typeOfPay;
 			
-			var buyAvatarWindow:ConfirmWindow;
+			var notEnoughMoneyWindow:ShopNoticeWindow;
 			var check:Boolean = true;
 			
 			if (typeOfPay == 2) 
 			{
 				if (Number(avatarChoseBuy._goldAvt) > MainData.getInstance().chooseChannelData.myInfo.money ) 
 				{
-					buyAvatarWindow = new ConfirmWindow();
-					buyAvatarWindow.setNotice("Tài khoản không có đủ GOLD");
-					buyAvatarWindow.buttonStatus(false, true, false);
-					windowLayer.openWindow(buyAvatarWindow);
+					notEnoughMoneyWindow = new ShopNoticeWindow();
+					notEnoughMoneyWindow.addWindow("BuyItemUnSuccessWindown", "Tài khoản không có đủ GOLD");
+					windowLayer.openWindow(notEnoughMoneyWindow);
+					notEnoughMoneyWindow.addEventListener(ShopNoticeWindow.ADD_MONEY, onShowShopAddMoney);
 					check = false;
 				}
 			}
@@ -2253,10 +2269,10 @@ package view.window.shop
 			{
 				if (Number(avatarChoseBuy._chipAvt) > MainData.getInstance().chooseChannelData.myInfo.cash ) 
 				{
-					buyAvatarWindow = new ConfirmWindow();
-					buyAvatarWindow.setNotice("Tài khoản không có đủ CHIP");
-					buyAvatarWindow.buttonStatus(false, true, false);
-					windowLayer.openWindow(buyAvatarWindow);
+					notEnoughMoneyWindow = new ShopNoticeWindow();
+					notEnoughMoneyWindow.addWindow("BuyItemUnSuccessWindown", "Tài khoản không có đủ CHIP");
+					windowLayer.openWindow(notEnoughMoneyWindow);
+					notEnoughMoneyWindow.addEventListener(ShopNoticeWindow.ADD_MONEY, onShowShopAddMoney);
 					check = false;
 				}
 			}
