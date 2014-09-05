@@ -387,6 +387,8 @@ package view
 					mainData.portNumber = 5101;
 					if (mainData.isTest)
 						mainData.portNumber = 3101;
+					if (!SoundManager.getInstance().isLoadSoundTlmn)
+						SoundManager.getInstance().addSound();
 				break;
 				case phomIcon:
 					gameId = 2;
@@ -397,6 +399,8 @@ package view
 					mainData.resetMatchTime = 6.5;
 					if (mainData.isTest)
 						mainData.portNumber = 3301;
+					if (!SoundManager.getInstance().isLoadSoundPhom)
+						SoundManager.getInstance().loadSoundPhom();
 				break;
 				case maubinhIcon:
 					gameId = 6;
@@ -407,6 +411,8 @@ package view
 					mainData.resetMatchTime = 8;
 					if (mainData.isTest)
 						mainData.portNumber = 3201;
+					if (!SoundManager.getInstance().isLoadSoundMauBinh)
+						SoundManager.getInstance().loadSoundMauBinh();
 				break;
 				default:
 			}
