@@ -1291,7 +1291,7 @@ package view.window.shop
 		{
 			windowLayer.openAlertWindow("Giải đấu chưa bắt đầu!");
 			return;
-			
+			tabOn(3);
 			allHeaderVisible();
 			showHeaderChose(3, 4);
 			loadMyItem(4);
@@ -1299,10 +1299,12 @@ package view.window.shop
 		
 		public function onClickShowGift(e:MouseEvent):void 
 		{
+			
 			windowLayer.openAlertWindow("Giải đấu chưa bắt đầu!");
 			return;
 			allHeaderVisible();
 			showHeaderChose(2, 4);
+			tabOn(3);
 			loadItem(4);
 		}
 		
@@ -1311,7 +1313,7 @@ package view.window.shop
 			
 			windowLayer.openAlertWindow("Giải đấu chưa bắt đầu!");
 			return;
-			
+			tabOn(3);
 			allHeaderVisible();
 			showHeaderChose(2, 3);
 			loadItem(3);
@@ -1329,7 +1331,7 @@ package view.window.shop
 			getNewAccessToken();
 			scrollView.visible = true;
 			scrollViewForRank.visible = false;
-			
+			tabOn(3);
 			allHeaderVisible();
 			showHeaderChose(2, 1);
 			loadItem(1);
@@ -1337,7 +1339,7 @@ package view.window.shop
 		
 		public function onClickShowAvatar(e:MouseEvent):void 
 		{
-			
+			tabOn(3);
 			getNewAccessToken();
 			scrollView.visible = true;
 			scrollViewForRank.visible = false;
