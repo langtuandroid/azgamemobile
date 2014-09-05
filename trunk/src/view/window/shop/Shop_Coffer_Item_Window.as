@@ -28,6 +28,7 @@ package view.window.shop
 	 */
 	public class Shop_Coffer_Item_Window extends Sprite 
 	{
+		public static var CHANGE_TAB:String = "changeTab";
 		private var myContent:MovieClip;
 		private var choosePay:ChoosePayMoneyType;
 		private var buyTour:BuyTourTicket;
@@ -38,7 +39,7 @@ package view.window.shop
 		
 		private var _arrBoard:Array;
 		
-		private var _type:int; // dang chon xem cai j`
+		public var _type:int; // dang chon xem cai j`
 		/**
 		 * 1:vina, 2:mobi, 3:viettel, 4:Vtc, 5:megacard, 6:fptgate
 		 */
@@ -736,6 +737,7 @@ package view.window.shop
 			e.currentTarget.removeEventListener(ShopNoticeWindow.CHANGE_MONEY, onShowShopGold);
 			
 			onClickShowGold(null);
+			dispatchEvent(new Event(CHANGE_TAB));
 		}
 		
 		private function updateUserInfo():void 
@@ -2063,7 +2065,7 @@ package view.window.shop
 		{
 			e.currentTarget.removeEventListener(ShopNoticeWindow.ADD_MONEY, onShowShopAddMoney);
 			
-			onClickShowAddMoneyRaking(null);
+			chooseAddMoney();
 		}
 		
 		private function buyItemRespone(obj:Object):void 
@@ -2342,11 +2344,15 @@ package view.window.shop
 			
 			headerOn(1);
 			boardOn(2);
+			tabOn(2);
 			
 			createCodeCheck();
 			
 			allHeaderVisible();
 			showHeaderChose(1, 0);
+			
+			dispatchEvent(new Event(CHANGE_TAB));
+			
 		}
 		
 		private function createCodeCheck():void 
@@ -2369,6 +2375,7 @@ package view.window.shop
 			scrollViewForRank.visible = true;
 			headerOn(0);
 			boardOn(0);
+			tabOn(1);
 			
 			loadTop(0);
 			allHeaderVisible();

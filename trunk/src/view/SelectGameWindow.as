@@ -324,6 +324,18 @@ package view
 				break;
 				default:
 			}
+			
+			if (_shopWindow) 
+			{
+				_shopWindow.removeEventListener(Shop_Coffer_Item_Window.CHANGE_TAB, onChangeTab);
+				_shopWindow.addEventListener(Shop_Coffer_Item_Window.CHANGE_TAB, onChangeTab);
+				
+			}
+		}
+		
+		private function onChangeTab(e:Event):void 
+		{
+			showTab(_shopWindow._type + 1);
 		}
 		
 		private function onAddedToStage(e:Event):void 
