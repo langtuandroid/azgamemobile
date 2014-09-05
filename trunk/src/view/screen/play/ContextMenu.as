@@ -24,7 +24,7 @@ package view.screen.play
 			avatar = new Avatar();
 			content.posAvatar.addChild(avatar);
 			avatar.x = -25;
-			avatar.y = -20;
+			//avatar.y = -20;
 			
 			content.addFriendBtn.addEventListener(MouseEvent.CLICK, onClickAddFriend);
 			content.removeFriendBtn.addEventListener(MouseEvent.CLICK, onClickRemoveFriend);
