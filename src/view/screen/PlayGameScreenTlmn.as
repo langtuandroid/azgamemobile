@@ -1201,8 +1201,8 @@ package view.screen
 						content.noticeMc.gotoAndPlay(1);
 					}
 					
-					if (_cardsName == "Đôi 2" || _cardsName == "Hai" || _cardsName == "3 đôi thông" ||
-						_cardsName == "4 đôi thông" || _cardsName == "Tứ quí") 
+					if ((_cardsName == "Đôi 2" || _cardsName == "Hai" || _cardsName == "3 đôi thông" ||
+						_cardsName == "4 đôi thông" || _cardsName == "Tứ quí" ) && _myInfo._isPassTurn)
 					{
 						content.noticeSpecialCard.visible = true;
 					}
@@ -1211,6 +1211,7 @@ package view.screen
 						content.noticeSpecialCard.visible = false;
 					}
 					
+					_myInfo._isPassTurn = false;
 					_myInfo.checkPosClock();
 					content.userTurn.x = _myInfo.x + 20;
 					content.userTurn.y = _myInfo.y - 80;
@@ -1285,7 +1286,7 @@ package view.screen
 				
 			}
 			
-			checkPosClock();
+			//checkPosClock();
 			
 				
 			
@@ -2967,7 +2968,7 @@ package view.screen
 			if (_cardsName == "Đôi 2" || _cardsName == "Hai" || _cardsName == "3 đôi thông" ||
 				_cardsName == "4 đôi thông" || _cardsName == "Tứ quí") 
 			{
-				_myInfo._isPassTurn = false;
+				
 				_myInfo.onCompleteNextturn();
 				
 				for (j = 0; j < _arrUserInfo.length; j++) 
@@ -3400,6 +3401,8 @@ package view.screen
 				_countTimerkick = 0;
 				content.timeKickUserTxt.visible = false;
 			}
+			
+			checkPosClock();
 		}
 		
 		public function removeAllEvent():void 
@@ -3455,6 +3458,8 @@ package view.screen
 				_arrUserInfo[i].removeEventListener(ConstTlmn.INVITE, onClickInvite);
 			}
 			
+			
+			
 			mainData.removeEventListener(MainData.UPDATE_SYSTEM_NOTICE, onUpdateSystemNotice);
 			if (timerToGetSystemNoticeInfo)
 			{
@@ -3469,6 +3474,7 @@ package view.screen
 			}
 			
 			_myInfo.removeAllEvent();
+			_myInfo.removeEventListener("showInfo", onShowMyInfo);
 			_myInfo.removeEventListener("next turn", onClickNextTurn);
 			_myInfo.removeEventListener("hit card", onClickHitCard);
 			_myInfo.removeEventListener(ConstTlmn.READY, onClickReady);
@@ -4492,13 +4498,7 @@ package view.screen
 		
 		private function addPlayerInfo():void 
 		{
-			_myInfo = new MyInfoTLMN(this);
-			content.addChild(_myInfo);
-			_myInfo.x = 60;
-			_myInfo.y = 372;
-			_myInfo.addEventListener("next turn", onClickNextTurn);
-			_myInfo.addEventListener("hit card", onClickHitCard);
-			_myInfo.addEventListener(ConstTlmn.READY, onClickReady);
+			
 							
 			_arrUserInfo = [];
 			//var count:int = 0;
@@ -4536,13 +4536,39 @@ package view.screen
 				//count++;
 			}
 			
+			_myInfo = new MyInfoTLMN(this);
+			content.addChild(_myInfo);
+			_myInfo.x = 60;
+			_myInfo.y = 372;
+			_myInfo.addEventListener("showInfo", onShowMyInfo);
+			_myInfo.addEventListener("next turn", onClickNextTurn);
+			_myInfo.addEventListener("hit card", onClickHitCard);
+			_myInfo.addEventListener(ConstTlmn.READY, onClickReady);
+		}
+		
+		private function onShowMyInfo(e:Event):void 
+		{
+			for (var i:int = 0; i < _arrUserInfo.length; i++) 
+			{
+				_arrUserInfo[i].onClose(null);
 			
+			}
+			_myInfo.onClose(null);
+			
+			_myInfo.showContextMenu();
 		}
 		
 		private function onShowInfo(e:Event):void 
 		{
+			for (var i:int = 0; i < _arrUserInfo.length; i++) 
+			{
+				_arrUserInfo[i].onClose(null);
+			
+			}
+			_myInfo.onClose(null);
 			var user:PlayerInfoTLMN = e.currentTarget as PlayerInfoTLMN;
 			content.setChildIndex(user, content.numChildren - 1);
+			user.showContextMenu();
 		}
 		
 		private function onAddFriend(e:Event):void 

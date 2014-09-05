@@ -128,6 +128,8 @@ package
 			BoGameBaiMainView;
 			zGiftCodeWindow;
 			zCloseConnectionWindow;
+			AddMoneySuccessWindow;
+			BuyItemUnSuccessWindown;
 		}
 	}
 }

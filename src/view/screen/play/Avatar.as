@@ -118,7 +118,7 @@ package view.screen.play
 			var urlRequest:URLRequest = new URLRequest(imgSrc);
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadImgComplete);
 			loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
-			loader.load(urlRequest, context);
+			loader.load(urlRequest);
 			content.addChild(loader);
 			/*if (!logoSrc)
 				return;
@@ -156,6 +156,7 @@ package view.screen.play
 				MovieClip(loader.content).smoothing = true;
 			}
 			*/
+			Bitmap(loader.content).smoothing = true;
 			var formRatio:Number = loader.width / loader.height;
 			var loaderRatio:Number = 1;
 			var ratio:Number = 0;
