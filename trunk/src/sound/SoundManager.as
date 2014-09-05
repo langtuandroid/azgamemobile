@@ -228,8 +228,15 @@
 				var tempSound:Sound = new Sound();
 				tempSound.load(new URLRequest("http://203.162.121.120/gamebai/bimkute/maubinh/soundMauBinh/" + soundUrl + ".az"));
 				tempSound.addEventListener(IOErrorEvent.IO_ERROR, onLoadSoundIOError);
+				tempSound.addEventListener(Event.COMPLETE, onLoadSoundBinhComplete);
+				
 				SoundManager.getInstance().registerSound(soundUrl, tempSound);
 			}
+		}
+		
+		private function onLoadSoundBinhComplete(e:Event):void 
+		{
+			trace("onLoadSoundBinhComplete");
 		}
 		
 		public function loadSoundPhom():void 
@@ -241,8 +248,14 @@
 				var tempSound:Sound = new Sound();
 				tempSound.load(new URLRequest("http://203.162.121.120/gamebai/bimkute/phom/soundPhom/" + soundUrl + ".az"));
 				tempSound.addEventListener(IOErrorEvent.IO_ERROR, onLoadSoundIOError);
+				tempSound.addEventListener(Event.COMPLETE, onLoadSoundPhomComplete);
 				SoundManager.getInstance().registerSound(soundUrl, tempSound);
 			}
+		}
+		
+		private function onLoadSoundPhomComplete(e:Event):void 
+		{
+			trace("onLoadSoundPhomComplete");
 		}
 		
 		public function loadSoundChung():void 
@@ -261,7 +274,7 @@
 		
 		private function onLoadSoundComplete(e:Event):void 
 		{
-			trace("load sound thanh cong");
+			//trace("load sound thanh cong");
 		}
 		
 		public function loadBackgroundMusic():void 

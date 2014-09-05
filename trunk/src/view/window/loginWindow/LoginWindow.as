@@ -467,14 +467,14 @@ package view.window.loginWindow
 			
 			if (mainData.isLoadSound)
 			{
-				if (!SoundManager.getInstance().isLoadSoundTlmn)
-					SoundManager.getInstance().addSound();
 				if (!SoundManager.getInstance().isLoadSoundChung)
 					SoundManager.getInstance().loadSoundChung();
-				if (!SoundManager.getInstance().isLoadSoundMauBinh)
-					SoundManager.getInstance().loadSoundMauBinh();
-				if (!SoundManager.getInstance().isLoadSoundPhom)
-					SoundManager.getInstance().loadSoundPhom();
+				//if (!SoundManager.getInstance().isLoadSoundTlmn)
+					//SoundManager.getInstance().addSound();
+				//if (!SoundManager.getInstance().isLoadSoundMauBinh)
+					//SoundManager.getInstance().loadSoundMauBinh();
+				//if (!SoundManager.getInstance().isLoadSoundPhom)
+					//SoundManager.getInstance().loadSoundPhom();
 				
 			}
 		}
