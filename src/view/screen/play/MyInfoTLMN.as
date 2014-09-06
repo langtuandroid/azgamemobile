@@ -180,7 +180,7 @@ package view.screen.play
 				
 			}
 			dispatchEvent(new Event("showInfo"));
-			_contextMenu.x = 235;
+			_contextMenu.x = -60;
 			_contextMenu.y = -175;
 			
 			_contextMenu.setInfo(MyDataTLMN.getInstance().myDisplayName, String(MyDataTLMN.getInstance().myMoney[0]), 
