@@ -4556,6 +4556,7 @@ package view.screen
 			_myInfo.onClose(null);
 			
 			_myInfo.showContextMenu();
+			content.setChildIndex(_myInfo, content.numChildren - 1);
 		}
 		
 		private function onShowInfo(e:Event):void 
