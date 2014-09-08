@@ -75,7 +75,7 @@ package view.screen.play
 		private var _clock:Clock;
 		private var _glowFilter:TextFormat = new TextFormat(); 
 		
-		private var _distanceConstan:int = 0;
+		private var _distanceConstan:int = 51;
 		private var _distanceConstanY:int = 0;
 		private var _arrStar:Array = [];
 		
@@ -104,6 +104,10 @@ package view.screen.play
 		
 		private var _contextMenu:ContextMenu;
 		private var _level:String = "";
+		
+		private var arrCardDeal:Array = [];
+		private var countDealCard:int = 0;
+		private var _countComplete:int;
 		
 		public function MyInfoTLMN(playgame:PlayGameScreenTlmn) 
 		{
@@ -296,6 +300,8 @@ package view.screen.play
 				_timerDealcard.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
 				_timerDealcard.stop();
 			}
+			
+			removeAllCardDeal();
 			
 			_ready = false;
 			
@@ -1125,6 +1131,8 @@ package view.screen.play
 			_arrcardDeck = [];
 			_arrCardImage = [];
 			_countCard = 0;
+			_countComplete = 0;
+			countDealCard = 0;
 			
 			content.confirmReady.visible = false;
 			
@@ -1144,6 +1152,8 @@ package view.screen.play
 				_timerDealcard.stop();
 			}
 			
+			
+			
 			hideSortCard();
 			
 			addClickCard();
@@ -1154,6 +1164,7 @@ package view.screen.play
 		{
 			effectDealCard(_countCard);
 			_countCard++;
+			
 		}
 		
 		private function effectDealCard(type:int):void 
@@ -1164,7 +1175,30 @@ package view.screen.play
 			}
 			
 			
+			var cardDeck:MovieClip = new CardDeckDeal();
+			content.cardContainer.addChild(cardDeck);
+			cardDeck.x = _posCardX + 150;
+			cardDeck.y = -150;
+			//cardDeck.scaleY = 0;
+			arrCardDeal.push(cardDeck);
+			
 			var card:CardTlmn = new CardTlmn(_arrCardInt[_countCard]);
+			card.x = _distanceConstan + _distance * _countCard;
+			card.y = _distanceConstanY;
+			card.scaleX = 0;
+			//card.scaleX = card.scaleY = .80;
+			content.cardContainer.addChild(card);
+			_arrCardImage.push(card);
+			card.buttonMode = true;
+			card._posCardY = _distanceConstanY;
+			card.pos = _countCard;
+			card.visible = false;
+			
+			//TweenMax.to(cardDeck, 1, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, ease:Back.easeOut, onComplete:onComplete } );
+			TweenMax.to(cardDeck, .8, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, 
+										onComplete:onCompleteMove } );
+			/////////////////
+			/*var card:CardTlmn = new CardTlmn(_arrCardInt[_countCard]);
 			card.x = _posCardX;
 			card.y = -90;
 			//card.scaleX = card.scaleY = .80;
@@ -1175,15 +1209,29 @@ package view.screen.play
 			card.pos = _countCard;
 			//TweenMax.to(card, .1, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, onComplete:onComplete } );
 			//TweenMax.to(card, .3, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, ease:Back.easeOut, onComplete:onComplete});
-			TweenMax.to(card, 1.5, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, ease:Back.easeOut});
+			TweenMax.to(card, 1.5, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, ease:Back.easeOut});*/
 			
+		}
+		
+		private function onCompleteMove():void 
+		{
+			
+			_arrCardImage[countDealCard].visible = true;
+			TweenMax.to(arrCardDeal[countDealCard], .7, { scaleX:0, onComplete:onComplete} );
+			TweenMax.to(_arrCardImage[countDealCard], .7, { scaleX:1 } );
+			countDealCard++;
 		}
 		
 		private function onComplete():void 
 		{
+			_countComplete++;
 			
-			_countCard++;
-			if (_countCard < _arrCardInt.length) 
+			if (_countComplete == 13) 
+			{
+				removeAllCardDeal();
+			}
+			
+			/*if (_countCard < _arrCardInt.length) 
 			{
 				effectDealCard(_countCard);
 			}
@@ -1193,8 +1241,17 @@ package view.screen.play
 				
 				addClickCard();
 				_parent.canExitGame = true;
-			}
+			}*/
 			
+		}
+		
+		private function removeAllCardDeal():void 
+		{
+			for (var i:int = 0; i < arrCardDeal.length; i++) 
+			{
+				content.cardContainer.removeChild(arrCardDeal[i]);
+			}
+			arrCardDeal = [];
 		}
 		
 		public function killAllTween():void 
@@ -1405,8 +1462,6 @@ package view.screen.play
 			}
 			arrCardChoose = arrCardChoose.sort(Array.NUMERIC);
 			arrCard = arrCard.sort(Array.NUMERIC);
-			
-			trace(arrCardChoose, "cac quan bai dang doi danh ra sap xep lai=============")
 			
 			if (!_isPassTurn) 
 			{
@@ -1803,6 +1858,8 @@ package view.screen.play
 				//e.currentTarget.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 				
 				//content.setChildIndex(card, content.numChildren - 1);
+				
+				
 				addEventListener(MouseEvent.MOUSE_MOVE, onMove);
 				addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			}
