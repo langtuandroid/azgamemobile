@@ -311,7 +311,7 @@ package view.screen.play
 				content.resultGame.gotoAndStop(1);
 				TextField(content.effectMoneySpecial).defaultTextFormat = _textformatWin;
 				
-				
+				_winCount++;
 				_win = true;
 				/*if (SoundManager.getInstance().isSoundOn) 
 				{
@@ -328,6 +328,7 @@ package view.screen.play
 			}
 			else 
 			{
+				_loseCount++;
 				_win = false;
 				if (_timerVoiceLose) 
 				{
