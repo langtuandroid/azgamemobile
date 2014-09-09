@@ -338,7 +338,7 @@ package view.screen.play
 			{
 				content.resultGame.gotoAndStop(1);
 				TextField(content.effectMoneySpecial).defaultTextFormat = _textformatWin;
-				
+				_win++;
 				if (SoundManager.getInstance().isSoundOn) 
 				{
 					var rd:int = int(Math.random() * 5);
@@ -354,6 +354,7 @@ package view.screen.play
 			}
 			else 
 			{
+				_lose++;
 				content.resultGame.gotoAndStop(2);
 				TextField(content.effectMoneySpecial).defaultTextFormat = _textformatLose;
 			}
