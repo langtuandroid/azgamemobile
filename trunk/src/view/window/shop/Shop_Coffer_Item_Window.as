@@ -222,6 +222,8 @@ package view.window.shop
 			myContent.standingBg.topMenu.topBinhBtn.gotoAndStop(2);
 			myContent.standingBg.topMenu.topPhomBtn.gotoAndStop(2);
 			
+			myContent.chooseInAddMoneyMc.purchase.visible = false;
+			
 			myContent.chooseInShopMc.chooseAvatar.addEventListener(MouseEvent.MOUSE_UP, onClickShowAvatar);
 			myContent.chooseInShopMc.chooseGold.addEventListener(MouseEvent.MOUSE_UP, onClickShowGold);
 			myContent.chooseInShopMc.chooseItem.addEventListener(MouseEvent.MOUSE_UP, onClickShowItem);
