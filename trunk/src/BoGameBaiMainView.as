@@ -33,6 +33,7 @@ package
 	import flash.utils.Timer;
 	import logic.PlayingLogic;
 	import logic.TLMNLogic;
+	import miniGame.MainMiniGame;
 	import model.chooseChannelData.ChooseChannelData;
 	import model.EsConfiguration;
 	import model.loadingData.LoadingData;
@@ -102,6 +103,8 @@ package
 		public var gamepath:String;
 		public var loadLoadingFinish:Boolean;
 		private var sharedObject:SharedObject;
+		private var minigameLayer:Sprite;
+		private var minigame:MainMiniGame;
 		
 		public function BoGameBaiMainView():void 
 		{
@@ -210,8 +213,108 @@ package
 			// Lắng nghe sự kiện join phòng chờ
 			mainData.lobbyRoomData.addEventListener(LobbyRoomData.JOIN_LOBBY_ROOM_SUCCESS, onJoinLobbyRoomSuccess);
 			
+			mainData.chooseChannelData.addEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
+			mainData.addEventListener(MainData.IS_MINI_GAME, onUpdateMiniGame);
 			// Lắng nghe sự kiện join phòng game
+			
 			mainData.playingData.addEventListener(PlayingData.JOIN_GAME_ROOM_SUCCESS, onJoinGameRoomSuccess);
+			
+			addMinigame();
+		}
+		
+		private function onUpdateMiniGame(e:Event):void 
+		{
+			if (mainData.isShowMiniGame) 
+			{
+				showMiniGame();
+			}
+			else 
+			{
+				hideMiniGame();
+			}
+		}
+		
+		private function onUpdateMyInfo(e:Event):void 
+		{
+			if (minigame) 
+			{
+				if (mainData.isTest) 
+				{
+					minigame.addInfoGame(mainData.chooseChannelData.myInfo.name, mainData.chooseChannelData.myInfo.cash, "http://wss.test.azgame.us/");
+				}
+				else 
+				{
+					minigame.addInfoGame(mainData.chooseChannelData.myInfo.name, mainData.chooseChannelData.myInfo.cash, "http://wss.azgame.us/");
+				}
+				
+			}
+		}
+		
+		private function addMinigame():void 
+		{
+			minigame = new MainMiniGame();
+			minigameLayer.addChild(minigame);
+			minigame.addEventListener(MainMiniGame.CLOSE_GAME, onCloseGame);
+		}
+		
+		private function onCloseGame(e:Event):void 
+		{
+			mainData.isShowMiniGame = false;
+		}
+		
+		
+		private function checkEventExist():void 
+		{
+			var httpReq:HTTPRequest = new HTTPRequest();
+			var method:String = "POST";
+			var str:String; 
+			if (mainData.isTest) 
+			{
+				str= "http://wss.test.azgame.us/Service02/OnplayGameEvent.asmx/Azgamebai_GetEventInfo";
+			}
+			else 
+			{
+				str= "http://wss.azgame.us/Service02/OnplayGameEvent.asmx/Azgamebai_GetEventInfo";
+			}
+			
+			var obj:Object = new Object();
+			obj.sq_id  = 1;
+			
+			httpReq.sendRequest(method, str, obj, getInfoEvent, true);
+		}
+		
+		private function getInfoEvent(obj:Object):void 
+		{
+			if (obj.Data.status == 0) 
+			{
+				var kickOutWindow:AlertWindow = new AlertWindow();
+				kickOutWindow.setNotice("Sự kiện đang bảo trì, vui lòng quay lại sau!");
+				WindowLayer.getInstance().openWindow(kickOutWindow);
+			}
+			else if (obj.Data.status == 1) 
+			{
+				showMiniGame();
+			}
+			mainData.typeOfEvent = obj.Data.status;
+			
+		}
+		
+		public function hideMiniGame():void 
+		{
+			if (minigame) 
+			{
+				minigame.removeMiniGame();
+			}
+			minigameLayer.visible = false;
+		}
+		
+		public function showMiniGame():void 
+		{
+			if (minigame) 
+			{
+				minigame.addMiniGame();
+			}
+			minigameLayer.visible = true;
 		}
 		
 		private function testCallServices():void 
@@ -354,6 +457,7 @@ package
 			lobbyRoomLayer = new Sprite();
 			playingScreenLayer = new Sprite();
 			topMenuLayer = new Sprite();
+			minigameLayer = new Sprite();
 			effectLayer = new Sprite();
 			windowLayer = new Sprite();
 			debugLayer = new Sprite();
@@ -363,11 +467,13 @@ package
 			addChild(lobbyRoomLayer);
 			addChild(topMenuLayer);
 			addChild(playingScreenLayer);
+			addChild(minigameLayer);
 			addChild(effectLayer);
 			addChild(windowLayer);
 			addChild(debugLayer);
 			
 			setupDebugLayer();
+			minigameLayer.visible = false;
 			
 			var stats:Stats = new Stats();
 			stats.y = 30;
@@ -408,6 +514,7 @@ package
 				windowLayerChild.closeAllWindow();
 				
 			//lobbyRoomScreen.updateGameType();
+			checkEventExist();
 				
 			if (mainData.chooseChannelData.myInfo.money < mainData.minMoney) // Nếu user hết tiền thì nạp tiền
 				mainCommand.getInfoCommand.addMoney();

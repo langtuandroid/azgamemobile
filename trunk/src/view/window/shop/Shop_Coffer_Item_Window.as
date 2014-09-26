@@ -71,6 +71,14 @@ package view.window.shop
 		private var changeGift:MovieClip;
 		private var tutorialAddMoney:MovieClip;
 		
+		private var loadAvatarShop:int;
+		private var loadGoldShop:int;
+		private var loadItemShop:int;
+		
+		private var loadAvatarCoffer:int;
+		private var loadGoldCoffer:int;
+		private var loadItemCoffer:int;
+		
 		public function Shop_Coffer_Item_Window() 
 		{
 			super();
@@ -192,6 +200,7 @@ package view.window.shop
 			
 			myContent.chooseInAddMoneyMc.raking.gotoAndStop(2);
 			myContent.chooseInAddMoneyMc.sms.gotoAndStop(2);
+			myContent.chooseInAddMoneyMc.creditCard.gotoAndStop(2);
 			
 			myContent.chooseInShopMc.chooseAvatar.gotoAndStop(2);
 			myContent.chooseInShopMc.chooseGold.gotoAndStop(2);
@@ -871,6 +880,14 @@ package view.window.shop
 			boardOn(1);
 		}
 		
+		private function onClickShowAddMoneyCreadit(e:MouseEvent):void 
+		{
+			allHeaderVisible();
+			showHeaderChose(1, 2);
+			headerOn(1);
+			boardOn(3);
+		}
+		
 		private function onClickShowAddMoneyRaking(e:MouseEvent):void 
 		{
 			allHeaderVisible();
@@ -1398,7 +1415,7 @@ package view.window.shop
 				myContent.chooseInStandingMc.royalBtn.gotoAndStop(1);
 				myContent.standingBg.boardContent.y = 0;
 			}
-			else if (header == 1 && type == 0) //nap tien: the cao, sms
+			else if (header == 1 && type == 0) //nap tien: the cao, sms, thẻ tín dụng
 			{
 				myContent.chooseInAddMoneyMc.raking.gotoAndStop(1);
 				myContent.standingBg.boardContent.y = 0;
@@ -1406,6 +1423,11 @@ package view.window.shop
 			else if (header == 1 && type == 1) 
 			{
 				myContent.chooseInAddMoneyMc.sms.gotoAndStop(1);
+				myContent.standingBg.boardContent.y = 0;
+			}
+			else if (header == 1 && type == 2) 
+			{
+				myContent.chooseInAddMoneyMc.creditCard.gotoAndStop(1);
 				myContent.standingBg.boardContent.y = 0;
 			}
 			else if (header == 2 && type == 0) //shop: avatar, gold. item. tour, phan thuong
@@ -1511,6 +1533,54 @@ package view.window.shop
 		 */
 		private function loadItem(type:int):void 
 		{
+			var i:int;
+			
+			for (i = 0; i < _arrTour.length; i++ ) 
+			{
+				_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
+				
+			}
+			for (i = 0; i < _arrGift.length; i++ ) 
+			{
+				_arrGift[i].removeEventListener(ConstTlmn.BUY_ITEM, onChangeGift);
+				
+			}
+			for (i = 0; i < _arrItem.length; i++ ) 
+			{
+				_arrItem[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemNormal);
+				
+			}
+			for (i = 0; i < _arrGold.length; i++ ) 
+			{
+				_arrGold[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemGold);
+				
+			}
+			for (i = 0; i < _arrAvatar.length; i++ ) 
+			{
+				_arrAvatar[i].removeEventListener(ConstTlmn.BUY_AVATAR, onBuyAvatar);
+				
+			}
+			for (i = 0; i < _arrMyAvatar.length; i++ ) 
+			{
+				_arrMyAvatar[i].removeEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
+				
+			}
+			scrollView.removeAll();
+			_arrAvatar = [];
+			_arrMyAvatar = [];
+			_arrGold = [];
+			_arrGift = [];
+			_arrItem = [];
+			_arrTour = [];
+			
+			loadAvatarShop = 0;
+			loadGoldShop = 0;
+			loadItemShop = 0;
+			
+			loadAvatarCoffer = 0;
+			loadGoldCoffer = 0;
+			loadItemCoffer = 0;
+			
 			headerOn(2);
 			windowLayer.openLoadingWindow();
 			var method:String = "POST";
@@ -1522,7 +1592,7 @@ package view.window.shop
 			{
 				case 0:
 					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwav00" + String(1)
-									+ "?rowStart=0&rowEnd=62";
+									+ "?rowStart=" + loadAvatarShop * 10 + 1 + "&rowEnd=" + (loadAvatarShop + 1) * 10;
 					obj = new Object();
 					obj.avt_group_id = String(0);
 					httpRequest.sendRequest(method, url, obj, loadAvatarSuccess, true);
@@ -1576,45 +1646,7 @@ package view.window.shop
 			var countY:int;
 			var i:int;
 			
-			for (i = 0; i < _arrGift.length; i++ ) 
-			{
-				_arrGift[i].removeEventListener(ConstTlmn.BUY_ITEM, onChangeGift);
-				
-			}
-			for (i = 0; i < _arrTour.length; i++ ) 
-			{
-				_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
-				
-			}
-			for (i = 0; i < _arrGift.length; i++ ) 
-			{
-				_arrGift[i].removeEventListener(ConstTlmn.BUY_ITEM, onChangeGift);
-				
-			}
-			for (i = 0; i < _arrItem.length; i++ ) 
-			{
-				_arrItem[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemNormal);
-				
-			}
-			for (i = 0; i < _arrGold.length; i++ ) 
-			{
-				_arrGold[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemGold);
-				
-			}
-			for (i = 0; i < _arrAvatar.length; i++ ) 
-			{
-				_arrAvatar[i].removeEventListener(ConstTlmn.BUY_AVATAR, onBuyAvatar);
-				
-			}
-			for (i = 0; i < _arrMyAvatar.length; i++ ) 
-			{
-				_arrMyAvatar[i].removeEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
-				
-			}
 			
-			
-			scrollView.removeAll();
-			_arrGift = [];
 			
 			if (obj["Msg"] == "Access Token Expired") 
 			{
@@ -1735,40 +1767,7 @@ package view.window.shop
 			var countY:int;
 			var i:int;
 			windowLayer.closeAllWindow();
-			for (i = 0; i < _arrTour.length; i++ ) 
-			{
-				_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
-				
-			}
-			for (i = 0; i < _arrGift.length; i++ ) 
-			{
-				_arrGift[i].removeEventListener(ConstTlmn.BUY_ITEM, onChangeGift);
-				
-			}
-			for (i = 0; i < _arrItem.length; i++ ) 
-			{
-				_arrItem[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemNormal);
-				
-			}
-			for (i = 0; i < _arrGold.length; i++ ) 
-			{
-				_arrGold[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemGold);
-				
-			}
-			for (i = 0; i < _arrAvatar.length; i++ ) 
-			{
-				_arrAvatar[i].removeEventListener(ConstTlmn.BUY_AVATAR, onBuyAvatar);
-				
-			}
-			for (i = 0; i < _arrMyAvatar.length; i++ ) 
-			{
-				_arrMyAvatar[i].removeEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
-				
-			}
 			
-			
-			scrollView.removeAll();
-			_arrTour = [];
 			
 			for (i = 0; i < arrData.length; i++ ) 
 			{
@@ -1823,38 +1822,7 @@ package view.window.shop
 			var countY:int;
 			var i:int;
 			windowLayer.closeAllWindow();
-			for (i = 0; i < _arrTour.length; i++ ) 
-			{
-				_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
-				
-			}
-			for (i = 0; i < _arrGift.length; i++ ) 
-			{
-				_arrGift[i].removeEventListener(ConstTlmn.BUY_ITEM, onChangeGift);
-				
-			}
-			for (i = 0; i < _arrItem.length; i++ ) 
-			{
-				_arrItem[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemNormal);
-				
-			}
-			for (i = 0; i < _arrGold.length; i++ ) 
-			{
-				_arrGold[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemGold);
-				
-			}
-			for (i = 0; i < _arrAvatar.length; i++ ) 
-			{
-				_arrAvatar[i].removeEventListener(ConstTlmn.BUY_AVATAR, onBuyAvatar);
-				
-			}
-			for (i = 0; i < _arrMyAvatar.length; i++ ) 
-			{
-				_arrMyAvatar[i].removeEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
-				
-			}
-			scrollView.removeAll();
-			_arrItem = [];
+			
 			
 			for (i = 0; i < arrData.length; i++ ) 
 			{
@@ -1931,38 +1899,7 @@ package view.window.shop
 			var countY:int;
 			var i:int;
 			windowLayer.closeAllWindow();
-			for (i = 0; i < _arrTour.length; i++ ) 
-			{
-				_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
-				
-			}
-			for (i = 0; i < _arrGift.length; i++ ) 
-			{
-				_arrGift[i].removeEventListener(ConstTlmn.BUY_ITEM, onChangeGift);
-				
-			}
-			for (i = 0; i < _arrItem.length; i++ ) 
-			{
-				_arrItem[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemNormal);
-				
-			}
-			for (i = 0; i < _arrGold.length; i++ ) 
-			{
-				_arrGold[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemGold);
-				
-			}
-			for (i = 0; i < _arrAvatar.length; i++ ) 
-			{
-				_arrAvatar[i].removeEventListener(ConstTlmn.BUY_AVATAR, onBuyAvatar);
-				
-			}
-			for (i = 0; i < _arrMyAvatar.length; i++ ) 
-			{
-				_arrMyAvatar[i].removeEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
-				
-			}
-			scrollView.removeAll();
-			_arrGold = [];
+			
 			
 			for (i = arrData.length - 1; i > -1; i-- ) 
 			{
@@ -2165,39 +2102,7 @@ package view.window.shop
 			var arrData:Array = obj.Data;
 			var countX:int;
 			var countY:int;
-
-			for (i = 0; i < _arrTour.length; i++ ) 
-			{
-				_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
-				
-			}
-			for (i = 0; i < _arrGift.length; i++ ) 
-			{
-				_arrGift[i].removeEventListener(ConstTlmn.BUY_ITEM, onChangeGift);
-				
-			}
-			for (i = 0; i < _arrItem.length; i++ ) 
-			{
-				_arrItem[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemNormal);
-				
-			}
-			for (i = 0; i < _arrGold.length; i++ ) 
-			{
-				_arrGold[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemGold);
-				
-			}
-			for (i = 0; i < _arrAvatar.length; i++ ) 
-			{
-				_arrAvatar[i].removeEventListener(ConstTlmn.BUY_AVATAR, onBuyAvatar);
-				
-			}
-			for (i = 0; i < _arrMyAvatar.length; i++ ) 
-			{
-				_arrMyAvatar[i].removeEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
-				
-			}
-			scrollView.removeAll();
-			_arrAvatar = [];
+			
 			
 			windowLayer.closeAllWindow();
 			
@@ -2233,6 +2138,22 @@ package view.window.shop
 				//_arrBoard[3].addChild(contentAvatar);
 				
 				contentAvatar.addEventListener(ConstTlmn.BUY_AVATAR, onBuyAvatar);
+			}
+			
+			var method:String = "POST";
+			var url:String;
+			var httpRequest:HTTPRequest = new HTTPRequest();
+			var obj:Object;
+			
+			if (arrData.length == 10) 
+			{
+				loadAvatarShop++;
+				url = basePath + "Service02/OnplayUserExt.asmx/GetListTwav00" + String(1)
+									+ "?rowStart=" + String(loadAvatarShop * 10 + 1) + "&rowEnd=" 
+									+ String((loadAvatarShop + 1) * 10);
+				obj = new Object();
+				obj.avt_group_id = String(0);
+				httpRequest.sendRequest(method, url, obj, loadAvatarSuccess, true);
 			}
 		}
 		

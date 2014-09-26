@@ -16,6 +16,7 @@ package view.window.loginWindow
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.utils.Timer;
+	import flash.media.StageWebView;
 	import getFacebookInfo.GetFacebookInfo;
 	import model.chooseChannelData.ChooseChannelData;
 	import model.chooseChannelData.MyInfo;
