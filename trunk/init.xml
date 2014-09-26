@@ -33,7 +33,7 @@
 	<gameDescription> <!--Các đoạn text thể hiện nội dung của game, ví dụ tên các button....-->
 		<moneyUnit>Ciao</moneyUnit>
 		<isTurnOnSms>1</isTurnOnSms>
-		<waitingSentence>Hệ thống đang xử lý, bạn vui lòng chờ trong giây lát</waitingSentence>
+		<waitingSentence>Đang kết nối. Bạn vui lòng chờ trong giây lát !</waitingSentence>
 		<waitingLoadRoomSentence>Đang cập nhật danh sách bàn chơi ...</waitingLoadRoomSentence>
 		<loginError>Bạn chưa đăng nhập</loginError>
 		<chooseChannelScreen>

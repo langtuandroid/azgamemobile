@@ -876,7 +876,7 @@ package logic
 			var tempArray:Array = new Array();
 			var countDouble:int = 0;
 			var countTriple:int = 0;
-			var tripleId:int;
+			var tripleIdArray:Array = new Array();
 			
 			for (var i:int = 0; i < cards.length; i++) 
 			{
@@ -885,17 +885,28 @@ package logic
 				else
 					tempArray[convertIdToRank(cards[i].id)]++;
 				if (tempArray[convertIdToRank(cards[i].id)] == 2 || tempArray[convertIdToRank(cards[i].id)] == 4)
+				{
+					if (tempArray[convertIdToRank(cards[i].id)] == 4)
+					{
+						for (var j:int = 0; j < tripleIdArray.length; j++) 
+						{
+							if (convertIdToRank(cards[i].id) == tripleIdArray[j])
+								tripleIdArray.splice(j, 1);
+						}
+						countTriple--;
+					}
 					countDouble++;
+				}
 				if (tempArray[convertIdToRank(cards[i].id)] == 3)
 				{
-					tripleId = convertIdToRank(cards[i].id);
+					tripleIdArray.push(convertIdToRank(cards[i].id));
 					countTriple++;
 				}
 			}
 			var tripleArray:Array = new Array();
 			for (i = cards.length - 1; i >= 0; i--)
 			{
-				if (convertIdToRank(cards[i].id) == tripleId)
+				if (convertIdToRank(cards[i].id) == tripleIdArray[0])
 					tripleArray.push(cards.splice(i, 1)[0]);
 			}
 			arrangeAllCard(cards);

@@ -221,7 +221,7 @@ package view.window.registerWindow
 			else if (value.status == "IO_ERROR")
 			{
 				zRegisterWindow(content).loadingLayer.visible = false;
-				WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại, link truy cập bị lỗi !!");
+				WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại");
 			}
 			else
 			{
@@ -237,7 +237,7 @@ package view.window.registerWindow
 			if (value["status"] == "IO_ERROR")
 			{
 				zRegisterWindow(content).loadingLayer.visible = false;
-				WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại, link truy cập bị lỗi !!");
+				WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại");
 				return;
 			}
 			if (value.TypeMsg < 1)

@@ -10,6 +10,7 @@ package model
 	import flash.events.EventDispatcher;
 	import flash.system.ApplicationDomain;
 	import flash.utils.ByteArray;
+	import inapp_purchase.StoreKitExample;
 	import model.applicationDomainData.ApplicationDomainData;
 	import model.chooseChannelData.ChooseChannelData;
 	import model.facebookData.FacebookData;
@@ -496,6 +497,19 @@ package model
 			dispatchEvent(new Event(UPDATE_VIRTUAL_ROOMS));
 		}
 		
+		public static const UPDATE_LOAD_SOUND:String = "updateLoadSound";
+		private var _loadSoundPercent:int = 0;
+		public function get loadSoundPercent():int 
+		{
+			return _loadSoundPercent;
+		}
+		
+		public function set loadSoundPercent(value:int):void 
+		{
+			_loadSoundPercent = value;
+			dispatchEvent(new Event(UPDATE_LOAD_SOUND));
+		}
+		
 		public static const MOVE_TO_SHOP:String = "moveToShop";
 		private var _isMoveToShop:Boolean;
 		public function get isMoveToShop():Boolean 
@@ -508,6 +522,47 @@ package model
 			_isMoveToShop = value;
 			if (value)
 				dispatchEvent(new Event(MOVE_TO_SHOP));
+		}
+		
+		public static const LOAD_INAPP_PRODUCT_LIST_COMPLETE:String = "loadInAppProductListComplete";
+		private var _isLoadInAppProductListComplete:Boolean;
+		public function get isLoadInAppProductListComplete():Boolean 
+		{
+			return _isLoadInAppProductListComplete;
+		}
+		
+		public function set isLoadInAppProductListComplete(value:Boolean):void 
+		{
+			_isLoadInAppProductListComplete = value;
+			if (value)
+				dispatchEvent(new Event(LOAD_INAPP_PRODUCT_LIST_COMPLETE));
+		}
+		
+		public static const PURCHASE_PRODUCT_RESPOND:String = "purchaseProductRespond";
+		private var _isPurchaseProductRespond:Boolean;
+		public function get isPurchaseProductRespond():Boolean 
+		{
+			return _isPurchaseProductRespond;
+		}
+		
+		public function set isPurchaseProductRespond(value:Boolean):void 
+		{
+			_isPurchaseProductRespond = value;
+			if (value)
+				dispatchEvent(new Event(PURCHASE_PRODUCT_RESPOND));
+		}
+		
+		private var _storeKitExample:StoreKitExample;
+		public function get storeKitExample():StoreKitExample 
+		{
+			if (!_storeKitExample)
+				_storeKitExample = new StoreKitExample();
+			return _storeKitExample;
+		}
+		
+		public function set storeKitExample(value:StoreKitExample):void 
+		{
+			_storeKitExample = value;
 		}
 		
 		public static const MAUBINH_ID:int = 1;
@@ -534,8 +589,8 @@ package model
 		public var isLoadSound:Boolean = true;
 		public var tokenTime:int = 0;
 		public var token:String;
-		public var version:String = "v1.1.2";
-		public var isTest:Boolean = true; // biến để check xem đang chạy trên server test hay server thật
+		public var version:String = "v1.2.1";
+		public var isTest:Boolean = false; // biến để check xem đang chạy trên server test hay server thật
 
 		public var isFacebookVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào facebook không
 	}

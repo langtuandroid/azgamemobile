@@ -293,7 +293,7 @@ package view.window
 			if (value["status"] == "IO_ERROR")
 			{
 				type = FAIL_FORM;
-				alertTxt.text = "Link truy cập không tồn tại !!";
+				alertTxt.text = "Kết nối thất bại !";
 				return;
 			}
 			if (value.TypeMsg == 1)
@@ -315,7 +315,7 @@ package view.window
 			type = FAIL_FORM;
 			if (value["status"] == "IO_ERROR")
 			{
-				alertTxt.text = "Link truy cập không tồn tại !!";
+				alertTxt.text = "Kết nối thất bại !";
 				return;
 			}
 			alertTxt.text = value.Msg;

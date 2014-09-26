@@ -83,7 +83,7 @@ package view.window
 			if (value["status"] == "IO_ERROR")
 			{
 				zLoginWindow(content).loadingLayer.visible = false;
-				WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại, link truy cập bị lỗi !!");
+				WindowLayer.getInstance().openAlertWindow("Đăng nhập Facebook thất bại");
 				return;
 			}
 			if (value["TypeMsg"] == "1")
@@ -113,7 +113,7 @@ package view.window
 			else if (value.status == "IO_ERROR")
 			{
 				zRegisterFacebookWindow(content).loadingLayer.visible = false;
-				WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại, link truy cập bị lỗi !!");
+				WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại");
 			}
 			else
 			{
@@ -127,7 +127,7 @@ package view.window
 			if (value["status"] == "IO_ERROR")
 			{
 				zRegisterFacebookWindow(content).loadingLayer.visible = false;
-				WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại, link truy cập bị lỗi !!");
+				WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại");
 				return;
 			}
 			if (value.TypeMsg < 1)
