@@ -512,6 +512,11 @@ package model
 		
 		public static const MOVE_TO_SHOP:String = "moveToShop";
 		private var _isMoveToShop:Boolean;
+		/**
+		 * 0:minigame ko chay, 1: minigame bat ngay tu dau, 2: minigame chi chay khi dc bat
+		 */
+		public var typeOfEvent:int = 0;
+		private var _isShowMiniGame:Boolean = false;
 		public function get isMoveToShop():Boolean 
 		{
 			return _isMoveToShop;
@@ -524,6 +529,19 @@ package model
 				dispatchEvent(new Event(MOVE_TO_SHOP));
 		}
 		
+
+		public static const IS_MINI_GAME:String = "onOffMiniGame";
+		public function get isShowMiniGame():Boolean 
+		{
+			return _isShowMiniGame;
+		}
+		
+		public function set isShowMiniGame(value:Boolean):void 
+		{
+			_isShowMiniGame = value;
+			dispatchEvent(new Event(IS_MINI_GAME));
+		}
+
 		public static const LOAD_INAPP_PRODUCT_LIST_COMPLETE:String = "loadInAppProductListComplete";
 		private var _isLoadInAppProductListComplete:Boolean;
 		public function get isLoadInAppProductListComplete():Boolean 
@@ -565,6 +583,7 @@ package model
 			_storeKitExample = value;
 		}
 		
+
 		public static const MAUBINH_ID:int = 1;
 		public static const PHOM_ID:int = 2;
 		public static const TLMN_ID:int = 3;
@@ -590,7 +609,7 @@ package model
 		public var tokenTime:int = 0;
 		public var token:String;
 		public var version:String = "v1.2.1";
-		public var isTest:Boolean = false; // biến để check xem đang chạy trên server test hay server thật
+		public var isTest:Boolean = true; // biến để check xem đang chạy trên server test hay server thật
 
 		public var isFacebookVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào facebook không
 	}

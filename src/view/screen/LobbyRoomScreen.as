@@ -444,7 +444,9 @@ package view.screen
 					selectGameWindow.showTab(5);
 				break;
 				case eventButton:
-					navigateToURL(new URLRequest("http://sanhbai.com/sanhbai-event.html"));
+					navigateToURL(new URLRequest("http://sanhbai.com/sanhbai-event.html"), "_blank");
+					mainData.isShowMiniGame = true;
+					
 				break;
 				case fanPageButton:
 					navigateToURL(new URLRequest("https://www.facebook.com/sanhbai"));
