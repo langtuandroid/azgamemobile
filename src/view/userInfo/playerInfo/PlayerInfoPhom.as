@@ -245,6 +245,7 @@ package view.userInfo.playerInfo
 				if (formName == PlayerInfoPhom.BELOW_USER)
 				{
 					avatar.setForm(Avatar.MY_AVATAR);
+					avatar.buttonMode = true;
 				}
 				else
 				{

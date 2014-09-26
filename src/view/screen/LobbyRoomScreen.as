@@ -88,7 +88,7 @@ package view.screen
 		private var inventoryButton:SimpleButton;
 		private var eventButton:SimpleButton;
 		private var fanPageButton:SimpleButton;
-		private var selectGameButton:SimpleButton;
+		private var luckyCardButton:SimpleButton;
 		private var channelList:ChannelList;
 		
 		private var chatButton:Sprite;
@@ -171,10 +171,6 @@ package view.screen
 			
 			var loginWindow:LoginWindow = new LoginWindow();
 			windowLayer.openWindow(loginWindow);
-			
-			selectGameButton.addEventListener(MouseEvent.CLICK, onSelectGameButtonClick);
-			
-			
 		}
 		
 		public function addSelectGameWindow():void
@@ -211,14 +207,6 @@ package view.screen
 			messageBox.parent.removeChild(messageBox);
 		}
 		
-		private function onSelectGameButtonClick(e:MouseEvent):void 
-		{
-			mainCommand.electroServerCommand.closeConnection();
-			addSelectGameWindow();
-			smallButtonMenu.visible = true;
-			buttonMenu.visible = false;
-		}
-		
 		private function onSelectGame(e:Event):void 
 		{
 			WindowLayer.getInstance().openLoadingWindow();
@@ -247,7 +235,7 @@ package view.screen
 				timerToGetChannelInfo.removeEventListener(TimerEvent.TIMER, onTimerToGetChannelInfo);
 				timerToGetChannelInfo.start();
 			}
-			timerToGetChannelInfo = new Timer(4000)
+			timerToGetChannelInfo = new Timer(30000)
 			timerToGetChannelInfo.addEventListener(TimerEvent.TIMER, onTimerToGetChannelInfo);
 			timerToGetChannelInfo.start();
 			
@@ -321,14 +309,14 @@ package view.screen
 			inventoryButton = buttonMenu["inventoryButton"];
 			eventButton = buttonMenu["eventButton"];
 			fanPageButton = buttonMenu["fanPageButton"];
-			selectGameButton = buttonMenu["selectGameButton"];
+			luckyCardButton = buttonMenu["luckyCardButton"];
 			
 			addMoneyButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
 			shopButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
 			inventoryButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
 			eventButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
 			fanPageButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
-			selectGameButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
+			luckyCardButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
 			
 			
 			chatButton = content["chatButton"];
@@ -461,6 +449,9 @@ package view.screen
 				case fanPageButton:
 					navigateToURL(new URLRequest("https://www.facebook.com/sanhbai"));
 				break;
+				case luckyCardButton:
+					
+				break;
 				default:
 			}
 		}
@@ -555,11 +546,11 @@ package view.screen
 				}
 				
 				addMoneyButton.y = 246;
-				shopButton.y = 246;
+				shopButton.y = 296;
 				inventoryButton.y = 299;
-				eventButton.y = 299;
+				eventButton.y = 349;
 				fanPageButton.y = 352;
-				selectGameButton.y = 352;
+				luckyCardButton.y = 202;
 				
 				return;
 			}
@@ -577,7 +568,7 @@ package view.screen
 			inventoryButton.y += channelList.height;
 			eventButton.y += channelList.height;
 			fanPageButton.y += channelList.height;
-			selectGameButton.y += channelList.height;
+			luckyCardButton.y += channelList.height;
 		}
 		
 		private function onButtonMouseDown(e:MouseEvent):void 

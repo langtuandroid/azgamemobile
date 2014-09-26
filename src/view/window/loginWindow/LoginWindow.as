@@ -1,5 +1,6 @@
 package view.window.loginWindow 
 {
+	import br.com.stimuli.loading.BulkLoader;
 	import com.adobe.serialization.json.JSON;
 	import com.gsolo.encryption.MD5;
 	import com.gsolo.encryption.SHA1;
@@ -10,6 +11,7 @@ package view.window.loginWindow
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
+	import flash.media.Sound;
 	import flash.net.SharedObject;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
@@ -47,6 +49,7 @@ package view.window.loginWindow
 		private var timerToCloseLoadingLayer:Timer;
 		private var deviceId:String;
 		private var versionTxt:TextField;
+		private var loader:BulkLoader;
 		
 		public function LoginWindow() 
 		{
@@ -123,6 +126,9 @@ package view.window.loginWindow
 				var androidUtilsExtension:AndroidUtilsController = AndroidUtilsController.getInstance();
 				deviceId = androidUtilsExtension.generateDeviceId();
 			}*/
+			
+			zLoginWindow(content).loadingSoundLayer["percentTxt"].text = '0%';
+			zLoginWindow(content).loadingSoundLayer.visible = false;
 		}
 		
 		private function onButtonClick(e:MouseEvent):void 
@@ -146,7 +152,7 @@ package view.window.loginWindow
 						timerToCloseLoadingLayer.removeEventListener(TimerEvent.TIMER_COMPLETE, onCloseLoadingLayer);
 						timerToCloseLoadingLayer.stop();
 					}
-					timerToCloseLoadingLayer = new Timer(30000, 1);
+					timerToCloseLoadingLayer = new Timer(60000, 1);
 					timerToCloseLoadingLayer.addEventListener(TimerEvent.TIMER_COMPLETE, onCloseLoadingLayer);
 					timerToCloseLoadingLayer.start();
 				break;
@@ -199,7 +205,7 @@ package view.window.loginWindow
 			if (value["status"] == "IO_ERROR")
 			{
 				zLoginWindow(content).loadingLayer.visible = false;
-				WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại, link truy cập bị lỗi !!");
+				WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại");
 				return;
 			}
 			if (value["login_status"] == "0")
@@ -257,6 +263,42 @@ package view.window.loginWindow
 				else
 					mainRequest.sendRequest_Post("http://wss.azgame.us/Service02/OnplayUserExt.asmx/Facebook_GetUserInfo", data, onLoginFacebookRespond, true);
 			}
+			
+			//SoundManager.getInstance().loadSoundChung();
+			//SoundManager.getInstance().loadSoundMauBinh();
+			//SoundManager.getInstance().loadSoundPhom();
+			//SoundManager.getInstance().addSound();
+			loader = new BulkLoader("main-site");
+			var sound:Sound = loader.getSound("soundtrack");
+			trace(sound);
+			if (loader.getSound("soundtrack"))
+			{
+				trace("aaaaaaaaaaaaa");
+			}
+			else
+			{
+				// dispatched when ALL the items have been loaded:
+				loader.addEventListener(BulkLoader.COMPLETE, onAllItemsLoaded);
+				loader.add("123.mp3", { "id":"soundtrack", maxTries:1, priority:100 } );
+				//loader.start();
+			}
+			
+			if (mainData.isOnIos)
+				mainData.storeKitExample.purchaseProduct("SB1");
+		}
+		
+		private function onAllItemsLoaded(e:Event):void 
+		{
+			trace("ccccccccccc");
+			var sound:Sound = loader.getSound("soundtrack");
+			trace(sound);
+		}
+		
+		private function onUpdateLoadSound(e:Event):void 
+		{
+			zLoginWindow(content).loadingSoundLayer["percentTxt"].text = String(int((mainData.loadSoundPercent / 556) * 100)) + "%";
+			if (mainData.loadSoundPercent == 556)
+				zLoginWindow(content).loadingSoundLayer.visible = false;
 		}
 		
 		private function onUpdateMyInfo(e:Event):void 
@@ -289,6 +331,7 @@ package view.window.loginWindow
 			var mainRequest:MainRequest = new MainRequest();
 			var data:Object = new Object();
 			data.access_token = mainData.facebookData.accessToken;
+			data.GameVersion = mainData.version;
 			zLoginWindow(content).loadingLayer.visible = true;
 			if (mainData.isTest)
 				mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/Facebook_GetUserInfo", data, onLoginFacebookRespond, true);
@@ -301,7 +344,7 @@ package view.window.loginWindow
 			if (value["status"] == "IO_ERROR")
 			{
 				zLoginWindow(content).loadingLayer.visible = false;
-				WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại, link truy cập bị lỗi !!");
+				WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại");
 				return;
 			}
 			if (value.TypeMsg == 2)
@@ -360,6 +403,7 @@ package view.window.loginWindow
 			data.user_name = zLoginWindow(content).userName.text;
 			data.password = zLoginWindow(content).pass.text;
 			data.client_id = mainData.client_id;
+			data.GameVersion = mainData.version;
 			zLoginWindow(content).loadingLayer.visible = true;
 			if (mainData.isTest)
 				mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileLogin", data, onLoginValidateRespond, true);
@@ -379,7 +423,7 @@ package view.window.loginWindow
 			if (value["status"] == "IO_ERROR")
 			{
 				zLoginWindow(content).loadingLayer.visible = false;
-				WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại, link truy cập bị lỗi !!");
+				WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại");
 				return;
 			}
 			if (value.TypeMsg < 1)
@@ -407,7 +451,7 @@ package view.window.loginWindow
 			if (value["status"] == "IO_ERROR")
 			{
 				zLoginWindow(content).loadingLayer.visible = false;
-				WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại, link truy cập bị lỗi !!");
+				WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại");
 				return;
 			}
 			if (value.TypeMsg < 1)
@@ -450,18 +494,6 @@ package view.window.loginWindow
 			MyDataTLMN.getInstance().myMoney[1] = value.Data["Cash"];
 			MyDataTLMN.getInstance().myAvatar = value.Data["Avatar"];
 			MyDataTLMN.getInstance().sex = value.Data["GenderCode"];
-			
-			/*myInfo.avatar = '';
-			myInfo.money = 100000;
-			myInfo.cash = 0;
-			myInfo.level = '1';
-			myInfo.name = 'tuandung';
-			myInfo.hash = '';
-			myInfo.token = '';
-			myInfo.uId = '25';
-			myInfo.id = '25';
-			myInfo.logo = '';
-			myInfo.sex = '';*/
 			
 			mainData.chooseChannelData.myInfo = myInfo;
 			

@@ -228,7 +228,7 @@
 				var tempSound:Sound = new Sound();
 				tempSound.load(new URLRequest("http://203.162.121.120/gamebai/bimkute/maubinh/soundMauBinh/" + soundUrl + ".az"));
 				tempSound.addEventListener(IOErrorEvent.IO_ERROR, onLoadSoundIOError);
-				tempSound.addEventListener(Event.COMPLETE, onLoadSoundBinhComplete);
+				tempSound.addEventListener(Event.COMPLETE, onLoadSoundComplete);
 				
 				SoundManager.getInstance().registerSound(soundUrl, tempSound);
 			}
@@ -248,7 +248,7 @@
 				var tempSound:Sound = new Sound();
 				tempSound.load(new URLRequest("http://203.162.121.120/gamebai/bimkute/phom/soundPhom/" + soundUrl + ".az"));
 				tempSound.addEventListener(IOErrorEvent.IO_ERROR, onLoadSoundIOError);
-				tempSound.addEventListener(Event.COMPLETE, onLoadSoundPhomComplete);
+				tempSound.addEventListener(Event.COMPLETE, onLoadSoundComplete);
 				SoundManager.getInstance().registerSound(soundUrl, tempSound);
 			}
 		}
@@ -269,12 +269,16 @@
 				tempSound.addEventListener(Event.COMPLETE, onLoadSoundComplete);
 				tempSound.load(new URLRequest("http://203.162.121.120/gamebai/bimkute/maubinh/soundChung/" + soundUrl + ".az"));
 				SoundManager.getInstance().registerSound(soundUrl, tempSound);
+				
+				//var urlCache:URLCache
 			}
 		}
 		
 		private function onLoadSoundComplete(e:Event):void 
 		{
 			//trace("load sound thanh cong");
+			mainData.loadSoundPercent++;
+			mainData.loadSoundPercent = mainData.loadSoundPercent;
 		}
 		
 		public function loadBackgroundMusic():void 
@@ -303,6 +307,8 @@
 		private function onLoadSoundIOError(e:IOErrorEvent):void 
 		{
 			trace("load sound lỗi")
+			mainData.loadSoundPercent++;
+			mainData.loadSoundPercent = mainData.loadSoundPercent;
 		}
 		
 		public function addSound():void 
@@ -567,14 +573,10 @@
 				
 				var mySound:Sound = new Sound();
 				mySound.load(new URLRequest(arrSound[i]));
-				mySound.addEventListener(IOErrorEvent.IO_ERROR, onErrorLoadSound);
+				mySound.addEventListener(IOErrorEvent.IO_ERROR, onLoadSoundIOError);
+				mySound.addEventListener(Event.COMPLETE, onLoadSoundComplete);
 				SoundManager.getInstance().registerSound(arrSoundName[i], mySound);
 			}
-		}
-		
-		private function onErrorLoadSound(e:IOErrorEvent):void 
-		{
-			
 		}
 	}
 
