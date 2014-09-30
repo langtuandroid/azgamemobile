@@ -795,7 +795,7 @@ package view.window.shop
 				tutorialAddMoney.numberTxt.text = MainData.getInstance().phone3;
 				
 				tutorialAddMoney.closeBtn.addEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);*/
-			if (MainData.getInstance().isFacebookVersion) 
+			if (MainData.getInstance().isFacebookVersion || MainData.getInstance().isOnIos) 
 			{
 				tutorialAddMoney = new TutorialAddMoneyPopup();
 				myContent.addChild(tutorialAddMoney);
@@ -821,11 +821,11 @@ package view.window.shop
 			{
 				AndroidExtensions.sendSMS(msg, phone);
 			}
-			else if (MainData.getInstance().isOnIos)
+			/*else if (MainData.getInstance().isOnIos)
 			{
 				var msgExtension:MSGExtension = new MSGExtension();
 				msgExtension.sendSMS(phone, msg);
-			}
+			}*/
 		}
 		
 		private function onCloseTutorial(e:MouseEvent):void 

@@ -451,14 +451,16 @@ package view.screen
 					selectGameWindow.showTab(5);
 				break;
 				case eventButton:
-					navigateToURL(new URLRequest("http://sanhbai.com/sanhbai-event.html"), "_blank");
-					
+					navigateToURL(new URLRequest("http://sanhbai.com/sanhbai-event.html"), "_blank")
 					
 				break;
 				case fanPageButton:
 					navigateToURL(new URLRequest("https://www.facebook.com/sanhbai"));
 				break;
 				case luckyCardButton:
+
+					mainData.isShowMiniGame = true;
+
 					if (mainData.typeOfEvent > 0) 
 					{
 						mainData.isShowMiniGame = true;
@@ -469,8 +471,7 @@ package view.screen
 						alertWindow.setNotice("Sự kiện đang bảo trì, xin vui lòng quay lại sau!");	
 						windowLayer.openWindow(alertWindow);
 					}
-			
-					
+
 				break;
 				default:
 			}

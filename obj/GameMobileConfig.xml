@@ -68,6 +68,7 @@
       <path-element>D:\azgame\mobile\lib\chatBoxPhomComponent.swc</path-element>
       <path-element>D:\azgame\mobile\lib\luckyCardMobile.swc</path-element>
       <path-element>D:\azgame\mobile\lib\com.milkmangames.extensions.StoreKit.ane</path-element>
+      <path-element>E:\Dropbox\azgame\googleSVN\BoGameBaiAZMobile\lib\luckyCardMobile.swc</path-element>
     </library-path>
   </compiler>
   <file-specs>
