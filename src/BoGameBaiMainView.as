@@ -255,6 +255,16 @@ package
 			minigame = new MainMiniGame();
 			minigameLayer.addChild(minigame);
 			minigame.addEventListener(MainMiniGame.CLOSE_GAME, onCloseGame);
+			minigame.addEventListener(MainMiniGame.ADD_MONEY, onAddMoney);
+		}
+		
+		private function onAddMoney(e:Event):void 
+		{
+			mainData.isShowMiniGame = false;
+			if (lobbyRoomScreen) 
+			{
+				lobbyRoomScreen.showAddMoney();
+			}
 		}
 		
 		private function onCloseGame(e:Event):void 
@@ -287,9 +297,7 @@ package
 		{
 			if (obj.Data.status == 0) 
 			{
-				var kickOutWindow:AlertWindow = new AlertWindow();
-				kickOutWindow.setNotice("Sự kiện đang bảo trì, vui lòng quay lại sau!");
-				WindowLayer.getInstance().openWindow(kickOutWindow);
+				
 			}
 			else if (obj.Data.status == 1) 
 			{

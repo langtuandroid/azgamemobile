@@ -424,6 +424,13 @@ package view.screen
 			}
 		}
 		
+		public function showAddMoney():void 
+		{
+			addSelectGameWindow();
+			mainCommand.electroServerCommand.closeConnection();
+			selectGameWindow.showTab(3);
+		}
+		
 		private function onOtherButtonClick(e:MouseEvent):void 
 		{
 			switch (e.currentTarget) 
@@ -445,13 +452,24 @@ package view.screen
 				break;
 				case eventButton:
 					navigateToURL(new URLRequest("http://sanhbai.com/sanhbai-event.html"), "_blank");
-					mainData.isShowMiniGame = true;
+					
 					
 				break;
 				case fanPageButton:
 					navigateToURL(new URLRequest("https://www.facebook.com/sanhbai"));
 				break;
 				case luckyCardButton:
+					if (mainData.typeOfEvent > 0) 
+					{
+						mainData.isShowMiniGame = true;
+					}
+					else if (mainData.typeOfEvent == 0) 
+					{
+						var alertWindow:AlertWindow = new AlertWindow();
+						alertWindow.setNotice("Sự kiện đang bảo trì, xin vui lòng quay lại sau!");	
+						windowLayer.openWindow(alertWindow);
+					}
+			
 					
 				break;
 				default:

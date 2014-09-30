@@ -12,6 +12,7 @@ package miniGame
 	public class MainMiniGame extends Sprite
 	{
 		public static const CLOSE_GAME:String = "closeGame";
+		public static const ADD_MONEY:String = "addMoney";
 		private var _playGame:PlayGameScreenMiniGame;
 		private var gameData:GameDataMiniGame = GameDataMiniGame.getInstance();
 		private var playGameLayer:Sprite;
@@ -62,7 +63,14 @@ package miniGame
 				noticePopup.addEventListener(ConstMiniGame.CLOSE_POPUP, closePopup);
 				noticePopup.addEventListener(ConstMiniGame.RECEIVE_GIFT, onReceiveGift);
 				noticePopup.addEventListener(ConstMiniGame.BUY_TURN_NOW, onShowBuyTurn);
+				noticePopup.addEventListener(ConstMiniGame.ADD_MONEY, onAddMoney);
 			}
+		}
+		
+		private function onAddMoney(e:Event):void 
+		{
+			dispatchEvent(new Event(ADD_MONEY));
+			noticePopup.visible = false;
 		}
 		
 		private function onShowBuyTurn(e:Event):void 

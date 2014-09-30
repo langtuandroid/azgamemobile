@@ -11,6 +11,7 @@ package miniGame
 	import flash.text.TextField;
 	import flash.utils.Timer;
 	import miniGame.request.HTTPRequestMiniGame;
+	import model.MainData;
 	import sound.SoundManager;
 	
 	/**
@@ -276,6 +277,7 @@ package miniGame
 				{
 					GameDataMiniGame.getInstance().goldGift = [obj.Data.Gold, obj.Data.Name];
 					GameDataMiniGame.getInstance().cardGift = [];
+					
 					goldGift = true;
 					
 				}
@@ -366,6 +368,8 @@ package miniGame
 			}
 			if (goldGift) 
 			{
+				MainData.getInstance().chooseChannelData.myInfo.money = MainData.getInstance().chooseChannelData.myInfo.money + GameDataMiniGame.getInstance().goldGift[0];
+				MainData.getInstance().chooseChannelData.myInfo = MainData.getInstance().chooseChannelData.myInfo;
 				_main.noticeGame(GameDataMiniGame.getInstance().goldGift[1], true);
 				setupContent();
 				goldGift = false;
