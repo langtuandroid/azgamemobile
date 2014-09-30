@@ -50,7 +50,7 @@ package view.window.shop
 		}
 		
 		public function addInfo(idAvt:String, nameAvt:String, chip:String, gold:String, linkAvt:String, 
-							expire:String, idWeb:String):void 
+							expire:String, idWeb:String, tail:String):void 
 		{
 			_idAvt = idAvt;
 			_goldAvt = gold;
@@ -80,8 +80,8 @@ package view.window.shop
 			content.containerImg.addChild(image);
 			image.x = 25;
 			image.y = 15;
-			trace("load gold: ", linkAvt + "/WAZ/" + idWeb + ".gif")
-			image.addImg(linkAvt + "/WAZ/" + idWeb + ".gif");
+			trace("load gold: ", linkAvt + "/WAZ/" + idWeb + tail)
+			image.addImg(linkAvt + "/WAZ/" + idWeb + tail);
 			
 		}
 		
