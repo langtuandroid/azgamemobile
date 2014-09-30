@@ -5,6 +5,7 @@ package getFacebookInfo
 	import com.milkmangames.nativeextensions.GVFacebookFriend;
 	import model.facebookData.FacebookData;
 	import model.MainData;
+	import view.window.windowLayer.WindowLayer;
 	/**
 	 * ...
 	 * @author 
@@ -72,32 +73,32 @@ package getFacebookInfo
 			switch(e.type)
 			{
 				case GVFacebookEvent.FB_DIALOG_CANCELED:
-					
+					WindowLayer.getInstance().openAlertWindow(GVFacebookEvent.FB_DIALOG_CANCELED);
 					break;
 				case GVFacebookEvent.FB_DIALOG_FAILED:
-					
+					WindowLayer.getInstance().openAlertWindow(GVFacebookEvent.FB_DIALOG_FAILED);
 					break;
 				case GVFacebookEvent.FB_DIALOG_FINISHED:
-					
+					WindowLayer.getInstance().openAlertWindow(GVFacebookEvent.FB_DIALOG_FINISHED);
 					break;
 				case GVFacebookEvent.FB_LOGGED_IN:
 					login();
 					break;
 				case GVFacebookEvent.FB_LOGGED_OUT:
-					
+					WindowLayer.getInstance().openAlertWindow(GVFacebookEvent.FB_LOGGED_OUT);
 					break;
 				case GVFacebookEvent.FB_LOGIN_CANCELED:
-					
+					WindowLayer.getInstance().openAlertWindow(GVFacebookEvent.FB_LOGIN_CANCELED);
 					break;
 				case GVFacebookEvent.FB_LOGIN_FAILED:
-					
+					WindowLayer.getInstance().openAlertWindow(GVFacebookEvent.FB_LOGIN_FAILED);
 					break;
 				case GVFacebookEvent.FB_REQUEST_FAILED:
-					
+					WindowLayer.getInstance().openAlertWindow(GVFacebookEvent.FB_REQUEST_FAILED);
 					break;
 				case GVFacebookEvent.FB_REQUEST_RESPONSE:
 					// handle a friend list- there will be only 1 item in it if 
-					// this was a 'my profile' request.				
+					// this was a 'my profile' request.			
 					if (e.friends!=null)
 					{					
 						// 'me' was a request for own profile.

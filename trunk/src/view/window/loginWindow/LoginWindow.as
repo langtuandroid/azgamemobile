@@ -265,11 +265,7 @@ package view.window.loginWindow
 					mainRequest.sendRequest_Post("http://wss.azgame.us/Service02/OnplayUserExt.asmx/Facebook_GetUserInfo", data, onLoginFacebookRespond, true);
 			}
 			
-			//SoundManager.getInstance().loadSoundChung();
-			//SoundManager.getInstance().loadSoundMauBinh();
-			//SoundManager.getInstance().loadSoundPhom();
-			//SoundManager.getInstance().addSound();
-			loader = new BulkLoader("main-site");
+			/*loader = new BulkLoader("main-site");
 			var sound:Sound = loader.getSound("soundtrack");
 			trace(sound);
 			if (loader.getSound("soundtrack"))
@@ -282,10 +278,10 @@ package view.window.loginWindow
 				loader.addEventListener(BulkLoader.COMPLETE, onAllItemsLoaded);
 				loader.add("123.mp3", { "id":"soundtrack", maxTries:1, priority:100 } );
 				//loader.start();
-			}
+			}*/
 			
-			if (mainData.isOnIos)
-				mainData.storeKitExample.purchaseProduct("SB1");
+			//if (mainData.isOnIos)
+				//mainData.storeKitExample.purchaseProduct("SB1");
 		}
 		
 		private function onAllItemsLoaded(e:Event):void 
@@ -324,6 +320,7 @@ package view.window.loginWindow
 		
 		private function onUpdateFacebookData(e:Event):void 
 		{
+			WindowLayer.getInstance().openAlertWindow("onUpdateFacebookData");
 			if (timerToCloseLoadingLayer)
 			{
 				timerToCloseLoadingLayer.removeEventListener(TimerEvent.TIMER_COMPLETE, onCloseLoadingLayer);
@@ -342,6 +339,7 @@ package view.window.loginWindow
 		
 		private function onLoginFacebookRespond(value:Object):void 
 		{
+			WindowLayer.getInstance().openAlertWindow("onLoginFacebookRespond");
 			if (value["status"] == "IO_ERROR")
 			{
 				zLoginWindow(content).loadingLayer.visible = false;
