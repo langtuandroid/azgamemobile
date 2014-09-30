@@ -2398,13 +2398,22 @@ package view.window.shop
 				scrollView.visible = true;
 				scrollViewForRank.visible = false;
 				
+				allHeaderVisible();
+				showHeaderChose(1, 4);
+				
 				headerOn(1);
 				boardOn(3);
 				tabOn(2);
 				
-				allHeaderVisible();
-				showHeaderChose(1, 4);
-				loadItem(5);
+				//loadItem(5);
+				var method:String = "POST";
+				var httpRequest:HTTPRequest = new HTTPRequest();
+				var url:String = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+										"?rowStart=0&rowEnd=20";
+				var obj:Object = new Object();
+				obj.it_group_id = String(4);
+				obj.it_type = String(1);
+				httpRequest.sendRequest(method, url, obj, loadItemPurchaseSuccess, true);
 				
 				//dispatchEvent(new Event(CHANGE_TAB));
 			}
