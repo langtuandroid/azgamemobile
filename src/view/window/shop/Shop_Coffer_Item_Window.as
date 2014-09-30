@@ -1640,10 +1640,11 @@ package view.window.shop
 				var nameAvatar:String = arrData[i]['it_name'];
 				var chipAvatar:String = arrData[i]['it_buy_chip'];
 				var payGold:String = arrData[i]['it_pay_gold'];
-				var linkAvatar:String = arrData[i]['it_dir_path'] + arrData[i]['it_file_ext'];
+				var linkAvatar:String = arrData[i]['it_dir_path'];
 				var expireAvatar:String = arrData[i]['it_sell_expire_dt'];
 				var idAvtWeb:String = arrData[i]['it_cd_wb'];
 				var idAvt:String = arrData[i]['it_id'];
+				var tail:String = arrData[i]['it_file_ext'];
 				
 				var contentAvatar:ContentItemPurchase = new ContentItemPurchase();
 				_arrPurchase.push(contentAvatar);
@@ -1661,7 +1662,7 @@ package view.window.shop
 				}
 				
 				
-				contentAvatar.addInfo(idAvt, nameAvatar, chipAvatar, payGold, linkAvatar, expireAvatar, idAvtWeb);
+				contentAvatar.addInfo(idAvt, nameAvatar, chipAvatar, payGold, linkAvatar, expireAvatar, idAvtWeb, tail);
 				scrollView.addRow(contentAvatar);
 				//_arrBoard[3].addChild(contentAvatar);
 				
@@ -2377,8 +2378,9 @@ package view.window.shop
 		private function getCountrySuccess(obj:Object):void 
 		{
 			MainData.getInstance().country = obj.Data;
-			if (obj.Data == "VN" ) 
+			if (obj.Data == "VN") 
 			{
+				
 				scrollView.visible = true;
 				scrollViewForRank.visible = false;
 				
@@ -2393,30 +2395,53 @@ package view.window.shop
 				
 				//dispatchEvent(new Event(CHANGE_TAB));
 			}
-			else 
+			else
 			{
-				scrollView.visible = true;
-				scrollViewForRank.visible = false;
+				if (MainData.getInstance().isOnAndroid) 
+				{
+					scrollView.visible = true;
+					scrollViewForRank.visible = false;
+					
+					headerOn(1);
+					boardOn(2);
+					tabOn(2);
+					
+					createCodeCheck();
+					
+					allHeaderVisible();
+					showHeaderChose(1, 0);
+				}
+				else 
+				{
+					scrollView.visible = true;
+					scrollViewForRank.visible = false;
+					
+					allHeaderVisible();
+					showHeaderChose(1, 4);
+					
+					headerOn(1);
+					boardOn(3);
+					tabOn(2);
+					
+					//loadItem(5);
+					loadItemPurchase();
+				}
 				
-				allHeaderVisible();
-				showHeaderChose(1, 4);
-				
-				headerOn(1);
-				boardOn(3);
-				tabOn(2);
-				
-				//loadItem(5);
-				var method:String = "POST";
-				var httpRequest:HTTPRequest = new HTTPRequest();
-				var url:String = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
-										"?rowStart=0&rowEnd=20";
-				var obj:Object = new Object();
-				obj.it_group_id = String(4);
-				obj.it_type = String(1);
-				httpRequest.sendRequest(method, url, obj, loadItemPurchaseSuccess, true);
 				
 				//dispatchEvent(new Event(CHANGE_TAB));
 			}
+		}
+		
+		private function loadItemPurchase():void 
+		{
+			var method:String = "POST";
+			var httpRequest:HTTPRequest = new HTTPRequest();
+			var url:String = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+									"?rowStart=0&rowEnd=20";
+			var obj:Object = new Object();
+			obj.it_group_id = String(4);
+			obj.it_type = String(1);
+			httpRequest.sendRequest(method, url, obj, loadItemPurchaseSuccess, true);
 		}
 		
 		private function createCodeCheck():void 
