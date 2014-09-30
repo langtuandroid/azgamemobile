@@ -17,6 +17,7 @@ package miniGame
 		public static const BUY_TURN_ERROR:String = "buyTurnError";
 		public static const BUY_TURN_SUCCESS:String = "buyTurnSuccess";
 		public static const ENOUGH_MONEY:String = "enoughMoney";
+		public static const ADD_MONEY:String = "addMoney";
 		
 		public static const RECEIVE_GIFT_ERROR:String = "receiveGiftError";
 		public static const RECEIVE_GIFT_SUCCESS:String = "receiveGiftSuccess";

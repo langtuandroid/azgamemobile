@@ -48,8 +48,8 @@ package miniGame
 		
 		private function onClickBuyChip(e:MouseEvent):void 
 		{
-			navigateToURL(new URLRequest("http://sanhbai.com/nap-the.html"), "blank");
-			dispatchEvent(new Event(ConstMiniGame.CLOSE_POPUP));
+			
+			dispatchEvent(new Event(ConstMiniGame.ADD_MONEY));
 		}
 		
 		private function onClickAgree(e:MouseEvent):void 

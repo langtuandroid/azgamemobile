@@ -54,6 +54,7 @@ package view.window.shop
 		private var _arrItem:Array = [];
 		private var _arrTour:Array = [];
 		private var _arrGift:Array = [];
+		private var _arrPurchase:Array = [];
 		
 		private var _arrMyAvatar:Array = [];
 		private var _arrMyItem:Array = [];
@@ -73,6 +74,7 @@ package view.window.shop
 		
 		private var loadAvatarShop:int;
 		private var loadGoldShop:int;
+		private var loadPurchase:int;
 		private var loadItemShop:int;
 		
 		private var loadAvatarCoffer:int;
@@ -241,6 +243,7 @@ package view.window.shop
 			
 			myContent.chooseInAddMoneyMc.raking.addEventListener(MouseEvent.MOUSE_UP, onClickShowAddMoneyRaking);
 			myContent.chooseInAddMoneyMc.sms.addEventListener(MouseEvent.MOUSE_UP, onClickShowAddMoneySms);
+			myContent.chooseInAddMoneyMc.creditCard.addEventListener(MouseEvent.MOUSE_UP, onClickShowAddMoneyPurchase);
 			
 			
 			myContent.rakingBg.userNameTxt.text = MainData.getInstance().chooseChannelData.myInfo.name;
@@ -807,6 +810,7 @@ package view.window.shop
 			else 
 			{
 				turnOnSendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, MainData.getInstance().phone3);
+				
 			}
 			
 		}
@@ -874,20 +878,34 @@ package view.window.shop
 			}
 		}
 		
+		private function onClickShowAddMoneyPurchase(e:MouseEvent):void 
+		{
+			
+			getNewAccessToken();
+			scrollView.visible = true;
+			scrollViewForRank.visible = false;
+			
+			allHeaderVisible();
+			showHeaderChose(1, 2);
+			headerOn(1);
+			boardOn(3);
+			//loadItem(5);
+			var method:String = "POST";
+			var httpRequest:HTTPRequest = new HTTPRequest();
+			var url:String = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+									"?rowStart=0&rowEnd=20";
+			var obj:Object = new Object();
+			obj.it_group_id = String(4);
+			obj.it_type = String(1);
+			httpRequest.sendRequest(method, url, obj, loadItemPurchaseSuccess, true);
+		}
+		
 		private function onClickShowAddMoneySms(e:MouseEvent):void 
 		{
 			allHeaderVisible();
 			showHeaderChose(1, 1);
 			headerOn(1);
 			boardOn(1);
-		}
-		
-		private function onClickShowAddMoneyCreadit(e:MouseEvent):void 
-		{
-			allHeaderVisible();
-			showHeaderChose(1, 2);
-			headerOn(1);
-			boardOn(3);
 		}
 		
 		private function onClickShowAddMoneyRaking(e:MouseEvent):void 
@@ -1417,19 +1435,27 @@ package view.window.shop
 				myContent.chooseInStandingMc.royalBtn.gotoAndStop(1);
 				myContent.standingBg.boardContent.y = 0;
 			}
-			else if (header == 1 && type == 0) //nap tien: the cao, sms, thẻ tín dụng
+			else if (header == 1 && type == 0) //nap tien: the cao, sms, thẻ tín dụng, purchase
 			{
+				myContent.chooseInAddMoneyMc.purchase.visible = false;
 				myContent.chooseInAddMoneyMc.raking.gotoAndStop(1);
 				myContent.standingBg.boardContent.y = 0;
 			}
 			else if (header == 1 && type == 1) 
 			{
+				myContent.chooseInAddMoneyMc.purchase.visible = false;
 				myContent.chooseInAddMoneyMc.sms.gotoAndStop(1);
 				myContent.standingBg.boardContent.y = 0;
 			}
 			else if (header == 1 && type == 2) 
 			{
+				myContent.chooseInAddMoneyMc.purchase.visible = false;
 				myContent.chooseInAddMoneyMc.creditCard.gotoAndStop(1);
+				myContent.standingBg.boardContent.y = 0;
+			}
+			else if (header == 1 && type == 4) 
+			{
+				myContent.chooseInAddMoneyMc.purchase.visible = true;
 				myContent.standingBg.boardContent.y = 0;
 			}
 			else if (header == 2 && type == 0) //shop: avatar, gold. item. tour, phan thuong
@@ -1531,9 +1557,119 @@ package view.window.shop
 		}
 		
 		/**
-		 * type(0: avatar, 1:gold, 2:item, 3:tour, 4:gift)
+		 * type(0: avatar, 1:gold, 2:item, 3:tour, 4:gift, 5:purchase)
 		 */
 		private function loadItem(type:int):void 
+		{
+			removeAllArray();
+			
+			headerOn(2);
+			windowLayer.openLoadingWindow();
+			var method:String = "POST";
+			var url:String;
+			var httpRequest:HTTPRequest = new HTTPRequest();
+			var obj:Object;
+			
+			switch (type) 
+			{
+				case 0:
+					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwav00" + String(1)
+									+ "?rowStart=" + loadAvatarShop * 10 + 1 + "&rowEnd=" + (loadAvatarShop + 1) * 10;
+					obj = new Object();
+					obj.avt_group_id = String(0);
+					httpRequest.sendRequest(method, url, obj, loadAvatarSuccess, true);
+				break;
+				case 5:
+					
+				break;
+				case 1:
+					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+									"?rowStart=0&rowEnd=10";
+					obj = new Object();
+					obj.it_group_id = String(1);
+					obj.it_type = String(1);
+					httpRequest.sendRequest(method, url, obj, loadItemGoldSuccess, true);
+				break;
+				case 5:
+					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+									"?rowStart=0&rowEnd=10";
+					obj = new Object();
+					obj.it_group_id = String(1);
+					obj.it_type = String(2);
+					httpRequest.sendRequest(method, url, obj, loadItemNormalSuccess, true);
+				break;
+				case 3:
+					trace("load ve giai dau")
+					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+									"?rowStart=0&rowEnd=10";
+					obj = new Object();
+					obj.it_group_id = String(2);//loai 1: gold, 2 ve giai dau
+					obj.it_type = String(3);
+					httpRequest.sendRequest(method, url, obj, loadItemTourSuccess, true);
+				break;
+				case 4:
+					trace("load item doi thuong")
+					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+									"?rowStart=0&rowEnd=50";
+					obj = new Object();
+					obj.it_group_id = String(3);//loai 1: gold, 2 ve giai dau, 3 item doi thuong
+					obj.it_type = String(4);
+					httpRequest.sendRequest(method, url, obj, loadItemGiftSuccess, true);
+				break;
+				default:
+			}
+			
+			
+		}
+		
+		private function loadItemPurchaseSuccess(obj:Object):void 
+		{
+			removeAllArray();
+			
+			trace("load thanh cong item gold: ", obj)
+			
+			var arrData:Array = obj.Data;
+			var countX:int;
+			var countY:int;
+			var i:int;
+			windowLayer.closeAllWindow();
+			
+			
+			for (i = arrData.length - 1; i > -1; i-- ) 
+			{
+				var nameAvatar:String = arrData[i]['it_name'];
+				var chipAvatar:String = arrData[i]['it_buy_chip'];
+				var payGold:String = arrData[i]['it_pay_gold'];
+				var linkAvatar:String = arrData[i]['it_dir_path'] + arrData[i]['it_file_ext'];
+				var expireAvatar:String = arrData[i]['it_sell_expire_dt'];
+				var idAvtWeb:String = arrData[i]['it_cd_wb'];
+				var idAvt:String = arrData[i]['it_id'];
+				
+				var contentAvatar:ContentItemPurchase = new ContentItemPurchase();
+				_arrPurchase.push(contentAvatar);
+				//contentAvatar.x = 10 + countX * 440;
+				//contentAvatar.y = 5 + countY * 135;
+				
+				if (countX < 2) 
+				{
+					countX++;
+				}
+				else 
+				{
+					countY++;
+					countX = 0;
+				}
+				
+				
+				contentAvatar.addInfo(idAvt, nameAvatar, chipAvatar, payGold, linkAvatar, expireAvatar, idAvtWeb);
+				scrollView.addRow(contentAvatar);
+				//_arrBoard[3].addChild(contentAvatar);
+				
+				contentAvatar.addEventListener(ConstTlmn.BUY_ITEM, onBuyItemPurchase);
+			}
+		}
+		
+		private function removeAllArray():void 
 		{
 			var i:int;
 			
@@ -1567,6 +1703,11 @@ package view.window.shop
 				_arrMyAvatar[i].removeEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
 				
 			}
+			for (i = 0; i < _arrPurchase.length; i++ ) 
+			{
+				_arrPurchase[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemPurchase);
+				
+			}
 			scrollView.removeAll();
 			_arrAvatar = [];
 			_arrMyAvatar = [];
@@ -1574,67 +1715,23 @@ package view.window.shop
 			_arrGift = [];
 			_arrItem = [];
 			_arrTour = [];
+			_arrPurchase = [];
 			
 			loadAvatarShop = 0;
 			loadGoldShop = 0;
 			loadItemShop = 0;
+			loadPurchase = 0;
 			
 			loadAvatarCoffer = 0;
 			loadGoldCoffer = 0;
 			loadItemCoffer = 0;
+		}
+		
+		private function onBuyItemPurchase(e:Event):void 
+		{
+			//thanh toan the tin dung
 			
-			headerOn(2);
-			windowLayer.openLoadingWindow();
-			var method:String = "POST";
-			var url:String;
-			var httpRequest:HTTPRequest = new HTTPRequest();
-			var obj:Object;
-			
-			switch (type) 
-			{
-				case 0:
-					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwav00" + String(1)
-									+ "?rowStart=" + loadAvatarShop * 10 + 1 + "&rowEnd=" + (loadAvatarShop + 1) * 10;
-					obj = new Object();
-					obj.avt_group_id = String(0);
-					httpRequest.sendRequest(method, url, obj, loadAvatarSuccess, true);
-				break;
-				case 1:
-					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
-									"?rowStart=0&rowEnd=10";
-					obj = new Object();
-					obj.it_group_id = String(1);
-					obj.it_type = String(1);
-					httpRequest.sendRequest(method, url, obj, loadItemGoldSuccess, true);
-				break;
-				case 2:
-					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
-									"?rowStart=0&rowEnd=10";
-					obj = new Object();
-					obj.it_group_id = String(1);
-					obj.it_type = String(2);
-					httpRequest.sendRequest(method, url, obj, loadItemNormalSuccess, true);
-				break;
-				case 3:
-					trace("load ve giai dau")
-					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
-									"?rowStart=0&rowEnd=10";
-					obj = new Object();
-					obj.it_group_id = String(2);//loai 1: gold, 2 ve giai dau
-					obj.it_type = String(3);
-					httpRequest.sendRequest(method, url, obj, loadItemTourSuccess, true);
-				break;
-				case 4:
-					trace("load item doi thuong")
-					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
-									"?rowStart=0&rowEnd=50";
-					obj = new Object();
-					obj.it_group_id = String(3);//loai 1: gold, 2 ve giai dau, 3 item doi thuong
-					obj.it_type = String(4);
-					httpRequest.sendRequest(method, url, obj, loadItemGiftSuccess, true);
-				break;
-				default:
-			}
+			goldChoseBuy = e.currentTarget as ContentItemPurchase;
 			
 			
 		}
@@ -2264,20 +2361,53 @@ package view.window.shop
 		
 		public function chooseAddMoney():void 
 		{
-			scrollView.visible = true;
-			scrollViewForRank.visible = false;
+			var httpReq:HTTPRequest = new HTTPRequest();
+			var method:String = "POST";
+			var str:String = basePath + "Service02/OnplayIO.asmx/GetCountryCodeFromIp";
+			var obj:Object = new Object();
 			
-			headerOn(1);
-			boardOn(2);
-			tabOn(2);
 			
-			createCodeCheck();
+			httpReq.sendRequest(method, str, obj, getCountrySuccess, true);
 			
-			allHeaderVisible();
-			showHeaderChose(1, 0);
 			
-			dispatchEvent(new Event(CHANGE_TAB));
 			
+			
+		}
+		
+		private function getCountrySuccess(obj:Object):void 
+		{
+			MainData.getInstance().country = obj.Data;
+			if (obj.Data == "VN" ) 
+			{
+				scrollView.visible = true;
+				scrollViewForRank.visible = false;
+				
+				headerOn(1);
+				boardOn(2);
+				tabOn(2);
+				
+				createCodeCheck();
+				
+				allHeaderVisible();
+				showHeaderChose(1, 0);
+				
+				//dispatchEvent(new Event(CHANGE_TAB));
+			}
+			else 
+			{
+				scrollView.visible = true;
+				scrollViewForRank.visible = false;
+				
+				headerOn(1);
+				boardOn(3);
+				tabOn(2);
+				
+				allHeaderVisible();
+				showHeaderChose(1, 4);
+				loadItem(5);
+				
+				//dispatchEvent(new Event(CHANGE_TAB));
+			}
 		}
 		
 		private function createCodeCheck():void 
