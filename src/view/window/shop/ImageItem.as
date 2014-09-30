@@ -12,6 +12,7 @@ package view.window.shop
 	import flash.system.Security;
 	import flash.system.SecurityDomain;
 	import flash.text.TextField;
+	import model.MainData;
 	
 	/**
 	 * ...
@@ -44,19 +45,23 @@ package view.window.shop
 			
 			context.securityDomain = SecurityDomain.currentDomain;
 			
-			Security.loadPolicyFile("http://graph.facebook.com/crossdomain.xml");
 			
+			if (MainData.getInstance().isFacebookVersion) 
+			{
+				Security.loadPolicyFile("http://graph.facebook.com/crossdomain.xml");
+				Security.loadPolicyFile("https://graph.facebook.com/crossdomain.xml");
+				Security.loadPolicyFile("http://profile.ak.fbcdn.net/crossdomain.xml");
+				Security.loadPolicyFile("https://profile.ak.fbcdn.net/crossdomain.xml");
+				Security.loadPolicyFile('http://profile.cc.fbcdn.net/crossdomain.xml');
+				Security.loadPolicyFile('https://profile.cc.fbcdn.net/crossdomain.xml');
+				Security.loadPolicyFile('http://fbcdn-profile-a.akamaihd.net/crossdomain.xml');
+				Security.loadPolicyFile('https://fbcdn-profile-a.akamaihd.net/crossdomain.xml');
+				Security.loadPolicyFile('http://fbcdn-sphotos-a.akamaihd.net/crossdomain.xml');
+				Security.loadPolicyFile('https://fbcdn-sphotos-a.akamaihd.net/crossdomain.xml');
+				Security.loadPolicyFile("http://profile.ak.fbcdn.net/crossdomain.xml");
+			}
 			
-			Security.loadPolicyFile("https://graph.facebook.com/crossdomain.xml");
-			Security.loadPolicyFile("http://profile.ak.fbcdn.net/crossdomain.xml");
-			Security.loadPolicyFile("https://profile.ak.fbcdn.net/crossdomain.xml");
-			Security.loadPolicyFile('http://profile.cc.fbcdn.net/crossdomain.xml');
-			Security.loadPolicyFile('https://profile.cc.fbcdn.net/crossdomain.xml');
-			Security.loadPolicyFile('http://fbcdn-profile-a.akamaihd.net/crossdomain.xml');
-			Security.loadPolicyFile('https://fbcdn-profile-a.akamaihd.net/crossdomain.xml');
-			Security.loadPolicyFile('http://fbcdn-sphotos-a.akamaihd.net/crossdomain.xml');
-			Security.loadPolicyFile('https://fbcdn-sphotos-a.akamaihd.net/crossdomain.xml');
-			Security.loadPolicyFile("http://profile.ak.fbcdn.net/crossdomain.xml");
+		
 			//Security.loadPolicyFile('http://api.facebook.com/crossdomain.xml');
 			
 			/*Security.allowDomain('http://profile.ak.fbcdn.net');
