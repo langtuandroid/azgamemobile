@@ -53,6 +53,8 @@ package miniGame
 		 */
 		private var pos:int;
 		
+		private var male:Boolean = false;
+		
 		public function PlayGameScreenMiniGame(main:MainMiniGame) 
 		{
 			super();
@@ -87,8 +89,16 @@ package miniGame
 							[content.card7.x, content.card7.y], [content.card8.x, content.card8.y],
 							[content.card9.x, content.card9.y], [content.card10.x, content.card10.y]
 					];
-			var rd:int = int(Math.random() * 2);
+			var rd:int = Math.ceil(Math.random() * 2);
 			content.userDealCard.gotoAndStop(rd);
+			if (rd == 1) 
+			{
+				male = false;
+			}
+			else 
+			{
+				male = true;
+			}
 			
 			myTurn = GameDataMiniGame.getInstance().myTurn;
 			
@@ -258,8 +268,16 @@ package miniGame
 			
 			if (obj.TypeMsg == 1) 
 			{
-				rd = int(Math.random() * 5);
-				SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_WIN_ + String(rd + 1) );	
+				rd = int(Math.random() * 3);
+				if (male) 
+				{
+					SoundManager.getInstance().playSound(ConstMiniGame.M_WIN_ + String(rd + 1) );	
+				}
+				else 
+				{
+					SoundManager.getInstance().playSound(ConstMiniGame.FE_WIN_ + String(rd + 1) );	
+				}
+				
 						
 				myTurn--;
 				TweenMax.to(arrCardDeck[pos], .5, { scaleX:0} );
@@ -368,7 +386,7 @@ package miniGame
 			}
 			if (goldGift) 
 			{
-				MainData.getInstance().chooseChannelData.myInfo.money = MainData.getInstance().chooseChannelData.myInfo.money + MainData.getInstance().chooseChannelData.myInfo.money + GameDataMiniGame.getInstance().goldGift[0];
+				MainData.getInstance().chooseChannelData.myInfo.money = MainData.getInstance().chooseChannelData.myInfo.money + Number(GameDataMiniGame.getInstance().goldGift[0]);
 				MainData.getInstance().chooseChannelData.myInfo = MainData.getInstance().chooseChannelData.myInfo;
 				_main.noticeGame(GameDataMiniGame.getInstance().goldGift[1], true);
 				setupContent();
@@ -562,6 +580,7 @@ package miniGame
 				timerDealCardDeck.stop();
 			}
 			
+			SoundManager.getInstance().playSound(ConstTlmn.SOUND_DEAL_DISCARD);
 			countCard = 0;
 			TweenMax.to(arrCardDeck[countCard], .5, { x:startX, y:startY, scaleX:0, scaleY:0} );
 			timerHidCard = new Timer(100, 9);
@@ -612,6 +631,7 @@ package miniGame
 		
 		private function onHideCardDeck(e:TimerEvent):void 
 		{
+			SoundManager.getInstance().playSound(ConstTlmn.SOUND_DEAL_DISCARD);
 			countCard++;
 			TweenMax.to(arrCardDeck[countCard], .5, { x:startX, y:startY, scaleX:0, scaleY:0} );
 		}

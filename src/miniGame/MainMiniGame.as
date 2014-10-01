@@ -3,7 +3,11 @@ package miniGame
 	import com.gsolo.encryption.MD5;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.IOErrorEvent;
+	import flash.media.Sound;
+	import flash.net.URLRequest;
 	import miniGame.request.HTTPRequestMiniGame;
+	import sound.SoundManager;
 	
 	/**
 	 * ...
@@ -48,8 +52,39 @@ package miniGame
 			
 			addNoticePopup();
 			
+			addSound();
+			
 			//addInfoGame("849", 80);
 			//addInfoGame("haonam01", 60000, "http://wss.test.azgame.us/");
+		}
+		
+		private function addSound():void 
+		{
+			
+			var arrSoundName:Array = [ConstMiniGame.FE_WIN_1, ConstMiniGame.FE_WIN_2, ConstMiniGame.FE_WIN_3,
+										ConstMiniGame.M_WIN_1, ConstMiniGame.M_WIN_2, ConstMiniGame.M_WIN_3
+										] 
+			var arrSound:Array = ["http://203.162.121.120/gamebai/sound/LBF01.mp3", 
+									"http://203.162.121.120/gamebai/sound/LBF02.mp3",
+										"http://203.162.121.120/gamebai/sound/LBF03.mp3", 
+										"http://203.162.121.120/gamebai/sound/LBM01.mp3",
+										"http://203.162.121.120/gamebai/sound/LBM02.mp3", 
+										"http://203.162.121.120/gamebai/sound/LBM03.mp3"
+										] 
+			for (var i:int = 0; i < arrSoundName.length; i++) 
+			{
+				
+				var mySound:Sound = new Sound();
+				mySound.load(new URLRequest(arrSound[i]));
+				mySound.addEventListener(IOErrorEvent.IO_ERROR, loadMusicError);
+				
+				SoundManager.getInstance().registerSound(arrSoundName[i], mySound);
+			}
+		}
+		
+		private function loadMusicError(e:IOErrorEvent):void 
+		{
+			trace("ko the load nhac nen")
 		}
 		
 		private function addNoticePopup():void 
@@ -213,6 +248,12 @@ package miniGame
 		
 		public function addMiniGame():void
 		{
+			if (_playGame) 
+			{
+				_playGame.removeAllEvent();
+				playGameLayer.removeChild(_playGame);
+				_playGame = null;
+			}
 			_playGame = new PlayGameScreenMiniGame(this);
 			playGameLayer.addChild(_playGame);
 			_playGame.y = 155;
