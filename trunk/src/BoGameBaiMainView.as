@@ -318,7 +318,7 @@ package
 		
 		public function showMiniGame():void 
 		{
-			if (minigame) 
+			if (!minigame) 
 			{
 				minigame.addMiniGame();
 			}

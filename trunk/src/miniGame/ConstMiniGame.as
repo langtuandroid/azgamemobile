@@ -25,6 +25,16 @@ package miniGame
 		public static const BUY_TURN_NOW:String = "buyTurnNow";
 		public static const SHOW_AWARD_AGAIN:String = "showAwardAgain";
 		
+		public static const FE_WIN_:String = "feWin";
+		public static const FE_WIN_1:String = "feWin1";
+		public static const FE_WIN_2:String = "feWin2";
+		public static const FE_WIN_3:String = "feWin3";
+		
+		public static const M_WIN_:String = "mWin";
+		public static const M_WIN_1:String = "mWin1";
+		public static const M_WIN_2:String = "mWin2";
+		public static const M_WIN_3:String = "mWin3";
+		
 		public function ConstMiniGame() 
 		{
 			
