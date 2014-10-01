@@ -1625,7 +1625,7 @@ package view.window.shop
 		private function loadItemPurchaseSuccess(obj:Object):void 
 		{
 			removeAllArray();
-			
+			windowLayer.closeAllWindow();
 			trace("load thanh cong item gold: ", obj)
 			
 			var arrData:Array = obj.Data;
@@ -1731,6 +1731,7 @@ package view.window.shop
 		private function onBuyItemPurchase(e:Event):void 
 		{
 			//thanh toan the tin dung
+			windowLayer.openLoadingWindow();
 			
 			goldChoseBuy = e.currentTarget as ContentItemPurchase;
 			
@@ -2434,6 +2435,8 @@ package view.window.shop
 		
 		private function loadItemPurchase():void 
 		{
+			windowLayer.openLoadingWindow();
+			
 			var method:String = "POST";
 			var httpRequest:HTTPRequest = new HTTPRequest();
 			var url:String = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
