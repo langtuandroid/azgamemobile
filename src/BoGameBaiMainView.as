@@ -297,7 +297,7 @@ package
 		{
 			if (obj.Data.status == 0) 
 			{
-				
+				hideMiniGame();
 			}
 			else if (obj.Data.status == 1) 
 			{
@@ -318,7 +318,7 @@ package
 		
 		public function showMiniGame():void 
 		{
-			if (!minigame) 
+			if (minigame) 
 			{
 				minigame.addMiniGame();
 			}

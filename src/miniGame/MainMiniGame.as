@@ -248,16 +248,14 @@ package miniGame
 		
 		public function addMiniGame():void
 		{
-			if (_playGame) 
+			if (!_playGame) 
 			{
-				_playGame.removeAllEvent();
-				playGameLayer.removeChild(_playGame);
-				_playGame = null;
+				_playGame = new PlayGameScreenMiniGame(this);
+				playGameLayer.addChild(_playGame);
+				_playGame.y = 155;
+				_playGame.addEventListener(ConstMiniGame.CLOSE_POPUP, onCloseGame);
 			}
-			_playGame = new PlayGameScreenMiniGame(this);
-			playGameLayer.addChild(_playGame);
-			_playGame.y = 155;
-			_playGame.addEventListener(ConstMiniGame.CLOSE_POPUP, onCloseGame);
+			
 			
 		}
 		
