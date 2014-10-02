@@ -65,12 +65,12 @@ package miniGame
 										ConstMiniGame.M_WIN_1, ConstMiniGame.M_WIN_2, ConstMiniGame.M_WIN_3,
 										ConstMiniGame.SOUND_DEAL_DISCARD, ConstMiniGame.SOUND_WIN
 										] 
-			var arrSound:Array = ["http://203.162.121.120/gamebai/sound/LBF01.mp3", 
-									"http://203.162.121.120/gamebai/sound/LBF02.mp3",
-										"http://203.162.121.120/gamebai/sound/LBF03.mp3", 
-										"http://203.162.121.120/gamebai/sound/LBM01.mp3",
-										"http://203.162.121.120/gamebai/sound/LBM02.mp3", 
-										"http://203.162.121.120/gamebai/sound/LBM03.mp3",
+			var arrSound:Array = ["http://203.162.121.120/gamebai/sound/LBF01.az", 
+									"http://203.162.121.120/gamebai/sound/LBF02.az",
+										"http://203.162.121.120/gamebai/sound/LBF03.az", 
+										"http://203.162.121.120/gamebai/sound/LBM01.az",
+										"http://203.162.121.120/gamebai/sound/LBM02.az", 
+										"http://203.162.121.120/gamebai/sound/LBM03.az",
 										"http://203.162.121.120/gamebai/bimkute/sound/AZgamebai_Sound_effect/GB005.az",
 										"http://203.162.121.120/gamebai/bimkute/sound/AZgamebai_Sound_effect/GB011.az"
 										] 
