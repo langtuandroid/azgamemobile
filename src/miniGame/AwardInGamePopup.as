@@ -10,6 +10,7 @@ package miniGame
 	import flash.net.URLRequest;
 	import flash.text.TextField;
 	import miniGame.request.HTTPRequestMiniGame;
+	import model.MainData;
 	
 	/**
 	 * ...
@@ -234,6 +235,8 @@ package miniGame
 			{
 				GameDataMiniGame.getInstance().myTurn = obj.Data.User_Turns;
 				GameDataMiniGame.getInstance().myMoney = GameDataMiniGame.getInstance().myMoney - (qualtityTurn * 10);
+				MainData.getInstance().chooseChannelData.myInfo.cash = GameDataMiniGame.getInstance().myMoney;
+				MainData.getInstance().chooseChannelData.myInfo = MainData.getInstance().chooseChannelData.myInfo;
 				dispatchEvent(new Event(ConstMiniGame.BUY_TURN_SUCCESS));
 			}
 			else 

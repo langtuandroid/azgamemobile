@@ -522,7 +522,11 @@ package
 				windowLayerChild.closeAllWindow();
 				
 			//lobbyRoomScreen.updateGameType();
-			checkEventExist();
+			if (!mainData.joinedGame) 
+			{
+				checkEventExist();
+			}
+			
 				
 			if (mainData.chooseChannelData.myInfo.money < mainData.minMoney) // Nếu user hết tiền thì nạp tiền
 				mainCommand.getInfoCommand.addMoney();
@@ -585,6 +589,7 @@ package
 			playingScreen.effectOpen();
 			playingScreen.addEventListener(ConstTlmn.OUT_ROOM, onExitPlayingScreen);
 			playingScreen.addEventListener(PlayerInfo.EXIT, onExitPlayingScreen);
+			mainData.joinedGame = true;
 			
 			playingScreen.addEventListener(PlayingScreen.CLOSE_COMPLETE, onRemoveScreen);
 		}

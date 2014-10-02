@@ -613,6 +613,7 @@ package model
 
 		public var isFacebookVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào facebook không
 		public var country:String = "";
+		public var joinedGame:Boolean = false;
 	}
 
 }
