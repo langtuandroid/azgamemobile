@@ -299,7 +299,7 @@ package miniGame
 					goldGift = false;
 				}
 				
-				content.resultTxt.text = obj.Data.Card_Value + "-" + obj.Data.Code + "-" + obj.Data.Name + "-" + obj.Data.Gold;
+				//content.resultTxt.text = obj.Data.Card_Value + "-" + obj.Data.Code + "-" + obj.Data.Name + "-" + obj.Data.Gold;
 				
 				var arr:Array = ["Thẻ \n 10k", "Thẻ \n 20k", "Thẻ \n 50k", "Thẻ \n 100k", "Gold \n 5 triệu", 
 								"Gold \n 2 triệu", "Gold \n 1 triệu", "Gold \n 500k", "Gold \n 200k", "Gold \n 100k"];
