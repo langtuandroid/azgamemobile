@@ -268,15 +268,8 @@ package miniGame
 			
 			if (obj.TypeMsg == 1) 
 			{
-				rd = int(Math.random() * 3);
-				if (male) 
-				{
-					SoundManager.getInstance().playSound(ConstMiniGame.M_WIN_ + String(rd + 1) );	
-				}
-				else 
-				{
-					SoundManager.getInstance().playSound(ConstMiniGame.FE_WIN_ + String(rd + 1) );	
-				}
+				SoundManager.getInstance().playSound(ConstMiniGame.SOUND_WIN);	
+				
 				
 						
 				myTurn--;
@@ -306,7 +299,7 @@ package miniGame
 					goldGift = false;
 				}
 				
-				//content.resultTxt.text = obj.Data.Card_Value + "-" + obj.Data.Code + "-" + obj.Data.Name + "-" + obj.Data.Gold;
+				content.resultTxt.text = obj.Data.Card_Value + "-" + obj.Data.Code + "-" + obj.Data.Name + "-" + obj.Data.Gold;
 				
 				var arr:Array = ["Thẻ \n 10k", "Thẻ \n 20k", "Thẻ \n 50k", "Thẻ \n 100k", "Gold \n 5 triệu", 
 								"Gold \n 2 triệu", "Gold \n 1 triệu", "Gold \n 500k", "Gold \n 200k", "Gold \n 100k"];
@@ -386,6 +379,16 @@ package miniGame
 			}
 			if (goldGift) 
 			{
+				var rd:int = int(Math.random() * 3);
+				if (male) 
+				{
+					SoundManager.getInstance().playSound(ConstMiniGame.M_WIN_ + String(rd + 1) );	
+				}
+				else 
+				{
+					SoundManager.getInstance().playSound(ConstMiniGame.FE_WIN_ + String(rd + 1) );	
+				}
+				
 				MainData.getInstance().chooseChannelData.myInfo.money = MainData.getInstance().chooseChannelData.myInfo.money + Number(GameDataMiniGame.getInstance().goldGift[0]);
 				MainData.getInstance().chooseChannelData.myInfo = MainData.getInstance().chooseChannelData.myInfo;
 				_main.noticeGame(GameDataMiniGame.getInstance().goldGift[1], true);
@@ -403,6 +406,17 @@ package miniGame
 				timerShowAwardPopup.stop();
 			}
 			
+			
+			var rd:int = int(Math.random() * 3);
+			if (male) 
+			{
+				SoundManager.getInstance().playSound(ConstMiniGame.M_WIN_ + String(rd + 1) );	
+			}
+			else 
+			{
+				SoundManager.getInstance().playSound(ConstMiniGame.FE_WIN_ + String(rd + 1) );	
+			}
+				
 			_main.noticeGame(GameDataMiniGame.getInstance().cardGift[2], true);
 			
 			/*if (awardPopup) 
@@ -580,7 +594,7 @@ package miniGame
 				timerDealCardDeck.stop();
 			}
 			
-			SoundManager.getInstance().playSound(ConstTlmn.SOUND_DEAL_DISCARD);
+			SoundManager.getInstance().playSound(ConstMiniGame.SOUND_DEAL_DISCARD);
 			countCard = 0;
 			TweenMax.to(arrCardDeck[countCard], .5, { x:startX, y:startY, scaleX:0, scaleY:0} );
 			timerHidCard = new Timer(100, 9);
@@ -631,7 +645,7 @@ package miniGame
 		
 		private function onHideCardDeck(e:TimerEvent):void 
 		{
-			SoundManager.getInstance().playSound(ConstTlmn.SOUND_DEAL_DISCARD);
+			SoundManager.getInstance().playSound(ConstMiniGame.SOUND_DEAL_DISCARD);
 			countCard++;
 			TweenMax.to(arrCardDeck[countCard], .5, { x:startX, y:startY, scaleX:0, scaleY:0} );
 		}
@@ -647,7 +661,7 @@ package miniGame
 			
 			removeAllCardDeck();
 			
-			SoundManager.getInstance().playSound(ConstTlmn.SOUND_DEAL_DISCARD);
+			SoundManager.getInstance().playSound(ConstMiniGame.SOUND_DEAL_DISCARD);
 			var cardDeck:MovieClip = new CardDeckMiniGame();
 			content.addChild(cardDeck);
 			cardDeck.x = startX;
@@ -668,7 +682,7 @@ package miniGame
 			countCard++;
 			if (countCard < 10) 
 			{
-				SoundManager.getInstance().playSound(ConstTlmn.SOUND_DEAL_DISCARD);
+				SoundManager.getInstance().playSound(ConstMiniGame.SOUND_DEAL_DISCARD);
 				var cardDeck:MovieClip = new CardDeckMiniGame();
 				content.addChild(cardDeck);
 				cardDeck.x = startX;

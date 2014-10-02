@@ -193,6 +193,7 @@ package view
 		private function onExitButtonClick(e:MouseEvent):void 
 		{
 			mainData.isLogOut = true;
+			mainData.joinedGame = false;
 		}
 		
 		private function onTabClick(e:MouseEvent):void 

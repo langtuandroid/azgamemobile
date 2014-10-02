@@ -35,6 +35,10 @@ package miniGame
 		public static const M_WIN_2:String = "mWin2";
 		public static const M_WIN_3:String = "mWin3";
 		
+		public static const SOUND_DEAL_DISCARD:String = "soundDealCard";
+		public static const SOUND_WIN:String = "Win";
+		
+		
 		public function ConstMiniGame() 
 		{
 			
