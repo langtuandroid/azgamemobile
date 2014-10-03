@@ -175,6 +175,11 @@ package miniGame
 		private function getInfoGift(obj:Object):void 
 		{
 			trace(obj)
+			var arr:Array = obj.Data;
+			for (var i:int = 0; i < arr.length; i++) 
+			{
+				GameDataMiniGame.getInstance().arrGift.push(arr[i].name);
+			}
 		}
 		
 		private function checkEventExist():void 
