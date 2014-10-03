@@ -301,11 +301,16 @@ package miniGame
 				
 				//content.resultTxt.text = obj.Data.Card_Value + "-" + obj.Data.Code + "-" + obj.Data.Name + "-" + obj.Data.Gold;
 				
-				var arr:Array = ["Thẻ \n 10k", "Thẻ \n 20k", "Thẻ \n 50k", "Thẻ \n 100k", "Gold \n 5 triệu", 
+				var arr:Array = ["Thẻ \n 100k", "Thẻ \n 50k", "Thẻ \n 20k", "Thẻ \n 10k", "Gold \n 5 triệu", 
 								"Gold \n 2 triệu", "Gold \n 1 triệu", "Gold \n 500k", "Gold \n 200k", "Gold \n 100k"];
-				var arr1:Array = ["Thẻ 10K", "Thẻ 20K", "Thẻ 50K", "Thẻ 100K", "5 triệu Gold", "2 triệu Gold", 
-									"1 triệu Gold", "500,000 Gold", "200,000 Gold", "100,000 Gold"];
+				var arr1:Array = [];
 				var i:int;
+				
+				for (i = 0; i < GameDataMiniGame.getInstance().arrGift.length; i++) 
+				{
+					arr1.push(GameDataMiniGame.getInstance().arrGift[i]);
+				}
+				
 				for (i = 0; i < arrCard.length; i++) 
 				{
 					if (arr1[i] == obj.Data.Name) 
@@ -799,7 +804,7 @@ package miniGame
 		
 		public function setupContent():void 
 		{
-			var arr:Array = ["Thẻ \n 10k", "Thẻ \n 20k", "Thẻ \n 50k", "Thẻ \n 100k", "Gold \n 5 triệu", 
+			var arr:Array = ["Thẻ \n 100k", "Thẻ \n 50k", "Thẻ \n 20k", "Thẻ \n 10k", "Gold \n 5 triệu", 
 								"Gold \n 2 triệu", "Gold \n 1 triệu", "Gold \n 500k", "Gold \n 200k", "Gold \n 100k"];
 			var i:int;
 			for (i = 0; i < arrCard.length; i++) 
