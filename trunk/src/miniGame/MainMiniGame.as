@@ -39,7 +39,7 @@ package miniGame
 			// entry point
 			
 			var shadow:Sprite = new Sprite();
-			shadow.graphics.beginFill(0x000000, .2);
+			shadow.graphics.beginFill(0x000000, .9);
 			shadow.graphics.drawRect(0, 0, 1024, 600);
 			shadow.graphics.endFill();
 			addChild(shadow);
@@ -250,7 +250,11 @@ package miniGame
 		
 		private function getMyTurnComplete(obj:Object):void 
 		{
-			gameData.myTurn = obj.Data.User_Turns;
+			if (obj.Data) 
+			{
+				gameData.myTurn = obj.Data.User_Turns;
+			}
+			
 			addMiniGame();
 		}
 		
