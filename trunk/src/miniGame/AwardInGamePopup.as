@@ -244,7 +244,7 @@ package miniGame
 				dispatchEvent(new Event(ConstMiniGame.BUY_TURN_ERROR));
 			}
 			
-			content.buyMoney.quanltityTxt.text = "1";
+			content.buyMoney.quanltityTxt.text = "10";
 		}
 		
 		public function showChoseReceiveGift():void 
@@ -334,7 +334,7 @@ package miniGame
 			
 			}
 			
-			content.buyMoney.quanltityTxt.text = "1";
+			content.buyMoney.quanltityTxt.text = "10";
 		}
 		
 		/**
