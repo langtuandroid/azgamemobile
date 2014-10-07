@@ -1,6 +1,7 @@
 package miniGame
 {
 	
+	
 	import flash.display.MovieClip;
 	import adobe.utils.CustomActions;
 	import flash.display.Bitmap;
@@ -12,13 +13,16 @@ package miniGame
 	import flash.net.URLRequest;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
+	
+	////////////
+    
+	
 	/**
 	 * ...
 	 * @author bimkute
 	 */
 	public class NoticePopupMiniGame extends MovieClip 
 	{
-		
 		private var noticePopup:MovieClip;
 		private var onGift:Boolean;
 		

@@ -1,6 +1,7 @@
 package 
 {
 	import control.ConstTlmn;
+	
 	import flash.desktop.NativeApplication;
 	import flash.display.MovieClip;
 	import flash.display.SimpleButton;
@@ -60,6 +61,15 @@ package
 	import view.window.BaseWindow;
 	import view.window.ConfirmWindow;
 	import view.window.windowLayer.WindowLayer;
+	
+	//////////
+	import flash.events.SoftKeyboardEvent; 
+    import flash.geom.Rectangle; 
+    import flash.events.Event; 
+    import flash.display.StageScaleMode; 
+    import flash.display.StageAlign; 
+	
+	
 	/**
 	 * ...
 	 * @author Yun
@@ -139,7 +149,10 @@ package
 			}
 			
 			scrollRect = new Rectangle(0, 0, mainData.stageWidth, mainData.stageHeight);
+			
+			
 		}
+		
 		
 		private function handleActivate(e:Event):void 
 		{
@@ -220,6 +233,8 @@ package
 			mainData.playingData.addEventListener(PlayingData.JOIN_GAME_ROOM_SUCCESS, onJoinGameRoomSuccess);
 			
 			addMinigame();
+			
+			
 		}
 		
 		private function onUpdateMiniGame(e:Event):void 
@@ -295,15 +310,19 @@ package
 		
 		private function getInfoEvent(obj:Object):void 
 		{
-			if (obj.Data.status == 0) 
+			if (obj.Data) 
 			{
-				hideMiniGame();
+				if (obj.Data.status == 0) 
+				{
+					hideMiniGame();
+				}
+				else if (obj.Data.status == 1) 
+				{
+					showMiniGame();
+				}
+				mainData.typeOfEvent = obj.Data.status;
 			}
-			else if (obj.Data.status == 1) 
-			{
-				showMiniGame();
-			}
-			mainData.typeOfEvent = obj.Data.status;
+			
 			
 		}
 		

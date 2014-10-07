@@ -2,12 +2,16 @@ package miniGame
 {
 	import com.greensock.TweenMax;
 	import control.ConstTlmn;
+	import flash.display.Bitmap;
+	import flash.display.Loader;
 	import flash.display.MovieClip;
 	import flash.display.ShaderPrecision;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.IOErrorEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
+	import flash.net.URLRequest;
 	import flash.text.TextField;
 	import flash.utils.Timer;
 	import miniGame.request.HTTPRequestMiniGame;
@@ -301,21 +305,32 @@ package miniGame
 				
 				//content.resultTxt.text = obj.Data.Card_Value + "-" + obj.Data.Code + "-" + obj.Data.Name + "-" + obj.Data.Gold;
 				
-				var arr:Array = ["Thẻ \n 100k", "Thẻ \n 50k", "Thẻ \n 20k", "Thẻ \n 10k", "Gold \n 5 triệu", 
-								"Gold \n 2 triệu", "Gold \n 1 triệu", "Gold \n 500k", "Gold \n 200k", "Gold \n 100k"];
+				var arr:Array = [];
 				var arr1:Array = [];
 				var i:int;
+				var loader:Loader;
 				
 				for (i = 0; i < GameDataMiniGame.getInstance().arrGift.length; i++) 
 				{
-					arr1.push(GameDataMiniGame.getInstance().arrGift[i]);
+					arr1.push(GameDataMiniGame.getInstance().arrGift[i][0]);
+					arr.push(GameDataMiniGame.getInstance().arrGift[i][1]);
 				}
 				
 				for (i = 0; i < arrCard.length; i++) 
 				{
 					if (arr1[i] == obj.Data.Name) 
 					{
-						TextField(arrCard[pos].txt).text = arr[i];
+						if (arrCard[pos].containerGiftImage.numChildren > 0) 
+						{
+							arrCard[pos].containerGiftImage.removeChild(arrCard[pos].containerGiftImage.getChildAt(0));
+						}
+						
+						
+						loader = arr[i];
+						
+						arrCard[pos].containerGiftImage.addChild(loader);
+						TextField(arrCard[pos].txt).text = "";// arr[i];
+						
 						arr1.splice(i, 1);
 						arr.splice(i, 1);
 						break;
@@ -326,8 +341,22 @@ package miniGame
 				{
 					if (i != pos) 
 					{
-						var rd:int = int(Math.random() * arr.length);
-						arrCard[i].txt.text = arr.splice(rd, 1);
+						var rd:int = int(Math.random() * arr1.length);
+						
+						if (arrCard[i].containerGiftImage.numChildren > 0) 
+						{
+							arrCard[i].containerGiftImage.removeChild(arrCard[i].containerGiftImage.getChildAt(0));
+						}
+						
+						loader = arr[rd];
+						
+						arr.splice(rd, 1);
+						arr1.splice(rd, 1);
+						
+						arrCard[i].containerGiftImage.addChild(loader);
+						
+						
+						arrCard[i].txt.text = "";// arr.splice(rd, 1);
 						arrCard[i].scaleX = arrCard[i].scaleY = 0;
 					}
 				}
@@ -804,18 +833,32 @@ package miniGame
 		
 		public function setupContent():void 
 		{
-			var arr:Array = ["Thẻ \n 100k", "Thẻ \n 50k", "Thẻ \n 20k", "Thẻ \n 10k", "Gold \n 5 triệu", 
-								"Gold \n 2 triệu", "Gold \n 1 triệu", "Gold \n 500k", "Gold \n 200k", "Gold \n 100k"];
+			var arr:Array = [];
 			var i:int;
+			for (i = 0; i < GameDataMiniGame.getInstance().arrGift.length; i++) 
+			{
+				arr.push(GameDataMiniGame.getInstance().arrGift[i][1]);
+			}
+			
 			for (i = 0; i < arrCard.length; i++) 
 			{
+				var rd:int = int(Math.random() * arr.length);
+				
+				var loader:Loader = arr[rd];
+				arr.splice(rd, 1);
+				
+				if (arrCard[i].containerGiftImage.numChildren > 0) 
+				{
+					arrCard[i].containerGiftImage.removeChild(arrCard[i].containerGiftImage.getChildAt(0));
+				}
+				arrCard[i].containerGiftImage.addChild(loader);
 				
 				arrCard[i].visible = true;
 				arrCard[i].scaleX = arrCard[i].scaleY = 1;
 				arrCard[i].x = arrPosCard[i][0];
 				arrCard[i].y = arrPosCard[i][1];
-				var rd:int = int(Math.random() * arr.length);
-				arrCard[i].txt.text = arr.splice(rd, 1);
+				
+				arrCard[i].txt.text = "";// arr.splice(rd, 1);
 				arrCard[i].txt.mouseEnabled = false;
 				arrCard[i].borderCard.visible = false;
 			}

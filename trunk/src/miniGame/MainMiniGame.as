@@ -1,6 +1,8 @@
 package miniGame
 {
 	import com.gsolo.encryption.MD5;
+	import flash.display.Bitmap;
+	import flash.display.Loader;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
@@ -23,7 +25,8 @@ package miniGame
 		private var popupLayer:Sprite;
 		private var noticePopup:NoticePopupMiniGame;
 		
-		public var giftObj:Object
+		public var giftObj:Object;
+		private var countGift:int;
 		
 		public function MainMiniGame():void
 		{
@@ -154,7 +157,7 @@ package miniGame
 			
 			getArrGift();
 			
-			checkEventExist();
+			//checkEventExist();
 			
 			//getAccessToken();
 			
@@ -162,6 +165,8 @@ package miniGame
 		
 		private function getArrGift():void 
 		{
+			countGift = 0;
+			
 			var httpReq:HTTPRequestMiniGame = new HTTPRequestMiniGame();
 			var method:String = "POST";
 			var str:String = GameDataMiniGame.getInstance().linkReq + "Service02/OnplayGameEvent.asmx/Azgamebai_GetListAward";
@@ -174,11 +179,34 @@ package miniGame
 		
 		private function getInfoGift(obj:Object):void 
 		{
-			trace(obj)
-			var arr:Array = obj.Data;
-			for (var i:int = 0; i < arr.length; i++) 
+			if (obj.Data) 
 			{
-				GameDataMiniGame.getInstance().arrGift.push(arr[i].name);
+				var arr:Array = obj.Data;
+				for (var i:int = 0; i < arr.length; i++) 
+				{
+					var loader:Loader = new Loader();
+					loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadGifComplete);
+					loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onLoadGiftError);
+					loader.load(new URLRequest(arr[i].image_url));
+					GameDataMiniGame.getInstance().arrGift.push([arr[i].name, loader]);
+				}
+			}
+			
+		}
+		
+		private function onLoadGiftError(e:IOErrorEvent):void 
+		{
+			
+		}
+		
+		private function onLoadGifComplete(e:Event):void 
+		{
+			countGift++;
+			Bitmap(e.currentTarget.content).smoothing = true;
+			
+			if (countGift > 9) 
+			{
+				checkEventExist();
 			}
 		}
 		
