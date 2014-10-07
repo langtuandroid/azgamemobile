@@ -7,6 +7,8 @@ package view.window
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.external.ExternalInterface;
+	import flash.net.navigateToURL;
+	import flash.net.URLRequest;
 	import flash.text.TextField;
 	import flash.utils.Timer;
 	import model.MainData;
@@ -19,9 +21,11 @@ package view.window
 	public class AlertWindow extends BaseWindow 
 	{
 		private var closeButton:SimpleButton;
+		private var updateButton:SimpleButton;
 		private var feedButton:MyButton;
 		private var notice:TextField;
 		private var loadingCircle:Sprite;
+		public var url:String;
 		
 		private var mainData:MainData = MainData.getInstance();
 		
@@ -30,12 +34,26 @@ package view.window
 			addContent("zAlertWindow");
 			notice = content["notice"];
 			
+			updateButton = content["updateButton"];
+			updateButton.visible = false;
 			closeButton = content["closeButton"];
 			closeButton.addEventListener(MouseEvent.CLICK, onCloseWindow);
 			loadingCircle = content["loadingCircle"];
 			loadingCircle.visible = false;
 			
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+		}
+		
+		public function showUpdateButton():void
+		{
+			updateButton.visible = true;
+			closeButton.visible = false;
+			updateButton.addEventListener(MouseEvent.CLICK, onUpdateButtonClick);
+		}
+		
+		private function onUpdateButtonClick(e:MouseEvent):void 
+		{
+			navigateToURL(new URLRequest(url));
 		}
 		
 		private function onRemovedFromStage(e:Event):void 

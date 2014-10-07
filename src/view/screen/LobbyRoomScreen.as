@@ -1195,6 +1195,8 @@ package view.screen
 		{
 			if(!roomList)
 				roomList = new RoomListComponent();
+			//if (mainData.isFacebookVersion)
+				roomList.isForMobile = false;
 			roomList.isInvite = false;
 			roomList.addEventListener(MouseEvent.MOUSE_DOWN, onCompMouseDown);
 			roomList.addEventListener(MouseEvent.MOUSE_UP, onCompMouseUp);
