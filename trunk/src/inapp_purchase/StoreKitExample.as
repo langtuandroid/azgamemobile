@@ -245,6 +245,7 @@ public class StoreKitExample extends Sprite
 	{
 		log("ERR loading products:" + e.text);
 		mainData.isPurchaseProductRespond = true;
+		WindowLayer.getInstance().closeAllWindow();
 		WindowLayer.getInstance().openAlertWindow("product details failed");
 	}
 	
@@ -255,20 +256,28 @@ public class StoreKitExample extends Sprite
 
 		var mainRequest:MainRequest = new MainRequest();
 		var data:Object = new Object();
-		data.receipt = e.receipt;
-		data.sandbox = 1;
-		data.guserid = mainData.chooseChannelData.myInfo.uId;
-		//mainRequest.sendRequest_Post("http://ciao88.net/ios/callback", data, onServerCallBack, true);	
+		data.receipt_data = e.receipt;
+		data.access_token = mainData.token;
+		if (mainData.isTest)
+			mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayShopExt.asmx/AppleStoreVerifyReceipt", data, onServerCallBack, true);
+		else
+			mainRequest.sendRequest_Post("http://wss.azgame.us/Service02/OnplayShopExt.asmx/AppleStoreVerifyReceipt", data, onServerCallBack, true);
 	}
 	
 	private function onServerCallBack(value:Object):void 
 	{
-		mainData.isPurchaseProductRespond = true;
-		WindowLayer.getInstance().openAlertWindow(value["msg"]);
-		if (int(value["status"]) == 1)
+		WindowLayer.getInstance().closeAllWindow();
+		
+		//mainData.isPurchaseProductRespond = true;
+		if (value.TypeMsg > 0 && value)
 		{
-			mainData.chooseChannelData.myInfo.money = value.money;
+			WindowLayer.getInstance().openAlertWindow("Mua sản phẩm thành công !!");
+			mainData.chooseChannelData.myInfo.money = value.Data.GameMoney;
 			mainData.chooseChannelData.myInfo = mainData.chooseChannelData.myInfo;
+		}
+		else
+		{
+			WindowLayer.getInstance().openAlertWindow(value.Msg);
 		}
 	}
 	
@@ -277,6 +286,7 @@ public class StoreKitExample extends Sprite
 	{
 		log("FAILED purchase=" + e.productId + ",t=" + e.transactionId + ",o=" + e.originalTransactionId);
 		mainData.isPurchaseProductRespond = true;
+		WindowLayer.getInstance().closeAllWindow();
 		WindowLayer.getInstance().openAlertWindow("purchase failed");
 	}
 		
@@ -285,6 +295,7 @@ public class StoreKitExample extends Sprite
 	{
 		log("CANCELLED purchase="+e.productId+","+e.transactionId);
 		mainData.isPurchaseProductRespond = true;
+		WindowLayer.getInstance().closeAllWindow();
 		WindowLayer.getInstance().openAlertWindow("purchase canceled");
 	}
 	
@@ -300,6 +311,7 @@ public class StoreKitExample extends Sprite
 	{
 		log("an error occurred in restore purchases:" + e.text);
 		mainData.isPurchaseProductRespond = true;
+		WindowLayer.getInstance().closeAllWindow();
 		WindowLayer.getInstance().openAlertWindow("Transaction Restore failed");
 	}
 	
@@ -345,6 +357,7 @@ public class StoreKitExample extends Sprite
 	{
 		log("DL FAILED:" + e.productId + ", " + e.transactionId + ", " + e.errorId + ", " + e.text);
 		mainData.isPurchaseProductRespond = true;
+		WindowLayer.getInstance().closeAllWindow();
 		WindowLayer.getInstance().openAlertWindow("download failed");
 	}
 	
@@ -367,6 +380,7 @@ public class StoreKitExample extends Sprite
 	{
 		log("VIEW DISMISSED FOR: "+e.productId);
 		mainData.isPurchaseProductRespond = true;
+		WindowLayer.getInstance().closeAllWindow();
 		WindowLayer.getInstance().openAlertWindow("Product View Dismissed");
 	}
 	
@@ -375,6 +389,7 @@ public class StoreKitExample extends Sprite
 	{
 		log("VIEW FAILED:" + e.productId + ", " + e.errorID + "=" + e.text);
 		mainData.isPurchaseProductRespond = true;
+		WindowLayer.getInstance().closeAllWindow();
 		WindowLayer.getInstance().openAlertWindow("product view failed");
 	}
 	

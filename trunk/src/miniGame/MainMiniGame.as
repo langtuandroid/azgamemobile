@@ -223,14 +223,18 @@ package miniGame
 		
 		private function getInfoEvent(obj:Object):void 
 		{
-			if (obj.Data.status == 0) 
+			if (obj.Data) 
 			{
-				noticeGame("Event không chạy, tự quay tay đi");
+				if (obj.Data.status == 0) 
+				{
+					noticeGame("Event không chạy, tự quay tay đi");
+				}
+				else if (obj.Data.status == 1 || obj.Data.status == 2) 
+				{
+					getAccessToken();
+				}
 			}
-			else if (obj.Data.status == 1 || obj.Data.status == 2) 
-			{
-				getAccessToken();
-			}
+			
 		}
 		
 		private function getAccessToken():void 

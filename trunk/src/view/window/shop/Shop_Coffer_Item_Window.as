@@ -11,6 +11,7 @@ package view.window.shop
 	import flash.events.FocusEvent;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
+	import inapp_purchase.StoreKitExample;
 	import model.chooseChannelData.MyInfo;
 	import model.MainData;
 	import model.MyDataTLMN;
@@ -1643,7 +1644,8 @@ package view.window.shop
 				var linkAvatar:String = arrData[i]['it_dir_path'];
 				var expireAvatar:String = arrData[i]['it_sell_expire_dt'];
 				var idAvtWeb:String = arrData[i]['it_cd_wb'];
-				var idAvt:String = arrData[i]['it_id'];
+				//var idAvt:String = arrData[i]['it_id'];
+				var idAvt:String = arrData[i]['it_explain'];
 				var tail:String = arrData[i]['it_file_ext'];
 				
 				var contentAvatar:ContentItemPurchase = new ContentItemPurchase();
@@ -1735,7 +1737,7 @@ package view.window.shop
 			
 			goldChoseBuy = e.currentTarget as ContentItemPurchase;
 			
-			
+			MainData.getInstance().storeKitExample.purchaseProduct(ContentItemPurchase(goldChoseBuy)._idAvt);
 		}
 		
 		private function loadItemGiftSuccess(obj:Object):void 

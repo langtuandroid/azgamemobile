@@ -37,6 +37,7 @@ package getFacebookInfo
 				GoViral.goViral.initFacebook("252347141635661", "");
 				
 				// facebook events
+				GoViral.goViral.addEventListener(GVFacebookEvent.FB_AD_ID_RESPONSE,onFacebookEvent);
 				GoViral.goViral.addEventListener(GVFacebookEvent.FB_DIALOG_CANCELED,onFacebookEvent);
 				GoViral.goViral.addEventListener(GVFacebookEvent.FB_DIALOG_FAILED,onFacebookEvent);
 				GoViral.goViral.addEventListener(GVFacebookEvent.FB_DIALOG_FINISHED,onFacebookEvent);
@@ -44,8 +45,13 @@ package getFacebookInfo
 				GoViral.goViral.addEventListener(GVFacebookEvent.FB_LOGGED_OUT,onFacebookEvent);
 				GoViral.goViral.addEventListener(GVFacebookEvent.FB_LOGIN_CANCELED,onFacebookEvent);
 				GoViral.goViral.addEventListener(GVFacebookEvent.FB_LOGIN_FAILED,onFacebookEvent);
+				GoViral.goViral.addEventListener(GVFacebookEvent.FB_PUBLISH_PERMISSIONS_FAILED,onFacebookEvent);
+				GoViral.goViral.addEventListener(GVFacebookEvent.FB_PUBLISH_PERMISSIONS_UPDATED,onFacebookEvent);
+				GoViral.goViral.addEventListener(GVFacebookEvent.FB_READ_PERMISSIONS_FAILED,onFacebookEvent);
+				GoViral.goViral.addEventListener(GVFacebookEvent.FB_READ_PERMISSIONS_UPDATED,onFacebookEvent);
 				GoViral.goViral.addEventListener(GVFacebookEvent.FB_REQUEST_FAILED,onFacebookEvent);
-				GoViral.goViral.addEventListener(GVFacebookEvent.FB_REQUEST_RESPONSE, onFacebookEvent);
+				GoViral.goViral.addEventListener(GVFacebookEvent.FB_REQUEST_RESPONSE,onFacebookEvent);
+				GoViral.goViral.addEventListener(GVFacebookEvent.FB_SESSION_INVALIDATED,onFacebookEvent);
 			}
 			
 			//GoViral.goViral.logoutFacebook();
@@ -72,6 +78,24 @@ package getFacebookInfo
 		{
 			switch(e.type)
 			{
+				case GVFacebookEvent.FB_AD_ID_RESPONSE:
+					WindowLayer.getInstance().openAlertWindow(GVFacebookEvent.FB_AD_ID_RESPONSE);
+					break;
+				case GVFacebookEvent.FB_PUBLISH_PERMISSIONS_FAILED:
+					WindowLayer.getInstance().openAlertWindow(GVFacebookEvent.FB_PUBLISH_PERMISSIONS_FAILED);
+					break;
+				case GVFacebookEvent.FB_PUBLISH_PERMISSIONS_UPDATED:
+					WindowLayer.getInstance().openAlertWindow(GVFacebookEvent.FB_PUBLISH_PERMISSIONS_UPDATED);
+					break;
+				case GVFacebookEvent.FB_READ_PERMISSIONS_FAILED:
+					WindowLayer.getInstance().openAlertWindow(GVFacebookEvent.FB_READ_PERMISSIONS_FAILED);
+					break;
+				case GVFacebookEvent.FB_READ_PERMISSIONS_UPDATED:
+					WindowLayer.getInstance().openAlertWindow(GVFacebookEvent.FB_READ_PERMISSIONS_UPDATED);
+					break;
+				case GVFacebookEvent.FB_SESSION_INVALIDATED:
+					WindowLayer.getInstance().openAlertWindow(GVFacebookEvent.FB_SESSION_INVALIDATED);
+					break;
 				case GVFacebookEvent.FB_DIALOG_CANCELED:
 					WindowLayer.getInstance().openAlertWindow(GVFacebookEvent.FB_DIALOG_CANCELED);
 					break;

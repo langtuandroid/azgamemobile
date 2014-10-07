@@ -493,6 +493,7 @@ package view.window.loginWindow
 			myInfo.name = value.Data["Displayname"];
 			myInfo.hash = '';
 			myInfo.token = '';
+			mainData.token = value.Data.AccessToken;
 			//myInfo.uId = value.Data["UserName"];
 			myInfo.uId = value.Data["Id"];
 			myInfo.id = value.Data["Id"];
