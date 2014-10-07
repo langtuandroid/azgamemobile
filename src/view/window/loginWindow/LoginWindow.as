@@ -22,6 +22,7 @@ package view.window.loginWindow
 	import model.chooseChannelData.MyInfo;
 	import model.MainData;
 	import model.MyDataTLMN;
+	import nid.ui.controls.VirtualKeyBoard;
 	import request.MainRequest;
 	import sound.SoundManager;
 	import view.window.BaseWindow;
@@ -70,6 +71,7 @@ package view.window.loginWindow
 			
 			
 			
+			///////////////////////////
 			zLoginWindow(content).loginButton.addEventListener(MouseEvent.CLICK, onLoginButtonClick);
 			zLoginWindow(content).registerButton.addEventListener(MouseEvent.CLICK, onRegisterButtonClick);
 			zLoginWindow(content).forgetPass.addEventListener(MouseEvent.CLICK, onForgetPassClick);
@@ -131,6 +133,11 @@ package view.window.loginWindow
 			zLoginWindow(content).loadingSoundLayer["percentTxt"].text = '0%';
 			zLoginWindow(content).loadingSoundLayer.visible = false;
 		}
+		
+		/*private function onShowVirtualKeyBoard(e:MouseEvent):void 
+		{
+			VirtualKeyBoard.getInstance().target = { field:e.currentTarget, fieldName:sharedObject.data.userName };
+		}*/
 		
 		private function onButtonClick(e:MouseEvent):void 
 		{
@@ -240,6 +247,11 @@ package view.window.loginWindow
 			
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			
+			//test virtual keyboard
+			//VirtualKeyBoard.getInstance().init(this);
+			//zLoginWindow(content).userName.textField.addEventListener(MouseEvent.CLICK, onShowVirtualKeyBoard);
+			
+			////
 			mainData.addEventListener(MainData.UPDATE_FACEBOOK_DATA, onUpdateFacebookData);
 			mainData.addEventListener(MainData.LOGIN_FACEBOOK_FAIL, onLoginFacebookFail);
 			mainData.chooseChannelData.addEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
