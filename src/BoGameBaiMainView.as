@@ -339,7 +339,7 @@ package
 		{
 			if (minigame) 
 			{
-				minigame.addMiniGame();
+				minigame.getMyTurn();
 			}
 			minigameLayer.visible = true;
 		}

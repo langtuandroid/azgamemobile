@@ -1308,11 +1308,11 @@ package view.screen.play
 				{
 					//trace("card ischoose ========================= ", card.isChoose );
 					//trace("card ischoose ========================= ", card._posCardY );	
-						if (GameDataTLMN.getInstance().playSound) 
+						/*if (GameDataTLMN.getInstance().playSound) 
 						{
 							SoundManager.getInstance().playSound("Click");
 						}
-						
+						*/
 						upAndDown();
 						//checkHitOrPassTurn();
 						
