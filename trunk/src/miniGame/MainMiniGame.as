@@ -268,7 +268,7 @@ package miniGame
 			}
 		}
 		
-		private function getMyTurn():void
+		public function getMyTurn():void
 		{
 			var httpReq:HTTPRequestMiniGame = new HTTPRequestMiniGame();
 			var method:String = "POST";
@@ -290,7 +290,7 @@ package miniGame
 			addMiniGame();
 		}
 		
-		public function addMiniGame():void
+		private function addMiniGame():void
 		{
 			if (!_playGame) 
 			{
