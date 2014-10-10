@@ -228,7 +228,7 @@ package view.window.shop
 			myContent.standingBg.topMenu.topBinhBtn.gotoAndStop(2);
 			myContent.standingBg.topMenu.topPhomBtn.gotoAndStop(2);
 			
-			myContent.chooseInAddMoneyMc.purchase.visible = false;
+			
 			
 			myContent.chooseInShopMc.chooseAvatar.addEventListener(MouseEvent.MOUSE_UP, onClickShowAvatar);
 			myContent.chooseInShopMc.chooseGold.addEventListener(MouseEvent.MOUSE_UP, onClickShowGold);
@@ -248,6 +248,9 @@ package view.window.shop
 			myContent.chooseInAddMoneyMc.raking.addEventListener(MouseEvent.MOUSE_UP, onClickShowAddMoneyRaking);
 			myContent.chooseInAddMoneyMc.sms.addEventListener(MouseEvent.MOUSE_UP, onClickShowAddMoneySms);
 			myContent.chooseInAddMoneyMc.creditCard.addEventListener(MouseEvent.MOUSE_UP, onClickShowAddMoneyPurchase);
+			
+			myContent.chooseInAddMoneyMc.purchase.visible = false;
+			myContent.chooseInAddMoneyMc.creditCard.visible = false;
 			
 			
 			myContent.rakingBg.userNameTxt.text = MainData.getInstance().chooseChannelData.myInfo.name;
