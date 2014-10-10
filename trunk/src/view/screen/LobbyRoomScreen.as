@@ -1194,9 +1194,7 @@ package view.screen
 		private function addRoomList():void 
 		{
 			if(!roomList)
-				roomList = new RoomListComponent();
-			//if (mainData.isFacebookVersion)
-				roomList.isForMobile = false;
+				roomList = new RoomListComponent(!mainData.isFacebookVersion);
 			roomList.isInvite = false;
 			roomList.addEventListener(MouseEvent.MOUSE_DOWN, onCompMouseDown);
 			roomList.addEventListener(MouseEvent.MOUSE_UP, onCompMouseUp);
@@ -1271,7 +1269,7 @@ package view.screen
 		private function addUserList():void 
 		{
 			if(!userList)
-				userList = new UserListComponent();
+				userList = new UserListComponent(!mainData.isFacebookVersion);
 			userList.addEventListener(MouseEvent.MOUSE_DOWN, onCompMouseDown);
 			userList.addEventListener(MouseEvent.MOUSE_UP, onCompMouseUp);
 			userList.addEventListener(UserRowULC.USER_ROW_CLICK, onUserRowClick);

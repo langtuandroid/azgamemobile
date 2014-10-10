@@ -45,6 +45,7 @@ package view.myComboBox
 				//addChild(rowContainer);
 				
 				scrollView = new ScrollViewYun();
+				scrollView.isForMobile = !mainData.isFacebookVersion;
 				scrollView.visible = false;
 				scrollView.setData(rowContainer);
 				addChild(scrollView);

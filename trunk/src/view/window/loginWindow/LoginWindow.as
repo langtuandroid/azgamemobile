@@ -25,6 +25,7 @@ package view.window.loginWindow
 	import nid.ui.controls.VirtualKeyBoard;
 	import request.MainRequest;
 	import sound.SoundManager;
+	import view.window.AlertWindow;
 	import view.window.BaseWindow;
 	import view.window.ConfirmWindow;
 	import view.window.FillNameWindow;
@@ -134,10 +135,10 @@ package view.window.loginWindow
 			zLoginWindow(content).loadingSoundLayer.visible = false;
 		}
 		
-		/*private function onShowVirtualKeyBoard(e:MouseEvent):void 
+		private function onShowVirtualKeyBoard(e:MouseEvent):void 
 		{
 			VirtualKeyBoard.getInstance().target = { field:e.currentTarget, fieldName:sharedObject.data.userName };
-		}*/
+		}
 		
 		private function onButtonClick(e:MouseEvent):void 
 		{
@@ -248,8 +249,9 @@ package view.window.loginWindow
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			
 			//test virtual keyboard
-			//VirtualKeyBoard.getInstance().init(this);
+			VirtualKeyBoard.getInstance().init(this);
 			//zLoginWindow(content).userName.textField.addEventListener(MouseEvent.CLICK, onShowVirtualKeyBoard);
+			//zLoginWindow(content).pass.textField.addEventListener(MouseEvent.CLICK, onShowVirtualKeyBoard);
 			
 			////
 			mainData.addEventListener(MainData.UPDATE_FACEBOOK_DATA, onUpdateFacebookData);
@@ -415,6 +417,10 @@ package view.window.loginWindow
 			data.password = zLoginWindow(content).pass.text;
 			data.client_id = mainData.client_id;
 			data.GameVersion = mainData.version;
+			if (mainData.isOnAndroid)
+				data.DeviceId = 4;
+			else
+				data.DeviceId = 5;
 			zLoginWindow(content).loadingLayer.visible = true;
 			if (mainData.isTest)
 				mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileLogin", data, onLoginValidateRespond, true);
@@ -440,7 +446,18 @@ package view.window.loginWindow
 			if (value.TypeMsg < 1)
 			{
 				zLoginWindow(content).loadingLayer.visible = false;
-				WindowLayer.getInstance().openAlertWindow(value.Msg);
+				if (int(value.TypeMsg) == -10)
+				{
+					var alertWindow:AlertWindow = new AlertWindow();
+					alertWindow.setNotice(value.Msg);
+					alertWindow.url = value.Data.AppsStoreUrl;
+					alertWindow.showUpdateButton();
+					WindowLayer.getInstance().openWindow(alertWindow);
+				}
+				else
+				{
+					WindowLayer.getInstance().openAlertWindow(value.Msg);
+				}
 				return;
 			}
 			
