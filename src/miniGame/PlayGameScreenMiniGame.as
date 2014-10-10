@@ -82,7 +82,7 @@ package miniGame
 			content = new PlayGameMc();
 			gameLayer.addChild(content);
 			
-			content.resultTxt.text = "v1.1"
+			//content.resultTxt.text = "v1.1"
 			
 			arrCard = [content.card1, content.card2, content.card3, content.card4, content.card5,
 						content.card6, content.card7, content.card8, content.card9, content.card10
