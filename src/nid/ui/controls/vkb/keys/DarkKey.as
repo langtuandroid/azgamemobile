@@ -54,7 +54,7 @@ package nid.ui.controls.vkb.keys
 				char = new TextField();
 				char.selectable = false;
 				char.embedFonts = true;
-				char.defaultTextFormat = new TextFormat("Arial", 30, 0xffffff, true, null, null, null, null, "center");
+				char.defaultTextFormat = new TextFormat("Tahoma", 30, 0xffffff, true, null, null, null, null, "center");
 				char.text = kid;
 				char.autoSize = TextFieldAutoSize.LEFT;
 				char.x = _width / 2 - char.width / 2;

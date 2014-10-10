@@ -7,7 +7,9 @@ package  nid.ui.controls
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
+	import flash.geom.Point;
 	import flash.text.TextField;
+	import model.MainData;
 	import nid.ui.controls.vkb.KeyBoardEvent;
 	import nid.ui.controls.vkb.KeyBoardUI;
 	
@@ -143,7 +145,11 @@ package  nid.ui.controls
 			keyboard.y = _stage.stageHeight;
 			keyboard.alpha = 0;
 			_stage.addChild(keyboard);
-			Tweener.addTween(keyboard, { alpha:1, y:_stage.stageHeight  - (keyboard.height), time:0.5, transition:"easeOutQuart" } );
+			var globalY:int = _stage.focus.parent.localToGlobal(new Point(_stage.focus.x, _stage.focus.y)).y;
+			var moveDistance:int = globalY + _stage.focus.height + 10 - 290;
+			if (moveDistance > 0)
+				MainData.getInstance().main.y -= moveDistance;
+			Tweener.addTween(keyboard, { alpha:1, y:/*_stage.stageHeight  - (keyboard.height)*/90, time:0.5, transition:"easeOutQuart" } );
 			isActive = true;
 		}
 		public function hide():void

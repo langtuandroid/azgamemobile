@@ -168,6 +168,7 @@ package nid.ui.controls.vkb
 				
 				for (var columns:int = 0; columns < currentLayout[raws].length; columns++)
 				{
+					//trace("ccccccccccccccccccccccccccc",currentLayout[raws][columns].t);
 					var key:IKey;
 					var ko:Object = currentLayout[raws][columns];
 					var icon:Bitmap = null;
@@ -182,7 +183,7 @@ package nid.ui.controls.vkb
 						case '{space}':	icon = new space_icon();	break;
 						case '{tab}':	icon = new tab_icon();		break;
 					}
-					trace(currentLayout[raws][columns].c,'icon:',icon);
+					//trace(currentLayout[raws][columns].c,'icon:',icon);
 					key = KeyFactory.getKey(ko.c, k_w, k_h, ko.t, icon);
 					
 					key.x = x_pox;
