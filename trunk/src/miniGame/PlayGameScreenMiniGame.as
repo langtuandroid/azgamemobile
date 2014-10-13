@@ -106,6 +106,7 @@ package miniGame
 			
 			myTurn = GameDataMiniGame.getInstance().myTurn;
 			
+			
 			setupContent();
 			
 			addAllEvent();
@@ -578,13 +579,17 @@ package miniGame
 		private function removeAllCardDeck():void 
 		{
 			
-			
-			for (var i:int = 0; i < arrCardDeck.length; i++) 
+			trace("arrcarđeck: ", arrCardDeck)
+			if (arrCardDeck) 
 			{
-				arrCardDeck[i].removeEventListener(MouseEvent.CLICK, onShowGift);
-				content.removeChild(arrCardDeck[i]);
-				arrCardDeck[i] = null;
+				for (var i:int = 0; i < arrCardDeck.length; i++) 
+				{
+					arrCardDeck[i].removeEventListener(MouseEvent.CLICK, onShowGift);
+					content.removeChild(arrCardDeck[i]);
+					arrCardDeck[i] = null;
+				}
 			}
+			
 			arrCardDeck = [];
 		}
 		

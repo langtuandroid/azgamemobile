@@ -306,7 +306,7 @@
 		
 		private function onLoadSoundIOError(e:IOErrorEvent):void 
 		{
-			trace("load sound lỗi")
+			
 			mainData.loadSoundPercent++;
 			mainData.loadSoundPercent = mainData.loadSoundPercent;
 		}
