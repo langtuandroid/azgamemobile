@@ -459,8 +459,6 @@ package view.screen
 				break;
 				case luckyCardButton:
 
-					mainData.isShowMiniGame = true;
-
 					if (mainData.typeOfEvent > 0) 
 					{
 						mainData.isShowMiniGame = true;
