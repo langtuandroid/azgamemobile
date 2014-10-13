@@ -11,6 +11,7 @@ package view.screen
 	import flash.text.TextField;
 	import model.ChannelData;
 	import model.chooseChannelData.ChooseChannelData;
+	import request.HTTPRequest;
 	import RoomListComponent
 	import sound.SoundLibChung;
 	import sound.SoundLibMauBinh;
@@ -458,21 +459,54 @@ package view.screen
 					navigateToURL(new URLRequest("https://www.facebook.com/sanhbai"));
 				break;
 				case luckyCardButton:
-
-					if (mainData.typeOfEvent > 0) 
-					{
-						mainData.isShowMiniGame = true;
-					}
-					else if (mainData.typeOfEvent == 0) 
-					{
-						var alertWindow:AlertWindow = new AlertWindow();
-						alertWindow.setNotice("Sự kiện đang bảo trì, xin vui lòng quay lại sau!");	
-						windowLayer.openWindow(alertWindow);
-					}
-
+					checkEventExist();
+					
 				break;
 				default:
 			}
+		}
+		
+		private function checkEventExist():void 
+		{
+			var httpReq:HTTPRequest = new HTTPRequest();
+			var method:String = "POST";
+			var str:String; 
+			if (mainData.isTest) 
+			{
+				str= "http://wss.test.azgame.us/Service02/OnplayGameEvent.asmx/Azgamebai_GetEventInfo";
+			}
+			else 
+			{
+				str= "http://wss.azgame.us/Service02/OnplayGameEvent.asmx/Azgamebai_GetEventInfo";
+			}
+			
+			var obj:Object = new Object();
+			obj.sq_id  = 1;
+			
+			httpReq.sendRequest(method, str, obj, getInfoEvent, true);
+		}
+				
+		private function getInfoEvent(obj:Object):void 
+		{
+			if (obj.Data) 
+			{
+				
+				mainData.typeOfEvent = obj.Data.status;
+				
+				if (mainData.typeOfEvent > 0) 
+				{
+					mainData.isShowMiniGame = true;
+				}
+				else if (mainData.typeOfEvent == 0) 
+				{
+					var alertWindow:AlertWindow = new AlertWindow();
+					alertWindow.setNotice("Sự kiện đang bảo trì, xin vui lòng quay lại sau!");	
+					windowLayer.openWindow(alertWindow);
+				}
+				
+			}
+			
+			
 		}
 		
 		private function onChannelButtonClick(e:MouseEvent):void 
