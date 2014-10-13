@@ -227,7 +227,7 @@ package miniGame
 			{
 				if (obj.Data.status == 0) 
 				{
-					noticeGame("Event không chạy, tự quay tay đi");
+					
 				}
 				else if (obj.Data.status == 1 || obj.Data.status == 2) 
 				{
