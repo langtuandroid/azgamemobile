@@ -292,6 +292,7 @@ package miniGame
 		
 		private function addMiniGame():void
 		{
+			
 			if (!_playGame) 
 			{
 				_playGame = new PlayGameScreenMiniGame(this);

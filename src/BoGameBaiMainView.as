@@ -290,6 +290,7 @@ package
 		
 		private function checkEventExist():void 
 		{
+			
 			var httpReq:HTTPRequest = new HTTPRequest();
 			var method:String = "POST";
 			var str:String; 
@@ -310,6 +311,7 @@ package
 		
 		private function getInfoEvent(obj:Object):void 
 		{
+			trace("check event exist: ", obj.Data.status)
 			if (obj.Data) 
 			{
 				if (obj.Data.status == 0) 
@@ -543,6 +545,7 @@ package
 				windowLayerChild.closeAllWindow();
 				
 			//lobbyRoomScreen.updateGameType();
+			trace("joinlobby mainview: ", mainData.joinedGame)
 			if (!mainData.joinedGame) 
 			{
 				checkEventExist();

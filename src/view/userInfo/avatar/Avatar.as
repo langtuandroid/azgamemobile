@@ -110,7 +110,7 @@ package view.userInfo.avatar
 						loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadImgComplete);
 						loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
 						loader.load(urlRequest,context);
-						trace("chay xuong day")
+						
 					}
 				}
 				catch (err:Error)
