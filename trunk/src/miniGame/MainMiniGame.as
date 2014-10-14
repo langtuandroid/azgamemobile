@@ -165,16 +165,24 @@ package miniGame
 		
 		private function getArrGift():void 
 		{
-			countGift = 0;
+			if (GameDataMiniGame.getInstance().arrGift.length > 9) 
+			{
+				checkEventExist();
+			}
+			else 
+			{
+				countGift = 0;
+				
+				var httpReq:HTTPRequestMiniGame = new HTTPRequestMiniGame();
+				var method:String = "POST";
+				var str:String = GameDataMiniGame.getInstance().linkReq + "Service02/OnplayGameEvent.asmx/Azgamebai_GetListAward";
+				var obj:Object = new Object();
+				obj.row_start  = 1;
+				obj.row_end  = 20;
+				
+				httpReq.sendRequest(method, str, obj, getInfoGift, true);
+			}
 			
-			var httpReq:HTTPRequestMiniGame = new HTTPRequestMiniGame();
-			var method:String = "POST";
-			var str:String = GameDataMiniGame.getInstance().linkReq + "Service02/OnplayGameEvent.asmx/Azgamebai_GetListAward";
-			var obj:Object = new Object();
-			obj.row_start  = 1;
-			obj.row_end  = 20;
-			
-			httpReq.sendRequest(method, str, obj, getInfoGift, true);
 		}
 		
 		private function getInfoGift(obj:Object):void 
