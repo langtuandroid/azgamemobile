@@ -56,18 +56,6 @@ package view.window.shop
 			_goldAvt = gold;
 			_chipAvt = chip;
 			
-			var date:Date = new Date();
-			
-			var month:Number = date.month + 1;
-			var year:Number = date.fullYear;
-			month = month + 1;
-			if (month > 12) 
-			{
-				month = month - 12;
-				year = year + 1;
-			}
-			
-			//content.itemLimitTxt.text = String(date.dateUTC) + "/" + String(month) + "/" + String(year);
 			content.overItem.visible = soldOut;
 			
 			content.itemNameTxt.text = nameAvt;

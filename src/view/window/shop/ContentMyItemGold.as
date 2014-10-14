@@ -57,7 +57,7 @@ package view.window.shop
 				year = year + 1;
 			}
 			
-			content.itemLimitTxt.text = String(date.dateUTC) + "/" + String(month) + "/" + String(year);
+			content.itemLimitTxt.text = expire;
 			
 			var image:ImageItem = new ImageItem();
 			content.containerImg.addChild(image);

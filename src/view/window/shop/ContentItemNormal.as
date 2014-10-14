@@ -68,6 +68,7 @@ package view.window.shop
 			}
 			
 			//content.itemLimitTxt.text = String(date.dateUTC) + "/" + String(month) + "/" + String(year);
+			content.itemLimitTxt.text = expire;
 			
 			
 			content.itemNameTxt.text = nameAvt;
