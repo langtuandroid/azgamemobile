@@ -1133,8 +1133,8 @@ package view.window.shop
 					var nameAvatar:String = arrData[i]['avt_name'];
 					
 					var linkAvatar:String = arrData[i]['avt_dir_path'];
-					var expireAvatar:String = arrData[i]['avt_sell_expire_dt'];
-					var sellRelease:String = arrData[i]['avt_sell_release_dt'];
+					var expireAvatar:String = arrData[i]['avt_expire_dt'];
+					var sellRelease:String = arrData[i]['avt_reserve_dt'];
 					var idAvt:String = arrData[i]['avt_id'];
 					var idAvtWeb:String = arrData[i]['avt_cd_wb'];
 					var idListAvt:String = arrData[i]['avt_lst_id'];
@@ -1227,8 +1227,8 @@ package view.window.shop
 					var nameAvatar:String = arrData[i]['avt_name'];
 					
 					var linkAvatar:String = arrData[i]['avt_dir_path'];
-					var expireAvatar:String = arrData[i]['avt_sell_expire_dt'];
-					var sellRelease:String = arrData[i]['avt_sell_release_dt'];
+					var expireAvatar:String = arrData[i]['avt_expire_dt'];
+					var sellRelease:String = arrData[i]['avt_reserve_dt'];
 					var idAvt:String = arrData[i]['avt_id'];
 					var idAvtWeb:String = arrData[i]['avt_cd_wb'];
 					var idListAvt:String = arrData[i]['avt_lst_id'];
@@ -1237,6 +1237,7 @@ package view.window.shop
 					_arrAvatar.push(contentAvatar);
 					//contentAvatar.x = 10 + countX * 440;
 					//contentAvatar.y = 5 + countY * 135;
+					
 					
 					if (countX < 2) 
 					{
@@ -1769,7 +1770,15 @@ package view.window.shop
 				var chipAvatar:String = "0";
 				var payGold:String = arrData[i]['it_buy_gold'];//arrData[i]['it_pay_gold'];
 				var linkAvatar:String = arrData[i]['it_dir_path'];
-				var expireAvatar:String = arrData[i]['it_sell_expire_dt'];
+				var expireAvatar:String;
+				if (arrData[i]['avt_expire_dt']) 
+				{
+					expireAvatar = arrData[i]['avt_expire_dt'];
+				}
+				else 
+				{
+					expireAvatar = arrData[i]['avt_sell_expire_dt'];
+				}
 				var idAvtWeb:String = arrData[i]['it_cd_wb'];
 				var idAvt:String = arrData[i]['it_id'];
 				
@@ -1884,7 +1893,15 @@ package view.window.shop
 				var chipAvatar:String = arrData[i]['it_buy_chip'];
 				var payGold:String = arrData[i]['it_pay_gold'];
 				var linkAvatar:String = arrData[i]['it_dir_path'];
-				var expireAvatar:String = arrData[i]['it_sell_expire_dt'];
+				var expireAvatar:String;
+				if (arrData[i]['avt_expire_dt']) 
+				{
+					expireAvatar = arrData[i]['avt_expire_dt'];
+				}
+				else 
+				{
+					expireAvatar = arrData[i]['avt_sell_expire_dt'];
+				}
 				var idAvtWeb:String = arrData[i]['it_cd_wb'];
 				var idAvt:String = arrData[i]['it_id'];
 				
@@ -1939,7 +1956,15 @@ package view.window.shop
 				var chipAvatar:String = arrData[i]['it_buy_chip'];
 				var payGold:String = arrData[i]['it_pay_gold'];
 				var linkAvatar:String = arrData[i]['it_dir_path'];
-				var expireAvatar:String = arrData[i]['it_sell_expire_dt'];
+				var expireAvatar:String;
+				if (arrData[i]['avt_expire_dt']) 
+				{
+					expireAvatar = arrData[i]['avt_expire_dt'];
+				}
+				else 
+				{
+					expireAvatar = arrData[i]['avt_sell_expire_dt'];
+				}
 				var idAvtWeb:String = arrData[i]['it_cd_wb'];
 				var idAvt:String = arrData[i]['it_id'];
 				
@@ -2016,7 +2041,7 @@ package view.window.shop
 				var chipAvatar:String = arrData[i]['it_buy_chip'];
 				var payGold:String = arrData[i]['it_pay_gold'];
 				var linkAvatar:String = arrData[i]['it_dir_path'];
-				var expireAvatar:String = arrData[i]['it_sell_expire_dt'];
+				var expireAvatar:String = arrData[i]['it_expire_dt'];
 				var idAvtWeb:String = arrData[i]['it_cd_wb'];
 				var idAvt:String = arrData[i]['it_id'];
 				
@@ -2221,7 +2246,16 @@ package view.window.shop
 				var chipAvatar:String = arrData[i]['avt_buy_chip'];
 				var goldAvatar:String = arrData[i]['avt_buy_gold'];
 				var linkAvatar:String = arrData[i]['avt_dir_path'];
-				var expireAvatar:String = arrData[i]['avt_sell_expire_dt'];
+				var expireAvatar:String;
+				if (arrData[i]['avt_expire_dt']) 
+				{
+					expireAvatar = arrData[i]['avt_expire_dt'];
+				}
+				else 
+				{
+					expireAvatar = arrData[i]['avt_sell_expire_dt'];
+				}
+				
 				var gender:String = arrData[i]['avt_gender_code'];
 				var idAvt:String = arrData[i]['avt_id'];
 				var idAvtWeb:String = arrData[i]['avt_cd_wb'];
