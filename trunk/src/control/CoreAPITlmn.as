@@ -1231,7 +1231,8 @@ package control
 			{
 				if (e.roomId == GameDataTLMN.getInstance().lobbyRoomId) // Tình huống có user vừa out ra khỏi lobby room 
 				{
-					if (GameDataTLMN.getInstance().userList.hasOwnProperty(e.userName)) 
+					if (e.userName && GameDataTLMN.getInstance().userList && 
+						GameDataTLMN.getInstance().userList.hasOwnProperty(e.userName)) 
 					{
 						delete GameDataTLMN.getInstance().userList[e.userName];
 					}

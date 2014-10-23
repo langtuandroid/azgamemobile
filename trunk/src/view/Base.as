@@ -61,7 +61,7 @@ package view
 			_shadow = null;*/
 		}
 		
-		protected function format(number:int):String 
+		protected function format(number:Number):String 
 		{
 			var numString:String = number.toString()
 			var result:String = ''

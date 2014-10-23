@@ -492,7 +492,7 @@ package view.screen
 		{
 			if (obj[DataField.USER_NAME] == MyDataTLMN.getInstance().myId) 
 			{
-				MyDataTLMN.getInstance().myMoney[0] = int(obj[DataField.MONEY]);
+				MyDataTLMN.getInstance().myMoney[0] = Number(obj[DataField.MONEY]);
 				mainData.chooseChannelData.myInfo.money = Number(obj[DataField.MONEY]);
 				_myInfo.addMyMoney();
 			}
@@ -502,7 +502,7 @@ package view.screen
 				{
 					if (obj[DataField.USER_NAME] == _arrUserInfo[i]._userName) 
 					{
-						_arrUserInfo[i].addMyMoney(int(obj[DataField.MONEY]));
+						_arrUserInfo[i].addMyMoney(Number(obj[DataField.MONEY]));
 					}
 					
 				}
@@ -4404,7 +4404,7 @@ package view.screen
 				//content.channelNameAndRoomId.text = "Bạn đang chơi ở " + String(MainData.getInstance().chooseChannelData[2]);
 				content.txtNotice.text = "TIẾN LÊN - " + GameDataTLMN.getInstance().levelLobby + " - Bàn " 
 										+ String(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_ID]) + " - Cược "
-										+ format(int(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]));
+										+ format(Number(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]));
 				
 				checkShowTextNotice();
 				//content.ruleDescription.y = content.channelNameAndRoomId.y;
@@ -4413,7 +4413,7 @@ package view.screen
 			{
 				content.txtNotice.text = "TIẾN LÊN - " + GameDataTLMN.getInstance().levelLobby + " - Bàn " 
 										+ String(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_ID]) + " - Cược "
-										+ format(int(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]));
+										+ format(Number(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]));
 										
 				
 				

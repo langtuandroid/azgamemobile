@@ -77,7 +77,7 @@ package view.screen.play
 								isMaster:Boolean, win:int, lose:int, isMe:Boolean):void 
 		{
 			content.userName.text = userName;
-			content.userMoney.text = format(int(money));
+			content.userMoney.text = format(Number(money));
 			content.winTxt.text = format(win);
 			content.loseTxt.text = format(lose);
 			content.level.txt.text = level;

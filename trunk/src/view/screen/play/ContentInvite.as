@@ -38,7 +38,7 @@ package view.screen.play
 			userName = str;
 			if (int(money) > 0) 
 			{
-				content.moneyTxt.text = format(int(money));
+				content.moneyTxt.text = format(Number(money));
 			}
 			
 		}

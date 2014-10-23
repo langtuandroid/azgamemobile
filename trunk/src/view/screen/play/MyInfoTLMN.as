@@ -352,7 +352,7 @@ package view.screen.play
 			content.resultGame.visible = true;
 			//content.effectMoneySpecial.visible = true;
 			content.effectMoneySpecial.visible = false;
-			content.effectMoneySpecial.text = format(int(obj[ConstTlmn.MONEY]));
+			content.effectMoneySpecial.text = format(Number(obj[ConstTlmn.MONEY]));
 			trace("xem lai tien cua minh: ", MyDataTLMN.getInstance().myMoney[0], obj[ConstTlmn.MONEY])
 			//MyDataTLMN.getInstance().myMoney[0] = int(MyDataTLMN.getInstance().myMoney[0]) + int(obj[ConstTlmn.MONEY]);
 			TweenMax.to(content.effectMoneySpecial, 3, { y:content.effectMoneySpecial.y - 130, onComplete:onCompleteShowMoney } );
@@ -401,7 +401,7 @@ package view.screen.play
 			}
 			content.effectMoneySpecial.visible = false;
 			content.effectMoneySpecial.y += 130;
-			content.userMoney.text = format(int(MyDataTLMN.getInstance().myMoney[0]));
+			content.userMoney.text = format(Number(MyDataTLMN.getInstance().myMoney[0]));
 			if (SoundManager.getInstance().isSoundOn && int(MyDataTLMN.getInstance().myMoney[0]) < 10000) 
 			{
 				var rd:int = int(Math.random() * 5);
@@ -486,7 +486,7 @@ package view.screen.play
 		
 		public function addMyMoney():void 
 		{
-			content.userMoney.text = format(int(MyDataTLMN.getInstance().myMoney[0]));
+			content.userMoney.text = format(Number(MyDataTLMN.getInstance().myMoney[0]));
 		}
 		
 		public function addMoneySpecial(money:String):void 
@@ -515,7 +515,7 @@ package view.screen.play
 			
 			trace("money bi chat: ", str, money)
 			
-			content.effectMoneySpecial.text = format(int(money));
+			content.effectMoneySpecial.text = format(Number(money));
 			
 			TweenMax.to(content.effectMoneySpecial, 3, { y: content.effectMoneySpecial.y - 50, onComplete:onCompleteMoneySpecial } );
 			//_moneyEffect.showEffect(money);
@@ -549,7 +549,7 @@ package view.screen.play
 			var myMoney:int = int(str) + int(money);
 			content.userMoney.text = format(myMoney);
 			
-			content.effectMoneySpecial.text = format(int(money));
+			content.effectMoneySpecial.text = format(Number(money));
 			//MyDataTLMN.getInstance().myMoney[0] = int(MyDataTLMN.getInstance().myMoney[0]) + int(money);
 			TweenMax.to(content.effectMoneySpecial, 3, { y: content.effectMoneySpecial.y - 130, onComplete:onCompleteMoneySpecial } );
 			//_moneyEffect.showEffect(money);
@@ -1071,7 +1071,7 @@ package view.screen.play
 			
 			content.userName.text = displayName;
 			_displayName = displayName;
-			content.userMoney.text = format(int(money));
+			content.userMoney.text = format(Number(money));
 			
 			content.level.txt.text = level;
 			

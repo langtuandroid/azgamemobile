@@ -275,7 +275,7 @@ package view.window
 				
 				if (int(arrResult[i][ConstTlmn.MONEY]) > 0) 
 				{
-					arrUserResult[count]["user"].betResultTxt.text = "+" + format(int(arrResult[i][ConstTlmn.MONEY])) ;
+					arrUserResult[count]["user"].betResultTxt.text = "+" + format(Number(arrResult[i][ConstTlmn.MONEY])) ;
 					//TextField(arrUserResult[i]["user"].betResultTxt).defaultTextFormat = _textformatWin;
 					trace("chi thang thang moi ddc add : ", obj["whiteWinType"])
 					arrUserResult[count]["user"].noticeTxt.text = whiteWin(obj["whiteWinType"]) ;
@@ -300,7 +300,7 @@ package view.window
 				else 
 				{
 					trace("thang thua ko add wintype")
-					arrUserResult[count]["user"].betResultTxt.text = "-" + format(int(arrResult[i][ConstTlmn.MONEY]) * -1) ;
+					arrUserResult[count]["user"].betResultTxt.text = "-" + format(Number(arrResult[i][ConstTlmn.MONEY]) * -1) ;
 					arrUserResult[count]["user"].noticeTxt.text = "";
 				}
 				
@@ -421,7 +421,7 @@ package view.window
 					
 					if (int(arrResult[i][ConstTlmn.SUB_MONEY]) > 0) 
 					{
-						arrUserResult[count]["user"].betResultTxt.text = "+" + format(int(arrResult[i][ConstTlmn.SUB_MONEY])) ;
+						arrUserResult[count]["user"].betResultTxt.text = "+" + format(Number(arrResult[i][ConstTlmn.SUB_MONEY])) ;
 						//TextField(arrUserResult[i]["user"].betResultTxt).defaultTextFormat = _textformatWin;
 						if (arrUserResult[count]["user"].userNameTxt.text != MyDataTLMN.getInstance().myName) 
 						{
@@ -437,7 +437,7 @@ package view.window
 					else 
 					{
 						//TextField(arrUserResult[i]["user"].betResultTxt).defaultTextFormat = _textformatLose;
-						arrUserResult[count]["user"].betResultTxt.text = "-" + format(int(arrResult[i][ConstTlmn.SUB_MONEY]) * -1) ;
+						arrUserResult[count]["user"].betResultTxt.text = "-" + format(Number(arrResult[i][ConstTlmn.SUB_MONEY]) * -1) ;
 						
 					}
 					
