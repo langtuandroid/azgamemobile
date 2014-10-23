@@ -167,11 +167,13 @@ package miniGame
 				historyBoard.visible = false;
 			}
 			
-			if (awardPopup) 
+			showAward();
+			
+			/*if (awardPopup) 
 			{
 				awardPopup.visible = true;
 				awardPopup.showChoseReceiveGift();
-			}
+			}*/
 		}
 		
 		private function onCloseHistory(e:Event):void 
@@ -424,7 +426,9 @@ package miniGame
 					SoundManager.getInstance().playSound(ConstMiniGame.FE_WIN_ + String(rd + 1) );	
 				}
 				
+				trace("tien truoc: ", MainData.getInstance().chooseChannelData.myInfo.money, Number(GameDataMiniGame.getInstance().goldGift[0]));
 				MainData.getInstance().chooseChannelData.myInfo.money = MainData.getInstance().chooseChannelData.myInfo.money + Number(GameDataMiniGame.getInstance().goldGift[0]);
+				trace("tien luc sau: ", MainData.getInstance().chooseChannelData.myInfo.money)
 				MainData.getInstance().chooseChannelData.myInfo = MainData.getInstance().chooseChannelData.myInfo;
 				_main.noticeGame(GameDataMiniGame.getInstance().goldGift[1], true);
 				setupContent();

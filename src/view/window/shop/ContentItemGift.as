@@ -61,11 +61,11 @@ package view.window.shop
 			content.itemNameTxt.text = nameAvt;
 			if (int(gold) > 0) 
 			{
-				content.itemGoldTxt.text = format(int(gold)) + " Gold";
+				content.itemGoldTxt.text = format(Number(gold)) + " Gold";
 			}
 			else 
 			{
-				content.itemGoldTxt.text = "-" + format(int(gold) * -1) + " Gold";
+				content.itemGoldTxt.text = "-" + format(Number(gold) * -1) + " Gold";
 			}
 			
 			var image:ImageItem = new ImageItem();
@@ -78,7 +78,7 @@ package view.window.shop
 		}
 		
 		
-		protected function format(number:int):String 
+		protected function format(number:Number):String 
 		{
 			var numString:String = number.toString()
 			var result:String = ''

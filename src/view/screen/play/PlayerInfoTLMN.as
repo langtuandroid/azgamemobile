@@ -368,7 +368,7 @@ package view.screen.play
 			
 			trace("xem lai tien cua nguoi choi: ", _money, obj[ConstTlmn.MONEY])
 			_money = _money + int(obj[ConstTlmn.MONEY]);
-			content.effectMoneySpecial.text = format(int(obj[ConstTlmn.MONEY]));
+			content.effectMoneySpecial.text = format(Number(obj[ConstTlmn.MONEY]));
 			TweenMax.to(content.effectMoneySpecial, 3, { y:content.effectMoneySpecial.y - 130, onComplete:onCompleteShowMoney } );
 			
 			//addCardImage(obj[ConstTlmn.CARDS]);
@@ -499,7 +499,7 @@ package view.screen.play
 			}
 		}
 		
-		public function addMyMoney(money:int):void 
+		public function addMyMoney(money:Number):void 
 		{
 			content.txtMoney.text = format(money);
 		}
@@ -536,7 +536,7 @@ package view.screen.play
 			//content.txtMoney.text = format(myMoney);
 			
 			_money = _money + int(money);
-			content.effectMoneySpecial.text = format(int(money));
+			content.effectMoneySpecial.text = format(Number(money));
 			TweenMax.to(content.effectMoneySpecial, 3, { y: content.effectMoneySpecial.y - 130, onComplete:onCompleteMoneySpecial } );
 			//_moneyEffect.showEffect(money);
 		}
@@ -710,7 +710,7 @@ package view.screen.play
 			_clock.setParent(sex);
 			_displayName = displayName;
 			content.txtName.text = displayName;
-			content.txtMoney.text = format(int(money));
+			content.txtMoney.text = format(Number(money));
 			
 			
 			trace("===============", pos, userName, "++++++++++++++++++")

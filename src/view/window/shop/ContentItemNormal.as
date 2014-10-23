@@ -72,8 +72,8 @@ package view.window.shop
 			
 			
 			content.itemNameTxt.text = nameAvt;
-			content.itemGoldTxt.text = format(int(gold));
-			content.itemChipTxt.text = format(int(chip));
+			content.itemGoldTxt.text = format(Number(gold));
+			content.itemChipTxt.text = format(Number(chip));
 			
 			
 			
@@ -85,7 +85,7 @@ package view.window.shop
 		}
 		
 		
-		protected function format(number:int):String 
+		protected function format(number:Number):String 
 		{
 			var numString:String = number.toString()
 			var result:String = ''
