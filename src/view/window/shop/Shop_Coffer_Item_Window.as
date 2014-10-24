@@ -108,7 +108,7 @@ package view.window.shop
 						//xep hang, nap sms, nap the, chua item
 			myContent.containerItemMc.x = 58;
 			scrollView = new ScrollViewYun();
-			scrollView.isForMobile = !mainData.isFacebookVersion;
+			scrollView.isForMobile = !mainData.isShowScroll;
 			scrollView.setData(myContent.containerItemMc, 10);
 			scrollView.distanceInColumn = 25;
 			scrollView.distanceInRow = 10;
@@ -118,7 +118,7 @@ package view.window.shop
 			scrollView.y = 10;
 			
 			scrollViewForRank = new ScrollViewYun();
-			scrollViewForRank.isForMobile = !mainData.isFacebookVersion;
+			scrollViewForRank.isForMobile = !mainData.isShowScroll;
 			scrollViewForRank.setData(myContent.containerTopMc, 0);
 			scrollViewForRank.distanceInColumn = 55;
 			scrollViewForRank.distanceInRow = 55;

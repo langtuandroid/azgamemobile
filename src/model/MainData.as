@@ -387,7 +387,7 @@ package model
 		public function get tracker():AnalyticsTracker 
 		{
 			if (!_tracker) {
-				_tracker = new GATracker( _main, "123", "AS3", false);
+				_tracker = new GATracker( _main, "UA-55118479-1", "AS3", false);
 			}
 			return _tracker;
 		}
@@ -608,12 +608,14 @@ package model
 		public var isLoadSound:Boolean = true;
 		public var tokenTime:int = 0;
 		public var token:String;
-		public var version:String = "v1.3.0";
+		public var version:String = "v1.3.1";
 		public var isTest:Boolean = false; // biến để check xem đang chạy trên server test hay server thật
 
 		public var isFacebookVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào facebook không
+		public var isShowScroll:Boolean;
 		public var country:String = "";
 		public var joinedGame:Boolean = false;
+		public var channelNum:String;
 	}
 
 }

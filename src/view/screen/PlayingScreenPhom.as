@@ -132,6 +132,9 @@ package view.screen
 		{
 			mainData.isAutoReady = false;
 			
+			background = new zGameBackground();
+			addChild(background);
+			
 			super();
 			addContent("zPlayingScreenPhom");
 			createLayer();
@@ -372,6 +375,7 @@ package view.screen
 		private var timerToKickRoomMaster:Timer;
 		private var emoWindow:Sprite;
 		private var emoArray:Array;
+		private var background:zGameBackground;
 		private function setupButton():void 
 		{
 			emoticonButton = content["emoticonButton"];
@@ -618,10 +622,15 @@ package view.screen
 			
 			var H:int = currDate.getHours();
 			
+			var addString:String;
+			if (int(mainData.channelNum) == 1)
+				addString = '1';
+			else if (int(mainData.channelNum) == 2 || (int(mainData.channelNum) == 3))
+				addString = '2';
 			if (H >= 6 && H < 18)
-				MovieClip(content["background"]).gotoAndStop("day");
+				background.gotoAndStop("day" + addString);
 			else
-				MovieClip(content["background"]).gotoAndStop("night");
+				background.gotoAndStop("night" + addString);
 		}
 		
 		private function onRemovedFromStage(e:Event):void 

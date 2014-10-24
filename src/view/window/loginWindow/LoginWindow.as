@@ -353,7 +353,8 @@ package view.window.loginWindow
 		
 		private function onLoginFacebookRespond(value:Object):void 
 		{
-			WindowLayer.getInstance().openAlertWindow("onLoginFacebookRespond");
+			//if (!mainData.isFacebookVersion)
+				//WindowLayer.getInstance().openAlertWindow("onLoginFacebookRespond");
 			if (value["status"] == "IO_ERROR")
 			{
 				zLoginWindow(content).loadingLayer.visible = false;
