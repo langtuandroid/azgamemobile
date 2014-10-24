@@ -121,6 +121,9 @@ package
 			//mainData.isOnAndroid = true;
 			//mainData.isOnIos = true;
 			
+			if (!mainData.isOnAndroid && !mainData.isOnIos)
+				mainData.isShowScroll = true;
+			
 			sharedObject = SharedObject.getLocal("soundConfig");
 			
 			if (sharedObject.data.isSoundOff)

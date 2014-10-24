@@ -98,6 +98,7 @@ package
 			Emo14;
 			Emo15;
 			Emo16;
+			zGameBackground;
 			
 			MyInfoTlmnMc;
 			MyClock;

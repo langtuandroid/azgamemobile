@@ -1,6 +1,7 @@
 package view.screen 
 {
 	import control.ConstTlmn;
+	import event.DataField;
 	import flash.desktop.NativeApplication;
 	import flash.display.MovieClip;
 	import flash.display.SimpleButton;
@@ -552,7 +553,7 @@ package view.screen
 							}
 							channelData.playerNumber = channelObject[DataFieldMauBinh.USERS_ONLINE] + virtualPlayer;
 							channelData.fee = channelObject[DataFieldMauBinh.DEALER_FEE];
-							channelData.maxPlayer = 200;
+							channelData.maxPlayer = channelObject[DataFieldMauBinh.CHANNEL_MAX_PLAYER];
 							dataList.push(channelData);
 						}
 					}
@@ -586,6 +587,7 @@ package view.screen
 			mainData.fee = channelList.currentChannelData.fee;
 			channelInfoTxt.text = mainData.gameName + " - " + channelList.currentChannelData.channelName;
 			mainData.playingData.gameRoomData.channelName = channelList.currentChannelData.channelName;
+			mainData.channelNum = String(channelList.currentChannelData.channelId).charAt(0);
 		}
 		
 		private function reArrageChannelButton(index:int, isRollBack:Boolean):void 
@@ -794,15 +796,24 @@ package view.screen
 		{
 			if (mainData.isFirstJoinLobby)
 			{
-				var channelObject:Object = mainData.chooseChannelData.channelInfoArray[0];
-				
+				var i:int;
+				var j:int;
+				for (i = 0; i < mainData.chooseChannelData.channelInfoArray.length; i++) 
+				{
+					var channelObject:Object = mainData.chooseChannelData.channelInfoArray[i];
+					if (channelObject[DataFieldMauBinh.USERS_ONLINE] < channelObject[DataFieldMauBinh.CHANNEL_MAX_PLAYER])
+					{
+						if (i == 0)
+							firstChannelId = channelObject[DataFieldMauBinh.CHANNEL_NUM];
+						break;
+					}
+				}
 				mainData.currentChannelId = channelObject[DataFieldMauBinh.CHANNEL_NUM];
-				firstChannelId = mainData.currentChannelId;
-				trace("startConnect",(new Date().getTime()));
 				mainCommand.electroServerCommand.startConnect("", mainData.currentChannelId);
 				mainData.fee = channelObject[DataFieldMauBinh.DEALER_FEE];
 				channelInfoTxt.text = mainData.gameName + " - " + channelObject[DataFieldMauBinh.CHANNEL_NAME];
 				mainData.playingData.gameRoomData.channelName = channelObject[DataFieldMauBinh.CHANNEL_NAME];
+				mainData.channelNum = String(channelObject[DataFieldMauBinh.CHANNEL_NUM]).charAt(0);
 				
 				switch (mainData.gameType) 
 				{
@@ -831,8 +842,6 @@ package view.screen
 					SoundManager.getInstance().loadBackgroundMusic();
 			}
 			
-			var i:int;
-			var j:int;
 			if (mainData.currentChannelId == 0)
 			{
 				channelObject = mainData.chooseChannelData.channelInfoArray[0];
@@ -1115,7 +1124,6 @@ package view.screen
 								roomData.hasPassword = true;
 							else
 								roomData.hasPassword = false;
-							//roomData.maxPlayer = mainData.virtualRooms[i].player_limit_number;
 							roomData.maxPlayer = 4;
 							roomData.name = '';
 							roomData.id = mainData.virtualRooms[i].room_id;
@@ -1226,7 +1234,7 @@ package view.screen
 		private function addRoomList():void 
 		{
 			if(!roomList)
-				roomList = new RoomListComponent(!mainData.isFacebookVersion);
+				roomList = new RoomListComponent(!mainData.isShowScroll);
 			roomList.isInvite = false;
 			roomList.addEventListener(MouseEvent.MOUSE_DOWN, onCompMouseDown);
 			roomList.addEventListener(MouseEvent.MOUSE_UP, onCompMouseUp);
@@ -1301,7 +1309,7 @@ package view.screen
 		private function addUserList():void 
 		{
 			if(!userList)
-				userList = new UserListComponent(!mainData.isFacebookVersion);
+				userList = new UserListComponent(!mainData.isShowScroll);
 			userList.addEventListener(MouseEvent.MOUSE_DOWN, onCompMouseDown);
 			userList.addEventListener(MouseEvent.MOUSE_UP, onCompMouseUp);
 			userList.addEventListener(UserRowULC.USER_ROW_CLICK, onUserRowClick);

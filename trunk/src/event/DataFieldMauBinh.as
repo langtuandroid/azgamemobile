@@ -160,6 +160,7 @@ package event
 		public static const UNREAD_MESSAGE:String = "unreadMessage";
 		public static const QUITERS: String = "quiters";
 		public static const DEALER_FEE:String = "dealer_fee";
+		public static const CHANNEL_MAX_PLAYER:String = "chl_max_user";
 		
 		public function DataFieldMauBinh() 
 		{

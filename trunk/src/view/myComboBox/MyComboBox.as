@@ -45,7 +45,7 @@ package view.myComboBox
 				//addChild(rowContainer);
 				
 				scrollView = new ScrollViewYun();
-				scrollView.isForMobile = !mainData.isFacebookVersion;
+				scrollView.isForMobile = !mainData.isShowScroll;
 				scrollView.visible = false;
 				scrollView.setData(rowContainer);
 				addChild(scrollView);
@@ -78,8 +78,8 @@ package view.myComboBox
 				return;
 			}
 			isRecentClickRow = false;
-			if (scrollView)
-				scrollView.visible = false;
+			//if (scrollView)
+				//scrollView.visible = false;
 		}
 		
 		private function onDownButtonClick(e:MouseEvent):void 
@@ -155,8 +155,8 @@ package view.myComboBox
 		private function onRowClick(e:MouseEvent):void 
 		{
 			isRecentClickRow = true;
-			if (scrollView.isRecentMoving)
-				return;
+			//if (scrollView.isRecentMoving)
+				//return;
 			currentValue = ComboBoxRow(e.currentTarget).value;
 			scrollView.visible = false;
 		}
