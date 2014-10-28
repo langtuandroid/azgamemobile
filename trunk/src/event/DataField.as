@@ -72,6 +72,7 @@ package event
 		public static const CHAT_CONTENT: String = "chatContent";
 		public static const USER_UPDATE_EVENT_TYPE:String = "userUpdateEventType";
 		public static const WHITE_WIN_TYPE:String = "whiteWinType";
+		public static const IS_EMO: String = "isEmo";
 		
 		public static const VARIABLE_NAME: String = "variableName";
 		public static const VARIABLE_ARRAY: String = "variableArray";

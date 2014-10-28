@@ -74,6 +74,8 @@ package view.screen.play
 			content = new PlayerInfoTlmnMc();
 			addChild(content);
 			
+			content.samResult.visible = false;
+			
 			_pos = pos;
 			if (!_clock) 
 			{
@@ -106,8 +108,8 @@ package view.screen.play
 				content.iconMobile.x = 110;
 				content.iconMaster.x = 0;
 				content.effectMoneySpecial.y = 120;
-				content.numCardRemainTxt.x = 200;
-				content.numCardRemainTxt.y = 150;
+				content.numCardRemainTxt.x = 203;
+				content.numCardRemainTxt.y = 156;
 				
 				content.bubbleChatMc.x = 5;
 				content.bubbleChatMc.y = 15;
@@ -127,8 +129,8 @@ package view.screen.play
 				
 				content.iconMaster.x = 100;
 				content.effectMoneySpecial.y = 120;
-				content.numCardRemainTxt.x = -45;
-				content.numCardRemainTxt.y = 100;
+				content.numCardRemainTxt.x = -41;
+				content.numCardRemainTxt.y = 105;
 				
 				
 				content.bubbleChatMc.x = 5;
@@ -148,8 +150,8 @@ package view.screen.play
 				
 				content.iconMaster.x = 100;
 				content.effectMoneySpecial.y = 120;
-				content.numCardRemainTxt.x = -52;
-				content.numCardRemainTxt.y = 150;
+				content.numCardRemainTxt.x = -47;
+				content.numCardRemainTxt.y = 156;
 				
 				content.bubbleChatMc.x = -24;
 				content.bubbleChatMc.y = 15;

@@ -173,6 +173,10 @@ package view.screen
 		private var _timerShowEmo:Timer;
 		
 		private var _stageGame:int = 0;
+		private var _arrCardSave:Array = [];
+		private var _containCardSave:Sprite;
+		
+		private var is3bich:Boolean;
 		
 		
 		public function PlayGameScreenTlmn() 
@@ -200,18 +204,35 @@ package view.screen
 			content = new PlayScreenTlmnMc();
 			gameLayer.addChild(content);
 			
+			var background:MovieClip = new zGameBackground();
+			content.backGround.addChild(background);
 			
+			if (MyDataTLMN.getInstance().isGame == 1) 
+			{
+				content.typeOfBoard.gotoAndStop(1);
+			}
+			else if (MyDataTLMN.getInstance().isGame == 2) 
+			{
+				content.typeOfBoard.gotoAndStop(2);
+			}
 			
+			var addString:String;
+			if (int(mainData.channelNum) == 1)
+				addString = '1';
+			else if (int(mainData.channelNum) == 2 || (int(mainData.channelNum) == 3))
+				addString = '2';
+				
 			var date:Date = new Date();
-			trace(date.getHours())
+			
 			if (date.getHours() > 18 || date.getHours() < 6) 
 			{
-				content.backGround.gotoAndStop(1);
+				background.gotoAndStop("night" + addString);
 			}
 			else 
 			{
-				content.backGround.gotoAndStop(2);
+				background.gotoAndStop("day" + addString);
 			}
+			
 			
 			trace("xem the nao: ", SoundManager.getInstance().isSoundOn, SoundManager.getInstance().isMusicOn)
 			if (SoundManager.getInstance().isSoundOn) 
@@ -247,12 +268,17 @@ package view.screen
 			content.addChild(sp);
 			mask = sp;
 			
+			_containCardSave = new Sprite();
+			content.addChild(_containCardSave);
+			
 			_containCard = new Sprite();
 			content.addChild(_containCard);
 			
 			containerCardResult = new Sprite();
 			content.addChild(containerCardResult);
 			_arrCardListOtherUser = [];
+			
+			content.dut3bich.visible = false;
 			
 			GameDataTLMN.getInstance().playingData.addEventListener(PlayingData.UPDATE_PLAYING_SCREEN, onUpdatePlayingScreen);
 			
@@ -1316,6 +1342,13 @@ package view.screen
 			var j:int;
 			var rd:int;
 			
+			
+			if (is3bich) 
+			{
+				content.dut3bich.visible = true;
+			}
+			
+			
 			canExitGame = true;
 			
 			timerShowResult = new Timer(3000, 1);
@@ -1462,6 +1495,8 @@ package view.screen
 			//var i:int;
 			e.currentTarget.removeEventListener(TimerEvent.TIMER_COMPLETE, onShowResult);
 			content.specialCard.visible = false;
+			content.dut3bich.visible = false;
+			is3bich = false;
 			_arrLastCard = [];
 			if (_resultWindow) 
 			{
@@ -1694,6 +1729,7 @@ package view.screen
 			var checkAnimationChatTuqui:Boolean = false;
 			_arrLastCard = _arrLastCard.sort(Array.NUMERIC);
 			content.specialCard.visible = false;
+			is3bich = false;
 			var rd:int;
 			var str:String;
 			var ihit:Boolean = false;
@@ -1711,6 +1747,13 @@ package view.screen
 						userSexhit = _arrUserInfo[i]._sex;
 					}
 				}
+			}
+			
+			
+			
+			if (arrCard.length == 1 && arrCard[0] == 0) 
+			{
+				is3bich = true;
 			}
 			
 			
@@ -2859,6 +2902,30 @@ package view.screen
 			}
 			
 			var cardChilds:Array = [];
+			
+			var arrSave:Array = [];
+			for (i = 0; i < _arrCardDiscard.length; i++) 
+			{
+				arrSave.push(_arrCardDiscard[i]);
+			}
+			
+			if (arrSave.length > 0) 
+			{
+				var rdX:int = int(Math.random() * 20);
+				var rdY:int = int(Math.random() * 20);
+				
+				for (i = 0; i < arrSave.length; i++) 
+				{
+					var card:CardTlmn = new CardTlmn(arrSave[i].id);
+					//card.rotation = angel;
+					_containCardSave.addChild(card);
+					_arrCardSave.push(card);
+					card.x = _containCard.x + 30 * i;
+					card.y = _containCard.y + 5;
+				}
+			}
+			
+			
 			removeAllDisCard();
 			_cardsName = cardsName;
 			arrCard = arrCard.sort(Array.NUMERIC);
@@ -3184,8 +3251,10 @@ package view.screen
 		
 		private function showEffect():void 
 		{
+			var rdX:int = 20 + int(Math.random() * 50);
+			var rdY:int = 20 + int(Math.random() * 20);
 			//TweenMax.to(_containCard, 1, { x:(this.width - _containCard.width) / 2, y:(this.height = _containCard.height) / 2 } );
-			TweenMax.to(_containCard, .5, { x:(1024 - _containCard.width) / 2 + 30, y:250} );
+			TweenMax.to(_containCard, .5, { x:(1024 - _containCard.width) / 2 + rdX, y:200 + rdY} );
 			//_containCard.x = (this.width - _containCard.width) / 2;
 			//_containCard.y = (this.height - _containCard.height) / 2;
 		}
@@ -4000,15 +4069,21 @@ package view.screen
 			}
 			if (canExitGame) 
 			{
-				if (_myInfo._ready && _stageGame == 1) 
+				if (_stageGame == 1) 
 				{
-					
-					confirmExitWindow = new ConfirmWindow();
-					confirmExitWindow.setNotice(mainData.init.gameDescription.playingScreen.confirmExit);
-					confirmExitWindow.addEventListener(ConfirmWindow.CONFIRM, onConfirmWindow);
-					windowLayer.openWindow(confirmExitWindow);
+					if (_myInfo._ready || GameDataTLMN.getInstance().master == _myInfo._userName) 
+					{
+						confirmExitWindow = new ConfirmWindow();
+						confirmExitWindow.setNotice(mainData.init.gameDescription.playingScreen.confirmExit);
+						confirmExitWindow.addEventListener(ConfirmWindow.CONFIRM, onConfirmWindow);
+						windowLayer.openWindow(confirmExitWindow);
+					}
+					else 
+					{
+						outGameRoom();
+					}
 				}
-				else if (_stageGame == 0)
+				else if (_stageGame == 0 || _stageGame == 2)
 				{
 					/*if (SoundManager.getInstance().isSoundOn) 
 					{
@@ -4024,10 +4099,7 @@ package view.screen
 						
 					}
 					*/
-					dispatchEvent(new Event(ConstTlmn.OUT_ROOM, true));
-					electroServerCommand.joinLobbyRoom();
-					
-					EffectLayer.getInstance().removeAllEffect();
+					outGameRoom();
 				}
 				
 			}
@@ -4056,12 +4128,17 @@ package view.screen
 					}
 					
 				}*/
-				dispatchEvent(new Event(ConstTlmn.OUT_ROOM, true));
+				outGameRoom();
+			}
+			
+		}
+		
+		private function outGameRoom():void 
+		{
+			dispatchEvent(new Event(ConstTlmn.OUT_ROOM, true));
 				electroServerCommand.joinLobbyRoom();
 				
 				EffectLayer.getInstance().removeAllEffect();
-			}
-			
 		}
 		
 		public function destroy():void 
@@ -4134,7 +4211,7 @@ package view.screen
 				}
 			}*/
 			
-			if (GameDataTLMN.getInstance().publicChat[DataFieldMauBinh.EMO]) 
+			if (GameDataTLMN.getInstance().publicChat[DataField.IS_EMO]) 
 			{
 				showEmo(GameDataTLMN.getInstance().publicChat[DataFieldMauBinh.CHAT_CONTENT], 
 							GameDataTLMN.getInstance().publicChat[DataFieldMauBinh.USER_NAME], isMe);

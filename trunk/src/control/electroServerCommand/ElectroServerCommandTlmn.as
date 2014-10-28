@@ -334,7 +334,7 @@ package control.electroServerCommand
 			GameDataTLMN.getInstance().publicChat[DataField.USER_NAME] = e.data[DataField.USER_NAME];
 			GameDataTLMN.getInstance().publicChat[DataField.DISPLAY_NAME] = e.data[DataField.DISPLAY_NAME];
 			GameDataTLMN.getInstance().publicChat[DataField.CHAT_CONTENT] = e.data[DataField.CHAT_CONTENT];
-			GameDataTLMN.getInstance().publicChat[DataFieldMauBinh.EMO] = e.data[DataFieldMauBinh.EMO];
+			GameDataTLMN.getInstance().publicChat[DataField.IS_EMO] = e.data[DataField.IS_EMO];
 			GameDataTLMN.getInstance().publicChat = GameDataTLMN.getInstance().publicChat;
 		}
 		

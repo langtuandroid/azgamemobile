@@ -1,6 +1,8 @@
 package 
 {
 	import control.ConstTlmn;
+	import model.GameDataTLMN;
+	import model.MyDataTLMN;
 	
 	import flash.desktop.NativeApplication;
 	import flash.display.MovieClip;
@@ -191,6 +193,38 @@ package
 			} 
 			catch (error:Error) {
 				
+			}
+			
+			if (MyDataTLMN.getInstance().isGame == 1) 
+			{
+				mainData.gameName = 'Tiến lên';
+				mainData.gameType = 'TLMN';
+				mainData.game_id = 'AZGB_TLMN';
+				
+				GameDataTLMN.getInstance().gameName = "TienLenMN";
+				GameDataTLMN.getInstance().gameType = "TienLenMNPlugin";
+				GameDataTLMN.getInstance().lobbyName = "TienLenMN";
+				GameDataTLMN.getInstance().lobbyPluginName = "LobbyTLMNPlugin";
+				GameDataTLMN.getInstance().gameZone = "tlmnZone";
+				
+				mainData.maxPlayer = 4;
+				mainData.minBetRate = 10;
+			}
+			else if (MyDataTLMN.getInstance().isGame == 2) 
+			{
+				mainData.gameName = 'Sâm';
+				//mainData.gameType = 'SAM';
+				mainData.gameType = 'TLMN';
+				mainData.game_id = 'AZGB_SAM';
+				
+				GameDataTLMN.getInstance().gameName = "Sam";
+				GameDataTLMN.getInstance().gameType = "SamPlugin";
+				GameDataTLMN.getInstance().lobbyName = "Sam";
+				GameDataTLMN.getInstance().lobbyPluginName = "LobbyPlugin";
+				GameDataTLMN.getInstance().gameZone = "SAM";
+				
+				mainData.maxPlayer = 4;
+				mainData.minBetRate = 10;
 			}
 			
 			mainData.loadingData.addEventListener(LoadingData.LOAD_lOADING_COMPLETE, onLoadLoadingComplete); // Load dữ liệu màn hình loading xong thì show bảng loading
