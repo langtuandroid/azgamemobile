@@ -123,6 +123,7 @@ package view.screen
 		
 		public var canExitGame:Boolean = true;
 		private var whiteWin:Boolean = false;
+		private var objWhiteWin:Object;
 		
 		private var _arrCardListOtherUser:Array = [];
 		private var containerCardResult:Sprite;
@@ -579,7 +580,16 @@ package view.screen
 			timerDealcardForme.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcardForMe);
 			timerDealcardForme.stop();
 			
-			checkPosClock();
+			if (whiteWin) 
+			{
+				showWhiteWin(objWhiteWin);
+				
+			}
+			else 
+			{
+				checkPosClock();
+			}
+			
 		}
 		
 		private function listenUserReady(obj:Object):void 
@@ -918,9 +928,8 @@ package view.screen
 			}
 		}
 		
-		private function listenWhiteWin(obj:Object):void 
+		private function showWhiteWin(obj:Object):void 
 		{
-			//trace(obj)
 			var i:int;
 			var j:int;
 			var rd:int;
@@ -1004,7 +1013,7 @@ package view.screen
 				_arrUserInfo[i].killAllTween();
 				_arrUserInfo[i].removeAllCards();
 			}
-			whiteWin = true;
+			
 			var card:CardTlmn;
 			
 			for (i = 0; i < obj[ConstTlmn.PLAYER_LIST].length; i++) 
@@ -1111,13 +1120,22 @@ package view.screen
 			timerShowResultWhiteWin = new Timer(1000, 10);
 			timerShowResultWhiteWin.addEventListener(TimerEvent.TIMER_COMPLETE, onResetGame);
 			timerShowResultWhiteWin.start();
+		}
+		
+		private function listenWhiteWin(obj:Object):void 
+		{
+			
+			whiteWin = true;
+			objWhiteWin = obj;
+			//trace(obj)
+			
 			//listenGameOver(obj);
 		}
 		
 		private function onResetGame(e:TimerEvent):void 
 		{
 			_stageGame = 0;
-			
+			whiteWin = false;
 			_isPlaying = false;
 			removeAllDisCard();
 			content.specialCard.visible = false;
@@ -1906,7 +1924,7 @@ package view.screen
 					{
 						if (_myInfo._arrCardInt.length == 1) 
 						{
-							whiteWin = true;
+							
 						}
 					}
 					else 
@@ -1917,7 +1935,7 @@ package view.screen
 							{
 								if (_arrUserInfo[i]._remainingCard == 1) 
 								{
-									whiteWin = true;
+									
 								}
 								break;
 							}
@@ -2903,7 +2921,7 @@ package view.screen
 			
 			var cardChilds:Array = [];
 			
-			var arrSave:Array = [];
+			/*var arrSave:Array = [];
 			for (i = 0; i < _arrCardDiscard.length; i++) 
 			{
 				arrSave.push(_arrCardDiscard[i]);
@@ -2923,7 +2941,7 @@ package view.screen
 					card.x = _containCard.x + 30 * i;
 					card.y = _containCard.y + 5;
 				}
-			}
+			}*/
 			
 			
 			removeAllDisCard();
@@ -3254,7 +3272,7 @@ package view.screen
 			var rdX:int = 20 + int(Math.random() * 50);
 			var rdY:int = 20 + int(Math.random() * 20);
 			//TweenMax.to(_containCard, 1, { x:(this.width - _containCard.width) / 2, y:(this.height = _containCard.height) / 2 } );
-			TweenMax.to(_containCard, .5, { x:(1024 - _containCard.width) / 2 + rdX, y:200 + rdY} );
+			TweenMax.to(_containCard, .5, { x:(1024 - _containCard.width) / 2, y:250} );
 			//_containCard.x = (this.width - _containCard.width) / 2;
 			//_containCard.y = (this.height - _containCard.height) / 2;
 		}
@@ -4479,7 +4497,7 @@ package view.screen
 				
 				
 				//content.channelNameAndRoomId.text = "Bạn đang chơi ở " + String(MainData.getInstance().chooseChannelData[2]);
-				content.txtNotice.text = "TIẾN LÊN - " + GameDataTLMN.getInstance().levelLobby + " - Bàn " 
+				content.txtNotice.text = "TIẾN LÊN - " + mainData.playingData.gameRoomData.channelName + " - Bàn " 
 										+ String(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_ID]) + " - Cược "
 										+ format(Number(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]));
 				
@@ -4488,7 +4506,7 @@ package view.screen
 			}
 			else 
 			{
-				content.txtNotice.text = "TIẾN LÊN - " + GameDataTLMN.getInstance().levelLobby + " - Bàn " 
+				content.txtNotice.text = "TIẾN LÊN - " + mainData.playingData.gameRoomData.channelName + " - Bàn " 
 										+ String(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_ID]) + " - Cược "
 										+ format(Number(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]));
 										
