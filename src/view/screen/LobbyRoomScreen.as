@@ -12,6 +12,7 @@ package view.screen
 	import flash.text.TextField;
 	import model.ChannelData;
 	import model.chooseChannelData.ChooseChannelData;
+	import model.GameDataTLMN;
 	import request.HTTPRequest;
 	import RoomListComponent
 	import sound.SoundLibChung;
@@ -551,6 +552,9 @@ package view.screen
 									virtualPlayer += mainData.virtualRooms[k].player_male_number + mainData.virtualRooms[k].player_female_number;
 								}
 							}
+							
+							GameDataTLMN.getInstance().levelLobby = channelObject[DataFieldMauBinh.CHANNEL_NAME];
+							
 							channelData.playerNumber = channelObject[DataFieldMauBinh.USERS_ONLINE] + virtualPlayer;
 							channelData.fee = channelObject[DataFieldMauBinh.DEALER_FEE];
 							channelData.maxPlayer = channelObject[DataFieldMauBinh.CHANNEL_MAX_PLAYER];
@@ -583,6 +587,8 @@ package view.screen
 			mainCommand.electroServerCommand.closeConnection();
 			WindowLayer.getInstance().openLoadingWindow();
 			mainData.currentChannelId = channelList.currentChannelData.channelId;
+			GameDataTLMN.getInstance().levelLobby = channelList.currentChannelData.channelName;
+			
 			mainCommand.electroServerCommand.startConnect("", channelList.currentChannelData.channelId);
 			mainData.fee = channelList.currentChannelData.fee;
 			channelInfoTxt.text = mainData.gameName + " - " + channelList.currentChannelData.channelName;
@@ -941,6 +947,8 @@ package view.screen
 			userData.levelName = mainData.chooseChannelData.myInfo.level;
 			userData.webLogoUrl = mainData.chooseChannelData.myInfo.logo;
 			userData.avatar = mainData.chooseChannelData.myInfo.avatar;
+			//GameDataTLMN.getInstance().levelLobby = channelObject[DataFieldMauBinh.CHANNEL_NAME];
+			
 			roomList.setUserData(userData);
 			roomList.setNameChannel("Kênh: " + mainData.playingData.gameRoomData.channelName);
 		}

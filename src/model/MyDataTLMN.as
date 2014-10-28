@@ -11,6 +11,10 @@ package model
 	public class MyDataTLMN extends EventDispatcher 
 	{
 		private static var instance:MyDataTLMN;
+		/**
+		 * 1: tlmn, 2: sam, 3: bay cay
+		 */
+		public var isGame:int = 1;
 		
 		public var myName:String = "";
 		public var myId:String = "1";

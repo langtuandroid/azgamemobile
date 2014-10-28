@@ -242,15 +242,15 @@ package control
 				case CommandTlmn.PUBLIC_CHAT:
 					var publicChatObject:Object = new Object();
 					publicChatObject[DataFieldMauBinh.USER_NAME] = e.userName;
-					publicChatObject[DataFieldMauBinh.DISPLAY_NAME] = e.esObject.getString(DataFieldMauBinh.DISPLAY_NAME);
-					publicChatObject[DataFieldMauBinh.CHAT_CONTENT] = e.esObject.getString(DataFieldMauBinh.CHAT_CONTENT);
-					if (e.esObject.doesPropertyExist(DataFieldMauBinh.EMO)) 
+					publicChatObject[DataFieldMauBinh.DISPLAY_NAME] = e.esObject.getString(DataField.DISPLAY_NAME);
+					publicChatObject[DataFieldMauBinh.CHAT_CONTENT] = e.esObject.getString(DataField.CHAT_CONTENT);
+					if (e.esObject.doesPropertyExist(DataField.IS_EMO)) 
 					{
-						publicChatObject[DataFieldMauBinh.EMO] = e.esObject.getBoolean(DataFieldMauBinh.EMO);
+						publicChatObject[DataField.IS_EMO] = e.esObject.getBoolean(DataField.IS_EMO);
 					}
 					else 
 					{
-						publicChatObject[DataFieldMauBinh.EMO] = false;
+						publicChatObject[DataField.IS_EMO] = false;
 					}
 					
 					
@@ -1172,8 +1172,6 @@ package control
 			var zone:Zone = electroServer.managerHelper.zoneManager.zoneById(zoneId);
 			GameDataTLMN.getInstance().zoneId = zoneId;
 			myData.zoneId = zoneId;
-			GameDataTLMN.getInstance().zoneId = e.zoneId;
-			GameDataTLMN.getInstance().roomId = e.roomId;
 			
 			var i:int;
 			
@@ -1503,7 +1501,7 @@ package control
 				
 				myData.roomId = e.roomId;
 				GameDataTLMN.getInstance().roomId = e.roomId;
-				GameDataTLMN.getInstance().zoneId = e.zoneId;
+				
 				var i:int;
 				
 				myData.gameRoomInfo = new Object();
@@ -1534,9 +1532,9 @@ package control
 		public function sendPublicChat(displayName:String, chatContent:String, emo:Boolean):void
 		{
 			var esObject:EsObject = new EsObject();
-			esObject.setString(DataFieldMauBinh.DISPLAY_NAME, displayName);
-			esObject.setString(DataFieldMauBinh.CHAT_CONTENT, chatContent);
-			esObject.setBoolean(DataFieldMauBinh.EMO, emo);
+			esObject.setString(DataField.DISPLAY_NAME, displayName);
+			esObject.setString(DataField.CHAT_CONTENT, chatContent);
+			esObject.setBoolean(DataField.IS_EMO, emo);
 			sendPublicMessage(CommandTlmn.PUBLIC_CHAT, esObject);
 		}
 		
@@ -1953,6 +1951,7 @@ package control
 			var leaveRoomRequest:LeaveRoomRequest = new LeaveRoomRequest();
 			leaveRoomRequest.zoneId = GameDataTLMN.getInstance().zoneId;
 			leaveRoomRequest.roomId = GameDataTLMN.getInstance().roomId;
+			GameDataTLMN.getInstance().roomId = -1;
 			myData.roomId = -1;
 			if (electroServer.engine.connected) 
 			{

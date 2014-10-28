@@ -119,6 +119,44 @@ package view.screen.play
 			content = new MyInfoTlmnMc();
 			addChild(content);
 			
+			if (MyDataTLMN.getInstance().isGame == 1) 
+			{
+				content.visibleSortCard.x = 192;
+				content.sortBtn.x = 192;
+				
+				content.visiblePassturn.x = 365;
+				content.passTurnBtn.x = 365;
+				
+				content.visibleChooseAgain.x = 540;
+				content.chooseAgain.x = 540;
+				
+				content.visibleHit.x = 715;
+				content.hitBtn.x = 715;
+				
+				_distanceConstan = 51;
+				_distance = 50;
+			}
+			else if (MyDataTLMN.getInstance().isGame == 2) 
+			{
+				content.visibleSortCard.x = 192;
+				content.sortBtn.x = 192;
+				
+				content.visiblePassturn.x = 345;
+				content.passTurnBtn.x = 345;
+				
+				content.visibleChooseAgain.x = 500;
+				content.chooseAgain.x = 500;
+				
+				content.visibleHit.x = 655;
+				content.hitBtn.x = 655;
+				
+				_distanceConstan = 88;
+				_distance = 55;
+			}
+			
+			content.samNotice.visible = false;
+			content.samResult.visible = false;
+			
 			if (!_clock) 
 			{
 				_clock = new Clock();
