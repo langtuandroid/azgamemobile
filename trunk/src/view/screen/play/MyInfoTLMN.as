@@ -584,7 +584,7 @@ package view.screen.play
 			}
 			
 			trace("money bi chat: ", str, money)
-			var myMoney:int = int(str) + int(money);
+			var myMoney:Number = Number(str) + Number(money);
 			content.userMoney.text = format(myMoney);
 			
 			content.effectMoneySpecial.text = format(Number(money));

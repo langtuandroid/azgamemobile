@@ -51,7 +51,7 @@ package view.screen.play
 		
 		private var _linkAvatar:String = "";
 		private var _linkBg:String = "";
-		private var _money:int;
+		private var _money:Number;
 		public var ready:Boolean = false;
 		
 		private var _timerShowChatde:Timer;
@@ -369,7 +369,7 @@ package view.screen.play
 			content.effectMoneySpecial.visible = false;
 			
 			trace("xem lai tien cua nguoi choi: ", _money, obj[ConstTlmn.MONEY])
-			_money = _money + int(obj[ConstTlmn.MONEY]);
+			_money = _money + Number(obj[ConstTlmn.MONEY]);
 			content.effectMoneySpecial.text = format(Number(obj[ConstTlmn.MONEY]));
 			TweenMax.to(content.effectMoneySpecial, 3, { y:content.effectMoneySpecial.y - 130, onComplete:onCompleteShowMoney } );
 			
@@ -531,13 +531,13 @@ package view.screen.play
 				}
 			}
 			trace("money bi chat info: ", str, money)
-			var myMoney:int = int(str) + int(money);
+			var myMoney:Number = Number(str) + Number(money);
 			content.txtMoney.text = format(myMoney);
 			
 			//var myMoney:int = int(content.txtMoney.text) + int(money);
 			//content.txtMoney.text = format(myMoney);
 			
-			_money = _money + int(money);
+			_money = _money + Number(money);
 			content.effectMoneySpecial.text = format(Number(money));
 			TweenMax.to(content.effectMoneySpecial, 3, { y: content.effectMoneySpecial.y - 130, onComplete:onCompleteMoneySpecial } );
 			//_moneyEffect.showEffect(money);
@@ -694,7 +694,7 @@ package view.screen.play
 			content.level.txt.text = level;
 			_level = level;
 			
-			_money = int(money);
+			_money = Number(money);
 			
 			content.txtName.visible = true;
 			content.txtMoney.visible = true;
