@@ -1170,7 +1170,8 @@ package control
 			var zoneId:int = e.zoneId;
 			var roomId:int = e.roomId;
 			var zone:Zone = electroServer.managerHelper.zoneManager.zoneById(zoneId);
-			GameDataTLMN.getInstance().zoneId = zoneId;
+			var gameDataTlmn:GameDataTLMN = GameDataTLMN.getInstance();
+			gameDataTlmn.zoneId = zoneId;
 			myData.zoneId = zoneId;
 			
 			var i:int;
@@ -1179,19 +1180,19 @@ package control
 			{
 				if (e.roomId == GameDataTLMN.getInstance().lobbyRoomId) // join vào lobby
 				{
-					if (!GameDataTLMN.getInstance().userList[e.userName])
+					if (gameDataTlmn.userList && e.userName && !gameDataTlmn.userList[e.userName])
 					{
-						GameDataTLMN.getInstance().userList[e.userName] = new Object();
-						GameDataTLMN.getInstance().userList[e.userName][DataField.ROOM_ID] = GameDataTLMN.getInstance().lobbyRoomId;
-						GameDataTLMN.getInstance().userList[e.userName][DataField.USER_NAME] = e.userName;
+						gameDataTlmn.userList[e.userName] = new Object();
+						gameDataTlmn.userList[e.userName][DataField.ROOM_ID] = GameDataTLMN.getInstance().lobbyRoomId;
+						gameDataTlmn.userList[e.userName][DataField.USER_NAME] = e.userName;
 						getUserInfo(e.userName);
 					}
 					else
 					{
 						if (e.userName != MyDataTLMN.getInstance().myName) 
 						{
-							GameDataTLMN.getInstance().userList[e.userName][DataField.ROOM_ID] = GameDataTLMN.getInstance().lobbyRoomId;
-							GameDataTLMN.getInstance().userList[e.userName][DataField.USER_NAME] = e.userName;
+							gameDataTlmn.userList[e.userName][DataField.ROOM_ID] = GameDataTLMN.getInstance().lobbyRoomId;
+							gameDataTlmn.userList[e.userName][DataField.USER_NAME] = e.userName;
 						}
 						
 					}
@@ -1227,15 +1228,15 @@ package control
 			}
 			else if (e.action == UserUpdateAction.DeleteUser)  // Có user out
 			{
-				if (e.roomId == GameDataTLMN.getInstance().lobbyRoomId) // Tình huống có user vừa out ra khỏi lobby room 
+				if (e.roomId == gameDataTlmn.lobbyRoomId) // Tình huống có user vừa out ra khỏi lobby room 
 				{
-					if (e.userName && GameDataTLMN.getInstance().userList && 
-						GameDataTLMN.getInstance().userList.hasOwnProperty(e.userName)) 
+					if (e.userName && gameDataTlmn.userList && 
+						gameDataTlmn.userList.hasOwnProperty(e.userName)) 
 					{
-						delete GameDataTLMN.getInstance().userList[e.userName];
+						delete gameDataTlmn.userList[e.userName];
 					}
 					
-					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST, GameDataTLMN.getInstance().userList));
+					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST, gameDataTlmn.userList));
 				}
 				else // Tình huống có user vừa out ra khỏi game
 				{
