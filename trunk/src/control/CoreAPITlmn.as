@@ -146,6 +146,7 @@ package control
 			}
 			
 			myData.roomId = -1;
+			GameDataTLMN.getInstance().roomId = -1;
 			
 			electroServer.engine.removeEventListener(MessageType.UserVariableUpdateEvent.name, onUserVariableUpdateEvent);
 			electroServer.engine.removeEventListener(MessageType.RoomVariableUpdateEvent.name, onRoomVariableUpdateEvent);
@@ -1180,7 +1181,7 @@ package control
 			{
 				if (e.roomId == GameDataTLMN.getInstance().lobbyRoomId) // join vào lobby
 				{
-					if (gameDataTlmn.userList && e.userName && !gameDataTlmn.userList[e.userName])
+					/*if (gameDataTlmn.userList && e.userName && !gameDataTlmn.userList[e.userName])
 					{
 						gameDataTlmn.userList[e.userName] = new Object();
 						gameDataTlmn.userList[e.userName][DataField.ROOM_ID] = GameDataTLMN.getInstance().lobbyRoomId;
@@ -1197,6 +1198,7 @@ package control
 						
 					}
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST, GameDataTLMN.getInstance().userList));
+					*/
 				}
 				else // join vào game
 				{
@@ -1230,13 +1232,14 @@ package control
 			{
 				if (e.roomId == gameDataTlmn.lobbyRoomId) // Tình huống có user vừa out ra khỏi lobby room 
 				{
-					if (e.userName && gameDataTlmn.userList && 
+					/*if (e.userName && gameDataTlmn.userList && 
 						gameDataTlmn.userList.hasOwnProperty(e.userName)) 
 					{
 						delete gameDataTlmn.userList[e.userName];
 					}
 					
-					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST, gameDataTlmn.userList));
+					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST, gameDataTlmn.userList));*/
+					
 				}
 				else // Tình huống có user vừa out ra khỏi game
 				{
@@ -1971,6 +1974,7 @@ package control
 			}
 			
 			myData.roomId = -1;
+			GameDataTLMN.getInstance().roomId = -1;
 			electroServer.engine.removeEventListener(MessageType.FindGamesResponse.name, onFindGameRespond);
 			electroServer.engine.removeEventListener(MessageType.UserUpdateEvent.name, onUserListUpdateEvent);
 			electroServer.engine.removeEventListener(MessageType.ConnectionClosedEvent.name, onCloseConnection);
