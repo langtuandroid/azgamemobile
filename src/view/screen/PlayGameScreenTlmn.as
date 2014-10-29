@@ -11,6 +11,7 @@ package view.screen
 	import event.DataFieldPhom;
 	import flash.net.SharedObject;
 	import flash.utils.getDefinitionByName;
+	import inapp_purchase.IAPManager;
 	import sound.SoundLib;
 	import view.ScrollView.ScrollViewYun;
 	import view.window.BaseWindow;
@@ -275,6 +276,21 @@ package view.screen
 			_containCard = new Sprite();
 			content.addChild(_containCard);
 			
+			/*var j:int;
+			var arrTest:Array = [1, 2, 4, 5, 6, 7, ,8, 9 , 10, 11, 12, 13];
+			for (j = 0; j < arrTest.length; j++) 
+			{
+				var card:CardTlmn = new CardTlmn(arrTest[j]);
+				card.x = 102 + 35 * j;
+				card.y = 110;
+				card.scaleX = card.scaleY = .8;
+				_containCard.addChild(card);
+				_arrCardDiscard.push(card);
+			}
+			
+			_containCard.x = 180;
+			_containCard.y = 155;*/
+			
 			containerCardResult = new Sprite();
 			content.addChild(containerCardResult);
 			_arrCardListOtherUser = [];
@@ -288,7 +304,7 @@ package view.screen
 			txtFormat.color = 0xffffff;
 			txtFormat.size = 11;
 			textfieldVer.defaultTextFormat = txtFormat;
-			textfieldVer.text = mainData.version;
+			textfieldVer.text = "v1.4.1";
 			textfieldVer.x = 840;
 			textfieldVer.y = 5;
 			textfieldVer.width = 40;
@@ -583,7 +599,7 @@ package view.screen
 			if (whiteWin) 
 			{
 				showWhiteWin(objWhiteWin);
-				
+				whiteWin = false;
 			}
 			else 
 			{
@@ -1025,7 +1041,7 @@ package view.screen
 					for (j = 0; j < arrCardWin.length; j++) 
 					{
 						card = new CardTlmn(arrCardWin[j]);
-						card.x = 42 + 35 * j;
+						card.x = 102 + 35 * j;
 						card.y = 110;
 						card.scaleX = card.scaleY = .8;
 						_containCard.addChild(card);
@@ -1039,7 +1055,7 @@ package view.screen
 					for (j = 0; j < obj[ConstTlmn.PLAYER_LIST][i][ConstTlmn.CARDS].length; j++) 
 					{
 						card = new CardTlmn(obj[ConstTlmn.PLAYER_LIST][i][ConstTlmn.CARDS][j]);
-						card.x = _myInfo.x + 160 + 35 * j;
+						card.x = _myInfo.x + 180 + 50 * j;
 						card.y = _myInfo.y + 30;
 						//card.scaleX = card.scaleY = .75;
 						
@@ -3691,19 +3707,23 @@ package view.screen
 			if (SoundManager.getInstance().isSoundOn) 
 			{
 				content.settingBoard.onSoundEffect.visible = false;
+				content.settingBoard.offSoundEffect.visible = true;
 			}
 			else 
 			{
 				content.settingBoard.onSoundEffect.visible = true;
+				content.settingBoard.offSoundEffect.visible = false;
 			}
 			
 			if (SoundManager.getInstance().isMusicOn) 
 			{
 				content.settingBoard.onMusic.visible = false;
+				content.settingBoard.offMusic.visible = true;
 			}
 			else 
 			{
 				content.settingBoard.onMusic.visible = true;
+				content.settingBoard.offMusic.visible = false;
 			}
 			
 			content.settingBoard.visible = false;
@@ -3744,6 +3764,8 @@ package view.screen
 			checkShowTextNotice();
 			
 			content.chatBtn.addEventListener(MouseEvent.CLICK, onChatButtonClick);
+			
+			
 			
 		}
 		
