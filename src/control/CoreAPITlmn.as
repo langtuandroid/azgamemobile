@@ -146,7 +146,7 @@ package control
 			}
 			
 			myData.roomId = -1;
-			GameDataTLMN.getInstance().roomId = -1;
+			GameDataTLMN.getInstance().roomId = -1
 			
 			electroServer.engine.removeEventListener(MessageType.UserVariableUpdateEvent.name, onUserVariableUpdateEvent);
 			electroServer.engine.removeEventListener(MessageType.RoomVariableUpdateEvent.name, onRoomVariableUpdateEvent);
@@ -275,7 +275,7 @@ package control
 				break;
 				case CommandTlmn.NEXTTURN://bo luot
 						
-					trace("co thang bo luot public: ", e.esObject.getString("playerName"))
+					//trace("co thang bo luot public: ", e.esObject.getString("playerName"))
 					var playerNextTurn:String = e.esObject.getString("playerName");
 					var objNextturn:Object = new Object();
 					objNextturn["user"] = playerNextTurn;
@@ -385,7 +385,6 @@ package control
 		// sau khi login thì join lobby
 		public function joinLobbyRoom(gameName:String, channelId:int, capacity:int = 200): void
 		{
-			leaveRoom();
 			myData.channelId = channelId;
 			GameDataTLMN.getInstance().channelId = channelId;
 			var description:String = "Phòng lobby của game: " + gameName + " tại kênh có id là: " + channelId;
@@ -395,6 +394,7 @@ package control
 		// join lobbyRoom thành công
 		public function onJoinLobbyRoomEvent(e:JoinRoomEvent):void
 		{
+			trace("onJoinLobbyRoomEvent onJoinLobbyRoomEvent onJoinLobbyRoomEvent");
 			electroServer.engine.removeEventListener(MessageType.JoinRoomEvent.name, onJoinLobbyRoomEvent);
 			
 			dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.JOIN_LOBBY_ROOM_SUCCESS));
@@ -465,7 +465,7 @@ package control
 			var tempArray:Array;
 			var readyObject:Object;
 			var command:String = e.parameters.getString("command");
-			trace("command plugin: ", command, "==============================")
+			//trace("command plugin: ", command, "==============================")
 			//trace(e.parameters)
 			var i:int;
 			var j:int;
@@ -501,7 +501,7 @@ package control
 				break;
 				
 				case CommandTlmn.GET_PLAYING_INFO: // lấy thông tin của các người chơi trong phòng chơi
-					trace(e.parameters, "+++++++++++++++++++++++++++++++++++++")
+					//trace(e.parameters, "+++++++++++++++++++++++++++++++++++++")
 					var userList:Array = [];
 					
 					var tempUserList:Array = e.parameters.getEsObjectArray(DataField.PLAYER_LIST);
@@ -517,7 +517,7 @@ package control
 						{
 							object[DataField.NUM_CARD] = EsObject(tempUserList[i]).getInteger(DataField.NUM_CARD);
 						}
-						trace(user.userVariableByName(DataField.USER_INFO).value.getString(DataField.SEX))
+						//trace(user.userVariableByName(DataField.USER_INFO).value.getString(DataField.SEX))
 						if (user.userVariableByName(DataField.USER_INFO).value.getString(DataField.SEX) == "M") 
 						{
 							object[DataField.SEX] = true;
@@ -723,7 +723,7 @@ package control
 					mainData.lobbyRoomData.friendList = tempUserList;
 				break;
 				case CommandTlmn.REMOVE_FRIEND: // Server confirm remove friend
-					trace("aaaaaaaaaaaaaaaaaaaaa");
+					//trace("aaaaaaaaaaaaaaaaaaaaa");
 					getFriendList();
 				break;
 				/*case CommandTlmn.ADD_CIAO: // add ciao khi hết tiền
@@ -972,7 +972,7 @@ package control
 						
 					}
 					
-					trace("GameDataTLMN.getInstance().zoneId", GameDataTLMN.getInstance().zoneId)
+					//trace("GameDataTLMN.getInstance().zoneId", GameDataTLMN.getInstance().zoneId)
 					var zone:Zone = electroServer.managerHelper.zoneManager.zoneById(GameDataTLMN.getInstance().zoneId);
 					var room:Room = zone.roomById(GameDataTLMN.getInstance().lobbyRoomId);
 					var userListInLobby:Array = room.users;
@@ -1238,8 +1238,8 @@ package control
 						delete gameDataTlmn.userList[e.userName];
 					}
 					
-					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST, gameDataTlmn.userList));*/
-					
+					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST, gameDataTlmn.userList));
+					*/
 				}
 				else // Tình huống có user vừa out ra khỏi game
 				{
@@ -1667,6 +1667,8 @@ package control
 		{
 			if (GameDataTLMN.getInstance().roomId == -1)
 				return;
+			if (_roomId != Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id)
+				return;
 			var pluginRequest:PluginRequest = new PluginRequest();
 			pluginRequest.zoneId = _zoneId;
 			pluginRequest.roomId = _roomId;
@@ -1684,6 +1686,7 @@ package control
 			if (GameDataTLMN.getInstance().channelId != -1)
 				leaveRoom();
 				
+			//trace("CreateRoomRequest CreateRoomRequest CreateRoomRequest CreateRoomRequest ",Math.random());
 			var createRoomRequest:CreateRoomRequest = new CreateRoomRequest();
 			createRoomRequest.zoneName = mainData.game_id + "_" + myData.channelId;
 			createRoomRequest.roomName = roomName;
@@ -1715,7 +1718,7 @@ package control
 			
 			plugins.push(plugin);
 			createRoomRequest.plugins = plugins;
-			trace("test")
+			//trace("test")
 			if (electroServer.engine.connected) 
 			{
 				electroServer.engine.send(createRoomRequest);
@@ -1952,6 +1955,14 @@ package control
 		{
 			if (GameDataTLMN.getInstance().roomId == -1)
 				return;
+			if (electroServer.managerHelper.zoneManager.zones.length == 0)
+			{
+				//trace("kddfdaddffdccccccccccccccccccccccccccc");
+				return;
+			}
+			if (GameDataTLMN.getInstance().roomId != Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id)
+				return;
+			//trace("leaveRoom leaveRoom leaveRoom leaveRoom leaveRoom leaveRoom leaveRoom",Math.random());
 			var leaveRoomRequest:LeaveRoomRequest = new LeaveRoomRequest();
 			leaveRoomRequest.zoneId = GameDataTLMN.getInstance().zoneId;
 			leaveRoomRequest.roomId = GameDataTLMN.getInstance().roomId;
@@ -1974,7 +1985,7 @@ package control
 			}
 			
 			myData.roomId = -1;
-			GameDataTLMN.getInstance().roomId = -1;
+			GameDataTLMN.getInstance().roomId = -1
 			electroServer.engine.removeEventListener(MessageType.FindGamesResponse.name, onFindGameRespond);
 			electroServer.engine.removeEventListener(MessageType.UserUpdateEvent.name, onUserListUpdateEvent);
 			electroServer.engine.removeEventListener(MessageType.ConnectionClosedEvent.name, onCloseConnection);
@@ -2050,16 +2061,6 @@ package control
 		
 		public function makeFriend(userName:String, roomType:String):void
 		{
-			// Gửi pluginRequest lên lấy thông tin friendList
-			/*var pluginMessage:EsObject = new EsObject();
-			pluginMessage.setString("command", CommandTlmn.ADD_FRIEND);
-			pluginMessage.setString(DataField.FRIEND_ID, userName);
-			pluginMessage.setString(DataField.REQUEST_CONTENT, "aaaa");
-			
-			if (roomType == DataField.IN_LOBBY)
-				sendPluginRequest(myData.zoneId, myData.lobbyRoomId, myData.lobbyPluginName, pluginMessage);
-			else if (roomType == DataField.IN_GAME_ROOM)
-				sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, pluginMessage);*/
 			var pluginMessage:EsObject = new EsObject();
 			pluginMessage.setString("command", CommandTlmn.ADD_FRIEND);
 			pluginMessage.setString(DataField.FRIEND_ID, userName);

@@ -1208,10 +1208,13 @@ package view.screen
 			
 			if (!isBolt && !isEndPlayer)
 			{
-				if (stealedPlayerObject[playerDisCard.userName] == 2)
-					SoundManager.getInstance().soundManagerPhom.playRiskDiscardPlayerSound(playerDisCard.sex);
-				else
-					SoundManager.getInstance().soundManagerPhom.playDiscardPlayerSound(playerDisCard.sex);
+				if (stealedPlayerObject)
+				{
+					if (stealedPlayerObject[playerDisCard.userName] == 2)
+						SoundManager.getInstance().soundManagerPhom.playRiskDiscardPlayerSound(playerDisCard.sex);
+					else
+						SoundManager.getInstance().soundManagerPhom.playDiscardPlayerSound(playerDisCard.sex);
+				}
 			}
 		}
 		
@@ -1788,27 +1791,30 @@ package view.screen
 					else
 						stealedPlayer = playingPlayerArray[i - 1];
 						
-					if (!stealedPlayerObject[stealedPlayer.userName])
-						stealedPlayerObject[stealedPlayer.userName] = 1;
-					else
-						stealedPlayerObject[stealedPlayer.userName] = 2;
-						
-					if (!stealPlayerObject[stealPlayer.userName])
-						stealPlayerObject[stealPlayer.userName] = 1;
-					else
-						stealPlayerObject[stealPlayer.userName] += 1;
-						
-					if (stealPlayer.leavedCards.length == 3 && stealPlayerObject[stealPlayer.userName] != 3)
+					if (stealedPlayerObject)
 					{
-						SoundManager.getInstance().soundManagerPhom.playStealBoltPlayerSound(stealPlayer.sex);
-					}
-					else
-					{
-						if (stealPlayerObject[stealPlayer.userName] == 1)
-							SoundManager.getInstance().soundManagerPhom.playStealFirstCardPlayerSound(stealPlayer.sex);
-						
-						if (stealPlayerObject[stealPlayer.userName] == 2)
-							SoundManager.getInstance().soundManagerPhom.playStealSecondCardPlayerSound(stealPlayer.sex);
+						if (!stealedPlayerObject[stealedPlayer.userName])
+							stealedPlayerObject[stealedPlayer.userName] = 1;
+						else
+							stealedPlayerObject[stealedPlayer.userName] = 2;
+							
+						if (!stealPlayerObject[stealPlayer.userName])
+							stealPlayerObject[stealPlayer.userName] = 1;
+						else
+							stealPlayerObject[stealPlayer.userName] += 1;
+							
+						if (stealPlayer.leavedCards.length == 3 && stealPlayerObject[stealPlayer.userName] != 3)
+						{
+							SoundManager.getInstance().soundManagerPhom.playStealBoltPlayerSound(stealPlayer.sex);
+						}
+						else
+						{
+							if (stealPlayerObject[stealPlayer.userName] == 1)
+								SoundManager.getInstance().soundManagerPhom.playStealFirstCardPlayerSound(stealPlayer.sex);
+							
+							if (stealPlayerObject[stealPlayer.userName] == 2)
+								SoundManager.getInstance().soundManagerPhom.playStealSecondCardPlayerSound(stealPlayer.sex);
+						}
 					}
 			
 					cardManager.stealCard(stealPlayer, stealedPlayer, data[DataFieldPhom.CARD]);

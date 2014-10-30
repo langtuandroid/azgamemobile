@@ -52,7 +52,7 @@ package view.window
 		
 		private function addInviteFriendList():void 
 		{
-			invitePlayBox = new InvitePlayBox();
+			invitePlayBox = new InvitePlayBox(!mainData.isShowScroll);
 			invitePlayBox.moneyIconUrl = mainData.init.requestLink.moneyIcon.@url;
 			invitePlayBox.x = content["selectBoxPosition"].x;
 			invitePlayBox.y = content["selectBoxPosition"].y;

@@ -1,6 +1,7 @@
 package 
 {
 	import control.ConstTlmn;
+	import flash.desktop.SystemIdleMode;
 	import model.GameDataTLMN;
 	import model.MyDataTLMN;
 	
@@ -122,6 +123,9 @@ package
 		{
 			//mainData.isOnAndroid = true;
 			//mainData.isOnIos = true;
+			
+			if (mainData.isOnAndroid || mainData.isOnIos)
+				NativeApplication.nativeApplication.systemIdleMode = SystemIdleMode.KEEP_AWAKE;
 			
 			if (!mainData.isOnAndroid && !mainData.isOnIos)
 				mainData.isShowScroll = true;
@@ -582,7 +586,7 @@ package
 				windowLayerChild.closeAllWindow();
 				
 			//lobbyRoomScreen.updateGameType();
-			trace("joinlobby mainview: ", mainData.joinedGame)
+			//trace("joinlobby mainview: ", mainData.joinedGame)
 			if (!mainData.joinedGame) 
 			{
 				checkEventExist();

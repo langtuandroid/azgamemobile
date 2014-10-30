@@ -146,7 +146,7 @@ package view.screen.play
 		
 		private function onLoadImgComplete(e:Event):void 
 		{
-			trace("AAAAAAAAAAAAAAA")
+			//trace("AAAAAAAAAAAAAAA")
 			/*if (loader.content is Bitmap) 
 			{
 				Bitmap(loader.content).smoothing = true;

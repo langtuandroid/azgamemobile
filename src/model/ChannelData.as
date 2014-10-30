@@ -11,6 +11,7 @@ package model
 		public var maxPlayer:int;
 		public var channelId:int;
 		public var fee:Number;
+		public var betting:Array;
 		
 		public function ChannelData() 
 		{

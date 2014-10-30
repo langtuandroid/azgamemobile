@@ -1333,6 +1333,7 @@ package control
 			if (myData.channelId != -1)
 				leaveRoom();
 				
+			trace("CreateRoomRequest CreateRoomRequest CreateRoomRequest CreateRoomRequest ",Math.random());
 			var createRoomRequest:CreateRoomRequest = new CreateRoomRequest();
 			createRoomRequest.zoneName = mainData.game_id + "_" + String(myData.channelId);
 			createRoomRequest.roomName = roomName;
@@ -1581,6 +1582,8 @@ package control
 		private function leaveRoom(): void
 		{
 			if (myData.roomId == -1)
+				return;
+			if (myData.roomId != Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id)
 				return;
 			var leaveRoomRequest:LeaveRoomRequest = new LeaveRoomRequest();
 			leaveRoomRequest.zoneId = myData.zoneId;
