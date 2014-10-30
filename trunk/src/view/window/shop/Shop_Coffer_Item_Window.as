@@ -388,11 +388,11 @@ package view.window.shop
 			{
 				var contentTop:MovieClip = new ContentUserTopList();
 				
-				var gold:int = arr[i].money;
+				var gold:Number = arr[i].money;
 				var nickname:String = arr[i].nick_name;
-				var level:int = arr[i].level;
-				var winNumber:int = arr[i].win;
-				var loseNumber:int = arr[i].lose;
+				var level:Number = arr[i].level;
+				var winNumber:Number = arr[i].win;
+				var loseNumber:Number = arr[i].lose;
 				
 				
 				contentTop.sttTxt.text = String(i + 1);
@@ -424,11 +424,11 @@ package view.window.shop
 			{
 				var contentTop:MovieClip = new ContentUserTopList();
 				
-				var gold:int = arr[i].money;
+				var gold:Number = arr[i].money;
 				var nickname:String = arr[i].nick_name;
-				var level:int = arr[i].level;
-				var winNumber:int = arr[i].win;
-				var loseNumber:int = arr[i].lose;
+				var level:Number = arr[i].level;
+				var winNumber:Number = arr[i].win;
+				var loseNumber:Number = arr[i].lose;
 				
 				
 				contentTop.sttTxt.text = String(i + 1);
@@ -466,11 +466,11 @@ package view.window.shop
 			{
 				var contentTop:MovieClip = new ContentUserTopList();
 				
-				var gold:int = arr[i].money;
+				var gold:Number = arr[i].money;
 				var nickname:String = arr[i].nick_name;
-				var level:int = arr[i].level;
-				var winNumber:int = arr[i].win;
-				var loseNumber:int = arr[i].lose;
+				var level:Number = arr[i].level;
+				var winNumber:Number = arr[i].win;
+				var loseNumber:Number = arr[i].lose;
 				
 				
 				contentTop.sttTxt.text = String(i + 1);
@@ -1598,9 +1598,9 @@ package view.window.shop
 					obj.it_type = String(1);
 					httpRequest.sendRequest(method, url, obj, loadItemGoldSuccess, true);
 				break;
-				case 5:
+				case 2:
 					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
-									"?rowStart=0&rowEnd=10";
+									"?rowStart=0&rowEnd=100";
 					obj = new Object();
 					obj.it_group_id = String(1);
 					obj.it_type = String(2);
@@ -2518,7 +2518,7 @@ package view.window.shop
 		}
 		
 		
-		protected function format(number:int):String 
+		protected function format(number:Number):String 
 		{
 			var numString:String = number.toString()
 			var result:String = ''
