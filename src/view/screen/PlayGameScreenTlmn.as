@@ -304,7 +304,7 @@ package view.screen
 			txtFormat.color = 0xffffff;
 			txtFormat.size = 11;
 			textfieldVer.defaultTextFormat = txtFormat;
-			textfieldVer.text = "v1.4.1";
+			textfieldVer.text = mainData.version;
 			textfieldVer.x = 840;
 			textfieldVer.y = 5;
 			textfieldVer.width = 40;
