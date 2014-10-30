@@ -441,7 +441,7 @@ package control
 			var tempArray:Array;
 			var readyObject:Object;
 			var command:String = e.parameters.getString("command");
-			trace("command plugin: ", command, "==============================")
+			//trace("command plugin: ", command, "==============================")
 			//trace(e.parameters)
 			var i:int;
 			var j:int;
@@ -1942,6 +1942,8 @@ package control
 		{
 			trace("leaveroom: ", GameDataTLMN.getInstance().roomId, GameDataTLMN.getInstance().lobbyRoomId, GameDataTLMN.getInstance().zoneId)
 			if (GameDataTLMN.getInstance().roomId == -1)
+				return;
+			if (GameDataTLMN.getInstance().roomId != Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id)
 				return;
 			var leaveRoomRequest:LeaveRoomRequest = new LeaveRoomRequest();
 			leaveRoomRequest.zoneId = GameDataTLMN.getInstance().zoneId;

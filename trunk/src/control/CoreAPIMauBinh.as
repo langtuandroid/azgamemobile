@@ -1727,6 +1727,8 @@ package control
 		{
 			if (myData.roomId == -1)
 				return;
+			if (myData.roomId != Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id)
+				return;
 			var leaveRoomRequest:LeaveRoomRequest = new LeaveRoomRequest();
 			leaveRoomRequest.zoneId = myData.zoneId;
 			leaveRoomRequest.roomId = myData.roomId;

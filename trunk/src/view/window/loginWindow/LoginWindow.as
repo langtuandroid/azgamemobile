@@ -334,7 +334,7 @@ package view.window.loginWindow
 		
 		private function onUpdateFacebookData(e:Event):void 
 		{
-			WindowLayer.getInstance().openAlertWindow("onUpdateFacebookData");
+			//WindowLayer.getInstance().openAlertWindow("onUpdateFacebookData");
 			if (timerToCloseLoadingLayer)
 			{
 				timerToCloseLoadingLayer.removeEventListener(TimerEvent.TIMER_COMPLETE, onCloseLoadingLayer);

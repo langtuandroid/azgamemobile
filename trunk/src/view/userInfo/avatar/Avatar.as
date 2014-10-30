@@ -68,7 +68,7 @@ package view.userInfo.avatar
 		
 		public function addImg(imgSrc:String, logoSrc:String = null, isConvert:Boolean = true, userId:String = ''):void
 		{
-			trace("link avatar: " , imgSrc, "=====================")
+			//trace("link avatar: " , imgSrc, "=====================")
 			var str:String = imgSrc.substr(0, 4);
 			
 			//Security.allowDomain("*");

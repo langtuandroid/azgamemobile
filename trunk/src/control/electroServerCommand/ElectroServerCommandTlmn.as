@@ -420,7 +420,7 @@ package control.electroServerCommand
 		
 		private function onJoinGameRoomFail(e:ElectroServerEventTlmn):void 
 		{
-			trace("ON JOIN GAME ROOM FAIL");
+			//trace("ON JOIN GAME ROOM FAIL");
 			windowLayer.closeAllWindow();
 			windowLayer.openAlertWindow(mainData.init.gameDescription.alertSentence.joinGameRoomFail);
 			windowLayer.isNoCloseAll = true;
@@ -509,7 +509,7 @@ package control.electroServerCommand
 		
 		private function onGameRoomInvalid(e:ElectroServerEventTlmn):void 
 		{
-			trace("ON GAME ROOM INVALID");
+			//trace("ON GAME ROOM INVALID");
 			windowLayer.openAlertWindow(mainData.init.gameDescription.alertSentence.gameRoomInvalid);
 		}
 		
@@ -518,7 +518,7 @@ package control.electroServerCommand
 		{
 			if (mainData.isOpeningKickOutWindow)
 				return;
-			trace("ON CLOSE CONNECTION");
+			//trace("ON CLOSE CONNECTION");
 			removeEventForCoreAPI();
 			windowLayer.closeAllWindow();
 			mainData.isCloseConnection = true;
@@ -579,7 +579,7 @@ package control.electroServerCommand
 			var gameName:String = mainData.init.gameName;
 			if (isNotInAnyRoom)
 				coreAPI.myData.roomId = -1;
-			coreAPI.joinLobbyRoom(gameName, channelId, capacity);
+			coreAPI.joinLobbyRoom(gameName, mainData.currentChannelId, capacity);
 		}
 		
 		// Thông báo ù
@@ -851,11 +851,11 @@ package control.electroServerCommand
 				coreAPI.orderCard(arr1, arr2, arr3, arr4);
 		}
 		
-		public function getRoomList():void
+		/*public function getRoomList():void
 		{
 			if (coreAPI)
 				coreAPI.getRoomList();
-		}
+		}*/
 		
 		public function myDisCard(arr:Array):void 
 		{
@@ -896,7 +896,7 @@ package control.electroServerCommand
 		
 		private function haveUserNextTurn(e:ElectroServerEventTlmn):void 
 		{
-			trace("nghe thay 2 lan bo luot lien")
+			//trace("nghe thay 2 lan bo luot lien")
 			callPlayingScreenAction(PlayingScreenActionTlmn.NEXTTURN, e.data);
 		}
 		

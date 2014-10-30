@@ -368,7 +368,7 @@ package view.screen.play
 			//content.effectMoneySpecial.visible = true;
 			content.effectMoneySpecial.visible = false;
 			
-			trace("xem lai tien cua nguoi choi: ", _money, obj[ConstTlmn.MONEY])
+			////trace("xem lai tien cua nguoi choi: ", _money, obj[ConstTlmn.MONEY])
 			_money = _money + Number(obj[ConstTlmn.MONEY]);
 			content.effectMoneySpecial.text = format(Number(obj[ConstTlmn.MONEY]));
 			TweenMax.to(content.effectMoneySpecial, 3, { y:content.effectMoneySpecial.y - 130, onComplete:onCompleteShowMoney } );
@@ -421,7 +421,7 @@ package view.screen.play
 		public function nextturn():void 
 		{
 			var myDate:Date = new Date();
-			trace("thang user nao do bo luot: ", myDate.minutes, myDate.seconds);
+			////trace("thang user nao do bo luot: ", myDate.minutes, myDate.seconds);
 			content.nextturn.visible = true;
 			content.setChildIndex(content.nextturn, content.numChildren - 1);
 			var rd:int = int(Math.random() * 5);
@@ -457,7 +457,7 @@ package view.screen.play
 		public function checkPosClock():void 
 		{
 			_clock.visible = true;
-			trace("day co phai luot danh dau tien ko: ", GameDataTLMN.getInstance().firstPlayer , _userName)
+			////trace("day co phai luot danh dau tien ko: ", GameDataTLMN.getInstance().firstPlayer , _userName)
 			if (GameDataTLMN.getInstance().firstPlayer == _userName) 
 			{
 				_clock.countTime(20);
@@ -522,7 +522,7 @@ package view.screen.play
 			}
 			
 			var str:String = "";
-			trace("money bi chat info: ", content.txtMoney.text, content.txtMoney.text.length)
+			////trace("money bi chat info: ", content.txtMoney.text, content.txtMoney.text.length)
 			for (var i:int = 0; i < content.txtMoney.text.length; i++) 
 			{
 				if (String(content.txtMoney.text).charAt(i) != ",")
@@ -530,7 +530,7 @@ package view.screen.play
 					str += String(content.txtMoney.text).charAt(i);
 				}
 			}
-			trace("money bi chat info: ", str, money)
+			////trace("money bi chat info: ", str, money)
 			var myMoney:Number = Number(str) + Number(money);
 			content.txtMoney.text = format(myMoney);
 			
@@ -578,7 +578,7 @@ package view.screen.play
 			var friend:Boolean = false;
 			for (var i:int = 0; i < GameDataTLMN.getInstance().friendList[DataField.FRIEND_LIST].length; i++) 
 			{
-				trace("thang ban co ten la j`: ", GameDataTLMN.getInstance().friendList[DataField.FRIEND_LIST][i].userName)
+				////trace("thang ban co ten la j`: ", GameDataTLMN.getInstance().friendList[DataField.FRIEND_LIST][i].userName)
 				if (GameDataTLMN.getInstance().friendList[DataField.FRIEND_LIST][i].userName == _userName) 
 				{
 					friend = true;
@@ -688,7 +688,7 @@ package view.screen.play
 			content.inviteBtn.visible = false;
 			_isPlaying = userPlaying;
 			ready = userPlaying;
-			trace("thang nao la chu phong: ", isMaster, _isPlaying, remainingCard)
+			////trace("thang nao la chu phong: ", isMaster, _isPlaying, remainingCard)
 			
 			content.level.visible = true;
 			content.level.txt.text = level;
@@ -715,7 +715,7 @@ package view.screen.play
 			content.txtMoney.text = format(Number(money));
 			
 			
-			trace("===============", pos, userName, "++++++++++++++++++")
+			////trace("===============", pos, userName, "++++++++++++++++++")
 			if (!userPlaying) 
 			{
 				stopTimer();
@@ -788,7 +788,7 @@ package view.screen.play
 		
 		private function onCompleteLoadBgMonter(e:Event):void 
 		{
-			trace("co bao nhieu thang trogn avatar dac biet: ", content.specialAvatar.numChildren)
+			////trace("co bao nhieu thang trogn avatar dac biet: ", content.specialAvatar.numChildren)
 			for (var i:int = 0; i < content.specialAvatar.numChildren; i++) 
 			{
 				content.specialAvatar.removeChild(content.specialAvatar.getChildAt(i));
@@ -799,19 +799,19 @@ package view.screen.play
 		
 		private function onCompleteLoadBgNormal(e:Event):void 
 		{
-			trace("co bao nhieu thang trogn avatar thuong: ", content.avatarNormal.numChildren)
+			////trace("co bao nhieu thang trogn avatar thuong: ", content.avatarNormal.numChildren)
 			for (var i:int = 0; i < content.avatarNormal.numChildren; i++) 
 			{
 				content.avatarNormal.removeChild(content.avatarNormal.getChildAt(i));
 			}
 			var loader:Loader = e.target.loader as Loader;
 			content.avatarNormal.addChild(loader);
-			trace("load xog avatar: ============================")
+			////trace("load xog avatar: ============================")
 		}
 		
 		private function errorLoadBg(e:IOErrorEvent):void 
 		{
-			trace("ko load dc bg user con lai", _pos)
+			////trace("ko load dc bg user con lai", _pos)
 		}
 		
 		public function addCardDeck(remainingCard:int):void 
@@ -871,7 +871,7 @@ package view.screen.play
 			{
 				for (var j:int = 0; j < _arrCardDeck.length; j++) 
 				{
-					trace(arr[i], "=============== so sanh =============", _arrCardDeck[j].id, "length: ", _arrCardDeck.length)
+					////trace(arr[i], "=============== so sanh =============", _arrCardDeck[j].id, "length: ", _arrCardDeck.length)
 					if (arr[i] == _arrCardDeck[j].id) 
 					{
 						
@@ -1035,7 +1035,7 @@ package view.screen.play
 			if (arrCardList.length > 0) 
 			{
 				_count++;
-				trace("cac quan bai dc chia: ", _arrCardList[_count])
+				////trace("cac quan bai dc chia: ", _arrCardList[_count])
 				startDeal(arrCardList[_count]);
 			}
 			else 
@@ -1051,7 +1051,7 @@ package view.screen.play
 			}
 			
 			content.confirmReady.visible = false;
-			////trace("chia bai cho cac info, ", type)
+			//////trace("chia bai cho cac info, ", type)
 			
 			
 		}
@@ -1094,7 +1094,7 @@ package view.screen.play
 				
 				if (_pos == 2) 
 				{
-					//trace("chia bai cho cac info, vị trí là: 2  ", _pos)
+					////trace("chia bai cho cac info, vị trí là: 2  ", _pos)
 					cardDeck.x = 537;
 					cardDeck.y = 107;
 					cardDeck.rotation = 90;
@@ -1107,7 +1107,7 @@ package view.screen.play
 					
 					if (_pos == 1) 
 					{
-						//trace("chia bai cho cac info, vị trí là: 1 ", _pos)
+						////trace("chia bai cho cac info, vị trí là: 1 ", _pos)
 						cardDeck.x = -112;
 						cardDeck.y = 216;
 						/*cardDeck.x = 0;
@@ -1116,7 +1116,7 @@ package view.screen.play
 					else
 					{
 						cardDeck.rotation = 90;
-						//trace("chia bai cho cac info, vị trí là:3  ", _pos)
+						////trace("chia bai cho cac info, vị trí là:3  ", _pos)
 						cardDeck.x = -303;
 						cardDeck.y = 108;
 						/*cardDeck.x = 0;
@@ -1126,7 +1126,7 @@ package view.screen.play
 					
 				}
 				content.addChild(cardDeck);
-				//trace("check carddeck: ", cardDeck)
+				////trace("check carddeck: ", cardDeck)
 				_arrCardDeck.push(cardDeck);
 				
 				//setChildIndex(
@@ -1141,7 +1141,7 @@ package view.screen.play
 				
 			if (cardDeck) 
 			{
-				//trace("check carddeck khi bat dau tween: ", cardDeck)
+				////trace("check carddeck khi bat dau tween: ", cardDeck)
 				if (_pos == 2) 
 				{
 					
@@ -1150,7 +1150,7 @@ package view.screen.play
 								
 					TweenMax.to(cardDeck, 1.2, { x:235, y:-25 + distance * _remainingCard, ease:Back.easeOut} ); 
 					//TweenMax.to(_arrCardDeck[type], 1, { x:0 * type, y:0} ); 
-					////trace("di chuyen den con , vị trí là:  ", _pos)
+					//////trace("di chuyen den con , vị trí là:  ", _pos)
 				}
 				else 
 				{
@@ -1166,7 +1166,7 @@ package view.screen.play
 								ease:Back.easeOut, onComplete:onComleteDeal} ); */
 						TweenMax.to(cardDeck, 1.2, { x:-15, y:-25 + distance * _remainingCard, ease:Back.easeOut} ); 
 					}
-					////trace("di chuyen den con , vị trí là:  ", _pos)
+					//////trace("di chuyen den con , vị trí là:  ", _pos)
 					
 					//TweenMax.to(_arrCardDeck[type], 1, { x:0 * type, y:0} ); 
 				}
@@ -1185,13 +1185,13 @@ package view.screen.play
 					_cardDeck.y = content.numCard.y - 6 - 10 * i;
 					
 				}*/
-			////trace("xem effect chia bai: ", type,"==", _arrCardDeck)
+			//////trace("xem effect chia bai: ", type,"==", _arrCardDeck)
 			
 		}
 		
 		private function onComleteDealCard():void 
 		{
-			trace("chia bai complete: ", _count)
+			//trace("chia bai complete: ", _count)
 			if (_count < 13 && _isPlaying) 
 			{
 				startDeal(_arrCardList[_count]);
@@ -1268,7 +1268,7 @@ package view.screen.play
 		
 		public function removeAllCards():void 
 		{
-			trace("remove di luc nao: ", _arrCardDeck, "============")
+			//trace("remove di luc nao: ", _arrCardDeck, "============")
 			if (_arrCardDeck && _arrCardDeck.length > 0) 
 			{
 				for (var i:int = 0; i < _arrCardDeck.length; i++) 
@@ -1288,7 +1288,7 @@ package view.screen.play
 		//dung khi co 1 user thoat ra, van giu lai bai, nhung xoa avatar
 		public function removeAvatar():void 
 		{
-			//trace(_userName)
+			////trace(_userName)
 			//allUnVisible();
 			_userName = "";
 			

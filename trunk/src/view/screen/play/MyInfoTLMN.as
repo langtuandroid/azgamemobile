@@ -391,7 +391,7 @@ package view.screen.play
 			//content.effectMoneySpecial.visible = true;
 			content.effectMoneySpecial.visible = false;
 			content.effectMoneySpecial.text = format(Number(obj[ConstTlmn.MONEY]));
-			trace("xem lai tien cua minh: ", MyDataTLMN.getInstance().myMoney[0], obj[ConstTlmn.MONEY])
+			//trace("xem lai tien cua minh: ", MyDataTLMN.getInstance().myMoney[0], obj[ConstTlmn.MONEY])
 			//MyDataTLMN.getInstance().myMoney[0] = int(MyDataTLMN.getInstance().myMoney[0]) + int(obj[ConstTlmn.MONEY]);
 			TweenMax.to(content.effectMoneySpecial, 3, { y:content.effectMoneySpecial.y - 130, onComplete:onCompleteShowMoney } );
 		}
@@ -468,7 +468,7 @@ package view.screen.play
 		
 		public function checkPosClock():void 
 		{
-			trace("day co phai luot danh dau tien ko: ", GameDataTLMN.getInstance().firstPlayer , MyDataTLMN.getInstance().myId)
+			//trace("day co phai luot danh dau tien ko: ", GameDataTLMN.getInstance().firstPlayer , MyDataTLMN.getInstance().myId)
 			
 			if (GameDataTLMN.getInstance().firstPlayer == MyDataTLMN.getInstance().myId) 
 			{
@@ -541,7 +541,7 @@ package view.screen.play
 			{
 				TextField(content.effectMoneySpecial).defaultTextFormat = _textformatWin;
 			}
-			trace("money bi chat: ", content.userMoney.text, content.userMoney.text.length)
+			//trace("money bi chat: ", content.userMoney.text, content.userMoney.text.length)
 			var str:String = "";
 			for (var i:int = 0; i < content.userMoney.text.length; i++) 
 			{
@@ -551,7 +551,7 @@ package view.screen.play
 				}
 			}
 			
-			trace("money bi chat: ", str, money)
+			//trace("money bi chat: ", str, money)
 			
 			content.effectMoneySpecial.text = format(Number(money));
 			
@@ -573,7 +573,7 @@ package view.screen.play
 			{
 				TextField(content.effectMoneySpecial).defaultTextFormat = _textformatWin;
 			}
-			trace("money bi chat: ", content.userMoney.text, content.userMoney.text.length)
+			//trace("money bi chat: ", content.userMoney.text, content.userMoney.text.length)
 			var str:String = "";
 			for (var i:int = 0; i < content.userMoney.text.length; i++) 
 			{
@@ -583,7 +583,7 @@ package view.screen.play
 				}
 			}
 			
-			trace("money bi chat: ", str, money)
+			//trace("money bi chat: ", str, money)
 			var myMoney:Number = Number(str) + Number(money);
 			content.userMoney.text = format(myMoney);
 			
@@ -660,7 +660,7 @@ package view.screen.play
 		
 		public function allButtonVisible():void 
 		{
-			trace("da de dc nut bo luot khi tata ca cac nut ko an dc")
+			////trace("da de dc nut bo luot khi tata ca cac nut ko an dc")
 			content.visibleSortCard.visible = true;
 			content.visiblePassturn.visible = true;
 			content.visibleChooseAgain.visible = true;
@@ -670,7 +670,7 @@ package view.screen.play
 		
 		private function hideButton():void 
 		{
-			trace("da de dc nut bo luot khi chi co 2 nut ko an dc")
+			////trace("da de dc nut bo luot khi chi co 2 nut ko an dc")
 			content.visiblePassturn.visible = true;
 			
 			content.visibleHit.visible = true;
@@ -688,12 +688,12 @@ package view.screen.play
 		
 		private function showPassTurn():void 
 		{
-			trace("ko ther click nut bo luot")
+			//trace("ko ther click nut bo luot")
 			content.visiblePassturn.visible = true;
 		}
 		private function hidePassTurn():void 
 		{
-			trace("da de dc nut bo luot")
+			//trace("da de dc nut bo luot")
 			content.visiblePassturn.visible = false;
 		}
 		
@@ -723,10 +723,10 @@ package view.screen.play
 				SoundManager.getInstance().playSound(ConstTlmn.SOUND_CLICK);
 			}
 			
-			trace(_isMyTurn, GameDataTLMN.getInstance().finishRound, "check bo luot khi danh luot dau tien")
+			//trace(_isMyTurn, GameDataTLMN.getInstance().finishRound, "check bo luot khi danh luot dau tien")
 			if (_isMyTurn && _checkSort) 
 			{
-				trace("mat turn khi an bo luot")
+				//trace("mat turn khi an bo luot")
 				_isMyTurn = false;
 				
 				dispatchEvent(new Event("next turn"));
@@ -737,7 +737,7 @@ package view.screen.play
 		public function nextturn():void 
 		{
 			var myDate:Date = new Date();
-			trace("minh click bo luot: ", myDate.minutes, myDate.seconds);
+			//trace("minh click bo luot: ", myDate.minutes, myDate.seconds);
 			_isPassTurn = true;
 			content.nextturn.visible = true;
 			hideButton();
@@ -804,7 +804,7 @@ package view.screen.play
 								break;
 							}
 						}
-						trace(arrNew)
+						//trace(arrNew)
 						
 						if (arrNew.length > 0) 
 						{
@@ -881,10 +881,10 @@ package view.screen.play
 						
 					}
 				}
-				trace("=====")
+				//trace("=====")
 				for (i = 0; i < _arrCardImage.length; i++) 
 				{
-					//trace(_arrCardImage[i].id)
+					////trace(_arrCardImage[i].id)
 				}
 				var arrCardImageCopy:Array = [];
 				for (i = 0; i < _arrCardImage.length; i++) 
@@ -898,7 +898,7 @@ package view.screen.play
 					{
 						if (arrCardImageCopy[j].id == _arrCardInt[i]) 
 						{
-							//trace("thang card dc di len: ", _arrCardImage[j].id, j, i)
+							////trace("thang card dc di len: ", _arrCardImage[j].id, j, i)
 							
 							_arrCardImage[i] = arrCardImageCopy[j];
 							
@@ -1118,12 +1118,12 @@ package view.screen.play
 		
 		private function onIOError(e:IOErrorEvent):void 
 		{
-			trace("AAAAAAAAAAAAA")
+			////trace("AAAAAAAAAAAAA")
 		}
 		
 		private function onLoadImgComplete(e:Event):void 
 		{
-			trace("BBBBBBBBBBBB")
+			////trace("BBBBBBBBBBBB")
 		}
 		
 		private function loadBg(str:String):void 
@@ -1152,7 +1152,7 @@ package view.screen.play
 		
 		private function errorLoadBg(e:IOErrorEvent):void 
 		{
-			trace("ko load dc bg")
+			//trace("ko load dc bg")
 		}
 		
 		public function dealCard(arr:Array):void 
@@ -1338,14 +1338,14 @@ package view.screen.play
 			removeEventListener(MouseEvent.MOUSE_MOVE, onMove);
 			removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			//removeEventListener(Event.ENTER_FRAME, onMove);
-			//trace("is move ========================= ", isMove, card.id, _arrCardInt );
+			////trace("is move ========================= ", isMove, card.id, _arrCardInt );
 			if (!isMove) 
 			{
-				//trace("card mousedown ========================= ", card.isMouseDown, _arrCardInt );
+				////trace("card mousedown ========================= ", card.isMouseDown, _arrCardInt );
 				if (card.isMouseDown) 
 				{
-					//trace("card ischoose ========================= ", card.isChoose );
-					//trace("card ischoose ========================= ", card._posCardY );	
+					////trace("card ischoose ========================= ", card.isChoose );
+					////trace("card ischoose ========================= ", card._posCardY );	
 						/*if (GameDataTLMN.getInstance().playSound) 
 						{
 							SoundManager.getInstance().playSound("Click");
@@ -1360,7 +1360,7 @@ package view.screen.play
 					//_indexOfCard = getPosCard(card.x);
 					/*for (i= 0; i < content.numChildren; i++) 
 					{
-						//trace("thang nay co bao nhieu child: ", content.getChildAt(i) );
+						////trace("thang nay co bao nhieu child: ", content.getChildAt(i) );
 					}
 					*/
 					//content.setChildIndex(card, (15 + _indexOfCard));
@@ -1370,10 +1370,10 @@ package view.screen.play
 			}
 			else 
 			{
-				trace("ko move")
+				//trace("ko move")
 				/*for (i= 0; i < content.numChildren; i++) 
 				{
-					//trace("thang nay co bao nhieu child: ", content.getChildAt(i) );
+					////trace("thang nay co bao nhieu child: ", content.getChildAt(i) );
 				}*/
 				_indexOfCard = getPosCard(card.x);
 				
@@ -1404,17 +1404,17 @@ package view.screen.play
 			}
 			
 			
-			//trace("child cua content: ", content.numChildren)
+			////trace("child cua content: ", content.numChildren)
 			/*for (var i:int = 0; i < content.numChildren; i++) 
 			{
-				//trace("id cua no: ", content.getChildAt(i))
+				////trace("id cua no: ", content.getChildAt(i))
 				
 			}*/
 			//TweenMax.to(e.currentTarget, .3, { x:_distance * _indexOfCard } );
 			isMove = false;
 			card.isMouseDown = false;
 			
-			trace("nhac 1 quan bai len: ", _isMyTurn)
+			//trace("nhac 1 quan bai len: ", _isMyTurn)
 			
 			if (_arrCardChoose.length > 0) 
 			{
@@ -1450,7 +1450,7 @@ package view.screen.play
 			var i:int;
 			if (card.isChoose) 
 			{
-				trace("bo chon")
+				//trace("bo chon")
 				TweenMax.to(card, .3, { y:card._posCardY} );
 				
 				for (i = 0; i < _arrCardChoose.length; i++) 
@@ -1467,7 +1467,7 @@ package view.screen.play
 			}
 			else 
 			{
-				trace("duoc  chon")
+				//trace("duoc  chon")
 				TweenMax.to(card, .3, { y:card._posCardY - 20} );
 				
 				_arrCardChoose.push(card.id);
@@ -1484,9 +1484,9 @@ package view.screen.play
 		{
 			var hit:Boolean;
 			var cardTlmn:CardsTlmn = new CardsTlmn();
-			trace(_isPassTurn, "turn cua thang nao =============")
 			//trace(_isPassTurn, "turn cua thang nao =============")
-			trace(_arrCardChoose, "cac quan bai dang doi danh ra =============")
+			////trace(_isPassTurn, "turn cua thang nao =============")
+			//trace(_arrCardChoose, "cac quan bai dang doi danh ra =============")
 			var check:Boolean = false;
 			var arrCard:Array = [];
 			var arrCardChoose:Array = [];
@@ -1872,7 +1872,7 @@ package view.screen.play
 			//if (!_hack) 
 			{
 				card = CardTlmn(e.currentTarget);
-				//trace("card dc down: ", card.id, _arrCardInt)
+				////trace("card dc down: ", card.id, _arrCardInt)
 				card.isMouseDown = true;
 				_posLastMouseX = mouseX;
 				for (var i:int = 0; i < _arrCardImage.length; i++) 
@@ -1887,11 +1887,11 @@ package view.screen.play
 						_indexLastOfCard = -1;
 					}
 				}
-				//trace("card dc down co vi tri: ", card.id, _indexLastOfCard)
+				////trace("card dc down co vi tri: ", card.id, _indexLastOfCard)
 				
 				if (_indexLastOfCard == -1) 
 				{
-					trace("index bang -1")
+					//trace("index bang -1")
 				}
 				_indexCardChoose = content.cardContainer.getChildIndex(card);
 				//e.currentTarget.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
@@ -1909,7 +1909,7 @@ package view.screen.play
 			
 			if (card.isMouseDown) 
 			{
-				//trace("card dc move: ", e.currentTarget.id, _arrCardInt)
+				////trace("card dc move: ", e.currentTarget.id, _arrCardInt)
 				//_hack = true;
 				isMove= true;
 				_posNewMouseX = mouseX;
@@ -1929,13 +1929,13 @@ package view.screen.play
 			else 
 			{
 				
-				//trace("card dc down sau khi thay move ma ko thay down: ", card.id, _arrCardInt)
+				////trace("card dc down sau khi thay move ma ko thay down: ", card.id, _arrCardInt)
 				card.isMouseDown = true;
 				_posLastMouseX = mouseX;
 				_indexLastOfCard = _arrCardImage.indexOf(card);
 				if (_indexLastOfCard == -1) 
 				{
-					trace("index bang -1")
+					//trace("index bang -1")
 				}
 				_indexCardChoose = content.getChildIndex(card);
 				//e.currentTarget.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
@@ -1979,9 +1979,9 @@ package view.screen.play
 			var arrChange:Array = [];
 			var arrCardIntChange:Array = [];
 			var i:int;
-			//trace("______________________________pos", pos)
-			trace(_arrCardInt)
-			//trace("______________________________last", _indexLastOfCard)
+			////trace("______________________________pos", pos)
+			//trace(_arrCardInt)
+			////trace("______________________________last", _indexLastOfCard)
 			for (i = 0; i < _arrCardImage.length; i++) 
 			{
 				if (card.id == _arrCardImage[i].id) 
@@ -2029,9 +2029,9 @@ package view.screen.play
 						}
 						
 					}
-					//trace(arrChange)
-					//trace(arrCardIntChange)
-					//trace("===========================================")
+					////trace(arrChange)
+					////trace(arrCardIntChange)
+					////trace("===========================================")
 				}
 				else 
 				{
@@ -2068,8 +2068,8 @@ package view.screen.play
 						/*arrChange[i] = arr[i];
 						arrCardIntChange[i] = arr[i].id;*/
 					}
-					//trace(arrCardIntChange)
-					//trace("+++++++++++++++++++++++++++++++")
+					////trace(arrCardIntChange)
+					////trace("+++++++++++++++++++++++++++++++")
 				}
 				
 				for (i = 0; i < _arrCardInt.length; i++) 
@@ -2095,7 +2095,7 @@ package view.screen.play
 			{
 				for (i = 0; i < _arrCardImage.length; i++) 
 				{
-					trace("cac quan danh ra: ", _arrCardImage[i].id, idCard)
+					//trace("cac quan danh ra: ", _arrCardImage[i].id, idCard)
 					if (_arrCardImage[i].id == idCard) 
 					{
 						removeEventCard(_arrCardImage[i]);
@@ -2105,7 +2105,7 @@ package view.screen.play
 						_arrCardInt.splice(i, 1);
 						
 						
-						trace("minh danh bai ra")
+						//trace("minh danh bai ra")
 						_isMyTurn = false;
 						showHitCard();
 						showPassTurn();

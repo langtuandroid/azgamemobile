@@ -583,7 +583,7 @@ package miniGame
 		private function removeAllCardDeck():void 
 		{
 			
-			trace("arrcarđeck: ", arrCardDeck)
+			//trace("arrcarđeck: ", arrCardDeck)
 			if (arrCardDeck) 
 			{
 				for (var i:int = 0; i < arrCardDeck.length; i++) 

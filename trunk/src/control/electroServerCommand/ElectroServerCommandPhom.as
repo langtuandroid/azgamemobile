@@ -518,6 +518,7 @@ package control.electroServerCommand
 		{
 			windowLayer.closeAllWindow();
 			windowLayer.openAlertWindow(mainData.init.gameDescription.alertSentence.loginFail);
+			
 		}
 		
 		private function onPluginNotFound(e:ElectroServerEvent):void 
@@ -535,7 +536,7 @@ package control.electroServerCommand
 			var gameName:String = mainData.init.gameName;
 			if (isNotInAnyRoom)
 				coreAPI.myData.roomId = -1;
-			coreAPI.joinLobbyRoom(gameName, channelId, capacity);
+			coreAPI.joinLobbyRoom(gameName, mainData.currentChannelId, capacity);
 		}
 		
 		// Thông báo ù

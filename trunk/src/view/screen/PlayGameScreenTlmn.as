@@ -236,7 +236,7 @@ package view.screen
 			}
 			
 			
-			trace("xem the nao: ", SoundManager.getInstance().isSoundOn, SoundManager.getInstance().isMusicOn)
+			////trace("xem the nao: ", SoundManager.getInstance().isSoundOn, SoundManager.getInstance().isMusicOn)
 			if (SoundManager.getInstance().isSoundOn) 
 			{
 				content.settingBoard.onSoundEffect.visible = true;
@@ -489,7 +489,7 @@ package view.screen
 		private function listenRoomMasterKick(obj:Object):void 
 		{
 			var i:int;
-			trace("thang bi kick la minh: ", obj[DataField.USER_NAME] , MyDataTLMN.getInstance().myId)
+			////trace("thang bi kick la minh: ", obj[DataField.USER_NAME] , MyDataTLMN.getInstance().myId)
 			if (obj[DataField.USER_NAME] == MyDataTLMN.getInstance().myId) 
 			{
 				okOut();
@@ -610,13 +610,13 @@ package view.screen
 		
 		private function listenUserReady(obj:Object):void 
 		{
-			trace("thang ready: ", obj[DataField.USER_NAME] , MyDataTLMN.getInstance().myId)
+			////trace("thang ready: ", obj[DataField.USER_NAME] , MyDataTLMN.getInstance().myId)
 			if (SoundManager.getInstance().isSoundOn) 
 			{
 				SoundManager.getInstance().playSound(SoundLib.READY_SOUND);
 			}
 			
-			trace("nut bat dau: ", _isPlaying, GameDataTLMN.getInstance().master , MyDataTLMN.getInstance().myId)
+			////trace("nut bat dau: ", _isPlaying, GameDataTLMN.getInstance().master , MyDataTLMN.getInstance().myId)
 			
 			
 			
@@ -628,7 +628,7 @@ package view.screen
 			{
 				for (var i:int = 0; i < _arrUserInfo.length; i++) 
 				{
-					trace("thang ready ko phai minh: ", obj[DataField.USER_NAME] , _arrUserInfo[i]._userName)
+					//trace("thang ready ko phai minh: ", obj[DataField.USER_NAME] , _arrUserInfo[i]._userName)
 					if (_arrUserInfo[i]._userName == obj[DataField.USER_NAME]) 
 					{
 						_arrUserInfo[i].myReady();
@@ -725,7 +725,7 @@ package view.screen
 			_countTimerkick = 0;
 			content.timeKickUserTxt.visible = false;
 			
-			trace(obj[ConstTlmn.MASTER], "la chu phong moi")
+			//trace(obj[ConstTlmn.MASTER], "la chu phong moi")
 			if (!_isPlaying)
 			{
 				if (obj[ConstTlmn.MASTER] == MyDataTLMN.getInstance().myId) 
@@ -859,7 +859,7 @@ package view.screen
 				_myInfo.nextturn();
 			}
 			
-			trace("sua khi thay bo luot da het vong hay chua: ", GameDataTLMN.getInstance().finishRound)
+			////trace("sua khi thay bo luot da het vong hay chua: ", GameDataTLMN.getInstance().finishRound)
 			if (GameDataTLMN.getInstance().finishRound) 
 			{
 				content.specialCard.visible = false;
@@ -890,7 +890,7 @@ package view.screen
 		
 		private function listenUpdateMoney(obj:Object):void 
 		{
-			//trace(obj);
+			////trace(obj);
 			var i:int;
 			var arrPlus:Array = obj["plus"];
 			var arrSub:Array = obj["sub"];
@@ -1143,7 +1143,7 @@ package view.screen
 			
 			whiteWin = true;
 			objWhiteWin = obj;
-			//trace(obj)
+			////trace(obj)
 			
 			//listenGameOver(obj);
 		}
@@ -1249,7 +1249,7 @@ package view.screen
 			content.noticeSpecialCard.visible = false;
 			{
 				
-				trace(GameDataTLMN.getInstance().currentPlayer, MyDataTLMN.getInstance().myId, "thằng nào có đồng hồ chạy", _isPlaying)
+				////trace(GameDataTLMN.getInstance().currentPlayer, MyDataTLMN.getInstance().myId, "thằng nào có đồng hồ chạy", _isPlaying)
 				if (GameDataTLMN.getInstance().currentPlayer == MyDataTLMN.getInstance().myId && _isPlaying) 
 				{
 					if (GameDataTLMN.getInstance().firstGame) 
@@ -1313,7 +1313,7 @@ package view.screen
 			
 			if (GameDataTLMN.getInstance().firstPlayer == MyDataTLMN.getInstance().myId) 
 			{
-				trace("het gio luot dau tien")
+				//trace("het gio luot dau tien")
 				_myInfo._arrCardChoose = [_myInfo._arrCardFirst[0]];
 				_myInfo._isMyTurn = false;
 				electroServerCommand.myDisCard(_myInfo._arrCardChoose);
@@ -1331,7 +1331,7 @@ package view.screen
 		private function getCurrentPlayer(obj:Object):void 
 		{
 			
-			trace("den luot ai: ", GameDataTLMN.getInstance().currentPlayer , MyDataTLMN.getInstance().myId , _isPlaying)
+			//trace("den luot ai: ", GameDataTLMN.getInstance().currentPlayer , MyDataTLMN.getInstance().myId , _isPlaying)
 			if (GameDataTLMN.getInstance().currentPlayer == MyDataTLMN.getInstance().myId && _isPlaying) 
 			{
 				
@@ -1339,7 +1339,7 @@ package view.screen
 				{
 					
 					_myInfo._isMyTurn = true;
-					trace("endround den luot minh")
+					//trace("endround den luot minh")
 					//_myInfo.checkHitOrPassTurn();
 				}
 				
@@ -1416,13 +1416,13 @@ package view.screen
 			
 			for (i = 0; i < arrResult.length; i++) 
 			{
-				trace(i, "check cac thang dc add card: ", arrResult[i][ConstTlmn.PLAYER_NAME] , MyDataTLMN.getInstance().myId)
+				//trace(i, "check cac thang dc add card: ", arrResult[i][ConstTlmn.PLAYER_NAME] , MyDataTLMN.getInstance().myId)
 				
 				userResult = arrResult[i][ConstTlmn.PLAYER_NAME];
 				
 				var outGame:Boolean = false;
 				var objResult:Object;
-				trace("check cac thang dc add card: ", userResult , MyDataTLMN.getInstance().myId)
+				//trace("check cac thang dc add card: ", userResult , MyDataTLMN.getInstance().myId)
 				if (userResult == MyDataTLMN.getInstance().myId) 
 				{
 					objResult = new Object();
@@ -1453,10 +1453,10 @@ package view.screen
 				}
 				else 
 				{
-					trace("tien su may; ", userResult )
+					//trace("tien su may; ", userResult )
 					for (j = 0; j < _arrUserInfo.length; j++) 
 					{
-						trace(i, "thang nao dc add card; ", userResult , _arrUserInfo[j]._userName)
+						//trace(i, "thang nao dc add card; ", userResult , _arrUserInfo[j]._userName)
 						
 						if (userResult == _arrUserInfo[j]._userName)
 						{
@@ -1478,7 +1478,7 @@ package view.screen
 				
 							_arrUserInfo[j]._isPlaying = true;
 							objResult = new Object();
-							trace("user nay co bao nhieu tien: ", arrResult[i][ConstTlmn.SUB_MONEY])
+							//trace("user nay co bao nhieu tien: ", arrResult[i][ConstTlmn.SUB_MONEY])
 							objResult[ConstTlmn.MONEY] = arrResult[i][ConstTlmn.SUB_MONEY];
 							objResult[ConstTlmn.CARDS] = arrResult[i][ConstTlmn.CARDS];
 							
@@ -1495,8 +1495,8 @@ package view.screen
 		
 		private function addCardImage(arr:Array, pos:int):void 
 		{
-			trace("card cua cac user: ", arr)
-			trace("card cua cac user: ", pos)
+			//trace("card cua cac user: ", arr)
+			//trace("card cua cac user: ", pos)
 			for (var i:int = 0; i < arr.length; i++) 
 			{
 				var card:CardTlmn = new CardTlmn(arr[i]);
@@ -1640,14 +1640,14 @@ package view.screen
 		
 		private function onClickStartGame(e:MouseEvent):void 
 		{
-			trace("click bat dau: ")
+			//trace("click bat dau: ")
 			if (SoundManager.getInstance().isSoundOn) 
 			{
 				SoundManager.getInstance().playSound(SoundLib.CLICK_BUTTON_SOUND);
 			}
 			if (_arrUserList) 
 			{
-				trace(_arrUserList)
+				//trace(_arrUserList)
 			}
 			if (_arrUserList && _arrUserList.length > 1) 
 			{
@@ -1702,10 +1702,10 @@ package view.screen
 			
 			var arr:Array = [];
 			
-			trace("1 lan vao thang chia bai", dealcard)
+			//trace("1 lan vao thang chia bai", dealcard)
 			for (var j:int = dealcard; j < _arrUserInfo.length; j++) 
 			{
-				trace("xem thang nao vua dc chia: ", j, _arrUserInfo[j].ready, _arrUserInfo[j]._userName , GameDataTLMN.getInstance().master)
+				//trace("xem thang nao vua dc chia: ", j, _arrUserInfo[j].ready, _arrUserInfo[j]._userName , GameDataTLMN.getInstance().master)
 				if (_arrUserInfo[j].ready || _arrUserInfo[j]._userName == GameDataTLMN.getInstance().master) 
 				{
 					_arrUserInfo[j].dealCard(arr);
@@ -1713,14 +1713,14 @@ package view.screen
 					{
 						if (timerDealCard) 
 						{
-							trace("da di du qua 3 thang")
+							//trace("da di du qua 3 thang")
 							timerDealCard.stop();
 							timerDealCard.removeEventListener(TimerEvent.TIMER, onCompleteDealCard);
 							
 						}
 					}
 					dealcard = j + 1;
-					trace("co 1 thang duowc chia: ", dealcard)
+					//trace("co 1 thang duowc chia: ", dealcard)
 					break;
 				}
 				
@@ -1742,8 +1742,8 @@ package view.screen
 		
 		private function onClickHitCard(e:Event):void 
 		{
-			trace("====== cac quan danh ra =====")
-			trace(e.target._arrCardChoose)
+			//trace("====== cac quan danh ra =====")
+			//trace(e.target._arrCardChoose)
 			electroServerCommand.myDisCard(e.target._arrCardChoose);
 		}
 		
@@ -1751,7 +1751,7 @@ package view.screen
 		
 		private function listenHaveCard(obj:Object):void 
 		{
-			//trace(obj)
+			////trace(obj)
 			var i:int;
 			var cardTlmn:CardsTlmn = new CardsTlmn();
 			var check:Boolean;
@@ -2976,7 +2976,7 @@ package view.screen
 			
 			showCards(arrCard, obj.userName);
 			
-			trace("thang danh cuoi cung: ", _userLastDisCard)
+			//trace("thang danh cuoi cung: ", _userLastDisCard)
 			if (_userLastDisCard == "") 
 			{
 				_userLastDisCard = obj.userName;
@@ -3201,11 +3201,11 @@ package view.screen
 				content.addChild(_containCard);
 				
 			}*/
-			trace("thang nao dang danh bai: ", userName)
+			//trace("thang nao dang danh bai: ", userName)
 			
 			if (userName == _myInfo._userName) 
 			{
-				trace("bai tu minh di ra: ", _myInfo._userName)
+				//trace("bai tu minh di ra: ", _myInfo._userName)
 				_containCard.x = _myInfo.x + 200;
 				_containCard.y = _myInfo.y - 20;
 			}
@@ -3213,10 +3213,10 @@ package view.screen
 			{
 				for (i = 0; i < _arrUserInfo.length; i++)
 				{
-					trace("bai tu thang nao di ra: ", _arrUserInfo[i]._userName)
+					//trace("bai tu thang nao di ra: ", _arrUserInfo[i]._userName)
 					if (_arrUserInfo[i]._userName && userName == _arrUserInfo[i]._userName) 
 					{
-						trace("bai tu thang nao di ra trong if: ", _arrUserInfo[i]._userName)
+						//trace("bai tu thang nao di ra trong if: ", _arrUserInfo[i]._userName)
 						switch (i) 
 						{
 							
@@ -3314,20 +3314,20 @@ package view.screen
 			{
 				if (_numUser > 1) 
 				{
-					trace("numuser > 1: ", GameDataTLMN.getInstance().master , MyDataTLMN.getInstance().myId)
+					//trace("numuser > 1: ", GameDataTLMN.getInstance().master , MyDataTLMN.getInstance().myId)
 					if (GameDataTLMN.getInstance().master == MyDataTLMN.getInstance().myId) 
 					{
 						var count:int = 0;
 						for (var i:int = 0; i < _arrUserInfo.length; i++) 
 						{
-							trace("count++", _arrUserInfo[i].ready)
+							//trace("count++", _arrUserInfo[i].ready)
 							if (_arrUserInfo[i].ready) 
 							{
-								trace("count++")
+								//trace("count++")
 								count++;
 							}
 						}
-						trace("count++", count)
+						//trace("count++", count)
 						if (count > 0) 
 						{
 							content.noticeForUserTxt.text = "";//"ĐÃ CÓ THỂ BẮT ĐẦU VÁN CHƠI!";
@@ -3381,7 +3381,7 @@ package view.screen
 				_contanierCardOutUser = new Sprite();
 				content.addChild(_contanierCardOutUser);
 			}
-			trace("co user out room: ", _arrUserList)
+			//trace("co user out room: ", _arrUserList)
 			
 			for (i = 0; i < _arrUserList.length; i++) 
 			{
@@ -3399,8 +3399,8 @@ package view.screen
 			
 			
 			
-			trace("co user out room: ", _arrUserList)
-			trace("co user out room: ", _isPlaying, MyDataTLMN.getInstance().myId , data["master"])
+			//trace("co user out room: ", _arrUserList)
+			//trace("co user out room: ", _isPlaying, MyDataTLMN.getInstance().myId , data["master"])
 			if (!_isPlaying && MyDataTLMN.getInstance().myId == GameDataTLMN.getInstance().master) 
 			{
 				var check:Boolean = false;
@@ -3701,7 +3701,7 @@ package view.screen
 				_resultWindow.y = -70; // (600 - _resultWindow.height) / 2;
 				_resultWindow.visible = false;
 				
-				//trace("tao ra thang result window")
+				////trace("tao ra thang result window")
 			}
 			
 			if (SoundManager.getInstance().isSoundOn) 
@@ -3817,7 +3817,7 @@ package view.screen
 		
 		private function onOrderCard(e:MouseEvent):void 
 		{
-			trace("order card: ", GameDataTLMN.getInstance().master , MyDataTLMN.getInstance().myName)
+			//trace("order card: ", GameDataTLMN.getInstance().master , MyDataTLMN.getInstance().myName)
 			if (GameDataTLMN.getInstance().master == MyDataTLMN.getInstance().myId)
 			{
 				var orderCardWindow:OrderCardWindow = new OrderCardWindow();
@@ -3836,7 +3836,7 @@ package view.screen
 		{
 			sharedObject = SharedObject.getLocal("soundConfig");
 			
-			trace(sharedObject.data.isSoundOff, sharedObject.data.isMusicOff)
+			//trace(sharedObject.data.isSoundOff, sharedObject.data.isMusicOff)
 			if (SoundManager.getInstance().isSoundOn) 
 			{
 				SoundManager.getInstance().playSound(SoundLib.CLICK_BUTTON_SOUND);
@@ -4011,7 +4011,7 @@ package view.screen
 		
 		private function onCreateBoardEmoChat(e:MouseEvent):void 
 		{
-			//trace(_emoBoard)
+			////trace(_emoBoard)
 			/*if (!_emoBoard) 
 			{
 				_emoBoard = new Emoticon();
@@ -4051,7 +4051,7 @@ package view.screen
 				timer.stop();
 				timer.removeEventListener(TimerEvent.TIMER_COMPLETE, onComplete);
 			}
-			//trace("co emo gui len ne: ", e.target.nameOfEmo)
+			////trace("co emo gui len ne: ", e.target.nameOfEmo)
 			_emoBoard.visible = false;
 			electroServerCommand.sendPublicChat(MyDataTLMN.getInstance().myId, MyDataTLMN.getInstance().myDisplayName,
 													e.target.nameOfEmo, true);
@@ -4080,7 +4080,7 @@ package view.screen
 		private function removeAllDisCard():void 
 		{
 			var i:int;
-			trace("remove tat ca bai da danh ra")
+			////trace("remove tat ca bai da danh ra")
 			if (_containCard) 
 			{
 				for (i = 0; i < _arrCardDiscard.length; i++) 
@@ -4363,7 +4363,7 @@ package view.screen
 		
 		private function onHaveChat(e:Event):void 
 		{
-			//trace(e.target.inputText.text);
+			////trace(e.target.inputText.text);
 			electroServerCommand.sendPublicChat(MyDataTLMN.getInstance().myId, MyDataTLMN.getInstance().myDisplayName,
 												e.target.zInputText.text, false);
 			
@@ -4500,7 +4500,7 @@ package view.screen
 			
 			for (i = 0; i < obj.userList.length; i++) 
 				{
-					//trace(i, obj.userList[i].userName)
+					////trace(i, obj.userList[i].userName)
 					if (obj.userList[i].userName == MyDataTLMN.getInstance().myId) 
 					{
 						count = obj.userList[i].position;
@@ -4624,7 +4624,7 @@ package view.screen
 			{
 				_userInfo = new PlayerInfoTLMN(i);
 				content.addChild(_userInfo);
-				//trace(count)
+				////trace(count)
 				switch (i) 
 				{
 					case 0:
@@ -4719,12 +4719,12 @@ package view.screen
 		{
 			
 			
-			trace("master in adduserinfo: ", GameDataTLMN.getInstance().master , MyDataTLMN.getInstance().myId)
-			trace("master in adduserinfo: ", _arrUserList[0].userName , _arrUserList[0].displayName)
+			////trace("master in adduserinfo: ", GameDataTLMN.getInstance().master , MyDataTLMN.getInstance().myId)
+			////trace("master in adduserinfo: ", _arrUserList[0].userName , _arrUserList[0].displayName)
 			var i:int;
 			var checkEvent:Boolean = false;
 			
-			trace("master in adduserinfo: ", GameDataTLMN.getInstance().master , MyDataTLMN.getInstance().myId)
+			////trace("master in adduserinfo: ", GameDataTLMN.getInstance().master , MyDataTLMN.getInstance().myId)
 			
 			if (GameDataTLMN.getInstance().master == MyDataTLMN.getInstance().myId) 
 			{
@@ -4738,7 +4738,7 @@ package view.screen
 				checkShowTextNotice();
 			}
 			var rd:int;
-			trace("minh join room: ", _myInfo._userName )
+			////trace("minh join room: ", _myInfo._userName )
 			if (_myInfo._userName == "") 
 			{
 				isMeJoinRoom = true;
@@ -4760,7 +4760,7 @@ package view.screen
 					}
 				}
 			}
-			trace("master là mình: ", _arrUserList[0].isMaster, _arrUserList)
+			//trace("master là mình: ", _arrUserList[0].isMaster, _arrUserList)
 			_myInfo.addInfoForMe(_arrUserList[0].userName, _arrUserList[0].money, _arrUserList[0].avatar, 
 									_arrUserList[0].remaningCard, _arrUserList[0].level,
 									_arrUserList[0].isMaster, _isPlaying, _arrUserList[0].displayName, _arrUserList[0].ready,
@@ -4775,12 +4775,12 @@ package view.screen
 			
 			for (i = 1; i < _arrUserList.length; i++) 
 			{
-				trace("_arruserlist cuoi cung dc add vao", _arrUserList[i]["userName"], _arrUserList[i].isMaster)
+				////trace("_arruserlist cuoi cung dc add vao", _arrUserList[i]["userName"], _arrUserList[i].isMaster)
 				if (_arrUserList[i]["userName"] && _arrUserInfo[i - 1]._userName == "" ) 
 				{
-					//trace("=====", i, _arrUserList[i].userName , "======")
-					//trace("=====", _arrUserList[i].money, _arrUserList[i].avatar , "======")
-					//trace("=====", _arrUserList[i].remaningCard, "======")
+					////trace("=====", i, _arrUserList[i].userName , "======")
+					////trace("=====", _arrUserList[i].money, _arrUserList[i].avatar , "======")
+					////trace("=====", _arrUserList[i].remaningCard, "======")
 					if (_arrUserList[i].isMonster) 
 					{
 						checkEvent = true;
@@ -4855,7 +4855,7 @@ package view.screen
 			
 			for (i = 0; i < arr.length; i++) 
 			{
-				trace(arr[i]["userName"], "=========================", arr[i]["position"])
+				////trace(arr[i]["userName"], "=========================", arr[i]["position"])
 			}
 			
 			for (i = 0; i < arr.length; i++) 
@@ -4903,7 +4903,7 @@ package view.screen
 					if (int(arr[i]["position"]) === (int(arrAgain[0]["position"]) + 2) % 4)
 					{
 						arrAgain[2] = arr[i];
-						trace("=========lay dc thang thu 3=========")
+						////trace("=========lay dc thang thu 3=========")
 						break;
 					}
 					
@@ -4945,10 +4945,10 @@ package view.screen
 				}
 			}
 			
-			trace(arrAgain[0]["userName"])
-			trace(arrAgain[1]["userName"])
-			trace(arrAgain[2]["userName"])
-			trace(arrAgain[3]["userName"])
+			////trace(arrAgain[0]["userName"])
+			////trace(arrAgain[1]["userName"])
+			////trace(arrAgain[2]["userName"])
+			////trace(arrAgain[3]["userName"])
 			
 			/*for (i = 0; i < 4; i++) 
 			{
@@ -4983,8 +4983,8 @@ package view.screen
 				{
 					arrAgain[i].remaningCard = 0;
 				}
-				//trace(arr[i].userName)
-				//trace(arrAgain[i].userName)
+				////trace(arr[i].userName)
+				////trace(arrAgain[i].userName)
 			}*/
 			
 			return arrAgain;
