@@ -589,12 +589,25 @@ package view.screen
 		
 		private function onCompleteDealcardForMe(e:TimerEvent):void 
 		{
-			timerDealCard.stop();
-			timerDealCard.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealCard);
-			content.noc.visible = false;
+			if (timerDealCard) 
+			{
+				timerDealCard.stop();
+				timerDealCard.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealCard);
+				content.noc.visible = false;
+			}
 			
-			timerDealcardForme.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcardForMe);
-			timerDealcardForme.stop();
+			if (timerDealcardForme) 
+			{
+				timerDealcardForme.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcardForMe);
+				timerDealcardForme.stop();
+			}
+			
+			if (_timerKickMaster) 
+			{
+				_timerKickMaster.removeEventListener(TimerEvent.TIMER_COMPLETE, onKickMaster);
+				_timerKickMaster.removeEventListener(TimerEvent.TIMER, onTimerKickMaster);
+				_timerKickMaster.stop();
+			}
 			
 			if (whiteWin) 
 			{
@@ -1717,6 +1730,12 @@ package view.screen
 							timerDealCard.stop();
 							timerDealCard.removeEventListener(TimerEvent.TIMER, onCompleteDealCard);
 							
+						}
+						if (_timerKickMaster) 
+						{
+							_timerKickMaster.removeEventListener(TimerEvent.TIMER_COMPLETE, onKickMaster);
+							_timerKickMaster.removeEventListener(TimerEvent.TIMER, onTimerKickMaster);
+							_timerKickMaster.stop();
 						}
 					}
 					dealcard = j + 1;
