@@ -821,6 +821,19 @@ package view.screen
 				}
 				mainData.currentChannelId = channelObject[DataFieldMauBinh.CHANNEL_NUM];
 				mainData.currentPort = channelObject[DataFieldMauBinh.CHANNEL_PORT];
+				
+				//mainData.currentChannelId = 11;
+				//mainData.currentPort = 5101;
+				
+				//mainData.currentChannelId = 12;
+				//mainData.currentPort = 5111;
+				
+				//mainData.currentChannelId = 13;
+				//mainData.currentPort = 5121;
+				
+				//mainData.currentChannelId = 14;
+				//mainData.currentPort = 5131;
+				
 				mainCommand.electroServerCommand.startConnect("", mainData.currentChannelId);
 				mainData.fee = channelObject[DataFieldMauBinh.DEALER_FEE];
 				channelInfoTxt.text = mainData.gameName + " - " + channelObject[DataFieldMauBinh.CHANNEL_NAME];
