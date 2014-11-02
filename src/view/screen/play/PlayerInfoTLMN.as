@@ -538,7 +538,15 @@ package view.screen.play
 			//content.txtMoney.text = format(myMoney);
 			
 			_money = _money + Number(money);
-			content.effectMoneySpecial.text = format(Number(money));
+			if (Number(money) < 0) 
+			{
+				content.effectMoneySpecial.text = "-" + format(Number(money) * -1);
+			}
+			else 
+			{
+				content.effectMoneySpecial.text = format(Number(money));
+			}
+			
 			TweenMax.to(content.effectMoneySpecial, 3, { y: content.effectMoneySpecial.y - 130, onComplete:onCompleteMoneySpecial } );
 			//_moneyEffect.showEffect(money);
 		}
