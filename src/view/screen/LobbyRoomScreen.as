@@ -544,6 +544,7 @@ package view.screen
 							var channelData:ChannelData = new ChannelData();
 							channelData.channelId = channelObject[DataFieldMauBinh.CHANNEL_NUM];
 							channelData.channelName = channelObject[DataFieldMauBinh.CHANNEL_NAME];
+							channelData.port = channelObject[DataFieldMauBinh.CHANNEL_PORT];
 							channelData.betting = String(channelObject[DataFieldMauBinh.BETS]).split(",");
 							var virtualPlayer:int = 0;
 							if (i == 0 && j == 0)
@@ -585,13 +586,14 @@ package view.screen
 		private function onChannelClick(e:Event):void 
 		{
 			SoundManager.getInstance().playSound(SoundLibChung.CLICK_SOUND);
-			//mainCommand.electroServerCommand.closeConnection();
+			mainCommand.electroServerCommand.closeConnection();
 			WindowLayer.getInstance().openLoadingWindow();
 			mainData.currentChannelId = channelList.currentChannelData.channelId;
+			mainData.currentPort = channelList.currentChannelData.port;
 			GameDataTLMN.getInstance().levelLobby = channelList.currentChannelData.channelName;
 			
-			mainCommand.electroServerCommand.joinLobbyRoom();
-			//mainCommand.electroServerCommand.startConnect("", channelList.currentChannelData.channelId);
+			//mainCommand.electroServerCommand.joinLobbyRoom();
+			mainCommand.electroServerCommand.startConnect("", channelList.currentChannelData.channelId);
 			mainData.fee = channelList.currentChannelData.fee;
 			channelInfoTxt.text = mainData.gameName + " - " + channelList.currentChannelData.channelName;
 			mainData.playingData.gameRoomData.channelName = channelList.currentChannelData.channelName;
@@ -818,6 +820,7 @@ package view.screen
 					}
 				}
 				mainData.currentChannelId = channelObject[DataFieldMauBinh.CHANNEL_NUM];
+				mainData.currentPort = channelObject[DataFieldMauBinh.CHANNEL_PORT];
 				mainCommand.electroServerCommand.startConnect("", mainData.currentChannelId);
 				mainData.fee = channelObject[DataFieldMauBinh.DEALER_FEE];
 				channelInfoTxt.text = mainData.gameName + " - " + channelObject[DataFieldMauBinh.CHANNEL_NAME];
