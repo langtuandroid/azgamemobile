@@ -692,6 +692,8 @@ package control
 							tempUserList.push(userData);
 					}
 					
+					GameDataTLMN.getInstance().friendList = new Object();
+					GameDataTLMN.getInstance().friendList[DataField.FRIEND_LIST] = tempUserList;
 					mainData.lobbyRoomData.friendList = tempUserList;
 				break;
 				case Command.REMOVE_FRIEND: // Server confirm remove friend
