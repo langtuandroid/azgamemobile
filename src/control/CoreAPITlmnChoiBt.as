@@ -26,6 +26,7 @@ package control
 	import com.electrotank.electroserver5.api.UserVariable;
 	import com.electrotank.electroserver5.api.UserVariableUpdateAction;
 	import com.electrotank.electroserver5.api.ZoneUpdateAction;
+	import com.electrotank.electroserver5.connection.AvailableConnection;
 	import com.electrotank.electroserver5.ElectroServer
 	import com.electrotank.electroserver5.api.ConnectionClosedEvent;
 	import com.electrotank.electroserver5.api.CreateOrJoinGameResponse;
@@ -48,28 +49,32 @@ package control
 	import com.electrotank.electroserver5.api.ZoneUpdateEvent;
 	import com.electrotank.electroserver5.ElectroServer;
 	import com.electrotank.electroserver5.events.ConnectionEvent;
+	import com.electrotank.electroserver5.server.Server;
 	import com.electrotank.electroserver5.user.User;
 	import com.electrotank.electroserver5.zone.Room;
 	import com.electrotank.electroserver5.zone.Zone;
+	import event.Command;
 	import event.CommandTlmn;
 	import event.DataField;
-	import event.ElectroServerEvent;
+	import event.DataFieldMauBinh;
+	import event.DataFieldPhom;
+	import model.GameDataTLMN;
+	import model.MyDataTLMN;
+	
 	import event.ElectroServerEventTlmn;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import model.EsConfiguration;
-	import model.GameDataTLMN;
 	import model.MainData;
 	import model.MyData;
-	import model.MyDataTLMN;
 	
 	/**
 	 * ...
 	 * @author Yun
 	 */
-	public class CoreAPITlmnChoiBt extends EventDispatcher 
+	public class CoreAPITlmn extends EventDispatcher 
 	{	
 		private var electroServer:ElectroServer;
 		private var userRecentlyJoinRoom:String;
@@ -80,7 +85,7 @@ package control
 		public var mainData:MainData = MainData.getInstance();
 		public  var myData:MyData;
 		
-		public function CoreAPITlmnChoiBt(config:EsConfiguration) 
+		public function CoreAPITlmn(config:EsConfiguration) 
 		{
 			_configuration = config;
 		}
@@ -89,6 +94,11 @@ package control
 		public function createConnection():void
 		{
 			myData = new MyData();
+			
+			myData.gameType = GameDataTLMN.getInstance().gameType;
+			myData.lobbyName = GameDataTLMN.getInstance().lobbyName;
+			myData.lobbyPluginName = GameDataTLMN.getInstance().lobbyPluginName;
+		
 			electroServer = new ElectroServer();
 			
 			mainData.electroServer = electroServer;
@@ -106,19 +116,16 @@ package control
 			electroServer.engine.addEventListener(MessageType.ZoneUpdateEvent.name, onZoneUpdateEvent);
 			electroServer.engine.addEventListener(MessageType.FindGamesResponse.name, onFindGameRespond);
 			
-			electroServer.engine.addEventListener(MessageType.UserEvictedFromRoomEvent.name, onServerKick);
-			
 			//electroServer.setProtocol(configuration.protocol);
-			electroServer.loadAndConnect(configuration.path);
+			var server:Server = new Server("server1");
+			var availConn:AvailableConnection = new AvailableConnection(configuration.ip, configuration.port, configuration.protocol.name);
+			server.addAvailableConnection(availConn);
+			
+			electroServer.engine.addServer(server);
+			electroServer.engine.connect();
 			
 			electroServer.engine.addEventListener(MessageType.ConnectionResponse.name, onConnectionEvent);
 			//electroServer.engine.createConnection(configuration.ip, configuration.port);
-		}
-		
-		private function onServerKick(e:Event):void 
-		{
-			onCloseConnection(null);
-			
 		}
 		
 		public function onConnectionEvent(e:ConnectionResponse):void
@@ -139,6 +146,7 @@ package control
 			}
 			
 			myData.roomId = -1;
+			GameDataTLMN.getInstance().roomId = -1
 			
 			electroServer.engine.removeEventListener(MessageType.UserVariableUpdateEvent.name, onUserVariableUpdateEvent);
 			electroServer.engine.removeEventListener(MessageType.RoomVariableUpdateEvent.name, onRoomVariableUpdateEvent);
@@ -151,7 +159,6 @@ package control
 			electroServer.engine.removeEventListener(MessageType.GetUserVariablesResponse.name, onGetUserInfoResponse);
 			electroServer.engine.removeEventListener(MessageType.GenericErrorResponse.name, onGenericErrorResponse);
 			electroServer.engine.removeEventListener(MessageType.ZoneUpdateEvent.name, onZoneUpdateEvent);
-			electroServer.engine.removeEventListener(MessageType.UserEvictedFromRoomEvent.name, onServerKick);
 			
 			this.dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.CLOSE_CONNECTION));
 		}
@@ -165,58 +172,58 @@ package control
 				break;
 				case CommandTlmn.INVITE_PLAY:
 					var invitePlayObject:Object = new Object();
-					invitePlayObject[DataField.DISPLAY_NAME] = e.esObject.getString(DataField.DISPLAY_NAME);
-					invitePlayObject[DataField.USER_NAME] = e.userName;
-					invitePlayObject[DataField.ROOM_ID] = e.esObject.getInteger(DataField.ROOM_ID);
-					invitePlayObject[DataField.GAME_ID] = e.esObject.getInteger(DataField.GAME_ID);
-					invitePlayObject[DataField.ROOM_PASSWORD] = e.esObject.getString(DataField.ROOM_PASSWORD);
-					invitePlayObject[DataField.MESSAGE] = e.esObject.getString(DataField.MESSAGE);
-					invitePlayObject[DataField.ROOM_BET] = e.esObject.getString(DataField.ROOM_BET);
-					invitePlayObject[DataField.AVATAR] = e.esObject.getString(DataField.AVATAR);
-					invitePlayObject[DataField.MONEY] = e.esObject.getString(DataField.MONEY);
-					invitePlayObject[DataField.SEX] = e.esObject.getString(DataField.SEX);
+					invitePlayObject[DataFieldMauBinh.DISPLAY_NAME] = e.esObject.getString(DataFieldMauBinh.DISPLAY_NAME);
+					invitePlayObject[DataFieldMauBinh.USER_NAME] = e.userName;
+					invitePlayObject[DataFieldMauBinh.ROOM_ID] = e.esObject.getInteger(DataFieldMauBinh.ROOM_ID);
+					invitePlayObject[DataFieldMauBinh.GAME_ID] = e.esObject.getInteger(DataFieldMauBinh.GAME_ID);
+					invitePlayObject[DataFieldMauBinh.ROOM_PASSWORD] = e.esObject.getString(DataFieldMauBinh.ROOM_PASSWORD);
+					invitePlayObject[DataFieldMauBinh.MESSAGE] = e.esObject.getString(DataFieldMauBinh.MESSAGE);
+					invitePlayObject[DataFieldMauBinh.ROOM_BET] = e.esObject.getString(DataFieldMauBinh.ROOM_BET);
+					invitePlayObject[DataFieldMauBinh.AVATAR] = e.esObject.getString(DataFieldMauBinh.AVATAR);
+					invitePlayObject[DataFieldMauBinh.MONEY] = e.esObject.getString(DataFieldMauBinh.MONEY);
+					invitePlayObject[DataFieldMauBinh.SEX] = e.esObject.getString(DataFieldMauBinh.SEX);
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.HAVE_INVITE_PLAY,invitePlayObject));
 				break;
 				case CommandTlmn.INVITE_ADD_FRIEND: // Lời mời kết bạn
 					var inviteAddFriendObject:Object = new Object();
-					inviteAddFriendObject[DataField.DISPLAY_NAME] = e.esObject.getString(DataField.DISPLAY_NAME);
-					inviteAddFriendObject[DataField.USER_NAME] = e.esObject.getString(DataField.USER_NAME);
-					inviteAddFriendObject[DataField.MESSAGE] = e.esObject.getString(DataField.MESSAGE);
+					inviteAddFriendObject[DataFieldMauBinh.DISPLAY_NAME] = e.esObject.getString(DataFieldMauBinh.DISPLAY_NAME);
+					inviteAddFriendObject[DataFieldMauBinh.USER_NAME] = e.esObject.getString(DataFieldMauBinh.USER_NAME);
+					inviteAddFriendObject[DataFieldMauBinh.MESSAGE] = e.esObject.getString(DataFieldMauBinh.MESSAGE);
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.INVITE_ADD_FRIEND, inviteAddFriendObject));
 				break;
 				case CommandTlmn.CONFIRM_ADD_FRIEND_INVITE: // Người khác trả lời yêu cầu kết bạn của mình
 					var confirmAddFriendInviteObject:Object = new Object();
-					confirmAddFriendInviteObject[DataField.DISPLAY_NAME] = e.esObject.getString(DataField.DISPLAY_NAME);
-					confirmAddFriendInviteObject[DataField.USER_NAME] = e.esObject.getString(DataField.USER_NAME);
-					confirmAddFriendInviteObject[DataField.MESSAGE] = e.esObject.getString(DataField.MESSAGE);
-					confirmAddFriendInviteObject[DataField.CONFIRM] = e.esObject.getBoolean(DataField.CONFIRM);
+					confirmAddFriendInviteObject[DataFieldMauBinh.DISPLAY_NAME] = e.esObject.getString(DataFieldMauBinh.DISPLAY_NAME);
+					confirmAddFriendInviteObject[DataFieldMauBinh.USER_NAME] = e.esObject.getString(DataFieldMauBinh.USER_NAME);
+					confirmAddFriendInviteObject[DataFieldMauBinh.MESSAGE] = e.esObject.getString(DataFieldMauBinh.MESSAGE);
+					confirmAddFriendInviteObject[DataFieldMauBinh.CONFIRM] = e.esObject.getBoolean(DataFieldMauBinh.CONFIRM);
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.FRIEND_CONFIRM_ADD_FRIEND_INVITE, confirmAddFriendInviteObject));
 				break;
 				case CommandTlmn.REMOVE_FRIEND: // Người khác xóa mình khỏi danh sách friend
 					var removeFriendObject:Object = new Object();
-					removeFriendObject[DataField.DISPLAY_NAME] = e.esObject.getString(DataField.DISPLAY_NAME);
-					removeFriendObject[DataField.USER_NAME] = e.esObject.getString(DataField.USER_NAME);
-					removeFriendObject[DataField.MESSAGE] = e.esObject.getString(DataField.MESSAGE);
+					removeFriendObject[DataFieldMauBinh.DISPLAY_NAME] = e.esObject.getString(DataFieldMauBinh.DISPLAY_NAME);
+					removeFriendObject[DataFieldMauBinh.USER_NAME] = e.esObject.getString(DataFieldMauBinh.USER_NAME);
+					removeFriendObject[DataFieldMauBinh.MESSAGE] = e.esObject.getString(DataFieldMauBinh.MESSAGE);
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.REMOVE_FRIEND, removeFriendObject));
 				break;
 				case CommandTlmn.REQUEST_TIME_CLOCK: // Người khác request time clock
 					var requestTimeClockObject:Object = new Object();
-					requestTimeClockObject[DataField.USER_NAME] = e.esObject.getString(DataField.USER_NAME);
+					requestTimeClockObject[DataFieldMauBinh.USER_NAME] = e.esObject.getString(DataFieldMauBinh.USER_NAME);
 					dispatchEvent(new ElectroServerEventTlmn(CommandTlmn.REQUEST_TIME_CLOCK, requestTimeClockObject));
 				break;
 				case CommandTlmn.RESPOND_TIME_CLOCK: // Người khác respond time clock
 					var respondTimeClockObject:Object = new Object();
-					respondTimeClockObject[DataField.TIME_CLOCK] = e.esObject.getString(DataField.TIME_CLOCK);
+					respondTimeClockObject[DataFieldMauBinh.TIME_CLOCK] = e.esObject.getString(DataFieldMauBinh.TIME_CLOCK);
 					dispatchEvent(new ElectroServerEventTlmn(CommandTlmn.RESPOND_TIME_CLOCK, respondTimeClockObject));
 				break;
 				case CommandTlmn.REQUEST_IS_COMPARE_GROUP: // Người khác hỏi xem có phải đang đọ chi không
 					var requestIsCompareGroupObject:Object = new Object();
-					requestIsCompareGroupObject[DataField.USER_NAME] = e.esObject.getString(DataField.USER_NAME);
+					requestIsCompareGroupObject[DataFieldMauBinh.USER_NAME] = e.esObject.getString(DataFieldMauBinh.USER_NAME);
 					dispatchEvent(new ElectroServerEventTlmn(CommandTlmn.REQUEST_IS_COMPARE_GROUP, requestIsCompareGroupObject));
 				break;
 				case CommandTlmn.RESPOND_IS_COMPARE_GROUP: // Người khác trả lời có phải đang đọ chi không
 					var respondIsCompareGroupObject:Object = new Object();
-					respondIsCompareGroupObject[DataField.IS_COMPARE_GROUP] = e.esObject.getBoolean(DataField.IS_COMPARE_GROUP);
+					respondIsCompareGroupObject[DataFieldMauBinh.IS_COMPARE_GROUP] = e.esObject.getBoolean(DataFieldMauBinh.IS_COMPARE_GROUP);
 					dispatchEvent(new ElectroServerEventTlmn(CommandTlmn.RESPOND_IS_COMPARE_GROUP, respondIsCompareGroupObject));
 				break;
 				case CommandTlmn.COMPARE_GROUP_COMPLETE: // Người khác thông báo là đã đọ chi xong
@@ -228,20 +235,27 @@ package control
 		
 		public function onPublicMessageEvent(e:PublicMessageEvent):void
 		{
-			trace("onPublicMessageEvent", e.esObject.getString(DataField.COMMAND));
+			//trace("onPublicMessageEvent");
 			var i:int;
 			var startGameObject:Object;
-			switch(e.esObject.getString(DataField.COMMAND))
+			switch(e.esObject.getString(DataFieldMauBinh.COMMAND))
 			{
-				case CommandTlmn.HEART_BEAT:
-					trace("da ping len server")
-				break;
 				case CommandTlmn.PUBLIC_CHAT:
 					var publicChatObject:Object = new Object();
-					publicChatObject[DataField.USER_NAME] = e.userName;
-					publicChatObject[DataField.DISPLAY_NAME] = e.esObject.getString(DataField.DISPLAY_NAME);
-					publicChatObject[DataField.CHAT_CONTENT] = e.esObject.getString(DataField.CHAT_CONTENT);
-					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.PUBLIC_CHAT,publicChatObject));
+					publicChatObject[DataFieldMauBinh.USER_NAME] = e.userName;
+					publicChatObject[DataFieldMauBinh.DISPLAY_NAME] = e.esObject.getString(DataField.DISPLAY_NAME);
+					publicChatObject[DataFieldMauBinh.CHAT_CONTENT] = e.esObject.getString(DataField.CHAT_CONTENT);
+					if (e.esObject.doesPropertyExist(DataField.IS_EMO)) 
+					{
+						publicChatObject[DataField.IS_EMO] = e.esObject.getBoolean(DataField.IS_EMO);
+					}
+					else 
+					{
+						publicChatObject[DataField.IS_EMO] = false;
+					}
+					
+					
+					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.PUBLIC_CHAT, publicChatObject));
 				break;
 				case CommandTlmn.READY:
 					var readyObject:Object = new Object();
@@ -260,7 +274,8 @@ package control
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.START_GAME_SUCCESS,startGameObject));
 				break;
 				case CommandTlmn.NEXTTURN://bo luot
-					
+						
+					//trace("co thang bo luot public: ", e.esObject.getString("playerName"))
 					var playerNextTurn:String = e.esObject.getString("playerName");
 					var objNextturn:Object = new Object();
 					objNextturn["user"] = playerNextTurn;
@@ -325,9 +340,8 @@ package control
 					obj["plus"] = arrPlus;
 					obj["sub"] = arrSub;
 					
-					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_MONEY, obj));
+					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_MONEY_SPECIAL, obj));
 				break;
-				
 			}
 		}
 		
@@ -338,6 +352,15 @@ package control
 			var loginRequest:LoginRequest = new LoginRequest();
 			loginRequest.userName = userName;
 			loginRequest.password = password;
+			var tempEsObject:EsObject = new EsObject();
+			tempEsObject.setString(DataFieldMauBinh.CHANNEL_ID, String(mainData.currentChannelId));
+			if (mainData.isFacebookVersion)
+				tempEsObject.setString(DataFieldMauBinh.DEVICE_ID, "fb");
+			else if (mainData.isOnAndroid)
+				tempEsObject.setString(DataFieldMauBinh.DEVICE_ID, "android");
+			else
+				tempEsObject.setString(DataFieldMauBinh.DEVICE_ID, "ios");
+			loginRequest.esObject = tempEsObject;
 			electroServer.engine.send(loginRequest);
 		}
 		
@@ -347,6 +370,13 @@ package control
 			if (e.successful)
 			{
 				this.dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.LOGIN_SUCCESS));
+				
+				/*var uuvr:UpdateUserVariableRequest = new UpdateUserVariableRequest();
+				uuvr.name = DataFieldMauBinh.OTHER_INFO;
+				uuvr.value = new EsObject();
+				uuvr.value.setString(DataFieldMauBinh.SEX, mainData.chooseChannelData.myInfo.sex);
+				electroServer.engine.send(uuvr);*/
+		
 			} else {
 				this.dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.LOGIN_FAIL));
 			}
@@ -355,33 +385,32 @@ package control
 		// sau khi login thì join lobby
 		public function joinLobbyRoom(gameName:String, channelId:int, capacity:int = 200): void
 		{
-			leaveRoom();
 			myData.channelId = channelId;
-			
+			GameDataTLMN.getInstance().channelId = channelId;
 			var description:String = "Phòng lobby của game: " + gameName + " tại kênh có id là: " + channelId;
-			//joinRoom(myData.lobbyName, "", description, null, capacity);
 			joinRoom(GameDataTLMN.getInstance().gameName, "", description, null, capacity);
 		}
 		
 		// join lobbyRoom thành công
 		public function onJoinLobbyRoomEvent(e:JoinRoomEvent):void
 		{
+			trace("onJoinLobbyRoomEvent onJoinLobbyRoomEvent onJoinLobbyRoomEvent");
 			electroServer.engine.removeEventListener(MessageType.JoinRoomEvent.name, onJoinLobbyRoomEvent);
 			
 			dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.JOIN_LOBBY_ROOM_SUCCESS));
 			
 			myData.zoneId = e.zoneId;
 			myData.roomId = e.roomId;
+			myData.saveUserList = new Object();
 			
 			GameDataTLMN.getInstance().zoneId = e.zoneId;
 			GameDataTLMN.getInstance().roomId = e.roomId;
 			
-			myData.saveUserList = new Object();
-			
-			// Gửi pluginRequest lên lấy thông tin friendList
-			/*var pluginMessage:EsObject = new EsObject();
-			pluginMessage.setString("command", Command.GET_FRIEND_LIST);
-			sendPluginRequest(myData.zoneId, myData.lobbyRoomId, myData.lobbyPluginName, pluginMessage);*/
+			 //Gửi pluginRequest lên lấy thông tin friendList
+			var pluginMessage:EsObject = new EsObject();
+			pluginMessage.setString("command", CommandTlmn.GET_FRIEND_LIST);
+			sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().lobbyRoomId, 
+			GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);
 			
 			electroServer.engine.addEventListener(MessageType.UserVariableUpdateEvent.name, onUserVariableUpdateEvent);
 			electroServer.engine.addEventListener(MessageType.RoomVariableUpdateEvent.name, onRoomVariableUpdateEvent);
@@ -403,34 +432,29 @@ package control
 			getRoomList()
 		}
 		
+		public function getFriendList():void
+		{
+			var pluginMessage:EsObject = new EsObject();
+			pluginMessage.setString("command", CommandTlmn.GET_FRIEND_LIST);
+			sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().lobbyRoomId,
+			GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);
+		}
+		
 		public function getRoomList():void
 		{
-			/*if (mainData.isNoRenderLobbyList)
-				return;
-			
-			var currentTime:Number = (new Date()).getTime();
-			if (currentTime - mainData.lastTimeMouseMove > 4000)
-				return;
-			
-			trace("getRoomList aaaaaaaaaaaa");
-			
-			mainData.lastTimeGetRoomList = currentTime;*/
+			/*if (GameDataTLMN.getInstance().isNoRenderLobbyList)
+				return;*/
 				
-			/*var pluginMessage:EsObject = new EsObject();
-			pluginMessage.setString("command", Command.GET_ROOM_LIST);
-			sendPluginRequest(myData.zoneId, myData.roomId, "LobbyMauBinhPlugin", pluginMessage);*/
-			
 			var pluginMessage:EsObject = new EsObject();
 			pluginMessage.setString("command", CommandTlmn.GET_ROOM_LIST);
-			trace("tim room moi: ", GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().roomId)
-			sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().roomId, 
+			sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().roomId,
 								GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);
 				
 			/*myData.countGame = 0;
 			myData.roomList = new Object();
 			var findGame:FindGamesRequest = new FindGamesRequest();
 			var search:SearchCriteria = new SearchCriteria();
-			search.gameType = myData.gameType;
+			search.gameType = zoneigameType;
 			search.gameId = -1;
 			findGame.searchCriteria = search;
 			electroServer.engine.send(findGame);*/
@@ -477,7 +501,7 @@ package control
 				break;
 				
 				case CommandTlmn.GET_PLAYING_INFO: // lấy thông tin của các người chơi trong phòng chơi
-					trace(e.parameters, "+++++++++++++++++++++++++++++++++++++")
+					//trace(e.parameters, "+++++++++++++++++++++++++++++++++++++")
 					var userList:Array = [];
 					
 					var tempUserList:Array = e.parameters.getEsObjectArray(DataField.PLAYER_LIST);
@@ -493,7 +517,7 @@ package control
 						{
 							object[DataField.NUM_CARD] = EsObject(tempUserList[i]).getInteger(DataField.NUM_CARD);
 						}
-						trace(user.userVariableByName(DataField.USER_INFO).value.getString(DataField.SEX))
+						//trace(user.userVariableByName(DataField.USER_INFO).value.getString(DataField.SEX))
 						if (user.userVariableByName(DataField.USER_INFO).value.getString(DataField.SEX) == "M") 
 						{
 							object[DataField.SEX] = true;
@@ -518,10 +542,13 @@ package control
 						//if (EsObject(tempUserList[i]).doesPropertyExist(DataField.LEVEL))
 						object[DataField.LEVEL] = user.userVariableByName(DataField.USER_INFO).value.getString(DataField.LEVEL);
 						object[DataField.MONEY] = user.userVariableByName(DataField.USER_INFO).value.getString(DataField.MONEY);
+						object[DataField.DEVICE_ID] = user.userVariableByName(DataField.USER_INFO).value.getString(DataField.DEVICE_ID);
 						//object[DataField.CASH] = myData.userList[userName][DataField.USER_INFO][DataField.CASH];
+						object[DataField.IP] = user.userVariableByName(DataField.USER_INFO).value.getString(DataField.IP);
 						object[DataField.AVATAR] = user.userVariableByName(DataField.USER_INFO).value.getString(DataField.AVATAR);
 						object[DataField.DISPLAY_NAME] = EsObject(tempUserList[i]).getString(DataField.DISPLAY_NAME);
-						
+						object[DataField.WIN] = user.userVariableByName(DataField.USER_INFO).value.getInteger(DataField.WIN);
+						object[DataField.LOSE] = user.userVariableByName(DataField.USER_INFO).value.getInteger(DataField.LOSE);
 						//object[DataField.DEVICE] = myData.userList[userName][DataField.USER_INFO][DataField.DEVICE];
 						userList.push(object);
 					}
@@ -535,19 +562,6 @@ package control
 					GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_MASTER] = e.parameters.getString("roomMaster");
 					GameDataTLMN.getInstance().master = e.parameters.getString("roomMaster");
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.JOIN_GAME_ROOM_SUCCESS, GameDataTLMN.getInstance().gameRoomInfo));
-				break;
-				case CommandTlmn.NEXTTURN://bo luot
-					
-					var playerNextTurn:String = e.parameters.getString("playerName");
-					var objNextturn:Object = new Object();
-					objNextturn["user"] = playerNextTurn;
-					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.NEXTTURN, objNextturn));
-				break;
-				
-				case CommandTlmn.ENDROUND:
-					GameDataTLMN.getInstance().finishRound = true;
-					GameDataTLMN.getInstance().firstPlayer = e.parameters.getString("userName");
-					//dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.END_ROUND, GameDataTLMN.getInstance().currentPlayer));
 				break;
 				
 				case CommandTlmn.WINNER:
@@ -569,6 +583,12 @@ package control
 						dealCardObject[DataField.PLAYER_CARDS] = e.parameters.getIntegerArray(DataField.PLAYER_CARDS);
 						var cardArray:Array = dealCardObject[DataField.PLAYER_CARDS];
 						
+					}
+					
+					if (e.parameters.doesPropertyExist("isFirst"))
+					{
+						GameDataTLMN.getInstance().firstPlayer = MyDataTLMN.getInstance().myId;
+						GameDataTLMN.getInstance().firstGame = e.parameters.getBoolean("isFirst");
 					}
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.DEAL_CARD, dealCardObject));
 				break;
@@ -608,7 +628,7 @@ package control
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.GAME_OVER, resultData));
 				break;
 				
-				/*case Command.UPDATE_ROOM_MASTER: // kết quả trả về của hành động ăn bài
+				/*case CommandTlmn.UPDATE_ROOM_MASTER: // kết quả trả về của hành động ăn bài
 					var roomMasterObject:Object = new Object();
 					roomMasterObject[DataField.ROOM_MASTER] = e.parameters.getString(DataField.ROOM_MASTER);
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_ROOM_MASTER, roomMasterObject));
@@ -621,6 +641,7 @@ package control
 						addFriendObject[DataField.FRIEND_ID] = e.parameters.getString(DataField.FRIEND_ID);
 						dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.SEND_ADD_FRIEND_SUCCESS, addFriendObject));
 					}
+					getFriendList();
 				break; 
 				case CommandTlmn.CONFIRM_FRIEND_REQUEST: // Xác nhận với server đồng ý hay từ chối lời mời kết bạn
 					isSuccess = e.parameters.getBoolean("success");
@@ -637,20 +658,69 @@ package control
 						dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.CONFIRM_FRIEND_REQUEST, confirmFriendRequestObject));
 					}
 				break;
-				/*case Command.GET_FRIEND_LIST: // Get danh sách bạn bè
+				case CommandTlmn.GET_FRIEND_LIST: // Get danh sách bạn bè
 					myData.friendList = new Object();
-					var friendList:Array = e.parameters.getEsObjectArray(DataField.FRIEND_LIST);
+					GameDataTLMN.getInstance().friendList = new Object();
+					var friendList:Array = e.parameters.getEsObjectArray(DataFieldMauBinh.FRIEND_LIST);
 					var friendObject:Object;
+					var userData:UserDataULC;
+					tempUserList = new Array();
 					for (i = 0; i < friendList.length; i++) 
 					{
-						myData.friendList[EsObject(friendList[i]).getString(DataField.USER_NAME)] = new Object();
-						myData.friendList[EsObject(friendList[i]).getString(DataField.USER_NAME)][DataField.DISPLAY_NAME] = EsObject(friendList[i]).getString(DataField.DISPLAY_NAME);
+						userData = new UserDataULC();
+						userData.isJoinRoom = true;
+						userData.isViewPersonalInfo = true;
+						userData.isMakeFriend = true;
+						userData.moneyLogoUrl = '';
+						userData.displayName = EsObject(friendList[i]).getString(DataFieldMauBinh.DISPLAY_NAME);
+						userData.levelName = EsObject(friendList[i]).getString(DataFieldMauBinh.LEVEL);
+						userData.userID = EsObject(friendList[i]).getString(DataFieldMauBinh.USER_NAME);
+						userData.userName = EsObject(friendList[i]).getString(DataFieldMauBinh.USER_NAME);
+						userData.isOnline = EsObject(friendList[i]).getBoolean(DataFieldMauBinh.ONLINE);
+						if (userData.isOnline)
+						{
+							userData.roomID = int(EsObject(friendList[i]).getString("room_id"));
+							
+							switch (EsObject(friendList[i]).getString("game_id")) 
+							{
+								case "AZGB_BINH":
+									userData.gameId = MainData.MAUBINH_ID;
+								break;
+								case "AZGB_PHOM":
+									userData.gameId = MainData.PHOM_ID;
+								break;
+								case "AZGB_TLMN":
+									userData.gameId = MainData.TLMN_ID;
+								break;
+								default:
+							}
+						}
+						
+						if (!EsObject(friendList[i]).doesPropertyExist(DataFieldMauBinh.LOSE))
+							userData.lose = 0;
+						else
+							userData.lose = EsObject(friendList[i]).getInteger(DataFieldMauBinh.LOSE);
+						if (!EsObject(friendList[i]).doesPropertyExist(DataFieldMauBinh.WIN))
+							userData.win = 0;
+						else
+							userData.win = EsObject(friendList[i]).getInteger(DataFieldMauBinh.WIN);
+							
+						userData.money = EsObject(friendList[i]).getString(DataFieldMauBinh.MONEY);
+						
+						userData.avatar = EsObject(friendList[i]).getString(DataFieldMauBinh.AVATAR);
+						userData.isFriend = true;
+						
+						if (userData.userName != mainData.chooseChannelData.myInfo.uId)
+							tempUserList.push(userData);
 					}
-				break;*/
-				case CommandTlmn.REMOVE_FRIEND: // Server confirm remove friend
-					trace("aaaaaaaaaaaaaaaaaaaaa");
+					GameDataTLMN.getInstance().friendList[DataField.FRIEND_LIST] = tempUserList;
+					mainData.lobbyRoomData.friendList = tempUserList;
 				break;
-				/*case Command.ADD_CIAO: // add ciao khi hết tiền
+				case CommandTlmn.REMOVE_FRIEND: // Server confirm remove friend
+					//trace("aaaaaaaaaaaaaaaaaaaaa");
+					getFriendList();
+				break;
+				/*case CommandTlmn.ADD_CIAO: // add ciao khi hết tiền
 					var addCiaoObject:Object = new Object();
 					addCiaoObject[DataField.SUCCESS] = e.parameters.getBoolean(DataField.ADD_CIAO);
 					addCiaoObject[DataField.NUMBER] = e.parameters.getInteger(DataField.NUMBER);
@@ -733,137 +803,9 @@ package control
 					obj["plus"] = arrPlus;
 					obj["sub"] = arrSub;
 					
-					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_MONEY, obj));
-				break;
-				case "bccGetMoney": //chuyen bai
-					var objGetResult:Object = new Object();
-					objGetResult["dice1"] = e.parameters.getInteger("dice1");
-					objGetResult["dice2"] = e.parameters.getInteger("dice2");
-					objGetResult["dice3"] = e.parameters.getInteger("dice3");
-					objGetResult["winMoney"] = e.parameters.getInteger("winMoney");
-					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.GET_MONEY, objGetResult));
-				break;
-				case CommandTlmn.ERROR:
-					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.ERROR));
+					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_MONEY_SPECIAL, obj));
 				break;
 				
-				case "getListAvatar": //chuyen bai
-					
-					/*for each (var esObj:EsObject in e.parameters.getEsObjectArray("list")) 
-					{
-						var arrAvatar:Array = [];
-						arrAvatar["id"] = esObj.getInteger("id");
-						arrAvatar["name"] = esObj.getString("name");
-						arrAvatar["price"] = esObj.getInteger("price");
-						arrAvatar["url"] = esObj.getString("url");
-						
-						GameDataTLMN.getInstance().arrListAvatar.push(arrAvatar);
-					}*/
-				break;
-				case "getListFrame": //chuyen bai
-					
-					/*for each (var esObjFrame:EsObject in e.parameters.getEsObjectArray("list")) 
-					{
-						var arrFrame:Array = [];
-						arrFrame["id"] = esObjFrame.getInteger("id");
-						arrFrame["name"] = esObjFrame.getString("name");
-						arrFrame["price"] = esObjFrame.getInteger("price");
-						arrFrame["url"] = esObjFrame.getString("url");
-						
-						mainData.arrListFrame.push(arrFrame);
-					}*/
-				break;
-				
-				case "buyAvatar": //chuyen bai
-					//mainData.noticeBuySuccess = "Bạn đã mua nhân vật này thành công";
-					
-				break;
-				
-				case "buyFrame": //chuyen bai
-					
-					//mainData.noticeBuySuccess = "Bạn đã mua khung ảnh thành công";
-				break;
-				
-				case "getMyAvatar": //chuyen bai
-						/*var arrMyAvatar:Array = [];
-						mainData.arrMyAvatar = [];
-						if (mainData.arrMyAvatar.length == 0) 
-						{
-							if (mainData.mySex) 
-							{
-								arrMyAvatar["url"] = "http://183.91.14.52/gamebai/public/shop/avatar/default_2.png";
-								arrMyAvatar["name"] = "Ho Be";
-								arrMyAvatar["id"] = 1;
-							}
-							else 
-							{
-								arrMyAvatar["url"] = "http://183.91.14.52/gamebai/public/shop/avatar/default_1.png";
-								arrMyAvatar["name"] = "Pê Ka";
-								arrMyAvatar["id"] = 2;
-							}
-							
-							
-							mainData.arrMyAvatar.push(arrMyAvatar);
-						}
-						
-					
-					for each (var esObjMyAvatar:EsObject in e.parameters.getEsObjectArray("list")) 
-					{
-						arrMyAvatar = [];
-						
-						arrMyAvatar["url"] = esObjMyAvatar.getString("url");
-						if (esObjMyAvatar.doesPropertyExist("name")) 
-						{
-							arrMyAvatar["name"] = esObjMyAvatar.getString("name");
-						}
-						if (esObjMyAvatar.doesPropertyExist("id")) 
-						{
-							arrMyAvatar["id"] = esObjMyAvatar.getInteger("id");
-						}
-						
-						mainData.arrMyAvatar.push(arrMyAvatar);
-					}*/
-				break;
-				case "getMyFrame": //chuyen bai
-						/*var arrMyFrame:Array = [];
-						mainData.arrMyFrame = [];
-						if (mainData.arrMyFrame.length == 0) 
-						{
-							
-							arrMyFrame["url"] = "http://183.91.14.52/gamebai/public/shop/frame/frame_default.png";
-							arrMyFrame["name"] = "Khung mặc định";
-							arrMyFrame["id"] = 1;
-							mainData.arrMyFrame.push(arrMyFrame);
-						}
-						
-					
-					for each (var esObjMyFrame:EsObject in e.parameters.getEsObjectArray("list")) 
-					{
-						arrMyFrame = [];
-						
-						arrMyFrame["url"] = esObjMyFrame.getString("url");
-						if (esObjMyFrame.doesPropertyExist("name")) 
-						{
-							arrMyFrame["name"] = esObjMyFrame.getString("name");
-						}
-						if (esObjMyFrame.doesPropertyExist("id")) 
-						{
-							arrMyFrame["id"] = esObjMyFrame.getInteger("id");
-						}
-						
-						mainData.arrMyFrame.push(arrMyFrame);
-					}*/
-				break;
-				
-				case "setAvatar": //chuyen bai
-					//mainData.noticeUseSuccess = "Bạn đã sử dụng nhân vật này thành công";
-					
-				break;
-				
-				case "setFrame": //chuyen bai
-					
-					//mainData.noticeUseSuccess = "Bạn đã sử dụng khung ảnh này thành công";
-				break;
 				case CommandTlmn.GET_ROOM_LIST: // update roomList và userList
 					var roomList:Array = e.parameters.getEsObjectArray(DataField.ROOM_LIST);
 					GameDataTLMN.getInstance().roomList = new Object();
@@ -874,33 +816,50 @@ package control
 						var roomId:int = EsObject(roomList[i]).getInteger(DataField.ROOM_ID);
 						GameDataTLMN.getInstance().roomList[roomId] = new Object();
 						//GameDataTLMN.getInstance().roomList[roomId][DataField.IS_SEND_CARD] = gameDetails.getBoolean(DataField.IS_SEND_CARD);
-						GameDataTLMN.getInstance().roomList[roomId][DataField.ROOM_BET] = gameDetails.getString(DataField.ROOM_BET);
-						GameDataTLMN.getInstance().roomList[roomId][DataField.ROOM_NAME] = gameDetails.getString(DataField.ROOM_NAME);
-						GameDataTLMN.getInstance().roomList[roomId][DataField.GAME_ID] = EsObject(roomList[i]).getInteger(DataField.GAME_ID);
-						GameDataTLMN.getInstance().roomList[roomId][DataField.HAS_PASSWORD] = EsObject(roomList[i]).getBoolean(DataField.HAS_PASSWORD);
-						GameDataTLMN.getInstance().roomList[roomId][DataField.USERS_NUMBER] = EsObject(roomList[i]).getEsObjectArray(DataField.USER_LIST).length;
+						GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.ROOM_BET] = gameDetails.getString(DataFieldMauBinh.ROOM_BET);
+						GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.ROOM_NAME] = gameDetails.getString(DataFieldMauBinh.ROOM_NAME);
+						GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.GAME_ID] = EsObject(roomList[i]).getInteger(DataFieldMauBinh.GAME_ID);
+						GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.HAS_PASSWORD] = EsObject(roomList[i]).getBoolean(DataFieldMauBinh.HAS_PASSWORD);
+						GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.USERS_NUMBER] = EsObject(roomList[i]).getEsObjectArray(DataFieldMauBinh.USER_LIST).length;
+						GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.MALE] = 0;
+						GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.MAX_PLAYER] = gameDetails.getInteger(DataFieldMauBinh.MAX_PLAYER);
 						userList = EsObject(roomList[i]).getEsObjectArray(DataField.USER_LIST);
+						
 						for (j = 0; j < userList.length; j++) 
 						{
-							userName = EsObject(userList[j]).getString(DataField.USER_NAME);
+							userName = EsObject(userList[j]).getString(DataFieldPhom.USER_NAME);
 							GameDataTLMN.getInstance().userList[userName] = new Object();
-							object = convertEsObject(EsObject(userList[j]).getEsObject(DataField.USER_INFO));
-							GameDataTLMN.getInstance().userList[userName][DataField.USER_INFO] = object;
-							GameDataTLMN.getInstance().userList[userName][DataField.ROOM_ID] = roomId;
+							object = convertEsObject(EsObject(userList[j]).getEsObject(DataFieldPhom.USER_INFO));
+							if (object[DataFieldPhom.SEX] == 'M')
+								GameDataTLMN.getInstance().roomList[roomId][DataFieldPhom.MALE]++;
+							GameDataTLMN.getInstance().userList[userName][DataFieldPhom.USER_INFO] = object;
+							GameDataTLMN.getInstance().userList[userName][DataFieldPhom.ROOM_ID] = roomId;
 						}
+						
 					}
 					
+					//trace("GameDataTLMN.getInstance().zoneId", GameDataTLMN.getInstance().zoneId)
 					var zone:Zone = electroServer.managerHelper.zoneManager.zoneById(GameDataTLMN.getInstance().zoneId);
 					var room:Room = zone.roomById(GameDataTLMN.getInstance().lobbyRoomId);
 					var userListInLobby:Array = room.users;
 					for (i = 0; i < userListInLobby.length; i++) 
 					{
+						
 						userName = User(userListInLobby[i]).userName;
-						object = convertEsObject(UserVariable(User(userListInLobby[i]).userVariableByName(DataField.USER_INFO)).value);
+						object = convertEsObject(UserVariable(User(userListInLobby[i]).userVariableByName(DataFieldMauBinh.USER_INFO)).value);
+						if (!object[DataFieldMauBinh.SEX])
+							object[DataFieldMauBinh.SEX] = 'M';
 						GameDataTLMN.getInstance().userList[userName] = new Object();
-						GameDataTLMN.getInstance().userList[userName][DataField.ROOM_ID] = 0;
-						GameDataTLMN.getInstance().userList[userName][DataField.USER_INFO] = object;
+						GameDataTLMN.getInstance().userList[userName][DataFieldMauBinh.ROOM_ID] = mainData.lobbyRoomId;
+						GameDataTLMN.getInstance().userList[userName][DataFieldMauBinh.USER_INFO] = object;
+						if (!object[DataFieldMauBinh.LOSE])
+							object[DataFieldMauBinh.LOSE] = 0;
+						if (!object[DataFieldMauBinh.WIN])
+							object[DataFieldMauBinh.WIN] = 0;
 					}
+					
+					myData.roomList = GameDataTLMN.getInstance().roomList;
+					myData.userList = GameDataTLMN.getInstance().userList;
 					
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST, GameDataTLMN.getInstance().userList));
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_ROOM_LIST, GameDataTLMN.getInstance().roomList));
@@ -915,19 +874,23 @@ package control
 			invitePlay.userNames = invitedNameArray;
 			invitePlay.message = CommandTlmn.INVITE_PLAY;
 			var message:EsObject = new EsObject();
-			message.setString(DataField.DISPLAY_NAME, infoObject[DataField.DISPLAY_NAME]);
-			message.setString(DataField.USER_NAME, infoObject[DataField.USER_NAME]);
-			message.setInteger(DataField.ROOM_ID, myData.gameRoomInfo[DataField.ROOM_ID]);
-			message.setInteger(DataField.GAME_ID, myData.gameRoomInfo[DataField.GAME_ID]);
-			message.setString(DataField.ROOM_PASSWORD, infoObject[DataField.ROOM_PASSWORD]);
-			message.setString(DataField.ROOM_BET, infoObject[DataField.ROOM_BET]);
-			message.setString(DataField.MESSAGE, infoObject[DataField.MESSAGE]);
-			message.setString(DataField.MONEY, infoObject[DataField.MONEY]);
-			message.setString(DataField.AVATAR, infoObject[DataField.AVATAR]);
-			message.setString(DataField.SEX, infoObject[DataField.SEX]);
+			message.setString(DataFieldMauBinh.DISPLAY_NAME, infoObject[DataFieldMauBinh.DISPLAY_NAME]);
+			message.setString(DataFieldMauBinh.USER_NAME, infoObject[DataFieldMauBinh.USER_NAME]);
+			message.setInteger(DataFieldMauBinh.ROOM_ID, myData.gameRoomInfo[DataFieldMauBinh.ROOM_ID]);
+			message.setInteger(DataFieldMauBinh.GAME_ID, myData.gameRoomInfo[DataFieldMauBinh.GAME_ID]);
+			message.setString(DataFieldMauBinh.ROOM_PASSWORD, infoObject[DataFieldMauBinh.ROOM_PASSWORD]);
+			message.setString(DataFieldMauBinh.ROOM_BET, infoObject[DataFieldMauBinh.ROOM_BET]);
+			message.setString(DataFieldMauBinh.MESSAGE, infoObject[DataFieldMauBinh.MESSAGE]);
+			message.setString(DataFieldMauBinh.MONEY, infoObject[DataFieldMauBinh.MONEY]);
+			message.setString(DataFieldMauBinh.AVATAR, infoObject[DataFieldMauBinh.AVATAR]);
+			message.setString(DataFieldMauBinh.SEX, infoObject[DataFieldMauBinh.SEX]);
 			
 			invitePlay.esObject = message;
-			electroServer.engine.send(invitePlay);
+			if (electroServer.engine.connected) 
+			{
+				electroServer.engine.send(invitePlay);
+			}
+			
 		}
 		
 		public function sendPrivateMessage(invitedNameArray:Array, command:String, esObject:EsObject):void
@@ -937,7 +900,11 @@ package control
 			privateMessageRequest.message = command;
 			
 			privateMessageRequest.esObject = esObject;
-			electroServer.engine.send(privateMessageRequest);
+			if (electroServer.engine.connected) 
+			{
+				electroServer.engine.send(privateMessageRequest);
+			}
+			
 		}
 		
 		public function onLeaveRoomEvent(e:LeaveRoomEvent):void
@@ -956,7 +923,7 @@ package control
 						if (isMe)
 						{
 							var kickedObject:Object = new Object();
-							kickedObject[DataField.USER_NAME] = e.userName;
+							kickedObject[DataFieldMauBinh.USER_NAME] = e.userName;
 							dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.ROOM_MASTER_KICK, kickedObject));
 						}
 					}
@@ -979,53 +946,39 @@ package control
 		public function kickUser(userName:String):void
 		{
 			var esObject:EsObject = new EsObject();
-			esObject.setString(DataField.USER_NAME, userName);
+			esObject.setString(DataFieldMauBinh.USER_NAME, userName);
 			sendPublicMessage(CommandTlmn.KICK_USER, esObject);
 		}
 		
-		public function makeFriend(userName:String, roomType:String):void
+		public function addFriend(userName:String, roomType:String):void
 		{
 			// Gửi pluginRequest lên lấy thông tin friendList
-			/*var pluginMessage:EsObject = new EsObject();
-			pluginMessage.setString("command", Command.ADD_FRIEND);
-			pluginMessage.setString(DataField.FRIEND_ID, userName);
-			pluginMessage.setString(DataField.REQUEST_CONTENT, "aaaa");
-			
-			if (roomType == DataField.IN_LOBBY)
-				sendPluginRequest(myData.zoneId, myData.lobbyRoomId, myData.lobbyPluginName, pluginMessage);
-			else if (roomType == DataField.IN_GAME_ROOM)
-				sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, pluginMessage);*/
 			var pluginMessage:EsObject = new EsObject();
 			pluginMessage.setString("command", CommandTlmn.ADD_FRIEND);
-			pluginMessage.setString(DataField.FRIEND_ID, userName);
-			pluginMessage.setString(DataField.REQUEST_CONTENT, "aaaa");
+			pluginMessage.setString(DataFieldMauBinh.FRIEND_ID, userName);
+			pluginMessage.setString(DataFieldMauBinh.REQUEST_CONTENT, "aaaa");
 			
-			if (roomType == DataField.IN_LOBBY)
-				sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().lobbyRoomId, GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);
-			else if (roomType == DataField.IN_GAME_ROOM)
-				sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().roomId, GameDataTLMN.getInstance().gameType, pluginMessage);
+			if (roomType == DataFieldMauBinh.IN_LOBBY)
+				sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().lobbyRoomId, 
+									GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);
+			else if (roomType == DataFieldMauBinh.IN_GAME_ROOM)
+				sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().roomId, 
+									GameDataTLMN.getInstance().gameType, pluginMessage);
 		}
 		
 		public function removeFriend(userName:String, roomType:String):void
 		{
 			// Gửi pluginRequest lên lấy thông tin friendList
-			/*var pluginMessage:EsObject = new EsObject();
-			pluginMessage.setString("command", Command.REMOVE_FRIEND);
-			pluginMessage.setString(DataField.FRIEND_ID, userName);
-			
-			if (roomType == DataField.IN_LOBBY)
-				sendPluginRequest(myData.zoneId, myData.lobbyRoomId, myData.lobbyPluginName, pluginMessage);
-			else if (roomType == DataField.IN_GAME_ROOM)
-				sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, pluginMessage);*/
-				
 			var pluginMessage:EsObject = new EsObject();
 			pluginMessage.setString("command", CommandTlmn.REMOVE_FRIEND);
-			pluginMessage.setString(DataField.FRIEND_ID, userName);
+			pluginMessage.setString(DataFieldMauBinh.FRIEND_ID, userName);
 			
-			if (roomType == DataField.IN_LOBBY)
-				sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().lobbyRoomId, GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);
-			else if (roomType == DataField.IN_GAME_ROOM)
-				sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().roomId, GameDataTLMN.getInstance().gameType, pluginMessage);
+			if (roomType == DataFieldMauBinh.IN_LOBBY)
+				sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().lobbyRoomId, 
+									GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);
+			else if (roomType == DataFieldMauBinh.IN_GAME_ROOM)
+				sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().roomId, 
+									GameDataTLMN.getInstance().gameType, pluginMessage);
 		}
 		
 		public function addMoney():void
@@ -1033,30 +986,32 @@ package control
 			// Gửi pluginRequest lên để request nạp tiền
 			var pluginMessage:EsObject = new EsObject();
 			pluginMessage.setString("command", CommandTlmn.ADD_MONEY);
-			sendPluginRequest(myData.zoneId, myData.lobbyRoomId, myData.lobbyPluginName, pluginMessage);
+			sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().lobbyRoomId, 
+								GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);
 		}
 		
 		public function updateMoney():void
 		{
-			if (myData.roomId == -1)
+			if (GameDataTLMN.getInstance().roomId == -1)
 				return;
 			// Gửi pluginRequest lên để request nạp tiền
 			var pluginMessage:EsObject = new EsObject();
 			pluginMessage.setString("command", CommandTlmn.REFRESH_MONEY);
 			if (myData.roomId == myData.lobbyRoomId)
-				sendPluginRequest(myData.zoneId, myData.roomId, myData.lobbyPluginName, pluginMessage);
+				sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().roomId, 
+				GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);
 			else
-				sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, pluginMessage);
+				sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().roomId, 
+				GameDataTLMN.getInstance().gameType, pluginMessage);
 		}
 		
 		public function orderCard(arr1:Array,arr2:Array,arr3:Array,arr4:Array):void
 		{
 			var esObject:EsObject = new EsObject();
-			esObject.setString(DataField.COMMAND, CommandTlmn.START_GAME_1);
-			esObject.setIntegerArray(DataField.CARD_ARRAY_1, arr1);
-			esObject.setIntegerArray(DataField.CARD_ARRAY_2, arr2);
-			esObject.setIntegerArray(DataField.CARD_ARRAY_3, arr3);
-			esObject.setIntegerArray(DataField.CARD_ARRAY_4, arr4);
+			esObject.setIntegerArray(DataFieldMauBinh.CARD_ARRAY_1, arr1);
+			esObject.setIntegerArray(DataFieldMauBinh.CARD_ARRAY_2, arr2);
+			esObject.setIntegerArray(DataFieldMauBinh.CARD_ARRAY_3, arr3);
+			esObject.setIntegerArray(DataFieldMauBinh.CARD_ARRAY_4, arr4);
 			sendPublicMessage(CommandTlmn.START_GAME_1, esObject);
 		}
 		
@@ -1065,13 +1020,15 @@ package control
 			// Gửi pluginRequest lên xác nhận đồng ý kết bạn
 			var pluginMessage:EsObject = new EsObject();
 			pluginMessage.setString("command", CommandTlmn.CONFIRM_FRIEND_REQUEST);
-			pluginMessage.setString(DataField.FRIEND_ID, userName);
-			pluginMessage.setBoolean(DataField.CONFIRM, isAccept);
+			pluginMessage.setString(DataFieldMauBinh.FRIEND_ID, userName);
+			pluginMessage.setBoolean(DataFieldMauBinh.CONFIRM, isAccept);
 			
-			if (roomType == DataField.IN_LOBBY)
-				sendPluginRequest(myData.zoneId, myData.lobbyRoomId, myData.lobbyPluginName, pluginMessage);
-			else if (roomType == DataField.IN_GAME_ROOM)
-				sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, pluginMessage);
+			if (roomType == DataFieldMauBinh.IN_LOBBY)
+				sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().lobbyRoomId, 
+				GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);
+			else if (roomType == DataFieldMauBinh.IN_GAME_ROOM)
+				sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().roomId,
+				GameDataTLMN.getInstance().gameType, pluginMessage);
 		}
 		
 		// có sự kiện update userList trong phòng
@@ -1080,7 +1037,9 @@ package control
 			var zoneId:int = e.zoneId;
 			var roomId:int = e.roomId;
 			var zone:Zone = electroServer.managerHelper.zoneManager.zoneById(zoneId);
-			GameDataTLMN.getInstance().zoneId = zoneId;
+			var gameDataTlmn:GameDataTLMN = GameDataTLMN.getInstance();
+			gameDataTlmn.zoneId = zoneId;
+			myData.zoneId = zoneId;
 			
 			var i:int;
 			
@@ -1088,55 +1047,65 @@ package control
 			{
 				if (e.roomId == GameDataTLMN.getInstance().lobbyRoomId) // join vào lobby
 				{
-					if (!GameDataTLMN.getInstance().userList[e.userName])
+					/*if (gameDataTlmn.userList && e.userName && !gameDataTlmn.userList[e.userName])
 					{
-						GameDataTLMN.getInstance().userList[e.userName] = new Object();
-						GameDataTLMN.getInstance().userList[e.userName][DataField.ROOM_ID] = GameDataTLMN.getInstance().lobbyRoomId;
-						GameDataTLMN.getInstance().userList[e.userName][DataField.USER_NAME] = e.userName;
+						gameDataTlmn.userList[e.userName] = new Object();
+						gameDataTlmn.userList[e.userName][DataField.ROOM_ID] = GameDataTLMN.getInstance().lobbyRoomId;
+						gameDataTlmn.userList[e.userName][DataField.USER_NAME] = e.userName;
 						getUserInfo(e.userName);
 					}
 					else
 					{
 						if (e.userName != MyDataTLMN.getInstance().myName) 
 						{
-							GameDataTLMN.getInstance().userList[e.userName][DataField.ROOM_ID] = GameDataTLMN.getInstance().lobbyRoomId;
-							GameDataTLMN.getInstance().userList[e.userName][DataField.USER_NAME] = e.userName;
+							gameDataTlmn.userList[e.userName][DataField.ROOM_ID] = GameDataTLMN.getInstance().lobbyRoomId;
+							gameDataTlmn.userList[e.userName][DataField.USER_NAME] = e.userName;
 						}
 						
 					}
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST, GameDataTLMN.getInstance().userList));
+					*/
 				}
 				else // join vào game
 				{
 					
-					/*userRecentlyJoinRoom = e.userName;
-					var userJoinRoom:EsObject = UserVariable(e.userVariables[2]).value;
+					var room:Room = zone.roomById(roomId);
+					userRecentlyJoinRoom = e.userName;
+					var userJoinRoom:EsObject = UserVariable(e.userVariables[0]).value;
 					var userRecentlyJoinRoomObject:Object = new Object();
 					userRecentlyJoinRoomObject[DataField.USER_NAME] = userRecentlyJoinRoom;
 					userRecentlyJoinRoomObject[DataField.LEVEL] = userJoinRoom.getString(DataField.LEVEL);
 					userRecentlyJoinRoomObject[DataField.MONEY] = userJoinRoom.getString(DataField.MONEY);
+					userRecentlyJoinRoomObject[DataField.DEVICE_ID] = userJoinRoom.getString(DataField.DEVICE_ID);
+					userRecentlyJoinRoomObject[DataField.IP] = userJoinRoom.getString(DataField.IP);
+					//userRecentlyJoinRoomObject[DataField.IP] = "123.123.123.123";
 					//userRecentlyJoinRoomObject[DataField.CASH] = object[DataField.CASH];
 					userRecentlyJoinRoomObject[DataField.AVATAR] = userJoinRoom.getString(DataField.AVATAR);
 					userRecentlyJoinRoomObject[DataField.DISPLAY_NAME] = userJoinRoom.getString(DataField.DISPLAY_NAME);
+					userRecentlyJoinRoomObject[DataField.SEX] = userJoinRoom.getString(DataField.SEX);
+					userRecentlyJoinRoomObject[DataField.WIN] = userJoinRoom.getInteger(DataField.WIN);
+					userRecentlyJoinRoomObject[DataField.LOSE] = userJoinRoom.getInteger(DataField.LOSE);
 					//userRecentlyJoinRoomObject[DataField.LOGO] = object[DataField.LOGO];
 					//userRecentlyJoinRoomObject[DataField.DEVICE] = object[DataField.DEVICE];
-					userRecentlyJoinRoom = "";
-					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.HAVE_USER_JOIN_ROOM, userRecentlyJoinRoomObject));*/
 					
-					// Gửi pluginRequest lên lấy thông tin các user trong phòng chơi
-					var pluginMessage:EsObject = new EsObject();
-					pluginMessage.setString("command", CommandTlmn.GET_PLAYING_INFO);
-					sendPluginRequest(GameDataTLMN.getInstance().zoneId, e.roomId, GameDataTLMN.getInstance().gameType, pluginMessage);
+					userRecentlyJoinRoom = "";
+					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.HAVE_USER_JOIN_ROOM, userRecentlyJoinRoomObject));
 					
 					
 				}
 			}
 			else if (e.action == UserUpdateAction.DeleteUser)  // Có user out
 			{
-				if (e.roomId == GameDataTLMN.getInstance().lobbyRoomId) // Tình huống có user vừa out ra khỏi lobby room 
+				if (e.roomId == gameDataTlmn.lobbyRoomId) // Tình huống có user vừa out ra khỏi lobby room 
 				{
-					delete GameDataTLMN.getInstance().userList[e.userName];
-					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST, GameDataTLMN.getInstance().userList));
+					/*if (e.userName && gameDataTlmn.userList && 
+						gameDataTlmn.userList.hasOwnProperty(e.userName)) 
+					{
+						delete gameDataTlmn.userList[e.userName];
+					}
+					
+					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST, gameDataTlmn.userList));
+					*/
 				}
 				else // Tình huống có user vừa out ra khỏi game
 				{
@@ -1146,6 +1115,8 @@ package control
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.HAVE_USER_OUT_ROOM, object));
 				}
 			}
+			
+			
 		}
 		
 		// sự kiện update userVarialbe
@@ -1168,9 +1139,9 @@ package control
 								return;
 							var updateUserVariableRequest:UpdateUserVariableRequest
 							updateUserVariableRequest = new UpdateUserVariableRequest();
-							updateUserVariableRequest.name = DataField.USER_INFO;
+							updateUserVariableRequest.name = DataFieldMauBinh.USER_INFO;
 							var tempEsObject:EsObject = e.variable.value;
-							tempEsObject.setString(DataField.LOGO, mainData.chooseChannelData.myInfo.logo);
+							tempEsObject.setString(DataFieldMauBinh.LOGO, mainData.chooseChannelData.myInfo.logo);
 							updateUserVariableRequest.value = tempEsObject
 							//electroServer.engine.send(updateUserVariableRequest);
 						}
@@ -1188,11 +1159,11 @@ package control
 								if (mainData.chooseChannelData.myInfo.logo)
 								{
 									updateUserVariableRequest = new UpdateUserVariableRequest();
-									updateUserVariableRequest.name = DataField.USER_INFO
+									updateUserVariableRequest.name = DataFieldMauBinh.USER_INFO
 									tempEsObject = e.variable.value;
-									if (!tempEsObject.doesPropertyExist(DataField.LOGO))
+									if (!tempEsObject.doesPropertyExist(DataFieldMauBinh.LOGO))
 									{
-										tempEsObject.setString(DataField.LOGO, mainData.chooseChannelData.myInfo.logo);
+										tempEsObject.setString(DataFieldMauBinh.LOGO, mainData.chooseChannelData.myInfo.logo);
 										updateUserVariableRequest.value = tempEsObject;
 										//electroServer.engine.send(updateUserVariableRequest);
 									}
@@ -1200,8 +1171,8 @@ package control
 								
 								tempEsObject = e.variable.value
 								var updateMoneyObject:Object = new Object();
-								updateMoneyObject[DataField.USER_NAME] = tempEsObject.getString(DataField.USER_NAME);
-								updateMoneyObject[DataField.MONEY] = tempEsObject.getString(DataField.MONEY);
+								updateMoneyObject[DataFieldMauBinh.USER_NAME] = tempEsObject.getString(DataFieldMauBinh.USER_NAME);
+								updateMoneyObject[DataFieldMauBinh.MONEY] = tempEsObject.getString(DataFieldMauBinh.MONEY);
 								dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_MONEY, updateMoneyObject));
 							}
 						}
@@ -1209,8 +1180,8 @@ package control
 						{
 							tempEsObject = e.variable.value
 							updateMoneyObject = new Object();
-							updateMoneyObject[DataField.USER_NAME] = tempEsObject.getString(DataField.USER_NAME);
-							updateMoneyObject[DataField.MONEY] = tempEsObject.getString(DataField.MONEY);
+							updateMoneyObject[DataFieldMauBinh.USER_NAME] = tempEsObject.getString(DataFieldMauBinh.USER_NAME);
+							updateMoneyObject[DataFieldMauBinh.MONEY] = tempEsObject.getString(DataFieldMauBinh.MONEY);
 							dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_MONEY, updateMoneyObject));
 						}
 					break;
@@ -1270,8 +1241,9 @@ package control
 		
 		public function getUserInLobby():void
 		{
+			myData.userListOfLobby = new Object();
 			GameDataTLMN.getInstance().userListOfLobby = new Object();
-			getUserInRoom(GameDataTLMN.getInstance().lobbyRoomId);
+			getUserInRoom(myData.lobbyRoomId);
 		}
 		
 		public function onFindGameRespond(e:FindGamesResponse):void
@@ -1280,16 +1252,27 @@ package control
 			var roomId:int;
 			for (var i:int = 0; i < gameList.length; i++) 
 			{
-				roomId = ServerGame(gameList[i]).gameDetails.getInteger(DataField.ROOM_ID);
-				if (electroServer.managerHelper.zoneManager.zoneById(myData.zoneId).roomById(roomId))
+				roomId = ServerGame(gameList[i]).gameDetails.getInteger(DataFieldMauBinh.ROOM_ID);
+				if (electroServer.managerHelper.zoneManager.zoneById(GameDataTLMN.getInstance().zoneId).roomById(roomId))
 				{
 					myData.roomList[roomId] = new Object();
-					myData.roomList[roomId][DataField.GAME_ID] = ServerGame(gameList[i]).id;
-					myData.roomList[roomId][DataField.HAS_PASSWORD] = ServerGame(gameList[i]).passwordProtected;
-					myData.roomList[roomId][DataField.ROOM_NAME] = ServerGame(gameList[i]).gameDetails.getString(DataField.ROOM_NAME);
-					myData.roomList[roomId][DataField.ROOM_BET] = ServerGame(gameList[i]).gameDetails.getString(DataField.ROOM_BET);
-					if (ServerGame(gameList[i]).gameDetails.doesPropertyExist(DataField.IS_SEND_CARD))
-						myData.roomList[roomId][DataField.IS_SEND_CARD] = ServerGame(gameList[i]).gameDetails.getBoolean(DataField.IS_SEND_CARD);
+					myData.roomList[roomId][DataFieldMauBinh.GAME_ID] = ServerGame(gameList[i]).id;
+					myData.roomList[roomId][DataFieldMauBinh.HAS_PASSWORD] = ServerGame(gameList[i]).passwordProtected;
+					myData.roomList[roomId][DataFieldMauBinh.ROOM_NAME] = ServerGame(gameList[i]).gameDetails.getString(DataFieldMauBinh.ROOM_NAME);
+					myData.roomList[roomId][DataFieldMauBinh.ROOM_BET] = ServerGame(gameList[i]).gameDetails.getString(DataFieldMauBinh.ROOM_BET);
+					myData.roomList[roomId][DataFieldMauBinh.USERS_NUMBER] = ServerGame(gameList[i]).gameDetails.getString(DataFieldMauBinh.USERS_NUMBER);
+					myData.roomList[roomId][DataFieldMauBinh.MALE] = 0;
+					myData.roomList[roomId][DataFieldMauBinh.MAX_PLAYER] = ServerGame(gameList[i]).gameDetails.getInteger(DataFieldMauBinh.MAX_PLAYER);
+					
+					//GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.ROOM_BET] = gameDetails.getString(DataFieldMauBinh.ROOM_BET);
+					//GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.ROOM_NAME] = gameDetails.getString(DataFieldMauBinh.ROOM_NAME);
+					//GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.GAME_ID] = EsObject(roomList[i]).getInteger(DataFieldMauBinh.GAME_ID);
+					//GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.HAS_PASSWORD] = EsObject(roomList[i]).getBoolean(DataFieldMauBinh.HAS_PASSWORD);
+					//GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.USERS_NUMBER] = EsObject(roomList[i]).getEsObjectArray(DataFieldMauBinh.USER_LIST).length;
+					//GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.MALE] = 0;
+					//GameDataTLMN.getInstance().roomList[roomId][DataFieldMauBinh.MAX_PLAYER] = gameDetails.getInteger(DataFieldMauBinh.MAX_PLAYER);
+					if (ServerGame(gameList[i]).gameDetails.doesPropertyExist(DataFieldMauBinh.IS_SEND_CARD))
+						myData.roomList[roomId][DataFieldMauBinh.IS_SEND_CARD] = ServerGame(gameList[i]).gameDetails.getBoolean(DataFieldMauBinh.IS_SEND_CARD);
 					getUserInRoom(roomId);
 				}
 			}
@@ -1298,22 +1281,24 @@ package control
 		public function createGameRoom(gameOption:Object, password:String):void
 		{
 			leaveRoom();
-			
-			//joinLobbyRoom(GameDataTLMN.getInstance().gameName, GameDataTLMN.getInstance().channelId, -1);
 			var gameDetails:EsObject = new EsObject();
-			gameDetails.setString(DataField.ROOM_NAME, gameOption[DataField.ROOM_NAME]);
-			gameDetails.setString(DataField.ROOM_BET, gameOption[DataField.ROOM_BET]);
-			//gameDetails.setBoolean(DataField.IS_SEND_CARD, gameOption[DataField.IS_SEND_CARD]);
+			gameDetails.setString(DataFieldMauBinh.ROOM_NAME, gameOption[DataFieldMauBinh.ROOM_NAME]);
+			gameDetails.setString(DataFieldMauBinh.ROOM_BET, gameOption[DataFieldMauBinh.ROOM_BET]);
+			//gameDetails.setBoolean(DataFieldMauBinh.IS_SEND_CARD, gameOption[DataFieldMauBinh.IS_SEND_CARD]);
+			gameDetails.setInteger(DataFieldMauBinh.MAX_PLAYER, gameOption[DataFieldMauBinh.MAX_PLAYER]);
 			//var createGameRequest:CreateGameRequest = new CreateGameRequest();
 			var createGameRequest:QuickJoinGameRequest = new QuickJoinGameRequest();
-			createGameRequest.gameType = GameDataTLMN.getInstance().gameType;
-			createGameRequest.zoneName = GameDataTLMN.getInstance().gameType + "_" + String(GameDataTLMN.getInstance().channelId);
+			createGameRequest.gameType = myData.gameType;
+			createGameRequest.zoneName = mainData.game_id + "_" + myData.channelId;
 			createGameRequest.gameDetails = gameDetails;
 			createGameRequest.createOnly = true;
 			createGameRequest.password = password;
 			electroServer.engine.addEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
+			if (electroServer.engine.connected) 
+			{
+				electroServer.engine.send(createGameRequest);
+			}
 			
-			electroServer.engine.send(createGameRequest);
 		}
 		
 		public function joinGameRoom(gameId:int, password:String):void
@@ -1336,10 +1321,14 @@ package control
 			{
 				leaveRoom();
 				var joinGameRequest:JoinGameRequest = new JoinGameRequest();
-				joinGameRequest.gameId = myData.roomList[roomId][DataField.GAME_ID];
+				joinGameRequest.gameId = myData.roomList[roomId][DataFieldMauBinh.GAME_ID];
 				joinGameRequest.password = password;
 				electroServer.engine.addEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
-				electroServer.engine.send(joinGameRequest);
+				if (electroServer.engine.connected) 
+				{
+					electroServer.engine.send(joinGameRequest);
+				}
+				
 			}
 		}
 		
@@ -1347,105 +1336,75 @@ package control
 		{
 			leaveRoom();
 			var quickJoinGameRequest:QuickJoinGameRequest = new QuickJoinGameRequest();
-			quickJoinGameRequest.zoneName = GameDataTLMN.getInstance().gameType + "_" + String(GameDataTLMN.getInstance().channelId);
+			quickJoinGameRequest.zoneName = mainData.game_id + "_" + myData.channelId;
 			quickJoinGameRequest.gameType = GameDataTLMN.getInstance().gameType;
 			var searchCriteria:SearchCriteria = new SearchCriteria();
 			searchCriteria.gameType = GameDataTLMN.getInstance().gameType;
 			quickJoinGameRequest.criteria = searchCriteria;
 			var gameDetails:EsObject = new EsObject();
-			gameDetails.setString(DataField.ROOM_NAME, "Vào làm một ván nào");
-			gameDetails.setString(DataField.ROOM_BET, defaultBet);
-			//gameDetails.setBoolean(DataField.IS_DICE, true);
+			gameDetails.setString(DataFieldMauBinh.ROOM_NAME, "Vào làm một ván nào");
+			gameDetails.setString(DataFieldMauBinh.ROOM_BET, defaultBet);
+			gameDetails.setBoolean(DataFieldMauBinh.IS_SEND_CARD, true);
 			quickJoinGameRequest.gameDetails = gameDetails;
 			electroServer.engine.addEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
-			electroServer.engine.send(quickJoinGameRequest);
-		}
-		
-		private function onFindGameList(e:TimerEvent):void 
-		{
-			findGame();
-		}
-		
-		public function findGame(lobbyName:String = null):void 
-		{
-			
-			/*try
+			if (electroServer.engine.connected) 
 			{
-				var fgr:FindGamesRequest = new FindGamesRequest();
-				var criteria:SearchCriteria = new SearchCriteria();
-				criteria.gameType = GameDataTLMN.getInstance().gameType; //DemLaPlugin
-				criteria.gameDetails = new EsObject();
-				
-				if (lobbyName == null) lobbyName = GameDataTLMN.getInstance().gameName;
-				
-				criteria.gameDetails.setString("LobbyTLMN", lobbyName);
-				fgr.searchCriteria = criteria;
-				electroServer.engine.send(fgr);
-		   }
-		   catch (e:Error)
-		   {
-				trace(e.getStackTrace());
-		   }
-			*/
-		   
-			var pluginMessage:EsObject = new EsObject();
-			pluginMessage.setString("command", CommandTlmn.GET_ROOM_LIST);
-			trace("tim room moi: ", GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().roomId)
-			sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().roomId, 
-								GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);
+				electroServer.engine.send(quickJoinGameRequest);
+			}
+			
 		}
 		
 		public function onCreateOrJoinGameResponse(e:CreateOrJoinGameResponse):void
 		{
-			electroServer.engine.removeEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
-			if (e.successful) 
+			if (timerToGetRoomList)
 			{
+				timerToGetRoomList.removeEventListener(TimerEvent.TIMER, onGetRoomList)
+				timerToGetRoomList.stop();
+				mainData.isNoRenderLobbyList = false;
+			}
+			
+			electroServer.engine.removeEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
+			electroServer.engine.removeEventListener(MessageType.RoomVariableUpdateEvent.name, onRoomVariableUpdateEvent);
+			if (e.successful) {
 				electroServer.engine.addEventListener(MessageType.ZoneUpdateEvent.name, onZoneUpdateEvent);
 				//electroServer.engine.removeEventListener(MessageType.UserVariableUpdateEvent.name, onUserVariableUpdateEvent);
-				if (timerToFindGameRequest)
-				{
-					timerToFindGameRequest.removeEventListener(TimerEvent.TIMER, onFindGameList);
-					timerToFindGameRequest.stop();
-				}
-				if (timerToGetRoomList)
-				{
-					timerToGetRoomList.removeEventListener(TimerEvent.TIMER, onGetRoomList)
-					timerToGetRoomList.stop();
-					mainData.isNoRenderLobbyList = false;
-				}
 				
+				myData.roomId = e.roomId;
 				GameDataTLMN.getInstance().roomId = e.roomId;
-				GameDataTLMN.getInstance().zoneId = e.zoneId;
 				
-				trace("xem roomid lobby", GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().roomId)
 				var i:int;
+				
+				myData.gameRoomInfo = new Object();
+				myData.gameRoomInfo[DataFieldMauBinh.ROOM_ID] = myData.roomId;
+				myData.gameRoomInfo[DataFieldMauBinh.ROOM_BET] = e.gameDetails.getString(DataFieldMauBinh.ROOM_BET);
+				myData.gameRoomInfo[DataFieldMauBinh.ROOM_NAME] = e.gameDetails.getString(DataFieldMauBinh.ROOM_NAME);
+				//myData.gameRoomInfo[DataFieldMauBinh.IS_SEND_CARD] = e.gameDetails.getBoolean(DataFieldMauBinh.IS_SEND_CARD);
+				myData.gameRoomInfo[DataFieldMauBinh.GAME_ID] = e.gameId;
 				
 				GameDataTLMN.getInstance().gameRoomInfo = new Object();
 				GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_ID] = GameDataTLMN.getInstance().roomId;
 				GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET] = e.gameDetails.getString(DataField.ROOM_BET);
 				
 				GameDataTLMN.getInstance().gameRoomInfo[DataField.GAME_ID] = e.gameId;
-				
-				
 				// Gửi pluginRequest lên lấy thông tin các user trong phòng chơi
 				var pluginMessage:EsObject = new EsObject();
 				pluginMessage.setString("command", CommandTlmn.GET_PLAYING_INFO);
-				sendPluginRequest(GameDataTLMN.getInstance().zoneId, e.roomId, GameDataTLMN.getInstance().gameType, pluginMessage);
-				//dispatchEvent(new Event("createdRoom"));
+				sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().roomId, 
+				GameDataTLMN.getInstance().gameType, pluginMessage);
 			}
 			else 
 			{
-				
-				
+				//trace("khong vao dc phong game yeu cau");
 				dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.JOIN_GAME_ROOM_FAIL));
 			}
 		}
 		
-		public function sendPublicChat(userName:String, displayName:String, chatContent:String):void
+		public function sendPublicChat(displayName:String, chatContent:String, emo:Boolean):void
 		{
 			var esObject:EsObject = new EsObject();
 			esObject.setString(DataField.DISPLAY_NAME, displayName);
 			esObject.setString(DataField.CHAT_CONTENT, chatContent);
+			esObject.setBoolean(DataField.IS_EMO, emo);
 			sendPublicMessage(CommandTlmn.PUBLIC_CHAT, esObject);
 		}
 		
@@ -1453,7 +1412,6 @@ package control
 		public function readyPlay():void
 		{
 			var esObject:EsObject = new EsObject();
-			esObject.setString("userName", MyDataTLMN.getInstance().myId);
 			sendPublicMessage(CommandTlmn.READY, esObject);
 		}
 		
@@ -1466,8 +1424,8 @@ package control
 			}
 			//cardInfo.reverse();
 			var esObject:EsObject = new EsObject();
-			esObject.setIntegerArray(DataField.CARDS, cardInfo);
-			esObject.setBoolean(DataField.IS_SORT, isSort);
+			esObject.setIntegerArray(DataFieldMauBinh.CARDS, cardInfo);
+			esObject.setBoolean(DataFieldMauBinh.IS_SORT, isSort);
 			sendPublicMessage(CommandTlmn.SORT_FINISH, esObject);
 		}
 		
@@ -1475,7 +1433,6 @@ package control
 		public function startGame():void
 		{
 			var esObject:EsObject = new EsObject();
-			
 			sendPublicMessage(CommandTlmn.START_GAME, esObject);
 		}
 		
@@ -1483,8 +1440,8 @@ package control
 		public function playOneCard(cardId:int, nextTurn:String):void
 		{
 			var esObject:EsObject = new EsObject();
-			esObject.setInteger(DataField.CARD, cardId - 1);
-			esObject.setString(DataField.NEXT_TURN, nextTurn);
+			esObject.setInteger(DataFieldMauBinh.CARD, cardId - 1);
+			esObject.setString(DataFieldMauBinh.NEXT_TURN, nextTurn);
 			sendPublicMessage(CommandTlmn.DISCARD, esObject);
 		}
 		
@@ -1495,19 +1452,23 @@ package control
 			var publicMessageRequest:PublicMessageRequest = new PublicMessageRequest();
 			publicMessageRequest.roomId = GameDataTLMN.getInstance().roomId;
 			publicMessageRequest.zoneId = GameDataTLMN.getInstance().zoneId;
-			
+			publicMessageRequest.message = "";
 			if (!esObject)
 				esObject = new EsObject();
-			esObject.setString(DataField.COMMAND, command);
+			esObject.setString(DataFieldMauBinh.COMMAND, command);
 			publicMessageRequest.esObject = esObject;
-			electroServer.engine.send(publicMessageRequest);
+			if (electroServer.engine.connected) 
+			{
+				electroServer.engine.send(publicMessageRequest);
+			}
+			
 		}
 		
 		// Gửi pluginRequest lên thông báo người chơi đã sẵn sàng chơi
 		public function getOneCard(userName:String):void
 		{
 			var esObject:EsObject = new EsObject();
-			esObject.setString(DataField.USER_NAME, userName);
+			esObject.setString(DataFieldMauBinh.USER_NAME, userName);
 			sendPublicMessage(CommandTlmn.DRAW_CARD, esObject);
 		}
 		
@@ -1515,8 +1476,8 @@ package control
 		public function stealCard(userName:String, cardId:int):void
 		{
 			var esObject:EsObject = new EsObject();
-			esObject.setInteger(DataField.CARD, cardId - 1);
-			esObject.setString(DataField.USER_NAME, userName);
+			esObject.setInteger(DataFieldMauBinh.CARD, cardId - 1);
+			esObject.setString(DataFieldMauBinh.USER_NAME, userName);
 			sendPublicMessage(CommandTlmn.STEAL_CARD, esObject);
 		}
 		
@@ -1529,8 +1490,8 @@ package control
 			}
 			
 			var esObject:EsObject = new EsObject();
-			esObject.setIntegerArray(DataField.CARDS, cardArray);
-			esObject.setString(DataField.USER_NAME, userName);
+			esObject.setIntegerArray(DataFieldMauBinh.CARDS, cardArray);
+			esObject.setString(DataFieldMauBinh.USER_NAME, userName);
 			sendPublicMessage(CommandTlmn.LAYING_CARD, esObject);
 		}
 		
@@ -1538,7 +1499,7 @@ package control
 		public function downCardFinish(userName:String):void
 		{
 			var esObject:EsObject = new EsObject();
-			esObject.setString(DataField.USER_NAME, userName);
+			esObject.setString(DataFieldMauBinh.USER_NAME, userName);
 			sendPublicMessage(CommandTlmn.LAYING_DONE, esObject);
 		}
 		
@@ -1546,7 +1507,7 @@ package control
 		public function sendCardFinish(userName:String):void
 		{
 			var esObject:EsObject = new EsObject();
-			esObject.setString(DataField.USER_NAME, userName);
+			esObject.setString(DataFieldMauBinh.USER_NAME, userName);
 			sendPublicMessage(CommandTlmn.SEND_CARD_FINISH, esObject);
 		}
 		
@@ -1554,10 +1515,10 @@ package control
 		public function sendCard(userName:String, destinationUser:String, index:int, cardId:int):void
 		{
 			var esObject:EsObject = new EsObject();
-			esObject.setString(DataField.USER_NAME, userName);
-			esObject.setString(DataField.PLAYER_DESTINATION, destinationUser);
-			esObject.setInteger(DataField.INDEX, index);
-			esObject.setInteger(DataField.CARD, cardId - 1);
+			esObject.setString(DataFieldMauBinh.USER_NAME, userName);
+			esObject.setString(DataFieldMauBinh.PLAYER_DESTINATION, destinationUser);
+			esObject.setInteger(DataFieldMauBinh.INDEX, index);
+			esObject.setInteger(DataFieldMauBinh.CARD, cardId - 1);
 			sendPublicMessage(CommandTlmn.SEND_CARD, esObject);
 		}
 		
@@ -1572,12 +1533,18 @@ package control
 		{
 			if (GameDataTLMN.getInstance().roomId == -1)
 				return;
+			if (_roomId != Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id)
+				return;
 			var pluginRequest:PluginRequest = new PluginRequest();
 			pluginRequest.zoneId = _zoneId;
 			pluginRequest.roomId = _roomId;
 			pluginRequest.pluginName = pluginName;
 			pluginRequest.parameters = esObject;
-			electroServer.engine.send(pluginRequest);
+			if (electroServer.engine.connected) 
+			{
+				electroServer.engine.send(pluginRequest);
+			}
+			
 		}
 		
 		private function joinRoom(roomName: String, roomPassword: String = "", roomDescription: String = "", plugins: Array = null, roomCapacity: int = -1): void
@@ -1585,17 +1552,24 @@ package control
 			if (GameDataTLMN.getInstance().channelId != -1)
 				leaveRoom();
 				
+			//trace("CreateRoomRequest CreateRoomRequest CreateRoomRequest CreateRoomRequest ",Math.random());
 			var createRoomRequest:CreateRoomRequest = new CreateRoomRequest();
-			createRoomRequest.zoneName = GameDataTLMN.getInstance().gameType + "_" + String(GameDataTLMN.getInstance().channelId);
+			createRoomRequest.zoneName = mainData.game_id + "_" + myData.channelId;
 			createRoomRequest.roomName = roomName;
 			createRoomRequest.roomDescription = roomDescription;
 			createRoomRequest.capacity = roomCapacity;
 			createRoomRequest.password = roomPassword;
 			
-			if(roomName == GameDataTLMN.getInstance().lobbyName)
+			if (roomName == GameDataTLMN.getInstance().lobbyName)
+			{
+				createRoomRequest.roomName = "Lobby";
 				createRoomRequest.persistent = true; // dù không có người chơi phòng này vẫn tồn tại
+			}
 			else
+			{
+				
 				createRoomRequest.persistent = false; // không có người chơi thì phòng này không tồn tại
+			}
 			
 			var plugin:PluginListEntry = new PluginListEntry();
 			plugin.extensionName = GameDataTLMN.getInstance().lobbyName;
@@ -1610,8 +1584,12 @@ package control
 			
 			plugins.push(plugin);
 			createRoomRequest.plugins = plugins;
-			trace("test")
-			electroServer.engine.send(createRoomRequest);
+			//trace("test")
+			if (electroServer.engine.connected) 
+			{
+				electroServer.engine.send(createRoomRequest);
+			}
+			
 		}
 		
 		/**
@@ -1619,26 +1597,32 @@ package control
 		 */		
 		public function getUserInRoom(roomId:int):void
 		{
-			var zoneName:String = GameDataTLMN.getInstance().gameType + "_" + GameDataTLMN.getInstance().channelId;
+			var zoneName:String = mainData.game_id + "_" + myData.channelId;
 			var zoneId: int = electroServer.managerHelper.zoneManager.zoneByName(zoneName).id;
 			var getUsersInRoomRequest:GetUsersInRoomRequest = new GetUsersInRoomRequest();
 			getUsersInRoomRequest.roomId = roomId;
 			getUsersInRoomRequest.zoneId = zoneId;
-			electroServer.engine.send(getUsersInRoomRequest);
+			if (electroServer.engine.connected) 
+			{
+				electroServer.engine.send(getUsersInRoomRequest);
+			}
+			
 		}
 		
 		public function onGetUsersInRoomResponse(e:GetUsersInRoomResponse): void
 		{
 			var i:int;
+			
 			var user:UserListEntry;
-			if (GameDataTLMN.getInstance().roomId != GameDataTLMN.getInstance().lobbyRoomId) // Nếu user đang ở trong phòng game và lấy danh sách user trong phòng chờ dùng cho việc mời chơi
+			if (myData.roomId != myData.lobbyRoomId) // Nếu user đang ở trong phòng game và lấy danh sách user trong phòng chờ dùng cho việc mời chơi
 			{
-				if (!GameDataTLMN.getInstance().userListOfLobby)
+				if (!myData.userListOfLobby)
 					return;
 				for each (user in e.users)
 				{
 					userName = user.userName;
-					if (!GameDataTLMN.getInstance().userListOfLobby[userName])
+					if (!myData.userListOfLobby[userName])
+						myData.userListOfLobby[userName] = new Object();
 						GameDataTLMN.getInstance().userListOfLobby[userName] = new Object();
 					getUserInfo(userName);
 				}
@@ -1649,158 +1633,49 @@ package control
 			var usernameArr: Array = new Array();
 			var userName:String;
 			
-			//myData.roomList[e.roomId][DataField.USER_LIST] = new Array();
 			for each (user in e.users)
 			{
 				userName = user.userName;
-				if (!GameDataTLMN.getInstance().userList[userName])
+				if (!myData.userList[userName])
 				{
-					GameDataTLMN.getInstance().userList[userName] = new Object();
-					GameDataTLMN.getInstance().userList[userName][DataField.ROOM_ID] = e.roomId;
-					GameDataTLMN.getInstance().userList[userName][DataField.USER_NAME] = userName;
-					//myData.roomList[e.roomId][DataField.USER_LIST].push(user.userName);
+					myData.userList[userName] = new Object();
+					if (!myData.saveUserList[userName])
+						myData.saveUserList[userName] = new Object();
 				}
-				
+				myData.userList[userName][DataFieldMauBinh.ROOM_ID] = e.roomId;
 			}
 			
-			GameDataTLMN.getInstance().countRoom++;
-			trace("====================: ", GameDataTLMN.getInstance().countRoom)
-			// Khi lấy xong tất cả các user trong các phòng thì bắt đầy request user info của tất cả các user đó
-			if (GameDataTLMN.getInstance().totalRoom == GameDataTLMN.getInstance().countRoom)
+			var userList:Array = e.users
+			var roomId:String = String(e.roomId);
+			
+			myData.countGame++;
+			if (!myData.roomList[roomId])
+				return;
+			myData.roomList[roomId][DataFieldMauBinh.USER_LIST] = new Array();
+			for (i = 0; i < userList.length; i++) 
 			{
-				getAllUserInfoInZone(GameDataTLMN.getInstance().zoneId);
-				
-				//dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_ROOM_LIST, myData.roomList));
+				(myData.roomList[roomId][DataFieldMauBinh.USER_LIST] as Array).push(UserListEntry(userList[i]).userName);
 			}
 			
-			if (!GameDataTLMN.getInstance().isFirstLoad) // Nếu không phải lần loadUser lần đầu lúc mới vào lobby
+			var countTotalGame:int = 0;
+			for (roomId in myData.roomList)
 			{
-				var userList:Array = e.users
-				var roomId:String = String(e.roomId);
-				
-				if (/*myData.isFirstLoadGame*/!myData) // Nếu là lần load game lần đầu lúc mới vào lobby
-				{
-					GameDataTLMN.getInstance().countGame++;
-					if (!GameDataTLMN.getInstance().roomList[roomId])
-						return;
-					GameDataTLMN.getInstance().roomList[roomId][DataField.USER_LIST] = new Array();
-					for (i = 0; i < userList.length; i++) 
-					{
-						if (UserListEntry(userList[i]).userName != MyDataTLMN.getInstance().myName) 
-						{
-							
-						}
-						(GameDataTLMN.getInstance().roomList[roomId][DataField.USER_LIST] as Array).push(UserListEntry(userList[i]).userName);
-					}
-					
-					var countTotalGame:int = 0;
-					for (roomId in GameDataTLMN.getInstance().roomList)
-					{
-						countTotalGame++;
-						
-					}
-					
-					if (countTotalGame == GameDataTLMN.getInstance().countGame)
-					{
-						
-						dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_ROOM_LIST, GameDataTLMN.getInstance().roomList));
-						
-						GameDataTLMN.getInstance().isFirstLoadGame = false;
-					}
-					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST, GameDataTLMN.getInstance().userList));
-				}
-				else
-				{
-					
-					if (GameDataTLMN.getInstance().roomList[roomId]) 
-					{
-						if (!GameDataTLMN.getInstance().roomList[roomId][DataField.USER_LIST])
-						{
-							GameDataTLMN.getInstance().roomList[roomId][DataField.USER_LIST] = new Array();
-							for (i = 0; i < userList.length; i++) 
-							{
-								(GameDataTLMN.getInstance().roomList[roomId][DataField.USER_LIST] as Array).push(UserListEntry(userList[i]).userName);
-								userName = UserListEntry(userList[i]).userName;
-								if (!GameDataTLMN.getInstance().userList[userName])
-									GameDataTLMN.getInstance().userList[userName] = new Object();
-								GameDataTLMN.getInstance().userList[userName][DataField.ROOM_ID] = e.roomId;
-								GameDataTLMN.getInstance().userList[userName][DataField.USER_NAME] = userName;
-								getUserInfo(userName);
-							}
-							/*var isUpdate:Boolean = true;
-							for (roomId in myData.roomList)
-							{
-								if (!myData.roomList[roomId][DataField.USER_LIST])
-									isUpdate = false;
-							}
-							if (isUpdate)*/
-							trace("get user respone !mydata: ", GameDataTLMN.getInstance().roomList)
-								dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_ROOM_LIST, GameDataTLMN.getInstance().roomList));
-								
-						}
-					
-					}
-					else
-					{
-						if ((GameDataTLMN.getInstance().roomList[roomId][DataField.USER_LIST] as Array).length > userList.length) // Tình huống có user ra khỏi phòng
-						{
-							// Tìm những người ra khỏi phòng để xóa đi
-							usernameArr = compareTwoUserArray(GameDataTLMN.getInstance().roomList[roomId][DataField.USER_LIST], userList);
-							
-							for (var j:int = 0; j < usernameArr.length; j++) 
-							{
-								for (i = 0; i < (GameDataTLMN.getInstance().roomList[roomId][DataField.USER_LIST] as Array).length; i++) 
-								{
-									if (usernameArr[j] == GameDataTLMN.getInstance().roomList[roomId][DataField.USER_LIST][i])
-									{
-										(GameDataTLMN.getInstance().roomList[roomId][DataField.USER_LIST] as Array).splice(i, 1);
-										i = (GameDataTLMN.getInstance().roomList[roomId][DataField.USER_LIST] as Array).length + 1;
-										if (GameDataTLMN.getInstance().userList[usernameArr[j]])
-										{
-											if (GameDataTLMN.getInstance().userList[usernameArr[j]][DataField.ROOM_ID] != GameDataTLMN.getInstance().lobbyRoomId)
-												delete GameDataTLMN.getInstance().userList[usernameArr[j]];
-										}
-									}
-								}
-							}
-							
-							dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_ROOM_LIST, GameDataTLMN.getInstance().roomList));
-							
-						}
-						else if ((GameDataTLMN.getInstance().roomList[roomId][DataField.USER_LIST] as Array).length < userList.length) // Tình huống có user vào phòng
-						{
-							// Tìm những user vừa vào phòng để push vào
-							usernameArr = compareTwoUserArray(GameDataTLMN.getInstance().roomList[roomId][DataField.USER_LIST], userList);
-							
-							for (j = 0; j < usernameArr.length; j++)
-							{
-								
-								(GameDataTLMN.getInstance().roomList[roomId][DataField.USER_LIST] as Array).push(usernameArr[j]);
-								
-								if (!GameDataTLMN.getInstance().userList[usernameArr[j]])
-									GameDataTLMN.getInstance().userList[usernameArr[j]] = new Object();
-								GameDataTLMN.getInstance().userList[usernameArr[j]][DataField.ROOM_ID] = e.roomId;
-								GameDataTLMN.getInstance().userList[usernameArr[j]][DataField.USER_NAME] = usernameArr[j];
-								getUserInfo(usernameArr[j]);
-							}
-							
-							dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_ROOM_LIST, GameDataTLMN.getInstance().roomList));
-							dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST, GameDataTLMN.getInstance().userList));
-						}
-						dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_USER_LIST, GameDataTLMN.getInstance().userList));
-					}
-				}
-				
+				countTotalGame++;
 			}
-		}
-		
-		public function getAllUserInfoInZone(zoneId:int):void
-		{
-			var i:int;
-		//	myData.allUserInfoList = new Array();
-			for (var userName:String in GameDataTLMN.getInstance().userList)
+			
+			if (countTotalGame == myData.countGame)
 			{
-				getUserInfo(userName);
+				dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.UPDATE_ROOM_LIST, myData.roomList));
+				/*for (userName in myData.userList)
+				{
+					if (myData.userList[userName][DataField.ROOM_ID] != 0)
+					{
+						if (!myData.saveUserList[userName][DataField.USER_INFO])
+							getUserInfo(userName);
+						else
+							myData.userList[userName][DataField.USER_INFO] = myData.saveUserList[userName][DataField.USER_INFO];
+					}
+				}*/
 			}
 		}
 		
@@ -1847,8 +1722,12 @@ package control
 			var getUserVariableRequest:GetUserVariablesRequest
 			getUserVariableRequest = new GetUserVariablesRequest();
 			getUserVariableRequest.userName = userName;
-			getUserVariableRequest.userVariableNames.add(DataField.USER_INFO);
-			electroServer.engine.send(getUserVariableRequest);
+			//getUserVariableRequest.userVariableNames.add(DataFieldMauBinh.USER_INFO);
+			if (electroServer.engine.connected) 
+			{
+				electroServer.engine.send(getUserVariableRequest);
+			}
+			
 		}
 		
 		public function onGetUserInfoResponse(e:GetUserVariablesResponse):void
@@ -1870,7 +1749,7 @@ package control
 						{
 							GameDataTLMN.getInstance().userListOfLobby[userName][DataField.DISPLAY_NAME] = object[DataField.DISPLAY_NAME];
 							GameDataTLMN.getInstance().userListOfLobby[userName][DataField.MONEY] = object[DataField.MONEY];
-							//GameDataTLMN.getInstance().userListOfLobby[userName][DataField.CASH] = object[DataField.CASH];
+							GameDataTLMN.getInstance().userListOfLobby[userName][DataField.LEVEL] = object[DataField.LEVEL];
 							GameDataTLMN.getInstance().userListOfLobby[userName][DataField.AVATAR] = object[DataField.AVATAR];
 							var isUpdateUserListOfLobby:Boolean = true;
 							for (userName in GameDataTLMN.getInstance().userListOfLobby)
@@ -1940,16 +1819,26 @@ package control
 		
 		private function leaveRoom(): void
 		{
-			trace("leaveroom: ", GameDataTLMN.getInstance().roomId, GameDataTLMN.getInstance().lobbyRoomId, GameDataTLMN.getInstance().zoneId)
 			if (GameDataTLMN.getInstance().roomId == -1)
 				return;
+			if (electroServer.managerHelper.zoneManager.zones.length == 0)
+			{
+				//trace("kddfdaddffdccccccccccccccccccccccccccc");
+				return;
+			}
 			if (GameDataTLMN.getInstance().roomId != Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id)
 				return;
+			//trace("leaveRoom leaveRoom leaveRoom leaveRoom leaveRoom leaveRoom leaveRoom",Math.random());
 			var leaveRoomRequest:LeaveRoomRequest = new LeaveRoomRequest();
 			leaveRoomRequest.zoneId = GameDataTLMN.getInstance().zoneId;
 			leaveRoomRequest.roomId = GameDataTLMN.getInstance().roomId;
 			GameDataTLMN.getInstance().roomId = -1;
-			electroServer.engine.send(leaveRoomRequest);
+			myData.roomId = -1;
+			if (electroServer.engine.connected) 
+			{
+				electroServer.engine.send(leaveRoomRequest);
+			}
+			
 			
 		}
 		
@@ -1962,6 +1851,7 @@ package control
 			}
 			
 			myData.roomId = -1;
+			GameDataTLMN.getInstance().roomId = -1
 			electroServer.engine.removeEventListener(MessageType.FindGamesResponse.name, onFindGameRespond);
 			electroServer.engine.removeEventListener(MessageType.UserUpdateEvent.name, onUserListUpdateEvent);
 			electroServer.engine.removeEventListener(MessageType.ConnectionClosedEvent.name, onCloseConnection);
@@ -1973,8 +1863,6 @@ package control
 			electroServer.engine.removeEventListener(MessageType.GenericErrorResponse.name, onGenericErrorResponse);
 			electroServer.engine.removeEventListener(MessageType.ZoneUpdateEvent.name, onZoneUpdateEvent);
 			electroServer.engine.close();
-			
-			this.dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.CLOSE_CONNECTION));
 		}
 		
 		public function onGenericErrorResponse(e:GenericErrorResponse): void
@@ -2037,25 +1925,18 @@ package control
 			return obj;
 		}
 		
-		private var _configuration:EsConfiguration;
-		private var timerToFindGameRequest:Timer;
-		public function get configuration():EsConfiguration 
+		public function makeFriend(userName:String, roomType:String):void
 		{
-			return _configuration;
+			var pluginMessage:EsObject = new EsObject();
+			pluginMessage.setString("command", CommandTlmn.ADD_FRIEND);
+			pluginMessage.setString(DataField.FRIEND_ID, userName);
+			pluginMessage.setString(DataField.REQUEST_CONTENT, "aaaa");
+			
+			if (roomType == DataField.IN_LOBBY)
+				sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().lobbyRoomId, GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);
+			else if (roomType == DataField.IN_GAME_ROOM)
+				sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().roomId, GameDataTLMN.getInstance().gameType, pluginMessage);
 		}
-		
-		public function set configuration(value:EsConfiguration):void 
-		{
-			_configuration = value;
-		}
-		
-		public function pingToServer():void
-		{
-			var pingRequest:GetUserCountRequest = new GetUserCountRequest();
-			electroServer.engine.send(pingRequest);
-			sendPublicMessage("heartBeat", null);
-		}
-		
 		
 		public function myDiscard(arr:Array):void 
 		{
@@ -2089,6 +1970,26 @@ package control
 			timerToFindGameRequest = new Timer(2000);
 			timerToFindGameRequest.addEventListener(TimerEvent.TIMER, onFindGameList);
 			timerToFindGameRequest.start();*/
+		}
+		
+		
+		private var _configuration:EsConfiguration;
+		private var timerToFindGameRequest:Timer;
+		public function get configuration():EsConfiguration 
+		{
+			return _configuration;
+		}
+		
+		public function set configuration(value:EsConfiguration):void 
+		{
+			_configuration = value;
+		}
+		
+		public function pingToServer():void
+		{
+			var pingRequest:GetUserCountRequest = new GetUserCountRequest();
+			//electroServer.engine.send(pingRequest);
+			sendPublicMessage(CommandTlmn.HEART_BEAT, null);
 		}
 		
 	}
