@@ -532,7 +532,7 @@ package view.screen.play
 			content.effectMoneySpecial.visible = true;
 			content.setChildIndex(content.effectMoneySpecial, content.numChildren - 1);
 			
-			if (int(money) < 0) 
+			if (Number(money) < 0) 
 			{
 				TextField(content.effectMoneySpecial).defaultTextFormat = _textformatLose;
 				//money = "-" + money;
@@ -552,8 +552,15 @@ package view.screen.play
 			}
 			
 			//trace("money bi chat: ", str, money)
+			if (Number(money) < 0) 
+			{
+				content.effectMoneySpecial.text = "-" + format(Number(money) * -1);
+			}
+			else 
+			{
+				content.effectMoneySpecial.text = format(Number(money));
+			}
 			
-			content.effectMoneySpecial.text = format(Number(money));
 			
 			TweenMax.to(content.effectMoneySpecial, 3, { y: content.effectMoneySpecial.y - 50, onComplete:onCompleteMoneySpecial } );
 			//_moneyEffect.showEffect(money);

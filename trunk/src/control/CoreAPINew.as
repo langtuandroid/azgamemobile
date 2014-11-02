@@ -409,7 +409,7 @@ package control
 		{
 			var pluginMessage:EsObject = new EsObject();
 			pluginMessage.setString("command", Command.GET_FRIEND_LIST);
-			sendPluginRequest(myData.zoneId, myData.lobbyRoomId, GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);
+			sendPluginRequest(myData.zoneId, myData.lobbyRoomId, myData.lobbyPluginName, pluginMessage);
 		}
 		
 		public function getRoomList():void
@@ -419,7 +419,7 @@ package control
 				
 			var pluginMessage:EsObject = new EsObject();
 			pluginMessage.setString("command", Command.GET_ROOM_LIST);
-			sendPluginRequest(myData.zoneId, myData.roomId, GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);
+			sendPluginRequest(myData.zoneId, myData.roomId, myData.lobbyPluginName, pluginMessage);
 				
 			/*myData.countGame = 0;
 			myData.roomList = new Object();
@@ -884,7 +884,7 @@ package control
 			pluginMessage.setString(DataFieldMauBinh.REQUEST_CONTENT, "aaaa");
 			
 			if (roomType == DataFieldMauBinh.IN_LOBBY)
-				sendPluginRequest(myData.zoneId, myData.lobbyRoomId, GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);
+				sendPluginRequest(myData.zoneId, myData.lobbyRoomId, myData.lobbyPluginName, pluginMessage);
 			else if (roomType == DataFieldMauBinh.IN_GAME_ROOM)
 				sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, pluginMessage);
 		}
@@ -897,7 +897,7 @@ package control
 			pluginMessage.setString(DataFieldMauBinh.FRIEND_ID, userName);
 			
 			if (roomType == DataFieldMauBinh.IN_LOBBY)
-				sendPluginRequest(myData.zoneId, myData.lobbyRoomId, GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);
+				sendPluginRequest(myData.zoneId, myData.lobbyRoomId, myData.lobbyPluginName, pluginMessage);
 			else if (roomType == DataFieldMauBinh.IN_GAME_ROOM)
 				sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, pluginMessage);
 		}
@@ -907,7 +907,7 @@ package control
 			// Gửi pluginRequest lên để request nạp tiền
 			var pluginMessage:EsObject = new EsObject();
 			pluginMessage.setString("command", Command.ADD_MONEY);
-			sendPluginRequest(myData.zoneId, myData.lobbyRoomId, GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);
+			sendPluginRequest(myData.zoneId, myData.lobbyRoomId, myData.lobbyPluginName, pluginMessage);
 		}
 		
 		public function updateMoney():void
@@ -918,7 +918,7 @@ package control
 			var pluginMessage:EsObject = new EsObject();
 			pluginMessage.setString("command", Command.REFRESH_MONEY);
 			if (myData.roomId == myData.lobbyRoomId)
-				sendPluginRequest(myData.zoneId, myData.roomId, GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);
+				sendPluginRequest(myData.zoneId, myData.roomId, myData.lobbyPluginName, pluginMessage);
 			else
 				sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, pluginMessage);
 		}
@@ -942,7 +942,7 @@ package control
 			pluginMessage.setBoolean(DataFieldMauBinh.CONFIRM, isAccept);
 			
 			if (roomType == DataFieldMauBinh.IN_LOBBY)
-				sendPluginRequest(myData.zoneId, myData.lobbyRoomId, GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);
+				sendPluginRequest(myData.zoneId, myData.lobbyRoomId, myData.lobbyPluginName, pluginMessage);
 			else if (roomType == DataFieldMauBinh.IN_GAME_ROOM)
 				sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, pluginMessage);
 		}
@@ -1416,8 +1416,8 @@ package control
 			if (roomName == myData.lobbyName) // Nếu là phòng chờ thì không cẩm plugins phỏm nên sẽ tạo một array plugins mới
 			{
 				plugins = new Array();
-				plugin.pluginHandle = GameDataTLMN.getInstance().lobbyPluginName;
-				plugin.pluginName = GameDataTLMN.getInstance().lobbyPluginName;
+				plugin.pluginHandle = myData.lobbyPluginName;
+				plugin.pluginName = myData.lobbyPluginName;
 				electroServer.engine.addEventListener(MessageType.JoinRoomEvent.name, onJoinLobbyRoomEvent);
 			}
 			
@@ -1759,7 +1759,7 @@ package control
 			pluginMessage.setString(DataField.REQUEST_CONTENT, "aaaa");
 			
 			if (roomType == DataField.IN_LOBBY)
-				sendPluginRequest(myData.zoneId, myData.lobbyRoomId, GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);
+				sendPluginRequest(myData.zoneId, myData.lobbyRoomId, myData.lobbyPluginName, pluginMessage);
 			else if (roomType == DataField.IN_GAME_ROOM)
 				sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, pluginMessage);
 		}
