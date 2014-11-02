@@ -1218,7 +1218,7 @@ package control
 				var i:int;
 				
 				GameDataTLMN.getInstance().gameRoomInfo = new Object();
-				GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_ID] = GameDataTLMN.getInstance().roomId;
+				GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_ID] = e.roomId;
 				GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET] = e.gameDetails.getString(DataField.ROOM_BET);
 				
 				GameDataTLMN.getInstance().gameRoomInfo[DataField.GAME_ID] = e.gameId;
