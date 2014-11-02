@@ -465,7 +465,7 @@ package control
 			var tempArray:Array;
 			var readyObject:Object;
 			var command:String = e.parameters.getString("command");
-			//trace("command plugin: ", command, "==============================")
+			trace("command plugin: ", command, "==============================")
 			//trace(e.parameters)
 			var i:int;
 			var j:int;
@@ -487,7 +487,11 @@ package control
 			}
 			switch (command) 
 			{
-				
+				case CommandTlmn.ENDROUND:
+					GameDataTLMN.getInstance().finishRound = true;
+					GameDataTLMN.getInstance().firstPlayer = e.parameters.getString("userName");
+					//dispatchEvent(new ElectroServerEvent(ElectroServerEvent.END_ROUND, GameDataTLMN.getInstance().currentPlayer));
+				break;
 				case CommandTlmn.CURRENTPLAYER:
 					GameDataTLMN.getInstance().currentPlayer = e.parameters.getString("currentTurn");
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.GET_CURRENT_PLAYER, GameDataTLMN.getInstance().currentPlayer));
