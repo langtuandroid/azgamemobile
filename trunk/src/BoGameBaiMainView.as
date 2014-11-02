@@ -121,11 +121,11 @@ package
 		
 		public function BoGameBaiMainView():void 
 		{
-			//mainData.isOnAndroid = true;
+			mainData.isOnAndroid = true;
 			//mainData.isOnIos = true;
 			
-			if (mainData.isOnAndroid || mainData.isOnIos)
-				NativeApplication.nativeApplication.systemIdleMode = SystemIdleMode.KEEP_AWAKE;
+			//if (mainData.isOnAndroid || mainData.isOnIos)
+				//NativeApplication.nativeApplication.systemIdleMode = SystemIdleMode.KEEP_AWAKE;
 			
 			if (!mainData.isOnAndroid && !mainData.isOnIos)
 				mainData.isShowScroll = true;

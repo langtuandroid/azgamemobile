@@ -126,7 +126,7 @@ package getFacebookInfo
 					if (e.friends!=null)
 					{					
 						// 'me' was a request for own profile.
-						if (e.graphPath=="me")
+						if (e.graphPath=="v2.1/me")
 						{
 							var myProfile:GVFacebookFriend = e.friends[0];
 							

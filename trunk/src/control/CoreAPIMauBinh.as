@@ -1267,41 +1267,6 @@ package control
 			electroServer.engine.send(joinGameRequest);
 		}
 		
-		public function findGameRoom(roomId:int, password:String):void
-		{
-			if (!myData.roomList[roomId])
-			{
-				dispatchEvent(new ElectroServerEvent(ElectroServerEvent.GAME_ROOM_INVALID));
-			}
-			else
-			{
-				leaveRoom();
-				var joinGameRequest:JoinGameRequest = new JoinGameRequest();
-				joinGameRequest.gameId = myData.roomList[roomId][DataFieldMauBinh.GAME_ID];
-				joinGameRequest.password = password;
-				electroServer.engine.addEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
-				electroServer.engine.send(joinGameRequest);
-			}
-		}
-		
-		public function quickJoinGameRoom(defaultBet:String):void
-		{
-			leaveRoom();
-			var quickJoinGameRequest:QuickJoinGameRequest = new QuickJoinGameRequest();
-			quickJoinGameRequest.zoneName = mainData.game_id + "_" + String(myData.channelId);
-			quickJoinGameRequest.gameType = myData.gameType;
-			var searchCriteria:SearchCriteria = new SearchCriteria();
-			searchCriteria.gameType = myData.gameType;
-			quickJoinGameRequest.criteria = searchCriteria;
-			var gameDetails:EsObject = new EsObject();
-			gameDetails.setString(DataFieldMauBinh.ROOM_NAME, "Vào làm một ván nào");
-			gameDetails.setString(DataFieldMauBinh.ROOM_BET, defaultBet);
-			gameDetails.setBoolean(DataFieldMauBinh.IS_SEND_CARD, true);
-			quickJoinGameRequest.gameDetails = gameDetails;
-			electroServer.engine.addEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
-			electroServer.engine.send(quickJoinGameRequest);
-		}
-		
 		public function onCreateOrJoinGameResponse(e:CreateOrJoinGameResponse):void
 		{
 			if (timerToGetRoomList)

@@ -151,6 +151,7 @@ package event
 		public static const CARD_ARRAY_4:String = "cardArray4";
 		public static const PASSWORD:String = "password";
 		public static const CHANNEL_NUM:String = "chl_num";
+		public static const CHANNEL_PORT:String = "svr_port";
 		public static const CHANNEL_NAME:String = "chl_nm";
 		public static const LEVEL_MIN:String = "lvl_min";
 		public static const USERS_ONLINE:String = "user_onlines";

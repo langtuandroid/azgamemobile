@@ -10,6 +10,7 @@ package model
 		public var playerNumber:int;
 		public var maxPlayer:int;
 		public var channelId:int;
+		public var port:int;
 		public var fee:Number;
 		public var betting:Array;
 		

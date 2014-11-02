@@ -4,7 +4,6 @@ package view.window.loginWindow
 	import com.adobe.serialization.json.JSON;
 	import com.gsolo.encryption.MD5;
 	import com.gsolo.encryption.SHA1;
-	import com.ingenstudios.utils.AndroidUtilsController;
 	import fl.controls.TextInput;
 	import flash.display.SimpleButton;
 	import flash.display.Sprite;
@@ -120,16 +119,6 @@ package view.window.loginWindow
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 			
 			deviceId = '1';
-			/*if (mainData.isOnIos)
-			{
-				var ingenNativeExtension:IngenNativeExtension = new IngenNativeExtension();
-				deviceId = ingenNativeExtension.getDeviceID();
-			}
-			else if (mainData.isOnAndroid)
-			{
-				var androidUtilsExtension:AndroidUtilsController = AndroidUtilsController.getInstance();
-				deviceId = androidUtilsExtension.generateDeviceId();
-			}*/
 			
 			zLoginWindow(content).loadingSoundLayer["percentTxt"].text = '0%';
 			zLoginWindow(content).loadingSoundLayer.visible = false;
@@ -189,16 +178,6 @@ package view.window.loginWindow
 		private function onFillNameFinish(e:Event):void 
 		{
 			var deviceId:String = '1';
-			if (mainData.isOnIos)
-			{
-				var ingenNativeExtension:IngenNativeExtension = new IngenNativeExtension();
-				deviceId = ingenNativeExtension.getDeviceID();
-			}
-			else if (mainData.isOnAndroid)
-			{
-				var androidUtilsExtension:AndroidUtilsController = AndroidUtilsController.getInstance();
-				deviceId = androidUtilsExtension.generateDeviceId();
-			}
 			
 			var mainRequest:MainRequest = new MainRequest();
 			var data:Object = new Object();

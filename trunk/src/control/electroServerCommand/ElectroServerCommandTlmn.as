@@ -46,10 +46,10 @@ package control.electroServerCommand
 		public function startConnect(_userName:String, _channelId:int, _capacity:int = -1, _pass:String = ""):void
 		{
 			ipNumber = "203.162.121.120";//mainData.init.ipNumber;
-			portNumber = 5101;
+			portNumber = mainData.currentPort;
 			if (mainData.isTest)
 				portNumber = 3101;
-			channelId = _channelId;
+			channelId = mainData.currentChannelId;
 			capacity = _capacity;
 			myUserName = _userName;
 			pass = _pass;
@@ -252,11 +252,6 @@ package control.electroServerCommand
 			waitingWindow.setNotice(mainData.init.gameDescription.lobbyRoomScreen.emptyRoomList);
 			windowLayer.openWindow(waitingWindow);
   
-		}
-		
-		public function findGameRoom(roomId:int,password:String):void
-		{
-			coreAPI.findGameRoom(roomId, password);
 		}
 		
 		private function onDealCard(e:ElectroServerEventTlmn):void 
@@ -900,11 +895,6 @@ package control.electroServerCommand
 			callPlayingScreenAction(PlayingScreenActionTlmn.NEXTTURN, e.data);
 		}
 		
-		public function exitGame(type:String):void 
-		{
-			coreAPI.exitGame(type);
-			//joinLobbyRoom();
-		}
 		public function getFriendList():void
 		{
 			if (coreAPI)

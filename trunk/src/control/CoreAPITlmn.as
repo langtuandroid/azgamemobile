@@ -1445,49 +1445,6 @@ package control
 			electroServer.engine.send(joinGameRequest);
 		}
 		
-		public function findGameRoom(roomId:int, password:String):void
-		{
-			if (!myData.roomList[roomId])
-			{
-				dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.GAME_ROOM_INVALID));
-			}
-			else
-			{
-				leaveRoom();
-				var joinGameRequest:JoinGameRequest = new JoinGameRequest();
-				joinGameRequest.gameId = myData.roomList[roomId][DataFieldMauBinh.GAME_ID];
-				joinGameRequest.password = password;
-				electroServer.engine.addEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
-				if (electroServer.engine.connected) 
-				{
-					electroServer.engine.send(joinGameRequest);
-				}
-				
-			}
-		}
-		
-		public function quickJoinGameRoom(defaultBet:String):void
-		{
-			leaveRoom();
-			var quickJoinGameRequest:QuickJoinGameRequest = new QuickJoinGameRequest();
-			quickJoinGameRequest.zoneName = mainData.game_id + "_" + myData.channelId;
-			quickJoinGameRequest.gameType = GameDataTLMN.getInstance().gameType;
-			var searchCriteria:SearchCriteria = new SearchCriteria();
-			searchCriteria.gameType = GameDataTLMN.getInstance().gameType;
-			quickJoinGameRequest.criteria = searchCriteria;
-			var gameDetails:EsObject = new EsObject();
-			gameDetails.setString(DataFieldMauBinh.ROOM_NAME, "Vào làm một ván nào");
-			gameDetails.setString(DataFieldMauBinh.ROOM_BET, defaultBet);
-			gameDetails.setBoolean(DataFieldMauBinh.IS_SEND_CARD, true);
-			quickJoinGameRequest.gameDetails = gameDetails;
-			electroServer.engine.addEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
-			if (electroServer.engine.connected) 
-			{
-				electroServer.engine.send(quickJoinGameRequest);
-			}
-			
-		}
-		
 		public function onCreateOrJoinGameResponse(e:CreateOrJoinGameResponse):void
 		{
 			if (timerToGetRoomList)
@@ -1666,6 +1623,8 @@ package control
 		private function sendPluginRequest(_zoneId:int, _roomId:int, pluginName:String, esObject:EsObject = null):void
 		{
 			if (GameDataTLMN.getInstance().roomId == -1)
+				return;
+			if (electroServer.managerHelper.zoneManager.zones.length == 0)
 				return;
 			if (_roomId != Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id)
 				return;
@@ -2086,26 +2045,6 @@ package control
 			esObject.setString("playerName", MyDataTLMN.getInstance().myId);
 			sendPublicMessage(CommandTlmn.NEXTTURN, esObject);
 		}
-		
-		
-		public function exitGame(type:String):void 
-		{
-			leaveRoom();
-			if (type == "game") 
-			{
-				joinRoom(GameDataTLMN.getInstance().gameName, "");
-			}
-			//
-			/*if (timerToFindGameRequest)
-			{
-				timerToFindGameRequest.removeEventListener(TimerEvent.TIMER, onFindGameList);
-				timerToFindGameRequest.stop();
-			}
-			timerToFindGameRequest = new Timer(2000);
-			timerToFindGameRequest.addEventListener(TimerEvent.TIMER, onFindGameList);
-			timerToFindGameRequest.start();*/
-		}
-		
 		
 		private var _configuration:EsConfiguration;
 		private var timerToFindGameRequest:Timer;

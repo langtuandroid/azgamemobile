@@ -220,11 +220,6 @@ package control.electroServerCommand
 			windowLayer.openWindow(waitingWindow);
 		}
 		
-		public function findGameRoom(roomId:int,password:String):void
-		{
-			coreAPI.findGameRoom(roomId, password);
-		}
-		
 		private function onDealCard(e:ElectroServerEvent):void 
 		{
 			callPlayingScreenAction(PlayingScreenAction.DEAL_CARD, e.data);
