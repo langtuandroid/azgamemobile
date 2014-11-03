@@ -60,6 +60,7 @@ package control
 	import event.DataFieldPhom;
 	import model.GameDataTLMN;
 	import model.MyDataTLMN;
+	import request.HTTPRequest;
 	
 	import event.ElectroServerEventTlmn;
 	import flash.events.Event;
@@ -1298,6 +1299,8 @@ package control
 			createGameRequest.createOnly = true;
 			createGameRequest.password = password;
 			electroServer.engine.addEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
+			writelog("create room " + myData.gameType + " - " + createGameRequest.zoneName + " - " + String(Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id) 
+											+ " - " + String(myData.roomId));
 			if (electroServer.engine.connected) 
 			{
 				electroServer.engine.send(createGameRequest);
@@ -1539,6 +1542,9 @@ package control
 				return;
 			if (_roomId != Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id)
 				return;
+			
+			writelog("send plugin request " + pluginName + " - " + String(Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id) 
+											+ " - " + String(_roomId));
 			var pluginRequest:PluginRequest = new PluginRequest();
 			pluginRequest.zoneId = _zoneId;
 			pluginRequest.roomId = _roomId;
@@ -1833,6 +1839,7 @@ package control
 			if (GameDataTLMN.getInstance().roomId != Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id)
 				return;
 			//trace("leaveRoom leaveRoom leaveRoom leaveRoom leaveRoom leaveRoom leaveRoom",Math.random());
+			writelog("send leave room " + String(GameDataTLMN.getInstance().roomId) + " - " + String(Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id));
 			var leaveRoomRequest:LeaveRoomRequest = new LeaveRoomRequest();
 			leaveRoomRequest.zoneId = GameDataTLMN.getInstance().zoneId;
 			leaveRoomRequest.roomId = GameDataTLMN.getInstance().roomId;
@@ -1996,6 +2003,34 @@ package control
 			sendPublicMessage(CommandTlmn.HEART_BEAT, null);
 		}
 		
+		private function writelog(str:String):void 
+		{
+			var httpReq:HTTPRequest = new HTTPRequest();
+			var displayname:String = MyDataTLMN.getInstance().myDisplayName;
+			var action:String = "web: " + str;
+			var method:String = "POST";
+			var obj:Object = new Object();
+			var writeLink:String = "";
+			if (mainData.isTest) 
+			{
+				writeLink = "http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/ClientWriteLog?game_id=AZGB_TLMN&NK_NM="
+								+ displayname + "&ACTION_NOTE=" + action;
+				httpReq.sendRequest(method, writeLink, obj, writeSuccess, true);
+			}
+			else 
+			{
+				writeLink = "http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/ClientWriteLog?game_id=AZGB_TLMN&NK_NM="
+								+ displayname + "&ACTION_NOTE=" + action;
+				httpReq.sendRequest(method, writeLink, obj, writeSuccess, true);
+				
+				
+			}
+		}
+		
+		private function writeSuccess(obj:Object):void 
+		{
+			trace(obj)
+		}
 	}
 
 }
