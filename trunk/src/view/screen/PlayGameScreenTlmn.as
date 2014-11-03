@@ -12,8 +12,10 @@ package view.screen
 	import flash.net.SharedObject;
 	import flash.utils.getDefinitionByName;
 	import inapp_purchase.IAPManager;
+	import request.HTTPRequest;
 	import sound.SoundLib;
 	import view.ScrollView.ScrollViewYun;
+	import view.window.AddMoneyWindow2;
 	import view.window.BaseWindow;
 	
 	import logic.CardsTlmn;
@@ -492,13 +494,14 @@ package view.screen
 			////trace("thang bi kick la minh: ", obj[DataField.USER_NAME] , MyDataTLMN.getInstance().myId)
 			if (obj[DataField.USER_NAME] == MyDataTLMN.getInstance().myId) 
 			{
+				writelog("roomMaster kick --> out room");
 				okOut();
 				var kickOutWindow:AlertWindow = new AlertWindow();
 				kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.roomMasterKick);
 				windowLayer.openWindow(kickOutWindow);
 				
 				windowLayer.isNoCloseAll = true;
-				electroServerCommand.joinLobbyRoom(true);
+				
 			}
 			else 
 			{
@@ -571,6 +574,7 @@ package view.screen
 			{
 				_myInfo._ready = true;
 				_myInfo.dealCard(obj[DataField.PLAYER_CARDS]);
+				writelog("deal card for me");
 				
 			}
 			else 
@@ -609,6 +613,8 @@ package view.screen
 				_timerKickMaster.stop();
 			}
 			
+			writelog("after deal card complete for me: " + String(whiteWin));
+			
 			if (whiteWin) 
 			{
 				showWhiteWin(objWhiteWin);
@@ -636,6 +642,7 @@ package view.screen
 			if (obj[DataField.USER_NAME] == MyDataTLMN.getInstance().myId) 
 			{
 				_myInfo.myReady();
+				writelog("user ready");
 			}
 			else 
 			{
@@ -654,13 +661,13 @@ package view.screen
 			{
 				_haveUserReady = true;
 				
-				_countTimerkick = _timerKick;
+				/*_countTimerkick = _timerKick;
 				content.timeKickUserTxt.visible = true;
 				content.timeKickUserTxt.text = String(_countTimerkick);
 				_timerKickMaster = new Timer(1000, _timerKick);
 				_timerKickMaster.addEventListener(TimerEvent.TIMER_COMPLETE, onKickMaster);
 				_timerKickMaster.addEventListener(TimerEvent.TIMER, onTimerKickMaster);
-				_timerKickMaster.start();
+				_timerKickMaster.start();*/
 			}
 			
 			checkShowTextNotice();
@@ -701,6 +708,7 @@ package view.screen
 				_haveUserReady = false;
 				_myInfo._userName = "";
 				
+				writelog("over time 15s --> out room");
 				okOut();
 				var kickOutWindow:AlertWindow = new AlertWindow();
 				kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.timerMasterKick);
@@ -816,13 +824,13 @@ package view.screen
 				{
 					_haveUserReady = true;
 					
-					_countTimerkick = _timerKick;
+					/*_countTimerkick = _timerKick;
 					content.timeKickUserTxt.visible = true;
 					content.timeKickUserTxt.text = String(_countTimerkick);
 					_timerKickMaster = new Timer(1000, _timerKick);
 					_timerKickMaster.addEventListener(TimerEvent.TIMER_COMPLETE, onKickMaster);
 					_timerKickMaster.addEventListener(TimerEvent.TIMER, onTimerKickMaster);
-					_timerKickMaster.start();
+					_timerKickMaster.start();*/
 				}
 			}
 			else 
@@ -979,6 +987,8 @@ package view.screen
 			canExitGame = true;
 			content.noc.visible = false;
 			_stageGame = 2;
+			
+			writelog("have white win, removeallcard, reset variable");
 			
 			content.noticeForUserTxt.text = "";
 			content.noticeForUserTxt.visible = false;
@@ -1572,6 +1582,7 @@ package view.screen
 		}
 		private function onOutGame(e:Event):void 
 		{
+			writelog("click out game in result window --> out room");
 			okOut();
 		}
 		
@@ -1594,49 +1605,62 @@ package view.screen
 			
 			if (GameDataTLMN.getInstance().notEnoughMoney) 
 			{
-				electroServerCommand.joinLobbyRoom();
-				dispatchEvent(new Event(ConstTlmn.OUT_ROOM, true));
-			}
-			
-			GameDataTLMN.getInstance().notEnoughMoney = false;
-			
-			_resultWindow.removeEventListener("close", onCloseResultWindow);
-			_resultWindow.removeEventListener("out game", onOutGame);
 				
-			removeAllDisCard();
-			
-			removeAllCardResult();
-			
-			if (_resultWindow) 
-			{
-				_resultWindow.visible = false;
-			}
-			
-			_myInfo.removeAllCard();
-			_myInfo.visibleResultGame();
-			for (var i:int = 0; i < _arrUserInfo.length; i++) 
-			{
-				_arrUserInfo[i].removeAllCards();
-				_arrUserInfo[i].waitNewGame();
-				_arrUserInfo[i].visibleResultGame();
-			}
-			
-			if (GameDataTLMN.getInstance().master == MyDataTLMN.getInstance().myId) 
-			{
-				checkShowTextNotice();
-				GameDataTLMN.getInstance().autoReady = false;
+				writelog("not enogh money --> out room");
+				okOut();
+				GameDataTLMN.getInstance().notEnoughMoney = false;
+				if (mainData.chooseChannelData.myInfo.money >= mainData.minMoney)
+				{
+					windowLayer.isNoCloseAll = true;
+					var kickOutWindow:AddMoneyWindow2 = new AddMoneyWindow2();
+					kickOutWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onKickOutWindowCloseComplete);
+					kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
+					windowLayer.openWindow(kickOutWindow);
+				}
 			}
 			else 
 			{
-				checkShowTextNotice();
+				_resultWindow.removeEventListener("close", onCloseResultWindow);
+				_resultWindow.removeEventListener("out game", onOutGame);
+					
+				removeAllDisCard();
 				
-				_myInfo.waitNewGame();
+				removeAllCardResult();
+				
+				if (_resultWindow) 
+				{
+					_resultWindow.visible = false;
+				}
+				writelog("game over, remove all card close result window");
+				_myInfo.removeAllCard();
+				_myInfo.visibleResultGame();
+				for (var i:int = 0; i < _arrUserInfo.length; i++) 
+				{
+					_arrUserInfo[i].removeAllCards();
+					_arrUserInfo[i].waitNewGame();
+					_arrUserInfo[i].visibleResultGame();
+				}
+				
+				if (GameDataTLMN.getInstance().master == MyDataTLMN.getInstance().myId) 
+				{
+					checkShowTextNotice();
+					GameDataTLMN.getInstance().autoReady = false;
+				}
+				else 
+				{
+					checkShowTextNotice();
+					
+					_myInfo.waitNewGame();
+				}
+				
+				if (GameDataTLMN.getInstance().autoReady) 
+				{
+					onClickReady(null);
+				}
 			}
 			
-			if (GameDataTLMN.getInstance().autoReady) 
-			{
-				onClickReady(null);
-			}
+			
+			
 			
 		}
 		
@@ -1708,6 +1732,8 @@ package view.screen
 				checkPosClock();
 			}
 			checkShowTextNotice();
+			
+			writelog("start game");
 		}
 		
 		private function onCompleteDealCard(e:TimerEvent):void 
@@ -1737,6 +1763,7 @@ package view.screen
 							_timerKickMaster.removeEventListener(TimerEvent.TIMER, onTimerKickMaster);
 							_timerKickMaster.stop();
 						}
+						writelog("deal card complete for all user ready");
 					}
 					dealcard = j + 1;
 					//trace("co 1 thang duowc chia: ", dealcard)
@@ -4194,15 +4221,13 @@ package view.screen
 		
 		private function outGameRoom():void 
 		{
-			dispatchEvent(new Event(ConstTlmn.OUT_ROOM, true));
-				electroServerCommand.joinLobbyRoom();
-				
-				EffectLayer.getInstance().removeAllEffect();
+			writelog("click out room --> out room");
+			okOut();
 		}
 		
 		public function destroy():void 
 		{
-			removeAllEvent();
+			//removeAllEvent();
 		}
 		
 		public function okOut():void 
@@ -4219,7 +4244,7 @@ package view.screen
 				_arrUserInfo[i].removeAvatar()
 				_arrUserInfo[i].removeAllEvent()
 			}
-			
+			writelog("out room, remove all card");
 			_myInfo.removeAllCard();
 			_myInfo.removeAllEvent();
 			_myInfo._isPlaying = false;
@@ -4238,6 +4263,8 @@ package view.screen
 				_contanierCardOutUser = null;
 			}
 			_isPlaying = false;
+			
+			removeAllEvent();
 			
 			dispatchEvent(new Event(ConstTlmn.OUT_ROOM, true));
 			electroServerCommand.joinLobbyRoom();
@@ -5009,6 +5036,35 @@ package view.screen
 			return arrAgain;
 		}
 		
+		
+		private function writelog(str:String):void 
+		{
+			var httpReq:HTTPRequest = new HTTPRequest();
+			var displayname:String = MyDataTLMN.getInstance().myDisplayName;
+			var action:String = "mobile: " + str;
+			var method:String = "POST";
+			var obj:Object = new Object();
+			var writeLink:String = "";
+			if (mainData.isTest) 
+			{
+				writeLink = "http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/ClientWriteLog?game_id=AZGB_TLMN&NK_NM="
+								+ displayname + "&ACTION_NOTE=" + action;
+				httpReq.sendRequest(method, writeLink, obj, writeSuccess, true);
+			}
+			else 
+			{
+				writeLink = "http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/ClientWriteLog?game_id=AZGB_TLMN&NK_NM="
+								+ displayname + "&ACTION_NOTE=" + action;
+				httpReq.sendRequest(method, writeLink, obj, writeSuccess, true);
+				
+				
+			}
+		}
+		
+		private function writeSuccess(obj:Object):void 
+		{
+			trace(obj)
+		}
 		
 		
 	}
