@@ -41,7 +41,7 @@ package view.screen.play
 		private var _arrCardDeck:Array = [];
 		public var _userName:String = "";
 		private var _contextMenu:ContextMenu;
-		private var _moneyEffect:MoneyEffect;
+		
 		private var _clock:Clock;
 		public var _isPlaying:Boolean = false;
 		private var _arrStar:Array = [];
@@ -472,33 +472,7 @@ package view.screen.play
 		
 		private function addMoneyEffect():void 
 		{
-			if (!_moneyEffect) 
-			{
-				_moneyEffect = new MoneyEffect();
-				if (_pos == 2) 
-				{
-					
-					
-					_moneyEffect.x = 35;
-					_moneyEffect.y = 170;
-					
-				}
-				else if (_pos == 1) 
-				{
-					
-					_moneyEffect.x = -95;
-					_moneyEffect.y = 85;
-				}
-				else
-				{
-					
-					_moneyEffect.x = 200;
-					_moneyEffect.y = 85;
-					
-				}
-					
-				content.addChild(_moneyEffect);
-			}
+			
 		}
 		
 		public function addMyMoney(money:Number):void 
@@ -548,7 +522,7 @@ package view.screen.play
 			}
 			
 			TweenMax.to(content.effectMoneySpecial, 3, { y: content.effectMoneySpecial.y - 130, onComplete:onCompleteMoneySpecial } );
-			//_moneyEffect.showEffect(money);
+			
 		}
 		
 		private function onCompleteMoneySpecial():void 
@@ -925,8 +899,6 @@ package view.screen.play
 			
 			ready = false;
 			
-			_avatar.removeAvatar();
-			
 			if (_isPlaying) 
 			{
 				content.outRoom.visible = true;
@@ -948,22 +920,63 @@ package view.screen.play
 		
 		public function removeAllEvent():void 
 		{
-			if (_contextMenu) 
+			if (content) 
 			{
-				_contextMenu.removeEventListener("kick", onClickKick);
+				if (_timerDealcard) 
+				{
+					_timerDealcard.removeEventListener(TimerEvent.TIMER, onTimerDealCard);
+					_timerDealcard.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
+					_timerDealcard.stop();
+				}
+				if (_timerShowChatde) 
+				{
+					_timerShowChatde.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteShowChatde);
+					_timerShowChatde.stop();
+				}
+				if (_contextMenu) 
+				{
+					_contextMenu.removeEventListener("kick", onClickKick);
+					_contextMenu.removeEventListener("close", onClose);
+					_contextMenu.removeEventListener("add friend", onClickAddFriend);
+					_contextMenu.removeEventListener("remove friend", onRemoveFriend);
+					_contextMenu.removeEventListener("kick", onClickKick);
+				}
+				
+				if (_contextMenu) 
+				{
+					removeChild(_contextMenu);
+					_contextMenu = null;
+				}
+				
+				if (_avatar) 
+				{
+					_avatar.removeAvatar();
+					_avatar.removeEventListener("loaderror", onLoadAvatarError);
+					//_avatar.removeEventListener("loadcomplete", onHideAvatarDefalt);
+					content.specialAvatar.removeChild(_avatar);
+					_avatar = null;
+					
+				}
+				
+				removeAllCards();
+				
+				
+				
+				_clock.removeEventListener(Clock.COUNT_TIME_FINISH, onOverTimer);
+				_clock.removeAllEvent();
+				content.showDetailUser.removeEventListener("onClick", onClickShowContex);
+				content.inviteBtn.removeEventListener(MouseEvent.CLICK, onClickInvite);
+				TweenMax.killChildTweensOf(this);
+				
+				var check:int = content.numChildren;
+				for (var i:int = 0; i < check; i++) 
+				{
+					content.removeChild(content.getChildAt(0));
+				}
+				
+				removeChild(content);
+				content = null;
 			}
-			
-			if (_timerDealcard) 
-			{
-				_timerDealcard.removeEventListener(TimerEvent.TIMER, onTimerDealCard);
-				_timerDealcard.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
-				_timerDealcard.stop();
-			}
-			
-			_clock.removeEventListener(Clock.COUNT_TIME_FINISH, onOverTimer);
-			content.showDetailUser.removeEventListener("onClick", onClickShowContex);
-			content.inviteBtn.removeEventListener(MouseEvent.CLICK, onClickInvite);
-			_avatar.addEventListener("loadError", onLoadAvatarError);
 		}
 		
 		public function removeCardDeck(num:int):void 

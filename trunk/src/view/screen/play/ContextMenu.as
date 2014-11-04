@@ -50,6 +50,20 @@ package view.screen.play
 			content.removeFriendBtn.removeEventListener(MouseEvent.CLICK, onClickRemoveFriend);
 			content.kickBtn.removeEventListener(MouseEvent.CLICK, onClickKick);
 			content.closeBtn.removeEventListener(MouseEvent.CLICK, onClose);
+			
+			if (avatar ) 
+			{
+				avatar.removeAvatar();
+			}
+			
+			var check:int = content.numChildren;
+			for (var i:int = 0; i < check; i++) 
+			{
+				content.removeChild(content.getChildAt(0));
+			}
+			
+			removeChild(content);
+			content = null;
 		}
 		
 		private function onClickViewInfo(e:MouseEvent):void 
