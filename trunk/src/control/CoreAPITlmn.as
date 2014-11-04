@@ -430,7 +430,7 @@ package control
 		
 		private function onGetRoomList(e:TimerEvent):void 
 		{
-			getRoomList()
+			getRoomList();
 		}
 		
 		public function getFriendList():void
@@ -443,9 +443,14 @@ package control
 		
 		public function getRoomList():void
 		{
+
+			if (mainData.isNoRenderLobbyList)
+				return;	
+
 			/*if (GameDataTLMN.getInstance().isNoRenderLobbyList)
 				return;*/
 				
+
 			var pluginMessage:EsObject = new EsObject();
 			pluginMessage.setString("command", CommandTlmn.GET_ROOM_LIST);
 			sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().roomId,
@@ -1542,9 +1547,10 @@ package control
 				return;
 			if (_roomId != Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id)
 				return;
-			
+
 			writelog("send plugin request " + pluginName + " - " + String(Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id) 
 											+ " - " + String(_roomId));
+
 			var pluginRequest:PluginRequest = new PluginRequest();
 			pluginRequest.zoneId = _zoneId;
 			pluginRequest.roomId = _roomId;
@@ -1963,26 +1969,6 @@ package control
 			esObject.setString("playerName", MyDataTLMN.getInstance().myId);
 			sendPublicMessage(CommandTlmn.NEXTTURN, esObject);
 		}
-		
-		
-		public function exitGame(type:String):void 
-		{
-			leaveRoom();
-			if (type == "game") 
-			{
-				joinRoom(GameDataTLMN.getInstance().gameName, "");
-			}
-			//
-			/*if (timerToFindGameRequest)
-			{
-				timerToFindGameRequest.removeEventListener(TimerEvent.TIMER, onFindGameList);
-				timerToFindGameRequest.stop();
-			}
-			timerToFindGameRequest = new Timer(2000);
-			timerToFindGameRequest.addEventListener(TimerEvent.TIMER, onFindGameList);
-			timerToFindGameRequest.start();*/
-		}
-		
 		
 		private var _configuration:EsConfiguration;
 		private var timerToFindGameRequest:Timer;
