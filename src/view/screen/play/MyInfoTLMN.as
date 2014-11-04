@@ -70,7 +70,7 @@ package view.screen.play
 		private var _sortToIdCard:Boolean = true; // mặc định khi ấn xếp bài lần đầu thì xếp theo các bộ bài, đôi, 3
 		public var _userName:String = "";
 		private var _checkSort:Boolean = false;
-		private var _moneyEffect:MoneyEffect;
+		
 		public var _isPassTurn:Boolean = false;
 		private var _clock:Clock;
 		private var _glowFilter:TextFormat = new TextFormat(); 
@@ -513,13 +513,7 @@ package view.screen.play
 		
 		private function addMoneyEffect():void 
 		{
-			if (!_moneyEffect) 
-			{
-				_moneyEffect = new MoneyEffect();
-				_moneyEffect.x = 60;
-				_moneyEffect.y = -30;
-				content.addChild(_moneyEffect);
-			}
+			
 		}
 		
 		public function addMyMoney():void 
@@ -563,7 +557,7 @@ package view.screen.play
 			
 			
 			TweenMax.to(content.effectMoneySpecial, 3, { y: content.effectMoneySpecial.y - 50, onComplete:onCompleteMoneySpecial } );
-			//_moneyEffect.showEffect(money);
+			
 		}
 		
 		public function addMoney(money:String):void 
@@ -597,7 +591,7 @@ package view.screen.play
 			content.effectMoneySpecial.text = format(Number(money));
 			//MyDataTLMN.getInstance().myMoney[0] = int(MyDataTLMN.getInstance().myMoney[0]) + int(money);
 			TweenMax.to(content.effectMoneySpecial, 3, { y: content.effectMoneySpecial.y - 130, onComplete:onCompleteMoneySpecial } );
-			//_moneyEffect.showEffect(money);
+			
 		}
 		
 		private function onCompleteMoneySpecial():void 
@@ -609,38 +603,63 @@ package view.screen.play
 		
 		public function removeAllEvent():void 
 		{
-			content.autoReadyBtn.removeEventListener(MouseEvent.CLICK, onClickAutoReady);
-			content.sortBtn.removeEventListener(MouseEvent.CLICK, onClickSort);
-			content.chooseAgain.removeEventListener(MouseEvent.CLICK, onClickChooseAgain);
-			content.hitBtn.removeEventListener(MouseEvent.CLICK, onClickHit);
-			content.passTurnBtn.removeEventListener(MouseEvent.CLICK, onClickPassTurn);
-			content.readyBtn.removeEventListener(MouseEvent.CLICK, onClickready);
-			
-			_clock.removeEventListener(Clock.COUNT_TIME_FINISH, onOverTimer);
-			_avatar.removeEventListener("loadError", onLoadAvatarError);
-			if (_avatar	) 
+			if (content) 
 			{
-				_avatar.removeAvatar();
-			}
-			
-			
-			if (_timerDealcard) 
-			{
-				_timerDealcard.removeEventListener(TimerEvent.TIMER, onTimerDealCard);
-				_timerDealcard.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
-				_timerDealcard.stop();
-			}
-			
-			if (_timerShowChatde) 
-			{
-				_timerShowChatde.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteShowChatde);
-				_timerShowChatde.stop();
-			}
-			
-			if (_timerVoiceLose) 
-			{
-				_timerVoiceLose.stop();
-				_timerVoiceLose.removeEventListener(TimerEvent.TIMER_COMPLETE, onShowVoiceLose);
+				content.autoReadyBtn.removeEventListener(MouseEvent.CLICK, onClickAutoReady);
+				content.sortBtn.removeEventListener(MouseEvent.CLICK, onClickSort);
+				content.chooseAgain.removeEventListener(MouseEvent.CLICK, onClickChooseAgain);
+				content.hitBtn.removeEventListener(MouseEvent.CLICK, onClickHit);
+				content.passTurnBtn.removeEventListener(MouseEvent.CLICK, onClickPassTurn);
+				content.readyBtn.removeEventListener(MouseEvent.CLICK, onClickready);
+				
+				_clock.removeEventListener(Clock.COUNT_TIME_FINISH, onOverTimer);
+				_clock.removeAllEvent();
+				_avatar.removeEventListener("loaderror", onLoadAvatarError);
+				//_avatar.removeEventListener("loadcomplete", onHideAvatarDefalt);
+				if (_timerShowChatde) 
+				{
+					_timerShowChatde.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteShowChatde);
+					_timerShowChatde.stop();
+				}
+				if (_timerDealcard) 
+				{
+					_timerDealcard.removeEventListener(TimerEvent.TIMER, onTimerDealCard);
+					_timerDealcard.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
+					_timerDealcard.stop();
+				}
+				if (_timerVoiceLose) 
+				{
+					_timerVoiceLose.stop();
+					_timerVoiceLose.removeEventListener(TimerEvent.TIMER_COMPLETE, onShowVoiceLose);
+				}
+				
+				removeAllCard();
+				removeAllCardDeal();
+				
+				
+				if (_avatar) 
+				{
+					_avatar.removeAvatar();
+				}
+				
+				TweenMax.killChildTweensOf(this);
+				
+				if (_contextMenu) 
+				{
+					_contextMenu.removeEventListener("close", onClose);	
+					removeChild(_contextMenu);
+					_contextMenu = null;
+				}
+				
+				
+				var check:int = content.numChildren;
+				for (var i:int = 0; i < check; i++) 
+				{
+					content.removeChild(content.getChildAt(0));
+				}
+				
+				removeChild(content);
+				content = null;
 			}
 				
 		}

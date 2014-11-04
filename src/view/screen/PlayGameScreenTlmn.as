@@ -58,10 +58,10 @@ package view.screen
 	
 	import view.card.CardDeck;
 	import view.clock.Clock;
-	import view.screen.play.Emoticon;
+	
 	
 	import view.screen.play.ContextMenu;
-	import view.screen.play.MoneyEffect;
+	
 	import view.screen.play.MyInfoTLMN;
 	import view.screen.play.PlayerInfoTLMN;
 	
@@ -87,7 +87,7 @@ package view.screen
 		private var _userInfo:PlayerInfoTLMN;
 		private var _card:CardTlmn;
 		private var _contextMenu:ContextMenu;
-		private var _moneyEffect:MoneyEffect;
+		
 		
 		//private var _waitToPlay:Sprite;
 		private var _waitToReady:Sprite;
@@ -113,7 +113,7 @@ package view.screen
 		private var _glowFilter:TextFormat = new TextFormat(); 
 		
 		private var _emoBoardButt:MovieClip;
-		private var _emoBoard:Emoticon;
+		
 		
 		private var arrChat:Array = ["Sad_Game", "Nausea_Game", "Laught_Game", "BigLaugh_Game", "Glass_Game", "Heart_Game", 
 										"Whistling_Game", "Cry_Game", "Kiss_Game", "Tongue_Game", "Blink_Game", "Agree_Game", 
@@ -338,6 +338,10 @@ package view.screen
 		
 		private function onEmoClick(e:MouseEvent):void 
 		{
+			if (!stage) 
+			{
+				return;
+			}
 			for (var i:int = 0; i < emoArray.length; i++) 
 			{
 				if (e.currentTarget == emoArray[i])
@@ -404,7 +408,11 @@ package view.screen
 		
 		private function onSendHeartBeat(e:TimerEvent):void 
 		{
-			electroServerCommand.pingToServer();
+			if (stage) 
+			{
+				electroServerCommand.pingToServer();
+			}
+			
 			
 			if (heartbeart) 
 			{
@@ -1333,7 +1341,10 @@ package view.screen
 		
 		public function onCountTimeFinish():void 
 		{
-			
+			if (!stage) 
+			{
+				return;
+			}
 			if (GameDataTLMN.getInstance().firstPlayer == MyDataTLMN.getInstance().myId) 
 			{
 				//trace("het gio luot dau tien")
@@ -1677,6 +1688,10 @@ package view.screen
 		
 		private function onClickStartGame(e:MouseEvent):void 
 		{
+			if (!stage) 
+			{
+				return;
+			}
 			//trace("click bat dau: ")
 			if (SoundManager.getInstance().isSoundOn) 
 			{
@@ -1782,12 +1797,19 @@ package view.screen
 		
 		private function onClickNextTurn(e:Event):void 
 		{
-			
+			if (!stage) 
+			{
+				return;
+			}
 			electroServerCommand.nextTurn();
 		}
 		
 		private function onClickHitCard(e:Event):void 
 		{
+			if (!stage) 
+			{
+				return;
+			}
 			//trace("====== cac quan danh ra =====")
 			//trace(e.target._arrCardChoose)
 			electroServerCommand.myDisCard(e.target._arrCardChoose);
@@ -3556,122 +3578,141 @@ package view.screen
 		
 		public function removeAllEvent():void 
 		{
-			content.settingBoard.onSoundEffect.removeEventListener(MouseEvent.CLICK, onClickOnOffSoundEffect);
-			content.settingBoard.offSoundEffect.removeEventListener(MouseEvent.CLICK, onClickOnOffSoundEffect);
-			content.settingBoard.onMusic.removeEventListener(MouseEvent.CLICK, onClickOnOffMusic);
-			content.settingBoard.offMusic.removeEventListener(MouseEvent.CLICK, onClickOnOffMusic);
-			content.emoBtn.removeEventListener(MouseEvent.CLICK, onEmoticonButtonClick);
-			var i:int;
-			for (i = 0; i < emoArray.length; i++) 
+			if (content) 
 			{
+				content.settingBoard.onSoundEffect.removeEventListener(MouseEvent.CLICK, onClickOnOffSoundEffect);
+				content.settingBoard.offSoundEffect.removeEventListener(MouseEvent.CLICK, onClickOnOffSoundEffect);
+				content.settingBoard.onMusic.removeEventListener(MouseEvent.CLICK, onClickOnOffMusic);
+				content.settingBoard.offMusic.removeEventListener(MouseEvent.CLICK, onClickOnOffMusic);
+				content.emoBtn.removeEventListener(MouseEvent.CLICK, onEmoticonButtonClick);
+				var i:int;
+				for (i = 0; i < emoArray.length; i++) 
+				{
+					
+					emoArray[i].removeEventListener(MouseEvent.MOUSE_UP, onEmoClick);
+					
+				}
 				
-				emoArray[i].removeEventListener(MouseEvent.MOUSE_UP, onEmoClick);
+				for (i = 0; i < _arrEmoForUser.length; i++) 
+				{
+					var timer:Timer = _arrEmoForUser[i][1];
+					timer.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteShowEmo);
+					timer.stop();
+					
+					_arrEmoForUser[i][0].parent.removeChild(_arrEmoForUser[i][0]);
+				}
 				
-			}
-			
-			for (i = 0; i < _arrEmoForUser.length; i++) 
-			{
-				var timer:Timer = _arrEmoForUser[i][1];
-				timer.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteShowEmo);
-				timer.stop();
+				haveUserReady = false;
 				
-				_arrEmoForUser[i][0].parent.removeChild(_arrEmoForUser[i][0]);
+				if (_timerKickMaster) 
+				{
+					_timerKickMaster.removeEventListener(TimerEvent.TIMER_COMPLETE, onKickMaster);
+					_timerKickMaster.removeEventListener(TimerEvent.TIMER, onTimerKickMaster);
+					_timerKickMaster.stop();
+				}
+				
+				content.signOutBtn.removeEventListener(MouseEvent.CLICK, onClickSignOutGame);
+				content.settingBoard.fullBtn.removeEventListener(MouseEvent.CLICK, onClickFullGame);
+				content.settingBoard.ipBtn.removeEventListener(MouseEvent.CLICK, onClickIPGame);
+				content.settingBoard.guideBtn.removeEventListener(MouseEvent.CLICK, onClickGuidGame);
+				
+				content.startGame.removeEventListener(MouseEvent.CLICK, onClickStartGame);
+				
+				_arrRealUser = [];
+				
+				for (i = 0; i < _arrUserInfo.length; i++) 
+				{
+					_arrUserInfo[i].removeAllEvent();
+					_arrUserInfo[i].removeEventListener("showInfo", onShowInfo);
+					_arrUserInfo[i].removeEventListener("kick", onClickKick);
+					_arrUserInfo[i].removeEventListener("add friend", onAddFriend);
+					_arrUserInfo[i].removeEventListener("remove friend", onRemoveFriend);
+					_arrUserInfo[i].removeEventListener(ConstTlmn.INVITE, onClickInvite);
+					
+				}
+				
+				
+				
+				mainData.removeEventListener(MainData.UPDATE_SYSTEM_NOTICE, onUpdateSystemNotice);
+				if (timerToGetSystemNoticeInfo)
+				{
+					timerToGetSystemNoticeInfo.removeEventListener(TimerEvent.TIMER, onGetSystemNoticeInfo);
+					timerToGetSystemNoticeInfo.stop();
+				}
+				
+				if (heartbeart) 
+				{
+					heartbeart.removeEventListener(TimerEvent.TIMER_COMPLETE, onSendHeartBeat);
+					heartbeart.stop();
+				}
+				
+				_myInfo.removeAllEvent();
+				_myInfo.removeEventListener("showInfo", onShowMyInfo);
+				_myInfo.removeEventListener("next turn", onClickNextTurn);
+				_myInfo.removeEventListener("hit card", onClickHitCard);
+				_myInfo.removeEventListener(ConstTlmn.READY, onClickReady);
+				_myInfo._userName = "";
+				
+				_chatBox.removeAllChat();
+				GameDataTLMN.getInstance().removeEventListener(ConstTlmn.HAVE_CHAT, onUpdatePublicChat);
+				_chatBox.removeEventListener(ChatBox.HAVE_CHAT, onHaveChat);
+				_chatBox.removeEventListener(ChatBox.BACK_BUTTON_CLICK, onChatBoxBackButtonClick);
+				chatLayer.removeChild(_chatBox);
+				
+				//GameDataTLMN.getInstance().removeEventListener(ConstTlmn.ADD_FRIEND, onUpdateAddFriend);
+				GameDataTLMN.getInstance().playingData.removeEventListener(PlayingData.UPDATE_PLAYING_SCREEN, onUpdatePlayingScreen);
+				
+				_resultWindow.removeEventListener("close", onCloseResultWindow);
+				_resultWindow.removeEventListener("out game", onOutGame);
+				
+				GameDataTLMN.getInstance().autoReady = false;
+				
+				if (timerShowResult) 
+				{
+					timerShowResult.removeEventListener(TimerEvent.TIMER_COMPLETE, onShowResult);
+					timerShowResult.stop();
+				}
+				
+				if (timerShowResultWhiteWin) 
+				{
+					timerShowResultWhiteWin.removeEventListener(TimerEvent.TIMER_COMPLETE, onResetGame);
+					timerShowResultWhiteWin.stop();
+				}
+				
+				if (_timerShowSpecial) 
+				{
+					_timerShowSpecial.stop();
+					_timerShowSpecial.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteShowSpecial);
+				}
+				if (timerDealcardForme) 
+				{
+					timerDealcardForme.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcardForMe);
+					timerDealcardForme.stop();
+				}
+				if (timerShowChatDe) 
+				{
+					timerShowChatDe.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteShowChatDe);
+					timerShowChatDe.stop();
+				}
+				
+				if (timerDealCard) 
+				{
+					timerDealCard.removeEventListener(TimerEvent.TIMER, onCompleteDealCard);
+					timerDealCard.stop();
+				}
+				removeAllCardResult();
+				removeAllDisCard();
+				
+				var check:int = content.numChildren;
+				for (i = 0; i < check; i++) 
+				{
+					content.removeChild(content.getChildAt(0));
+				}
+				
+				gameLayer.removeChild(content);
+				content = null;
 			}
 			
-			haveUserReady = false;
-			
-			if (_timerKickMaster) 
-			{
-				_timerKickMaster.removeEventListener(TimerEvent.TIMER_COMPLETE, onKickMaster);
-				_timerKickMaster.removeEventListener(TimerEvent.TIMER, onTimerKickMaster);
-				_timerKickMaster.stop();
-			}
-			
-			content.signOutBtn.removeEventListener(MouseEvent.CLICK, onClickSignOutGame);
-			content.settingBoard.fullBtn.removeEventListener(MouseEvent.CLICK, onClickFullGame);
-			content.settingBoard.ipBtn.removeEventListener(MouseEvent.CLICK, onClickIPGame);
-			content.settingBoard.guideBtn.removeEventListener(MouseEvent.CLICK, onClickGuidGame);
-			
-			content.startGame.removeEventListener(MouseEvent.CLICK, onClickStartGame);
-			
-			_arrRealUser = [];
-			
-			for (i = 0; i < _arrUserInfo.length; i++) 
-			{
-				_arrUserInfo[i].removeAllEvent();
-				_userInfo.removeEventListener("showInfo", onShowInfo);
-				_userInfo.removeEventListener("kick", onClickKick);
-				_userInfo.removeEventListener("add friend", onAddFriend);
-				_userInfo.removeEventListener("remove friend", onRemoveFriend);
-				_userInfo.removeEventListener(ConstTlmn.INVITE, onClickInvite);
-				_arrUserInfo[i].removeEventListener(ConstTlmn.INVITE, onClickInvite);
-			}
-			
-			
-			
-			mainData.removeEventListener(MainData.UPDATE_SYSTEM_NOTICE, onUpdateSystemNotice);
-			if (timerToGetSystemNoticeInfo)
-			{
-				timerToGetSystemNoticeInfo.removeEventListener(TimerEvent.TIMER, onGetSystemNoticeInfo);
-				timerToGetSystemNoticeInfo.stop();
-			}
-			
-			if (heartbeart) 
-			{
-				heartbeart.removeEventListener(TimerEvent.TIMER_COMPLETE, onSendHeartBeat);
-				heartbeart.stop();
-			}
-			
-			_myInfo.removeAllEvent();
-			_myInfo.removeEventListener("showInfo", onShowMyInfo);
-			_myInfo.removeEventListener("next turn", onClickNextTurn);
-			_myInfo.removeEventListener("hit card", onClickHitCard);
-			_myInfo.removeEventListener(ConstTlmn.READY, onClickReady);
-			
-			_chatBox.removeAllChat();
-			GameDataTLMN.getInstance().removeEventListener(ConstTlmn.HAVE_CHAT, onUpdatePublicChat);
-			_chatBox.removeEventListener(ChatBox.HAVE_CHAT, onHaveChat);
-			_chatBox.removeEventListener(ChatBox.BACK_BUTTON_CLICK, onChatBoxBackButtonClick);
-			chatLayer.removeChild(_chatBox);
-			
-			GameDataTLMN.getInstance().playingData.removeEventListener(PlayingData.UPDATE_PLAYING_SCREEN, onUpdatePlayingScreen);
-			
-			_resultWindow.removeEventListener("close", onCloseResultWindow);
-			_resultWindow.removeEventListener("out game", onOutGame);
-			
-			GameDataTLMN.getInstance().autoReady = false;
-			
-			if (timerShowResult) 
-			{
-				timerShowResult.removeEventListener(TimerEvent.TIMER_COMPLETE, onShowResult);
-				timerShowResult.stop();
-			}
-			
-			if (timerShowResultWhiteWin) 
-			{
-				timerShowResultWhiteWin.removeEventListener(TimerEvent.TIMER_COMPLETE, onResetGame);
-				timerShowResultWhiteWin.stop();
-			}
-			
-			if (_timerShowSpecial) 
-			{
-				_timerShowSpecial.stop();
-				_timerShowSpecial.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteShowSpecial);
-			}
-			
-			if (timerShowChatDe) 
-			{
-				timerShowChatDe.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteShowChatDe);
-				timerShowChatDe.stop();
-			}
-			
-			if (timerDealCard) 
-			{
-				timerDealCard.removeEventListener(TimerEvent.TIMER, onCompleteDealCard);
-				timerDealCard.stop();
-			}
-			removeAllCardResult();
-			removeAllDisCard();
 		}
 		
 		private function addComponent():void 
@@ -4057,48 +4098,27 @@ package view.screen
 		
 		private function onCreateBoardEmoChat(e:MouseEvent):void 
 		{
-			////trace(_emoBoard)
-			/*if (!_emoBoard) 
-			{
-				_emoBoard = new Emoticon();
-				_emoBoard.x = 225;
-				_emoBoard.y = 250;
-				addChild(_emoBoard);
-				
-			}
-			else if (_emoBoard.visible == true ) 
-			{
-				_emoBoard.visible = false;
-			}
-			else 
-			{
-				_emoBoard.visible = true;
-			}
-			if (timer) 
-			{
-				timer.stop();
-				timer.removeEventListener(TimerEvent.TIMER_COMPLETE, onComplete);
-			}
-			timer = new Timer(1000, 5);
-			timer.addEventListener(TimerEvent.TIMER_COMPLETE, onComplete);
-			timer.start();
-			_emoBoard.addEventListener("chose emo", onSendEmo);*/
+			
 		}
 		
 		private function onComplete(e:TimerEvent):void 
 		{
-			_emoBoard.visible = false;
+			
 		}
 		
 		private function onSendEmo(e:Event):void 
 		{
+			if (!stage) 
+			{
+				return;
+			}
 			if (timer) 
 			{
 				timer.stop();
 				timer.removeEventListener(TimerEvent.TIMER_COMPLETE, onComplete);
 			}
 			////trace("co emo gui len ne: ", e.target.nameOfEmo)
-			_emoBoard.visible = false;
+			
 			electroServerCommand.sendPublicChat(MyDataTLMN.getInstance().myId, MyDataTLMN.getInstance().myDisplayName,
 													e.target.nameOfEmo, true);
 		}
@@ -4232,6 +4252,10 @@ package view.screen
 		
 		public function okOut():void 
 		{
+			if (!stage) 
+			{
+				return;
+			}
 			if (_chatBox) 
 			{
 				_chatBox.removeAllChat();
@@ -4409,6 +4433,10 @@ package view.screen
 		
 		private function onHaveChat(e:Event):void 
 		{
+			if (!stage) 
+			{
+				return;
+			}
 			////trace(e.target.inputText.text);
 			electroServerCommand.sendPublicChat(MyDataTLMN.getInstance().myId, MyDataTLMN.getInstance().myDisplayName,
 												e.target.zInputText.text, false);
@@ -4591,67 +4619,6 @@ package view.screen
 					}
 				}
 				
-				
-				/*if (!waiting) // Nếu phòng chơi chưa bắt đầu
-				{
-					if (_arrUserList.length > 1)
-					{
-						var esObject:EsObject = new EsObject();
-						esObject.setString(DataField.USER_NAME, MainData.getInstance().myName);
-						var isCompareGroup:Boolean;
-						for (i = 0; i < _arrUserList.length; i++) 
-						{
-							if (_arrUserList[i])
-							{
-								if (PlayerInfo(_arrUserList[i]).unLeaveCards && PlayerInfo(_arrUserList[i])._userName != MainData.getInstance().myName)
-									electroServerCommand.sendPrivateMessage([PlayerInfo(_arrUserList[i]).userName], Command.REQUEST_IS_COMPARE_GROUP, esObject);
-							}
-						}
-						//showReadyButton();
-						waitToReady.visible = false;
-					}
-					else
-					{
-						waitToReady.visible = true;
-					}
-				}
-				else // Nếu phòng chơi đang chơi
-				{
-					//hideStartButton();
-					//hideReadyButton();
-					waitToPlay.visible = false;
-					waitToReady.visible = false;
-					waitToStart.visible = false;
-					//addCardManager();
-					// bổ sung thông tin cá nhân
-					for (i = 0; i < userList.length; i++) 
-					{
-						// Không phải add cho mình vì minh vừa vào nên chắc chắc là không có bài
-						if (!userList[i][DataField.IS_VIEWER]) 
-						{
-							//if (userList[i][DataField.NUM_CARD] == 13)
-								//arrangeTime.visible = true;
-							addCardInfo(userList[i]);
-						}
-					}
-				
-					playingPlayerArray = new Array();
-					for (i = 0; i < allPlayerArray.length; i++)
-					{
-						if (allPlayerArray[i])
-						{
-							if (PlayerInfo(allPlayerArray[i]).isPlaying)
-							{
-								playingPlayerArray.push(allPlayerArray[i]);
-							}
-						}
-					}*/
-					/*esObject = new EsObject();
-					esObject.setString(DataField.USER_NAME, mainData.chooseChannelData.myInfo.uId);
-					electroServerCommand.sendPrivateMessage([PlayerInfo(playingPlayerArray[0]).userName], Command.REQUEST_TIME_CLOCK, esObject);
-					isPlaying = true;
-					cardManager.playerArray = playingPlayerArray;
-				}*/
 			}
 			
 			
@@ -4737,23 +4704,39 @@ package view.screen
 		
 		private function onAddFriend(e:Event):void 
 		{
+			if (!stage) 
+			{
+				return;
+			}
 			var player:PlayerInfoTLMN = e.currentTarget as PlayerInfoTLMN;
 			electroServerCommand.makeFriend(player._userName, DataField.IN_GAME_ROOM);
 		}
 		
 		private function onRemoveFriend(e:Event):void 
 		{
+			if (!stage) 
+			{
+				return;
+			}
 			var player:PlayerInfoTLMN = e.currentTarget as PlayerInfoTLMN;
 			electroServerCommand.removeFriend(player._userName, DataField.IN_GAME_ROOM);
 		}
 		
 		private function onClickReady(e:Event):void 
 		{
+			if (!stage) 
+			{
+				return;
+			}
 			electroServerCommand.readyPlay();
 		}
 		
 		private function onClickKick(e:Event):void 
 		{
+			if (!stage) 
+			{
+				return;
+			}
 			electroServerCommand.kickUser(e.target._userName);
 		}
 		

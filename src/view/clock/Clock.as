@@ -117,6 +117,31 @@ package view.clock
 			TweenMax.killChildTweensOf(this);
 		}
 		
+		
+		public function removeAllEvent():void 
+		{
+			if (content) 
+			{
+				if (timerCount) 
+				{
+					timerCount.removeEventListener(TimerEvent.TIMER_COMPLETE, onWaitOverTimer);
+					timerCount.stop();
+				}
+				timerCount = null;
+				
+				TweenMax.killChildTweensOf(this);
+				
+				var check:int = content.numChildren;
+				for (var i:int = 0; i < check; i++) 
+				{
+					content.removeChild(content.getChildAt(0));
+				}
+				
+				removeChild(content);
+				content = null;
+			}
+		}
+		
 	}
 
 }

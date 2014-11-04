@@ -818,16 +818,35 @@ package view.screen
 			{
 				var i:int;
 				var j:int;
-				for (i = 0; i < mainData.chooseChannelData.channelInfoArray.length; i++) 
+				var channelObject:Object;
+				if (mainData.game_id == "AZGB_TLMN") 
 				{
-					var channelObject:Object = mainData.chooseChannelData.channelInfoArray[i];
-					if (channelObject[DataFieldMauBinh.USERS_ONLINE] < channelObject[DataFieldMauBinh.CHANNEL_MAX_PLAYER])
+					//for (i = 0; i < mainData.chooseChannelData.channelInfoArray.length; i++) 
+					for (i = mainData.chooseChannelData.channelInfoArray.length - 1; i > -1; i--) 
 					{
-						if (i == 0)
-							firstChannelId = channelObject[DataFieldMauBinh.CHANNEL_NUM];
-						break;
+						channelObject = mainData.chooseChannelData.channelInfoArray[i];
+						if (channelObject[DataFieldMauBinh.USERS_ONLINE] < channelObject[DataFieldMauBinh.CHANNEL_MAX_PLAYER])
+						{
+							if (i == 0)
+								firstChannelId = channelObject[DataFieldMauBinh.CHANNEL_NUM];
+							break;
+						}
 					}
 				}
+				else 
+				{
+					for (i = 0; i < mainData.chooseChannelData.channelInfoArray.length; i++) 
+					{
+						channelObject = mainData.chooseChannelData.channelInfoArray[i];
+						if (channelObject[DataFieldMauBinh.USERS_ONLINE] < channelObject[DataFieldMauBinh.CHANNEL_MAX_PLAYER])
+						{
+							if (i == 0)
+								firstChannelId = channelObject[DataFieldMauBinh.CHANNEL_NUM];
+							break;
+						}
+					}
+				}
+				
 				mainData.currentChannelId = channelObject[DataFieldMauBinh.CHANNEL_NUM];
 				mainData.currentPort = channelObject[DataFieldMauBinh.CHANNEL_PORT];
 				

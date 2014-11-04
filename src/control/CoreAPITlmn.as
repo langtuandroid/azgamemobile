@@ -1993,7 +1993,7 @@ package control
 		{
 			var httpReq:HTTPRequest = new HTTPRequest();
 			var displayname:String = MyDataTLMN.getInstance().myDisplayName;
-			var action:String = "web: " + str;
+			var action:String = "mobile: " + str;
 			var method:String = "POST";
 			var obj:Object = new Object();
 			var writeLink:String = "";

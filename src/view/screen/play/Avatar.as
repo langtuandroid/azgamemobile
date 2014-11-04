@@ -183,7 +183,21 @@ package view.screen.play
 				content.removeChild(loader);
 				loader = null;
 			}
+			if (content) 
+			{
+				content.click.removeEventListener(MouseEvent.CLICK, onClick);
+				
+				var check:int = content.numChildren;
+				for (var i:int = 0; i < check; i++) 
+				{
+					content.removeChild(content.getChildAt(0));
+				}
+				
+				removeChild(content);
+				content = null;
+			}
 			
+		
 		}
 		
 		private function onCompleteStartLoader(e:TimerEvent):void 
