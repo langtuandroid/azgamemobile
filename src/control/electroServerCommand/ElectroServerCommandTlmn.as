@@ -48,7 +48,7 @@ package control.electroServerCommand
 			ipNumber = "203.162.121.120";//mainData.init.ipNumber;
 			portNumber = mainData.currentPort;
 			if (mainData.isTest)
-				portNumber = 3101;
+				mainData.currentPort = 3101;
 			channelId = mainData.currentChannelId;
 			capacity = _capacity;
 			myUserName = _userName;
@@ -57,7 +57,7 @@ package control.electroServerCommand
 			if(!configuration)
 				configuration = new EsConfiguration();
 			configuration.ip = ipNumber;
-			configuration.port = portNumber;
+			configuration.port = mainData.currentPort;
 			configuration.protocol = Protocol.BinaryTCP;
 			configuration.path = "serverTlmn.xml";
 			if (!coreAPI)

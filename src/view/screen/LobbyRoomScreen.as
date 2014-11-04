@@ -593,12 +593,21 @@ package view.screen
 			GameDataTLMN.getInstance().levelLobby = channelList.currentChannelData.channelName;
 			
 			//mainCommand.electroServerCommand.joinLobbyRoom();
-			mainCommand.electroServerCommand.startConnect("", channelList.currentChannelData.channelId);
+			//mainCommand.electroServerCommand.startConnect("", channelList.currentChannelData.channelId);
 			mainData.fee = channelList.currentChannelData.fee;
 			channelInfoTxt.text = mainData.gameName + " - " + channelList.currentChannelData.channelName;
 			mainData.playingData.gameRoomData.channelName = channelList.currentChannelData.channelName;
 			mainData.channelNum = String(channelList.currentChannelData.channelId).charAt(0);
 			mainData.playingData.gameRoomData.betting = channelList.currentChannelData.betting;
+			
+			var timer:Timer = new Timer(1000, 1);
+			timer.addEventListener(TimerEvent.TIMER_COMPLETE, onTimerComplete);
+			timer.start();
+		}
+		
+		private function onTimerComplete(e:TimerEvent):void 
+		{
+			MainCommand.getInstance().electroServerCommand.startConnect("", mainData.currentChannelId);
 		}
 		
 		private function reArrageChannelButton(index:int, isRollBack:Boolean):void 

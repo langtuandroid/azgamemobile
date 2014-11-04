@@ -77,7 +77,7 @@ package
 	 * ...
 	 * @author Yun
 	 */
-	[Frame(factoryClass="Preloader")]
+	//[Frame(factoryClass="Preloader")]
 	[SWF(frameRate="24", width="960", height="600", backgroundColor='0x000000')]
 	public class BoGameBaiMainView extends Sprite 
 	{
