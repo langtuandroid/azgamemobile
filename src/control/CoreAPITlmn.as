@@ -2021,7 +2021,7 @@ package control
 			{
 				writeLink = "http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/ClientWriteLog?game_id=AZGB_TLMN&NK_NM="
 								+ displayname + "&ACTION_NOTE=" + action;
-				//httpReq.sendRequest(method, writeLink, obj, writeSuccess, true);
+				httpReq.sendRequest(method, writeLink, obj, writeSuccess, true);
 				
 				
 			}
