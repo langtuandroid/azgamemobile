@@ -669,13 +669,13 @@ package view.screen
 			{
 				_haveUserReady = true;
 				
-				/*_countTimerkick = _timerKick;
+				_countTimerkick = _timerKick;
 				content.timeKickUserTxt.visible = true;
 				content.timeKickUserTxt.text = String(_countTimerkick);
 				_timerKickMaster = new Timer(1000, _timerKick);
 				_timerKickMaster.addEventListener(TimerEvent.TIMER_COMPLETE, onKickMaster);
 				_timerKickMaster.addEventListener(TimerEvent.TIMER, onTimerKickMaster);
-				_timerKickMaster.start();*/
+				_timerKickMaster.start();
 			}
 			
 			checkShowTextNotice();
@@ -832,13 +832,13 @@ package view.screen
 				{
 					_haveUserReady = true;
 					
-					/*_countTimerkick = _timerKick;
+					_countTimerkick = _timerKick;
 					content.timeKickUserTxt.visible = true;
 					content.timeKickUserTxt.text = String(_countTimerkick);
 					_timerKickMaster = new Timer(1000, _timerKick);
 					_timerKickMaster.addEventListener(TimerEvent.TIMER_COMPLETE, onKickMaster);
 					_timerKickMaster.addEventListener(TimerEvent.TIMER, onTimerKickMaster);
-					_timerKickMaster.start();*/
+					_timerKickMaster.start();
 				}
 			}
 			else 

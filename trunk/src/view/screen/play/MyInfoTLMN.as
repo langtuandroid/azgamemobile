@@ -109,6 +109,8 @@ package view.screen.play
 		private var countDealCard:int = 0;
 		private var _countComplete:int;
 		
+		private var addEventCardTimer:Timer;
+		
 		public function MyInfoTLMN(playgame:PlayGameScreenTlmn) 
 		{
 			_glowFilter.color = 0x663311;
@@ -636,6 +638,11 @@ package view.screen.play
 				removeAllCard();
 				removeAllCardDeal();
 				
+				if (addEventCardTimer) 
+				{
+					addEventCardTimer.stop();
+					addEventCardTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, onAddEventForCard);
+				}
 				
 				if (_avatar) 
 				{
@@ -1218,11 +1225,6 @@ package view.screen.play
 			}
 			
 			
-			
-			hideSortCard();
-			
-			addClickCard();
-			_parent.canExitGame = true;
 		}
 		
 		private function onTimerDealCard(e:TimerEvent):void 
@@ -1293,7 +1295,10 @@ package view.screen.play
 			
 			if (_countComplete == 13) 
 			{
-				removeAllCardDeal();
+				
+				addEventCardTimer = new Timer(500, 1);
+				addEventCardTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onAddEventForCard);
+				addEventCardTimer.start();
 			}
 			
 			/*if (_countCard < _arrCardInt.length) 
@@ -1309,6 +1314,24 @@ package view.screen.play
 			}*/
 			
 		}
+		
+		
+		private function onAddEventForCard(e:TimerEvent):void 
+		{
+			if (addEventCardTimer) 
+			{
+				addEventCardTimer.stop();
+				addEventCardTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, onAddEventForCard);
+			}
+			
+			
+			removeAllCardDeal();
+			hideSortCard();
+		
+			addClickCard();
+			_parent.canExitGame = true;
+		}
+		
 		
 		private function removeAllCardDeal():void 
 		{

@@ -1567,7 +1567,10 @@ package control
 		{
 			if (GameDataTLMN.getInstance().channelId != -1)
 				leaveRoom();
-				
+			if (myData.channelId == -1) 
+			{
+				return;
+			}
 			//trace("CreateRoomRequest CreateRoomRequest CreateRoomRequest CreateRoomRequest ",Math.random());
 			var createRoomRequest:CreateRoomRequest = new CreateRoomRequest();
 			createRoomRequest.zoneName = mainData.game_id + "_" + myData.channelId;
@@ -2007,7 +2010,7 @@ package control
 			{
 				writeLink = "http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/ClientWriteLog?game_id=AZGB_TLMN&NK_NM="
 								+ displayname + "&ACTION_NOTE=" + action;
-				httpReq.sendRequest(method, writeLink, obj, writeSuccess, true);
+				//httpReq.sendRequest(method, writeLink, obj, writeSuccess, true);
 				
 				
 			}
@@ -2015,7 +2018,7 @@ package control
 		
 		private function writeSuccess(obj:Object):void 
 		{
-			trace(obj)
+			
 		}
 	}
 

@@ -821,8 +821,8 @@ package view.screen
 				var channelObject:Object;
 				if (mainData.game_id == "AZGB_TLMN") 
 				{
-					//for (i = 0; i < mainData.chooseChannelData.channelInfoArray.length; i++) 
-					for (i = mainData.chooseChannelData.channelInfoArray.length - 1; i > -1; i--) 
+					for (i = 0; i < mainData.chooseChannelData.channelInfoArray.length; i++) 
+					//for (i = mainData.chooseChannelData.channelInfoArray.length - 1; i > -1; i--) 
 					{
 						channelObject = mainData.chooseChannelData.channelInfoArray[i];
 						if (channelObject[DataFieldMauBinh.USERS_ONLINE] < channelObject[DataFieldMauBinh.CHANNEL_MAX_PLAYER])
