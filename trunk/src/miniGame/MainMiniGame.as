@@ -196,18 +196,6 @@ package miniGame
 				var arr:Array = obj.Data;
 				for (var i:int = 0; i < arr.length; i++) 
 				{
-					Security.allowDomain("*");
-					Security.allowInsecureDomain("*");
-					var context:LoaderContext = new LoaderContext();
-					context.checkPolicyFile = true;
-					context.allowCodeImport = true;
-					context.applicationDomain = ApplicationDomain.currentDomain;
-					
-					
-					context.securityDomain = SecurityDomain.currentDomain;
-					
-					Security.loadPolicyFile("http://azgamebai.com/crossdomain.xml");
-					Security.loadPolicyFile("http://files.azgame.us/crossdomain.xml");
 					
 					var loader:Loader = new Loader();
 					loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadGifComplete);
