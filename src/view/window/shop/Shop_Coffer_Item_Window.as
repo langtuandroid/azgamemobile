@@ -10,7 +10,9 @@ package view.window.shop
 	import flash.events.Event;
 	import flash.events.FocusEvent;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
 	import flash.text.TextField;
+	import flash.utils.Timer;
 	import inapp_purchase.StoreKitExample;
 	import model.chooseChannelData.MyInfo;
 	import model.MainData;
@@ -82,6 +84,8 @@ package view.window.shop
 		private var loadGoldCoffer:int;
 		private var loadItemCoffer:int;
 		private var mainData:MainData = MainData.getInstance();
+		
+		private var isLoad:Boolean = false;
 		
 		public function Shop_Coffer_Item_Window() 
 		{
@@ -322,61 +326,65 @@ package view.window.shop
 		
 		public function loadTop(type:int, typeGame:int = 0):void 
 		{
-			headerOn(0);
-			boardOn(0);
-			//http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserMoney?row_start=0&row_end=10
-			var method:String = "POST";
-			var url:String;
-			var httpRequest:HTTPRequest = new HTTPRequest();
-			var obj:Object;
-			
-			windowLayer.openLoadingWindow();
-			
-			switch (type) 
+			if (!isLoad) 
 			{
-				case 0:
-					
-					url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserMoney?row_start=0&row_end=10";
-					obj = new Object();
-					obj.avt_group_id = String(0);
-					httpRequest.sendRequest(method, url, obj, loadRichTopSuccess, true);
-				break;
-				case 1:
-					if (typeGame == 0) 
-					{
-						url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserWin?"
-								+ "game_id=AZGB_TLMN&row_start=0&row_end=10";
-					}
-					else if (typeGame == 1) 
-					{
-						url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserWin?"
-								+ "game_id=AZGB_BINH&row_start=0&row_end=10";
-					}
-					else if (typeGame == 2) 
-					{
-						url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserWin?"
-								+ "game_id=AZGB_PHOM&row_start=0&row_end=10";
-					}
-					
-					obj = new Object();
-					obj.it_group_id = String(1);
-					obj.it_type = String(1);
-					httpRequest.sendRequest(method, url, obj, loadTopSuccess, true);
-				break;
-				case 2:
-					
-					url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserLevel?row_start=0&row_end=10";
-					obj = new Object();
-					obj.avt_group_id = String(0);
-					httpRequest.sendRequest(method, url, obj, loadRoyalTopSuccess, true);
-				break;
-				default:
+				headerOn(0);
+				boardOn(0);
+				//http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserMoney?row_start=0&row_end=10
+				var method:String = "POST";
+				var url:String;
+				var httpRequest:HTTPRequest = new HTTPRequest();
+				var obj:Object;
+				
+				windowLayer.openLoadingWindow();
+				
+				switch (type) 
+				{
+					case 0:
+						
+						url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserMoney?row_start=0&row_end=10";
+						obj = new Object();
+						obj.avt_group_id = String(0);
+						httpRequest.sendRequest(method, url, obj, loadRichTopSuccess, true);
+					break;
+					case 1:
+						if (typeGame == 0) 
+						{
+							url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserWin?"
+									+ "game_id=AZGB_TLMN&row_start=0&row_end=10";
+						}
+						else if (typeGame == 1) 
+						{
+							url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserWin?"
+									+ "game_id=AZGB_BINH&row_start=0&row_end=10";
+						}
+						else if (typeGame == 2) 
+						{
+							url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserWin?"
+									+ "game_id=AZGB_PHOM&row_start=0&row_end=10";
+						}
+						
+						obj = new Object();
+						obj.it_group_id = String(1);
+						obj.it_type = String(1);
+						httpRequest.sendRequest(method, url, obj, loadTopSuccess, true);
+					break;
+					case 2:
+						
+						url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserLevel?row_start=0&row_end=10";
+						obj = new Object();
+						obj.avt_group_id = String(0);
+						httpRequest.sendRequest(method, url, obj, loadRoyalTopSuccess, true);
+					break;
+					default:
+				}
 			}
+			
 		}
 		
 		private function loadRoyalTopSuccess(obj:Object):void 
 		{
-			windowLayer.closeAllWindow();
+			
 			if (scrollViewForRank) 
 			{
 				scrollViewForRank.removeAll();
@@ -408,11 +416,13 @@ package view.window.shop
 				scrollViewForRank.addRow(contentTop);
 				
 			}
+			
+			closeLoading();
 		}
 		
 		private function loadRichTopSuccess(obj:Object):void 
 		{
-			windowLayer.closeAllWindow();
+			
 			if (scrollViewForRank) 
 			{
 				scrollViewForRank.removeAll();
@@ -444,12 +454,14 @@ package view.window.shop
 				scrollViewForRank.addRow(contentTop);
 				
 			}
+			
+			closeLoading();
 			
 		}
 		
 		private function loadTopSuccess(obj:Object):void 
 		{
-			windowLayer.closeAllWindow();
+			
 			if (scrollViewForRank) 
 			{
 				scrollViewForRank.removeAll();
@@ -487,6 +499,7 @@ package view.window.shop
 				
 			}
 			
+			closeLoading();
 		}
 		
 		private function onClickShowRichTop(e:MouseEvent):void 
@@ -720,7 +733,7 @@ package view.window.shop
 			var addMoney:ShopNoticeWindow = new ShopNoticeWindow();
 			var buyAvatarWindow:ConfirmWindow;
 			
-			windowLayer.closeAllWindow();
+			
 			if (obj.description == "link bị sai rùi") 
 			{
 				buyAvatarWindow = new ConfirmWindow();
@@ -750,7 +763,7 @@ package view.window.shop
 				windowLayer.openWindow(buyAvatarWindow);
 			}
 			
-			
+			closeLoading();
 		}
 		
 		private function onShowShopGold(e:Event):void 
@@ -930,64 +943,70 @@ package view.window.shop
 		 */
 		public function loadMyItem(type:int):void 
 		{
-			var method:String = "POST";
-			var url:String;
-			var httpRequest:HTTPRequest = new HTTPRequest();
-			var obj:Object;
-			
-			headerOn(3);
-			
-			windowLayer.openLoadingWindow();
-			
-			switch (type) 
+			if (!isLoad) 
 			{
-				case 0:
-					url = basePath + "Service02/OnplayUserExt.asmx/GetListAvatarOfBuyer?nick_name=" + 
-						MainData.getInstance().chooseChannelData.myInfo.name + "&rowStart=0&rowEnd=50";
-						
-					obj = new Object();
-					trace("xem avâtr cua minh: ", url);
-					httpRequest.sendRequest(method, url, obj, loadMyAvatarSuccess, true);
-				break;
-				case 1:
-					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
-									"?rowStart=0&rowEnd=10";
-					obj = new Object();
-					obj.it_group_id = String(1);
-					obj.it_type = String(2);
-					httpRequest.sendRequest(method, url, obj, loadMyItemGoldSuccess, true);
-				break;
-				case 2:
-					/*url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
-									"?rowStart=0&rowEnd=10";
-					obj = new Object();
-					obj.it_group_id = String(2);//loai 1: gold, 2 ve giai dau
-					obj.it_type = String(3);
-					httpRequest.sendRequest(method, url, obj, loadMyItemTourSuccess, true);*/
-				break;
-				case 3: // tour
-					url = basePath + "/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTransactionInfo";
-					obj = new Object();
-					obj.it_group_id = String(2);//loai 1: gold, 2 ve giai dau
-					obj.type_item_id = String(6);
-					obj.access_token = MainData.getInstance().loginData["AccessToken"];
-					httpRequest.sendRequest(method, url, obj, loadMyItemTourSuccess, true);
-				break;
-				case 4: // doi thuong
-					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
-									"?rowStart=0&rowEnd=10";
-					obj = new Object();
-					obj.it_group_id = String(2);//loai 1: gold, 2 ve giai dau
-					obj.it_type = String(3);
-					httpRequest.sendRequest(method, url, obj, loadMyItemGiftSuccess, true);
-				break;
-				default:
+				var method:String = "POST";
+				var url:String;
+				var httpRequest:HTTPRequest = new HTTPRequest();
+				var obj:Object;
+				
+				headerOn(3);
+				
+				isLoad = true;
+				
+				windowLayer.openLoadingWindow();
+				
+				switch (type) 
+				{
+					case 0:
+						url = basePath + "Service02/OnplayUserExt.asmx/GetListAvatarOfBuyer?nick_name=" + 
+							MainData.getInstance().chooseChannelData.myInfo.name + "&rowStart=0&rowEnd=50";
+							
+						obj = new Object();
+						trace("xem avâtr cua minh: ", url);
+						httpRequest.sendRequest(method, url, obj, loadMyAvatarSuccess, true);
+					break;
+					case 1:
+						url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+										"?rowStart=0&rowEnd=10";
+						obj = new Object();
+						obj.it_group_id = String(1);
+						obj.it_type = String(2);
+						httpRequest.sendRequest(method, url, obj, loadMyItemGoldSuccess, true);
+					break;
+					case 2:
+						/*url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+										"?rowStart=0&rowEnd=10";
+						obj = new Object();
+						obj.it_group_id = String(2);//loai 1: gold, 2 ve giai dau
+						obj.it_type = String(3);
+						httpRequest.sendRequest(method, url, obj, loadMyItemTourSuccess, true);*/
+					break;
+					case 3: // tour
+						url = basePath + "/Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTransactionInfo";
+						obj = new Object();
+						obj.it_group_id = String(2);//loai 1: gold, 2 ve giai dau
+						obj.type_item_id = String(6);
+						obj.access_token = MainData.getInstance().loginData["AccessToken"];
+						httpRequest.sendRequest(method, url, obj, loadMyItemTourSuccess, true);
+					break;
+					case 4: // doi thuong
+						url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+										"?rowStart=0&rowEnd=10";
+						obj = new Object();
+						obj.it_group_id = String(2);//loai 1: gold, 2 ve giai dau
+						obj.it_type = String(3);
+						httpRequest.sendRequest(method, url, obj, loadMyItemGiftSuccess, true);
+					break;
+					default:
+				}
 			}
+			
 		}
 		
 		private function loadMyItemGiftSuccess(obj:Object):void 
 		{
-			windowLayer.closeAllWindow();
+			closeLoading();
 		}
 		
 		private function loadMyItemTourSuccess(obj:Object):void 
@@ -998,7 +1017,7 @@ package view.window.shop
 				var arrData:Array = obj.Data;
 				var countX:int;
 				var countY:int;
-				windowLayer.closeAllWindow();
+				
 				for (i = 0; i < _arrTour.length; i++ ) 
 				{
 					_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
@@ -1074,6 +1093,8 @@ package view.window.shop
 					
 					contentAvatar.addEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
 				}
+				
+				closeLoading();
 			}
 		}
 		
@@ -1085,7 +1106,7 @@ package view.window.shop
 				var arrData:Array = obj.Data;
 				var countX:int;
 				var countY:int;
-				windowLayer.closeAllWindow();
+				
 				for (i = 0; i < _arrTour.length; i++ ) 
 				{
 					_arrTour[i].removeEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
@@ -1161,6 +1182,8 @@ package view.window.shop
 					
 					contentAvatar.addEventListener(ConstTlmn.USE_AVATAR, onUseMyItem);
 				}
+				
+				closeLoading();
 			}
 		}
 		
@@ -1174,7 +1197,7 @@ package view.window.shop
 			trace(obj)
 			if (obj["Msg"] == "Cập nhật thành công") 
 			{
-				windowLayer.closeAllWindow();
+				
 				var i:int;
 				var arrData:Array = obj.Data;
 				var countX:int;
@@ -1256,6 +1279,8 @@ package view.window.shop
 					
 					contentAvatar.addEventListener(ConstTlmn.USE_AVATAR, onUseAvatar);
 				}
+				
+				closeLoading();
 			}
 		}
 		
@@ -1569,63 +1594,69 @@ package view.window.shop
 		 */
 		private function loadItem(type:int):void 
 		{
-			removeAllArray();
-			
-			headerOn(2);
-			windowLayer.openLoadingWindow();
-			var method:String = "POST";
-			var url:String;
-			var httpRequest:HTTPRequest = new HTTPRequest();
-			var obj:Object;
-			
-			switch (type) 
+			if (!isLoad) 
 			{
-				case 0:
-					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwav00" + String(1)
-									+ "?rowStart=" + loadAvatarShop * 10 + 1 + "&rowEnd=" + (loadAvatarShop + 1) * 10;
-					obj = new Object();
-					obj.avt_group_id = String(0);
-					httpRequest.sendRequest(method, url, obj, loadAvatarSuccess, true);
-				break;
-				case 5:
-					
-				break;
-				case 1:
-					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
-									"?rowStart=0&rowEnd=10";
-					obj = new Object();
-					obj.it_group_id = String(1);
-					obj.it_type = String(1);
-					httpRequest.sendRequest(method, url, obj, loadItemGoldSuccess, true);
-				break;
-				case 2:
-					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
-									"?rowStart=0&rowEnd=100";
-					obj = new Object();
-					obj.it_group_id = String(1);
-					obj.it_type = String(2);
-					httpRequest.sendRequest(method, url, obj, loadItemNormalSuccess, true);
-				break;
-				case 3:
-					trace("load ve giai dau")
-					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
-									"?rowStart=0&rowEnd=10";
-					obj = new Object();
-					obj.it_group_id = String(2);//loai 1: gold, 2 ve giai dau
-					obj.it_type = String(3);
-					httpRequest.sendRequest(method, url, obj, loadItemTourSuccess, true);
-				break;
-				case 4:
-					trace("load item doi thuong")
-					url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
-									"?rowStart=0&rowEnd=50";
-					obj = new Object();
-					obj.it_group_id = String(3);//loai 1: gold, 2 ve giai dau, 3 item doi thuong
-					obj.it_type = String(4);
-					httpRequest.sendRequest(method, url, obj, loadItemGiftSuccess, true);
-				break;
-				default:
+				removeAllArray();
+				
+				headerOn(2);
+				windowLayer.openLoadingWindow();
+				isLoad = true;
+				
+				var method:String = "POST";
+				var url:String;
+				var httpRequest:HTTPRequest = new HTTPRequest();
+				var obj:Object;
+				
+				switch (type) 
+				{
+					case 0:
+						url = basePath + "Service02/OnplayUserExt.asmx/GetListTwav00" + String(1)
+										+ "?rowStart=" + loadAvatarShop * 10 + 1 + "&rowEnd=" + (loadAvatarShop + 1) * 10;
+						obj = new Object();
+						obj.avt_group_id = String(0);
+						httpRequest.sendRequest(method, url, obj, loadAvatarSuccess, true);
+					break;
+					case 5:
+						
+					break;
+					case 1:
+						url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+										"?rowStart=0&rowEnd=10";
+						obj = new Object();
+						obj.it_group_id = String(1);
+						obj.it_type = String(1);
+						httpRequest.sendRequest(method, url, obj, loadItemGoldSuccess, true);
+					break;
+					case 2:
+						url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+										"?rowStart=0&rowEnd=100";
+						obj = new Object();
+						obj.it_group_id = String(1);
+						obj.it_type = String(2);
+						httpRequest.sendRequest(method, url, obj, loadItemNormalSuccess, true);
+					break;
+					case 3:
+						trace("load ve giai dau")
+						url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+										"?rowStart=0&rowEnd=10";
+						obj = new Object();
+						obj.it_group_id = String(2);//loai 1: gold, 2 ve giai dau
+						obj.it_type = String(3);
+						httpRequest.sendRequest(method, url, obj, loadItemTourSuccess, true);
+					break;
+					case 4:
+						trace("load item doi thuong")
+						url = basePath + "Service02/OnplayUserExt.asmx/GetListTwit00" + String(1) + 
+										"?rowStart=0&rowEnd=50";
+						obj = new Object();
+						obj.it_group_id = String(3);//loai 1: gold, 2 ve giai dau, 3 item doi thuong
+						obj.it_type = String(4);
+						httpRequest.sendRequest(method, url, obj, loadItemGiftSuccess, true);
+					break;
+					default:
+				}
 			}
+			
 			
 			
 		}
@@ -1633,14 +1664,14 @@ package view.window.shop
 		private function loadItemPurchaseSuccess(obj:Object):void 
 		{
 			removeAllArray();
-			windowLayer.closeAllWindow();
+			
 			trace("load thanh cong item gold: ", obj)
 			
 			var arrData:Array = obj.Data;
 			var countX:int;
 			var countY:int;
 			var i:int;
-			windowLayer.closeAllWindow();
+			closeLoading();
 			
 			
 			for (i = arrData.length - 1; i > -1; i-- ) 
@@ -1677,6 +1708,8 @@ package view.window.shop
 				
 				contentAvatar.addEventListener(ConstTlmn.BUY_ITEM, onBuyItemPurchase);
 			}
+			
+			closeLoading();
 		}
 		
 		private function removeAllArray():void 
@@ -1750,7 +1783,7 @@ package view.window.shop
 		private function loadItemGiftSuccess(obj:Object):void 
 		{
 			trace("load dc qua doi thuong: ", obj.Data)
-			windowLayer.closeAllWindow();
+			
 			var arrData:Array = obj.Data;
 			var countX:int;
 			var countY:int;
@@ -1809,6 +1842,8 @@ package view.window.shop
 				
 				contentAvatar.addEventListener(ConstTlmn.BUY_ITEM, onChangeGift);
 			}
+			
+			closeLoading();
 		}
 		
 		private function onChangeGift(e:Event):void 
@@ -1884,7 +1919,7 @@ package view.window.shop
 			var countX:int;
 			var countY:int;
 			var i:int;
-			windowLayer.closeAllWindow();
+			
 			
 			
 			for (i = 0; i < arrData.length; i++ ) 
@@ -1927,6 +1962,8 @@ package view.window.shop
 				
 				contentAvatar.addEventListener(ConstTlmn.BUY_ITEM, onBuyItemTour);
 			}
+			
+			closeLoading();
 		}
 		
 		private function onBuyItemTour(e:Event):void 
@@ -1947,7 +1984,7 @@ package view.window.shop
 			var countX:int;
 			var countY:int;
 			var i:int;
-			windowLayer.closeAllWindow();
+			
 			
 			
 			for (i = 0; i < arrData.length; i++ ) 
@@ -1990,6 +2027,8 @@ package view.window.shop
 				
 				contentAvatar.addEventListener(ConstTlmn.BUY_ITEM, onBuyItemNormal);
 			}
+			
+			closeLoading();
 		}
 		
 		private function onBuyItemNormal(e:Event):void 
@@ -2032,7 +2071,7 @@ package view.window.shop
 			var countX:int;
 			var countY:int;
 			var i:int;
-			windowLayer.closeAllWindow();
+			
 			
 			
 			for (i = arrData.length - 1; i > -1; i-- ) 
@@ -2067,6 +2106,8 @@ package view.window.shop
 				
 				contentAvatar.addEventListener(ConstTlmn.BUY_ITEM, onBuyItemGold);
 			}
+			
+			closeLoading();
 		}
 		
 		private function onBuyItemGold(e:Event):void 
@@ -2238,7 +2279,7 @@ package view.window.shop
 			var countY:int;
 			
 			
-			windowLayer.closeAllWindow();
+			
 			
 			for (i = 0; i < arrData.length; i++ ) 
 			{
@@ -2298,6 +2339,22 @@ package view.window.shop
 				obj.avt_group_id = String(0);
 				httpRequest.sendRequest(method, url, obj, loadAvatarSuccess, true);
 			}
+			
+			closeLoading();
+			
+		}
+		
+		private function closeLoading():void 
+		{
+			var timer:Timer = new Timer(1000, 1);
+			timer.addEventListener(TimerEvent.TIMER_COMPLETE, onCloseLoadingWindow);
+			timer.start();
+		}
+		
+		private function onCloseLoadingWindow(e:TimerEvent):void 
+		{
+			windowLayer.closeAllWindow();
+			isLoad = false;
 		}
 		
 		private function onBuyAvatar(e:Event):void 
