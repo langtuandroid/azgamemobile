@@ -402,7 +402,7 @@ package miniGame
 			else 
 			{
 				_main.noticeGame(ConstMiniGame.PLAY_GAME_ERROR_TEXT);
-				setupContent();
+				//setupContent();
 			}
 			
 		}

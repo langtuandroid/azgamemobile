@@ -25,6 +25,7 @@ package miniGame
 	{
 		private var noticePopup:MovieClip;
 		private var onGift:Boolean;
+		public var error:Boolean = false;
 		
 		public function NoticePopupMiniGame() 
 		{
@@ -154,6 +155,11 @@ package miniGame
 				noticePopup.noticeGiftTxt2.text = "";
 			
 				
+			}
+			
+			if (str == ConstMiniGame.PLAY_GAME_ERROR_TEXT) 
+			{
+				error = true;
 			}
 			
 			onGift = type;
