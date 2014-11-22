@@ -143,6 +143,12 @@ package miniGame
 				_playGame.setupContent();
 				_playGame.receivingGift = false;
 			}
+			
+			if (_playGame && noticePopup.error) 
+			{
+				_playGame.setupContent();
+				noticePopup.error = false;
+			}
 			noticePopup.visible = false;
 		}
 		
