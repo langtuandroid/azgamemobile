@@ -646,6 +646,7 @@ package
 				break;
 				case MainData.TLMN:
 					playingScreen = new PlayGameScreenTlmn();
+					//playingScreen = new PlayingScreenTlmnYun();
 				break;
 				default:
 					playingScreen = new PlayingScreenMauBinh();

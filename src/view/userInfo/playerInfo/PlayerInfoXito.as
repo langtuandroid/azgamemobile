@@ -34,7 +34,7 @@ package view.userInfo.playerInfo
 	import view.card.CardManager;
 	import view.contextMenu.MyContextMenu;
 	import view.effectLayer.EffectLayer;
-	import view.screen.PlayingScreen;
+	//import view.screen.PlayingScreen;
 	import view.timeBar.TimeBar;
 	import view.userInfo.avatar.Avatar;
 	import view.window.AlertWindow;

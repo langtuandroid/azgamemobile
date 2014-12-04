@@ -2424,6 +2424,8 @@ package view.screen
 		
 		public function removeOnePlayer(position:int, isGiveUp:Boolean = false):void // xóa một người chơi
 		{
+			if (!destroyPlayerArray)
+				destroyPlayerArray = new Array();
 			var isPlayingUser:Boolean;
 			for (var i:int = 0; i < allPlayerArray.length; i++) 
 			{

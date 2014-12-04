@@ -46,7 +46,7 @@ package view.card
 		
 		private var filterNumber:Number = 0;
 		private var isFilterDown:Boolean;
-		private var getCardPoint:Sprite;
+		public var getCardPoint:Sprite;
 		public var getCardIcon:Sprite;
 		
 		public function CardManager() 

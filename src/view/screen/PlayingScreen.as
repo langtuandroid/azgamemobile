@@ -26,7 +26,7 @@ package view.screen
 	import view.button.MyButton;
 	import view.card.Card;
 	import view.card.CardManager;
-	import view.card.CardManagerTLMN;
+	import view.card.CardManagerPhom;
 	import view.contextMenu.MyContextMenu;
 	import view.effectLayer.EffectLayer;
 	import view.effectLayer.TextEffect_1;
@@ -54,7 +54,7 @@ package view.screen
 		
 		private var chatBox:ChatBox;
 		
-		private var cardManager:CardManagerTLMN;
+		private var cardManager:CardManagerPhom;
 		private var allPlayerArray:Array; // Mảng chứa tất cả người chơi
 		private var playingPlayerArray:Array; // Mảng chứa các người chơi đang trong ván bài
 		
@@ -1162,7 +1162,7 @@ package view.screen
 		private function addCardManager():void 
 		{
 			if (!cardManager)
-				cardManager = new CardManagerTLMN();
+				cardManager = new CardManagerPhom();
 			cardManager.getCardPoint.visible = true;
 			cardManager.x = content["cardManagerPosition"].x;
 			cardManager.y = content["cardManagerPosition"].y;

@@ -8,6 +8,7 @@ package view
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
 	import flash.net.URLRequest;
 	import flash.text.TextField;
 	import logic.PlayingLogic;
@@ -16,6 +17,7 @@ package view
 	import request.MainRequest;
 	import sound.SoundManager;
 	import view.itemContainer.ItemContainerYun;
+	import view.itemContainer.PanelScrollYun;
 	import view.userInfo.avatar.Avatar;
 	import view.window.BaseWindow;
 	import view.window.GiftCodeWindow;
@@ -71,13 +73,13 @@ package view
 		private var money1Txt:TextField;
 		private var money2Txt:TextField;
 		private var gameContainer:ItemContainerYun;
+		private var gameContainer2:PanelScrollYun;
 		private var giftCodeWindow:GiftCodeWindow;
+		private var isRecentlySelectGame:Boolean;
 		
 		public function SelectGameWindow() 
 		{
 			addContent("zSelectGameWindow");
-			
-			
 			
 			tlmnIcon = content["tlmnIcon"];
 			phomIcon = content["phomIcon"];
@@ -163,10 +165,10 @@ package view
 			switch (e.currentTarget) 
 			{
 				case nextButton:
-					gameContainer.moveToNext();
+					gameContainer2.moveToNext();
 				break;
 				case backButton:
-					gameContainer.moveToPrevivous();
+					gameContainer2.moveToPrevivous();
 				break;
 				default:
 			}
@@ -221,6 +223,8 @@ package view
 		
 		public function showTab(index:int):void 
 		{
+			if (gameContainer2)
+				gameContainer2.visible = false;
 			selectGameTabEnable.visible = true;
 			rankTabEnable.visible = true;
 			addMoneyTabEnable.visible = true;
@@ -247,6 +251,8 @@ package view
 					selectGameTabDisable.visible = true;
 					nextButton.visible = true;
 					backButton.visible = true;
+					if (gameContainer2)
+						gameContainer2.visible = true;
 				break;
 				case 2:
 					rankTabEnable.visible = false;
@@ -357,15 +363,37 @@ package view
 			
 			if (!gameContainer)
 			{
-				gameContainer = new ItemContainerYun();
+				/*gameContainer = new ItemContainerYun();
 				gameContainer.x = content["container"].x;
 				gameContainer.y = content["container"].y;
 				addChild(gameContainer);
 				gameContainer.setData(content["container"], 0.5);
 				gameContainer.numberForRow = 3;
 				gameContainer.numberForColumn = 1;
-				gameContainer.itemList = gameList;
+				gameContainer.itemList = gameList;*/
+				
+				gameContainer2 = new PanelScrollYun();
+				gameContainer2.addEventListener(PanelScrollYun.PANEL_SCROLL_MOUSE_UP, onPanelScrollMouseUp);
+				gameContainer2.x = content["container"].x;
+				gameContainer2.y = content["container"].y;
+				gameContainer2.view = content["container"];
+				gameContainer2.columnNumber = 3;
+				gameContainer2.viewList = gameList;
+				addChild(gameContainer2);
 			}
+		}
+		
+		private function onPanelScrollMouseUp(e:Event):void 
+		{
+			if (Math.abs(gameContainer2.endX - gameContainer2.startX) < 10 && isRecentlySelectGame)
+			{
+				MainCommand.getInstance().initVar();
+				mainData.lobbyRoomData.invitePlayData = new Object();
+				dispatchEvent(new Event(SELECT_GAME));
+				
+				SoundManager.getInstance().playBackgroundMusicMauBinh();
+			}
+			isRecentlySelectGame = false;
 		}
 		
 		private function onRemovedFromStage(e:Event):void 
@@ -385,9 +413,7 @@ package view
 		
 		private function onSelectGame(e:MouseEvent):void 
 		{
-			if (gameContainer.getMovingSpeed() > 10 || gameContainer.isDragFar)
-				return;
-			
+			isRecentlySelectGame = true;
 			mainData.isFirstJoinLobby = true;
 			mainData.maxPlayer = 4;
 			switch (e.currentTarget) 
@@ -451,11 +477,11 @@ package view
 				break;
 				default:
 			}
-			MainCommand.getInstance().initVar();
+			/*MainCommand.getInstance().initVar();
 			mainData.lobbyRoomData.invitePlayData = new Object();
 			dispatchEvent(new Event(SELECT_GAME));
 			
-			SoundManager.getInstance().playBackgroundMusicMauBinh();
+			SoundManager.getInstance().playBackgroundMusicMauBinh();*/
 		}
 	}
 

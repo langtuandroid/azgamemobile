@@ -2,6 +2,7 @@ package view.window.loginWindow
 {
 	import br.com.stimuli.loading.BulkLoader;
 	import com.adobe.serialization.json.JSON;
+	import com.freshplanet.ane.AirDeviceId;
 	import com.gsolo.encryption.MD5;
 	import com.gsolo.encryption.SHA1;
 	import fl.controls.TextInput;
@@ -56,6 +57,7 @@ package view.window.loginWindow
 		public function LoginWindow() 
 		{
 			addContent("zLoginWindow");
+			mainData.loginType = '1';
 			
 			loginFacebookBtn = zLoginWindow(content).fastLogin["loginFacebookBtn"];
 			loginMobileBtn = zLoginWindow(content).fastLogin["loginMobileBtn"];
@@ -67,9 +69,7 @@ package view.window.loginWindow
 			loginGmailBtn.addEventListener(MouseEvent.CLICK, onButtonClick);
 			loginGmailBtn.visible = false;
 			loginYahooBtn.visible = false;
-			loginMobileBtn.visible = false;
-			
-			
+			//loginMobileBtn.visible = false;
 			
 			///////////////////////////
 			zLoginWindow(content).loginButton.addEventListener(MouseEvent.CLICK, onLoginButtonClick);
@@ -80,6 +80,10 @@ package view.window.loginWindow
 			zLoginWindow(content).savePassword.visible = false;
 			
 			sharedObject = SharedObject.getLocal("userInfo");
+			
+			if (sharedObject.data.hasOwnProperty("loginType"))
+				mainData.loginType = sharedObject.data.loginType;
+				
 			if (sharedObject.data.hasOwnProperty("userName"))
 				zLoginWindow(content).userName.text = sharedObject.data.userName;
 				
@@ -118,10 +122,29 @@ package view.window.loginWindow
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 			
-			deviceId = '1';
+			deviceId = AirDeviceId.getInstance().getID("SanhBai");
 			
 			zLoginWindow(content).loadingSoundLayer["percentTxt"].text = '0%';
 			zLoginWindow(content).loadingSoundLayer.visible = false;
+			
+			if (mainData.isFirstLogin)
+			{
+				if (mainData.loginType == '1')
+				{
+					loginMobile();
+					mainData.isFirstLogin = false;
+				}
+				else if (mainData.loginType == '2')
+				{
+					loginFacebook();
+					mainData.isFirstLogin = false;
+				}
+				else if (mainData.loginType == '3')
+				{
+					loginEmail();
+					mainData.isFirstLogin = false;
+				}
+			}
 		}
 		
 		private function onShowVirtualKeyBoard(e:MouseEvent):void 
@@ -134,45 +157,60 @@ package view.window.loginWindow
 			switch (e.currentTarget) 
 			{
 				case loginFacebookBtn:
-					zLoginWindow(content).loadingLayer.visible = true;
-					
-					try 
-					{
-						GetFacebookInfo.getInstance().init();
-					}
-					catch (err:Error)
-					{
-						
-					}
-					
-					if (timerToCloseLoadingLayer)
-					{
-						timerToCloseLoadingLayer.removeEventListener(TimerEvent.TIMER_COMPLETE, onCloseLoadingLayer);
-						timerToCloseLoadingLayer.stop();
-					}
-					timerToCloseLoadingLayer = new Timer(60000, 1);
-					timerToCloseLoadingLayer.addEventListener(TimerEvent.TIMER_COMPLETE, onCloseLoadingLayer);
-					timerToCloseLoadingLayer.start();
+					loginFacebook();
 				break;
 				case loginMobileBtn:
-					if (!sharedObject.data.hasOwnProperty("isNotFirstLoginMobile"))
-					{
-						var fillNameWindow:FillNameWindow = new FillNameWindow();
-						fillNameWindow.addEventListener(ConfirmWindow.CONFIRM, onFillNameFinish);
-						WindowLayer.getInstance().openWindow(fillNameWindow);
-						return;
-					}
-					
-					var mainRequest:MainRequest = new MainRequest();
-					var data:Object = new Object();
-					data.udid = deviceId;
-					data.username = (new Date()).getTime();
-					data.token = MD5.encrypt(SHA1.encrypt(data.username) + SHA1.encrypt(data.username) + "ciao88UDID");
-					zLoginWindow(content).loadingLayer.visible = true;
-					mainRequest.sendRequest_Post("http://" + mainData.gameIp + "/user/login_mobile_udid", data, onLoginMobileRespond, true);
+					loginMobile();
 				break;
 				default:
 			}
+		}
+		
+		private function loginFacebook():void 
+		{
+			zLoginWindow(content).loadingLayer.visible = true;
+			sharedObject.setProperty("loginType", '2');	
+			try 
+			{
+				GetFacebookInfo.getInstance().init();
+			}
+			catch (err:Error)
+			{
+				
+			}
+			
+			if (timerToCloseLoadingLayer)
+			{
+				timerToCloseLoadingLayer.removeEventListener(TimerEvent.TIMER_COMPLETE, onCloseLoadingLayer);
+				timerToCloseLoadingLayer.stop();
+			}
+			timerToCloseLoadingLayer = new Timer(60000, 1);
+			timerToCloseLoadingLayer.addEventListener(TimerEvent.TIMER_COMPLETE, onCloseLoadingLayer);
+			timerToCloseLoadingLayer.start();
+		}
+		
+		private function loginMobile():void 
+		{
+			sharedObject.setProperty("loginType", '1');	
+			zLoginWindow(content).loadingLayer.visible = true;
+			var mainRequest:MainRequest = new MainRequest();
+			var data:Object = new Object();
+			data.device_id = deviceId;
+			data.client_id = mainData.client_id;
+			if (mainData.isOnIos)
+				data.device_type_id = 2;
+			else
+				data.device_type_id = 1;
+			if (mainData.isOnAndroid)
+				data.DeviceId = 4;
+			else
+				data.DeviceId = 5;
+			data.GameVersion = mainData.version;
+			zLoginWindow(content).loadingLayer.visible = true;
+			if (mainData.isTest)
+				mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/Device_GetUserInfo", data, onLoginFacebookRespond, true);
+			else
+				mainRequest.sendRequest_Post("http://wss.azgame.us/Service02/OnplayUserExt.asmx/Device_GetUserInfo", data, onLoginFacebookRespond, true);
 		}
 		
 		private function onFillNameFinish(e:Event):void 
@@ -323,6 +361,10 @@ package view.window.loginWindow
 			var data:Object = new Object();
 			data.access_token = mainData.facebookData.accessToken;
 			data.GameVersion = mainData.version;
+			if (mainData.isOnAndroid)
+				data.DeviceId = 4;
+			else
+				data.DeviceId = 5;
 			zLoginWindow(content).loadingLayer.visible = true;
 			if (mainData.isTest)
 				mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/Facebook_GetUserInfo", data, onLoginFacebookRespond, true);
@@ -342,6 +384,7 @@ package view.window.loginWindow
 			}
 			if (value.TypeMsg == 2)
 			{
+				zLoginWindow(content).loadingLayer.visible = false;
 				var registerFacebookWindow:RegisterFacebookWindow = new RegisterFacebookWindow();
 				registerFacebookWindow.email = value.Data.email;
 				WindowLayer.getInstance().openWindow(registerFacebookWindow);
@@ -390,7 +433,12 @@ package view.window.loginWindow
 		
 		private function onLoginButtonClick(e:MouseEvent):void 
 		{
-			trace("onLoginButtonClick",(new Date().getTime()));
+			loginEmail();
+		}
+		
+		private function loginEmail():void 
+		{
+			sharedObject.setProperty("loginType", '3');	
 			var mainRequest:MainRequest = new MainRequest();
 			var data:Object = new Object();
 			data.user_name = zLoginWindow(content).userName.text;

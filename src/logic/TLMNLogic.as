@@ -1,10 +1,7 @@
 package logic 
 {
 	import com.adobe.serialization.json.JSON;
-	import event.DataField;
 	import view.card.Card;
-	import view.card.CardManager;
-	import view.userInfo.playerInfo.PlayerInfo;
 	/**
 	 * ...
 	 * @author Yun
@@ -32,56 +29,6 @@ package logic
 			if (!_instance)
 				_instance = new TLMNLogic();
 			return _instance;
-		}
-		
-		/**
-		 * - Hàm để xét lại thứ tự vòng mỗi khi có người chơi vừa ăn một lá
-		 * @param	stealPlayer - người ăn bài
-		 * @param	stealedPlayer - người bị ăn
-		 * @param	playerArray - mảng chứa các người chơi
-		 */
-		public function setOrderRound(stealPlayer:PlayerInfo, stealedPlayer:PlayerInfo, playerArray:Array):void
-		{
-			var i:int;
-			var startIndex:int;
-			var card:Card;
-			for (i = 0; i < playerArray.length; i++)
-			{
-				if (playerArray[i] == stealPlayer)
-				{
-					startIndex = i;
-					i = playerArray.length;
-				}
-			}
-			
-			var player:PlayerInfo;
-			var beforePlayer:PlayerInfo;
-			
-			if (startIndex == 0)
-				startIndex = playerArray.length;
-			for (i = startIndex - 1; i >= 0; i--) 
-			{
-				player = playerArray[i];
-				if (i == 0)
-					beforePlayer = playerArray[playerArray.length - 1];
-				else
-					beforePlayer = playerArray[i - 1];
-				if (beforePlayer.leavedCards.length > player.leavedCards.length && player != stealPlayer)
-				{
-					card = beforePlayer.popOneLeavedCard(0);
-					player.pushNewLeavedCard(card, CardManager.playCardTime * 1.4);
-				}
-			}
-			for (i = playerArray.length - 1; i > startIndex; i--) 
-			{
-				player = playerArray[i];
-				beforePlayer = playerArray[i - 1];
-				if (beforePlayer.leavedCards.length > player.leavedCards.length && player != stealPlayer)
-				{
-					card = beforePlayer.popOneLeavedCard(0);
-					player.pushNewLeavedCard(card, CardManager.playCardTime * 1.4);
-				}
-			}
 		}
 		
 		// Hàm check xem có thể đánh con bài đó không
@@ -142,23 +89,7 @@ package logic
 		
 		public function arrangeUnleaveCard(cardArray:Array):Array
 		{
-			//var deckArray:Array = countDeck(cardArray);
-			var deckArray:Array = new Array();
-			
-			var isHaveOneDeck:Boolean;
-			var isHaveTwoDeck:Boolean;
-			var deck_1:Array;
-			var deck_2:Array;
-			var i:int;
-			var j:int;
-			var k:int;
-			var selectedDeckArray:Array = new Array();
-			var stealCardNumber:int = 0;
-			var countStealCard:int;
-				
 			var newCardArray:Array = new Array();
-			
-			var object:Object;
 			
 			newCardArray = new Array();
 			
@@ -184,6 +115,53 @@ package logic
 					}
 				}
 			}
+		}
+		
+		public function arrangeAllCard(cards:Array, isIncrease:Boolean = true):void
+		{
+			var arrangeFinish:Boolean;
+			while (!arrangeFinish)
+			{
+				arrangeFinish = true;
+				for (var i:int = 0; i < cards.length - 1; i++) 
+				{
+					if (convertIdToRank(Card(cards[i]).id) > convertIdToRank(Card(cards[i + 1]).id))
+					{
+						var tempCard:Card = cards[i];
+						cards[i] = cards[i + 1];
+						cards[i + 1] = tempCard;
+						arrangeFinish = false;
+					}
+				}
+			}
+			
+			/*var rankArray:Array = new Array();
+			if (isIncrease)
+			{
+				for (var i:int = 0; i < cards.length - 1; i++) 
+				{
+					if (!rankArray[convertIdToRank(CardTLMNYun(cards[i]).id)])
+						rankArray[convertIdToRank(CardTLMNYun(cards[i]).id)] = [i];
+					else
+						rankArray[convertIdToRank(CardTLMNYun(cards[i]).id)].push(i);
+				}
+			}*/
+		}
+		
+		public function convertIdToSuite(id:int):int
+		{
+			if (id % 4 == 0)
+				return 4;
+			return id % 4;
+			if (id < 14)
+				return 1;
+			else if (id > 13 && id < 27)
+				return 2;
+			else if (id > 26 && id < 40)
+				return 3;
+			else if (id > 39)
+				return 4;
+			return 0;
 		}
 		
 		// Tìm quân bài có giá trị nhỏ nhất
@@ -403,19 +381,6 @@ package logic
 		public function convertIdToRank(id:int):int
 		{
 			return Math.ceil(id / 4);
-		}
-		
-		public function convertIdToSuite(id:int):int
-		{
-			if (id < 14)
-				return 1;
-			else if (id > 13 && id < 27)
-				return 2;
-			else if (id > 26 && id < 40)
-				return 3;
-			else if (id > 39)
-				return 4;
-			return 0;
 		}
 	}
 
