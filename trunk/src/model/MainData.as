@@ -612,13 +612,17 @@ package model
 		public var token:String;
 		//public var version:String = "v1.4.1";
 		public var version:String = "v1.5.2";
-		public var isTest:Boolean = true; // biến để check xem đang chạy trên server test hay server thật
+		public var isTest:Boolean = false; // biến để check xem đang chạy trên server test hay server thật
 
 		public var isFacebookVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào facebook không
 		public var isShowScroll:Boolean;
 		public var country:String = "";
 		public var joinedGame:Boolean = false;
 		public var channelNum:String;
+		
+		public var isFirstGame:Boolean; // Biến để check xem mình có phải người đây là ván bài đầu tiên không
+		public var isFirstLogin:Boolean = true;
+		public var loginType:String;
 	}
 
 }

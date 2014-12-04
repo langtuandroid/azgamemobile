@@ -50,7 +50,7 @@ package view.card
 		
 		private var filterNumber:Number = 0;
 		private var isFilterDown:Boolean;
-		private var getCardPoint:MovieClip;
+		public var getCardPoint:MovieClip;
 		public var getCardIcon:Sprite;
 		private var _totalCard:int = 52;
 		private var cardNumberTxt:TextField;

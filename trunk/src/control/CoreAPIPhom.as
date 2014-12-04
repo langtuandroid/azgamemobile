@@ -731,6 +731,7 @@ package control
 								object[DataFieldPhom.SEX] = tempEsObject.getString(DataFieldPhom.SEX);
 							}
 						}
+							
 						myData.userList[userName] = new Object();
 						myData.userList[userName][DataFieldPhom.ROOM_ID] = mainData.lobbyRoomId;
 						myData.userList[userName][DataFieldPhom.USER_INFO] = object;

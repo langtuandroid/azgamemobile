@@ -3,6 +3,8 @@ package view.window
 	import com.gsolo.encryption.MD5;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.net.navigateToURL;
+	import flash.net.URLRequest;
 	import flash.text.TextFormat;
 	import model.chooseChannelData.MyInfo;
 	import model.MainData;
@@ -23,8 +25,10 @@ package view.window
 		{
 			addContent("zRegisterFacebookWindow");
 			zRegisterFacebookWindow(content).registerButton.addEventListener(MouseEvent.CLICK, onConfirm);
+			zRegisterFacebookWindow(content).helpButton.addEventListener(MouseEvent.CLICK, onHelpButtonClick);
 			
 			zRegisterFacebookWindow(content).registerButton.addEventListener(MouseEvent.CLICK, onConfirm);
+			zRegisterFacebookWindow(content).cancelButton.addEventListener(MouseEvent.CLICK, onCanCel);
 			zRegisterFacebookWindow(content).loadingLayer.visible = false;
 			
 			zRegisterFacebookWindow(content).userName.width = 261;
@@ -38,6 +42,16 @@ package view.window
 			
 			zRegisterFacebookWindow(content).maleSelectBox.addEventListener(MouseEvent.CLICK, onSelectBoxClick);
 			zRegisterFacebookWindow(content).femaleSelectBox.addEventListener(MouseEvent.CLICK, onSelectBoxClick);
+		}
+		
+		private function onCanCel(e:MouseEvent):void 
+		{
+			close(BaseWindow.MIDDLE_EFFECT);
+		}
+		
+		private function onHelpButtonClick(e:MouseEvent):void 
+		{
+			navigateToURL(new URLRequest("http://sanhbai.com/ho-tro.html"));
 		}
 		
 		private function onSelectBoxClick(e:MouseEvent):void 

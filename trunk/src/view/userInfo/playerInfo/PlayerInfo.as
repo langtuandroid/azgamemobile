@@ -33,7 +33,6 @@ package view.userInfo.playerInfo
 	import view.card.CardManager;
 	import view.contextMenu.MyContextMenu;
 	import view.effectLayer.EffectLayer;
-	import view.screen.PlayingScreen;
 	import view.timeBar.TimeBar;
 	import view.userInfo.avatar.Avatar;
 	import view.window.AlertWindow;
@@ -823,7 +822,7 @@ package view.userInfo.playerInfo
 			if (mainData.isFirstPlay) // Mình là người đánh đầu tiên của ván
 			{
 				// Nếu mình là ng đánh đầu tiên thì quân bài hoặc bộ bài mình đánh phải có quân bài có giá trị nhỏ nhất
-				var cardId:int = tlmnLogic.findSmallestCard(unLeaveCards).id;
+				var cardId:int/* = tlmnLogic.findSmallestCard(unLeaveCards).id*/;
 				var isHaveSmallestCard:Boolean;
 				for (var j:int = 0; j < myCardsValue.length; j++) 
 				{

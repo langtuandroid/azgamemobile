@@ -20,6 +20,7 @@ package control
 		public var electroServerCommand:*;
 		public var electroServerCommandMauBinh:ElectroServerCommandMauBinh;
 		public var electroServerCommandPhom:ElectroServerCommandPhom;
+		//public var electroServerCommandTlmn:ElectroServerCommandTlmnYun;
 		public var electroServerCommandTlmn:ElectroServerCommandTlmn;
 		private var mainData:MainData = MainData.getInstance();
 		
