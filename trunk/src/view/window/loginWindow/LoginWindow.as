@@ -122,15 +122,22 @@ package view.window.loginWindow
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 			
-			if (mainData.isOnAndroid || mainData.isOnIos)
-				deviceId = AirDeviceId.getInstance().getID("SanhBai");
-			else
-				deviceId = 'simulator';
+			try 
+			{
+				if (mainData.isOnAndroid || mainData.isOnIos)
+					deviceId = AirDeviceId.getInstance().getID("SanhBai");
+				else
+					deviceId = 'simulator';
+			}
+			catch (err:Error)
+			{
+				
+			}
 			
 			zLoginWindow(content).loadingSoundLayer["percentTxt"].text = '0%';
 			zLoginWindow(content).loadingSoundLayer.visible = false;
 			
-			if (mainData.isFirstLogin)
+			if (mainData.isFirstLogin && !mainData.isFacebookVersion)
 			{
 				if (mainData.loginType == '1')
 				{
