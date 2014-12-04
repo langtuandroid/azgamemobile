@@ -103,11 +103,11 @@ package view.screen.play
 				//content.nextturn.y = 30;
 				content.chatde.x = 135;
 				content.chatde.y = 50;
-				content.effectMoney.y = 120;
+				content.effectMoney.y = 70;
 				content.level.x = 107;
 				content.iconMobile.x = 110;
 				content.iconMaster.x = 0;
-				content.effectMoneySpecial.y = 120;
+				content.effectMoneySpecial.y = 70;
 				content.numCardRemainTxt.x = 203;
 				content.numCardRemainTxt.y = 156;
 				
@@ -123,12 +123,12 @@ package view.screen.play
 				//content.nextturn.y = -1;
 				content.chatde.x = -115;
 				content.chatde.y = 17;
-				content.effectMoney.y = 120;
+				content.effectMoney.y = 70;
 				content.level.x = -11;
 				content.iconMobile.x = -8;
 				
 				content.iconMaster.x = 100;
-				content.effectMoneySpecial.y = 120;
+				content.effectMoneySpecial.y = 70;
 				content.numCardRemainTxt.x = -41;
 				content.numCardRemainTxt.y = 105;
 				
@@ -144,12 +144,12 @@ package view.screen.play
 				//content.nextturn.y = 30;
 				content.chatde.x = -81;
 				content.chatde.y = 50;
-				content.effectMoney.y = 120;
+				content.effectMoney.y = 70;
 				content.level.x = -11;
 				content.iconMobile.x = -8;
 				
 				content.iconMaster.x = 100;
-				content.effectMoneySpecial.y = 120;
+				content.effectMoneySpecial.y = 70;
 				content.numCardRemainTxt.x = -47;
 				content.numCardRemainTxt.y = 156;
 				
@@ -371,7 +371,7 @@ package view.screen.play
 			////trace("xem lai tien cua nguoi choi: ", _money, obj[ConstTlmn.MONEY])
 			_money = _money + Number(obj[ConstTlmn.MONEY]);
 			content.effectMoneySpecial.text = format(Number(obj[ConstTlmn.MONEY]));
-			TweenMax.to(content.effectMoneySpecial, 3, { y:content.effectMoneySpecial.y - 130, onComplete:onCompleteShowMoney } );
+			TweenMax.to(content.effectMoneySpecial, 3, { y:content.effectMoneySpecial.y - 0, onComplete:onCompleteShowMoney } );
 			
 			//addCardImage(obj[ConstTlmn.CARDS]);
 		}
@@ -413,7 +413,7 @@ package view.screen.play
 		private function onCompleteShowMoney():void 
 		{
 			content.effectMoneySpecial.visible = false;
-			content.effectMoneySpecial.y += 130;
+			content.effectMoneySpecial.y += 0;
 			content.txtMoney.text = format(_money);
 			
 		}
@@ -521,14 +521,14 @@ package view.screen.play
 				content.effectMoneySpecial.text = format(Number(money));
 			}
 			
-			TweenMax.to(content.effectMoneySpecial, 3, { y: content.effectMoneySpecial.y - 130, onComplete:onCompleteMoneySpecial } );
+			TweenMax.to(content.effectMoneySpecial, 3, { y: content.effectMoneySpecial.y - 0, onComplete:onCompleteMoneySpecial } );
 			
 		}
 		
 		private function onCompleteMoneySpecial():void 
 		{
 			content.effectMoneySpecial.visible = false;
-			content.effectMoneySpecial.y += 130;
+			content.effectMoneySpecial.y += 0;
 			content.txtMoney.text = format(_money);
 		}
 		

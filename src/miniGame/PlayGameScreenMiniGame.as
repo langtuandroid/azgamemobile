@@ -1,7 +1,7 @@
 package miniGame
 {
 	import com.greensock.TweenMax;
-	import control.ConstTlmn;
+	//import control.ConstTlmn;
 	import flash.display.Bitmap;
 	import flash.display.Loader;
 	import flash.display.MovieClip;
@@ -59,6 +59,8 @@ package miniGame
 		
 		private var male:Boolean = false;
 		
+		public var on:Boolean = false;
+		
 		public function PlayGameScreenMiniGame(main:MainMiniGame) 
 		{
 			super();
@@ -106,7 +108,6 @@ package miniGame
 			
 			myTurn = GameDataMiniGame.getInstance().myTurn;
 			
-			
 			setupContent();
 			
 			addAllEvent();
@@ -124,6 +125,7 @@ package miniGame
 				awardPopup.addEventListener(ConstMiniGame.BUY_TURN_ERROR, onBuyError);
 				awardPopup.addEventListener(ConstMiniGame.BUY_TURN_SUCCESS, onBuySuccess);
 				awardPopup.addEventListener(ConstMiniGame.ENOUGH_MONEY, onNotEnoughMoney);
+				awardPopup.addEventListener(ConstMiniGame.BUY_TURN, onNotBuyTurn);
 				awardPopup.addEventListener(ConstMiniGame.RECEIVE_GIFT_ERROR, onReceiveGiftError);
 				awardPopup.addEventListener(ConstMiniGame.RECEIVE_GIFT_SUCCESS, onReceiveGiftSuccess);
 				awardPopup.addEventListener(ConstMiniGame.CLOSE_POPUP, onCloseBuyTurn);
@@ -139,6 +141,15 @@ package miniGame
 				historyBoard.y = 271.5;
 				historyBoard.addEventListener(ConstMiniGame.CLOSE_POPUP, onCloseHistory);
 				historyBoard.addEventListener(ConstMiniGame.SHOW_AWARD_AGAIN, onShowWard);
+			}
+		}
+		
+		private function onNotBuyTurn(e:Event):void 
+		{
+			if (_main) 
+			{
+				_main.noticeGame(ConstMiniGame.BUY_TURN_TEXT);
+				
 			}
 		}
 		
@@ -426,9 +437,7 @@ package miniGame
 					SoundManager.getInstance().playSound(ConstMiniGame.FE_WIN_ + String(rd + 1) );	
 				}
 				
-				trace("tien truoc: ", MainData.getInstance().chooseChannelData.myInfo.money, Number(GameDataMiniGame.getInstance().goldGift[0]));
 				MainData.getInstance().chooseChannelData.myInfo.money = MainData.getInstance().chooseChannelData.myInfo.money + Number(GameDataMiniGame.getInstance().goldGift[0]);
-				trace("tien luc sau: ", MainData.getInstance().chooseChannelData.myInfo.money)
 				MainData.getInstance().chooseChannelData.myInfo = MainData.getInstance().chooseChannelData.myInfo;
 				_main.noticeGame(GameDataMiniGame.getInstance().goldGift[1], true);
 				setupContent();
@@ -562,6 +571,7 @@ package miniGame
 				awardPopup.removeEventListener(ConstMiniGame.BUY_TURN_ERROR, onBuyError);
 				awardPopup.removeEventListener(ConstMiniGame.BUY_TURN_SUCCESS, onBuySuccess);
 				awardPopup.removeEventListener(ConstMiniGame.ENOUGH_MONEY, onNotEnoughMoney);
+				awardPopup.removeEventListener(ConstMiniGame.BUY_TURN, onNotBuyTurn);
 				awardPopup.removeEventListener(ConstMiniGame.RECEIVE_GIFT_ERROR, onReceiveGiftError);
 				awardPopup.removeEventListener(ConstMiniGame.RECEIVE_GIFT_SUCCESS, onReceiveGiftSuccess);
 			}
@@ -583,17 +593,13 @@ package miniGame
 		private function removeAllCardDeck():void 
 		{
 			
-			//trace("arrcarđeck: ", arrCardDeck)
-			if (arrCardDeck) 
-			{
-				for (var i:int = 0; i < arrCardDeck.length; i++) 
-				{
-					arrCardDeck[i].removeEventListener(MouseEvent.CLICK, onShowGift);
-					content.removeChild(arrCardDeck[i]);
-					arrCardDeck[i] = null;
-				}
-			}
 			
+			for (var i:int = 0; i < arrCardDeck.length; i++) 
+			{
+				arrCardDeck[i].removeEventListener(MouseEvent.CLICK, onShowGift);
+				content.removeChild(arrCardDeck[i]);
+				arrCardDeck[i] = null;
+			}
 			arrCardDeck = [];
 		}
 		
@@ -849,28 +855,41 @@ package miniGame
 				arr.push(GameDataMiniGame.getInstance().arrGift[i][1]);
 			}
 			
-			for (i = 0; i < arrCard.length; i++) 
+			if (!on) 
 			{
-				var rd:int = int(Math.random() * arr.length);
-				
-				var loader:Loader = arr[rd];
-				arr.splice(rd, 1);
-				
-				if (arrCard[i].containerGiftImage.numChildren > 0) 
+				for (i = 0; i < arrCard.length; i++) 
 				{
-					arrCard[i].containerGiftImage.removeChild(arrCard[i].containerGiftImage.getChildAt(0));
+					var rd:int = int(Math.random() * arr.length);
+					
+					var loader:Loader = arr[rd];
+					arr.splice(rd, 1);
+					
+					if (arrCard[i].containerGiftImage.numChildren > 0) 
+					{
+						arrCard[i].containerGiftImage.removeChild(arrCard[i].containerGiftImage.getChildAt(0));
+					}
+					arrCard[i].containerGiftImage.addChild(loader);
+					
+					arrCard[i].visible = true;
+					arrCard[i].scaleX = arrCard[i].scaleY = 1;
+					arrCard[i].x = arrPosCard[i][0];
+					arrCard[i].y = arrPosCard[i][1];
+					
+					arrCard[i].txt.text = "";// arr.splice(rd, 1);
+					arrCard[i].txt.mouseEnabled = false;
+					arrCard[i].borderCard.visible = false;
 				}
-				arrCard[i].containerGiftImage.addChild(loader);
-				
-				arrCard[i].visible = true;
-				arrCard[i].scaleX = arrCard[i].scaleY = 1;
-				arrCard[i].x = arrPosCard[i][0];
-				arrCard[i].y = arrPosCard[i][1];
-				
-				arrCard[i].txt.text = "";// arr.splice(rd, 1);
-				arrCard[i].txt.mouseEnabled = false;
-				arrCard[i].borderCard.visible = false;
+				on = true;
 			}
+			else 
+			{
+				for (i = 0; i < arrCard.length; i++) 
+				{
+					arrCard[i].txt.mouseEnabled = false;
+					arrCard[i].borderCard.visible = false;
+				}
+			}
+			
 			
 			removeAllCardDeck();
 			

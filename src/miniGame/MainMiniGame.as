@@ -146,6 +146,7 @@ package miniGame
 			
 			if (_playGame && noticePopup.error) 
 			{
+				_playGame.on = false;
 				_playGame.setupContent();
 				noticePopup.error = false;
 			}

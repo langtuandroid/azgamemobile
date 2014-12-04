@@ -183,7 +183,7 @@ package view.screen.play
 			content.iconMobile.visible = false;
 			content.effectMoney.visible = false;
 			content.effectMoneySpecial.visible = false;
-			content.effectMoneySpecial.y = 100;
+			content.effectMoneySpecial.y = 75;
 			content.nextturn.visible = false;
 			content.chatde.visible = false;
 			content.readyBtn.buttonMode = true;
@@ -395,7 +395,7 @@ package view.screen.play
 			content.effectMoneySpecial.text = format(Number(obj[ConstTlmn.MONEY]));
 			//trace("xem lai tien cua minh: ", MyDataTLMN.getInstance().myMoney[0], obj[ConstTlmn.MONEY])
 			//MyDataTLMN.getInstance().myMoney[0] = int(MyDataTLMN.getInstance().myMoney[0]) + int(obj[ConstTlmn.MONEY]);
-			TweenMax.to(content.effectMoneySpecial, 3, { y:content.effectMoneySpecial.y - 130, onComplete:onCompleteShowMoney } );
+			TweenMax.to(content.effectMoneySpecial, 3, { y:content.effectMoneySpecial.y - 0, onComplete:onCompleteShowMoney } );
 		}
 		
 		private function onShowVoiceLose(e:TimerEvent):void 
@@ -440,7 +440,7 @@ package view.screen.play
 				}
 			}
 			content.effectMoneySpecial.visible = false;
-			content.effectMoneySpecial.y += 130;
+			content.effectMoneySpecial.y += 0;
 			content.userMoney.text = format(Number(MyDataTLMN.getInstance().myMoney[0]));
 			if (SoundManager.getInstance().isSoundOn && int(MyDataTLMN.getInstance().myMoney[0]) < 10000) 
 			{
@@ -558,7 +558,7 @@ package view.screen.play
 			}
 			
 			
-			TweenMax.to(content.effectMoneySpecial, 3, { y: content.effectMoneySpecial.y - 50, onComplete:onCompleteMoneySpecial } );
+			TweenMax.to(content.effectMoneySpecial, 3, { y: content.effectMoneySpecial.y - 0, onComplete:onCompleteMoneySpecial } );
 			
 		}
 		
@@ -592,14 +592,14 @@ package view.screen.play
 			
 			content.effectMoneySpecial.text = format(Number(money));
 			//MyDataTLMN.getInstance().myMoney[0] = int(MyDataTLMN.getInstance().myMoney[0]) + int(money);
-			TweenMax.to(content.effectMoneySpecial, 3, { y: content.effectMoneySpecial.y - 130, onComplete:onCompleteMoneySpecial } );
+			TweenMax.to(content.effectMoneySpecial, 3, { y: content.effectMoneySpecial.y - 0, onComplete:onCompleteMoneySpecial } );
 			
 		}
 		
 		private function onCompleteMoneySpecial():void 
 		{
 			content.effectMoneySpecial.visible = false;
-			content.effectMoneySpecial.y += 50;
+			content.effectMoneySpecial.y += 0;
 			
 		}
 		
