@@ -62,7 +62,7 @@ package model.playingData
 		public function set playingScreenAction(value:Object):void 
 		{
 			_playingScreenAction = value;
-			if (MainData.getInstance().gameType == MainData.TLMN) 
+			if (MainData.getInstance().gameType == MainData.TLMN || MainData.getInstance().gameType == MainData.SAM) 
 			{
 				dispatchEvent(new PlayingScreenEventTlmn(UPDATE_PLAYING_SCREEN, value));
 			}

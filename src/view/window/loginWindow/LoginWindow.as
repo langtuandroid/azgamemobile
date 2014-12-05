@@ -122,7 +122,7 @@ package view.window.loginWindow
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 			
-			try 
+			/*try 
 			{
 				if (mainData.isOnAndroid || mainData.isOnIos)
 					deviceId = AirDeviceId.getInstance().getID("SanhBai");
@@ -132,7 +132,7 @@ package view.window.loginWindow
 			catch (err:Error)
 			{
 				
-			}
+			}*/
 			
 			zLoginWindow(content).loadingSoundLayer["percentTxt"].text = '0%';
 			zLoginWindow(content).loadingSoundLayer.visible = false;
