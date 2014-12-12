@@ -258,6 +258,10 @@ package view.window.shop
 			
 			
 			myContent.rakingBg.userNameTxt.text = MainData.getInstance().chooseChannelData.myInfo.name;
+			myContent.rakingBg.serinumberTxt.text = "Nhập seri thẻ";
+			myContent.rakingBg.codenumberTxt.text = "Nhập mã thẻ";
+			myContent.rakingBg.codecheckTxt.text = "Mã xác nhận";
+			
 			myContent.rakingBg.userNameTxt.addEventListener(FocusEvent.FOCUS_IN, userNameFocusHandler);
 			myContent.rakingBg.userNameTxt.addEventListener(FocusEvent.FOCUS_OUT, userNameFocusOutHandler);
 			
@@ -601,14 +605,14 @@ package view.window.shop
 			var txt:TextField = e.currentTarget as TextField;
 			if (txt.text == "") 
 			{
-				txt.text = "nhập mã thẻ";
+				txt.text = "Nhập mã thẻ";
 			}
 		}
 		
 		private function codeFocusHandler(e:FocusEvent):void 
 		{
 			var txt:TextField = e.currentTarget as TextField;
-			if (txt.text == "nhập mã thẻ") 
+			if (txt.text == "Nhập mã thẻ") 
 			{
 				txt.text = "";
 			}
@@ -639,14 +643,14 @@ package view.window.shop
 			var txt:TextField = e.currentTarget as TextField;
 			if (txt.text == "") 
 			{
-				txt.text = "nhập seri thẻ";
+				txt.text = "Nhập seri thẻ";
 			}
 		}
 		
 		private function seriFocusHandler(e:FocusEvent):void 
 		{
 			var txt:TextField = e.currentTarget as TextField;
-			if (txt.text == "nhập seri thẻ") 
+			if (txt.text == "Nhập seri thẻ") 
 			{
 				txt.text = "";
 			}
@@ -858,7 +862,7 @@ package view.window.shop
 		}
 		private function onClickChoseSms2(e:MouseEvent):void 
 		{
-			if (!MainData.getInstance().isFacebookVersion) 
+			/*if (!MainData.getInstance().isFacebookVersion) 
 			{
 				turnOnSendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, MainData.getInstance().phone4);
 			}
@@ -874,12 +878,30 @@ package view.window.shop
 				
 				tutorialAddMoney.closeBtn.addEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);
 				
+			}*/
+			
+			if (MainData.getInstance().isFacebookVersion || MainData.getInstance().isOnIos) 
+			{
+				tutorialAddMoney = new TutorialAddMoneyPopup();
+				myContent.addChild(tutorialAddMoney);
+				tutorialAddMoney.x = 47 + (865 - tutorialAddMoney.width) / 2;
+				tutorialAddMoney.y = 136 + (363 - tutorialAddMoney.height) / 2;
+				
+				tutorialAddMoney.contentMess.text = "SB G " + MainData.getInstance().chooseChannelData.myInfo.name;
+				tutorialAddMoney.numberTxt.text = MainData.getInstance().phone4;
+				
+				tutorialAddMoney.closeBtn.addEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);
+			}
+			else 
+			{
+				turnOnSendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, MainData.getInstance().phone4);
+				
 			}
 			
 		}
 		private function onClickChoseSms3(e:MouseEvent):void 
 		{
-			if (!MainData.getInstance().isFacebookVersion) 
+			/*if (!MainData.getInstance().isFacebookVersion) 
 			{
 				turnOnSendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, MainData.getInstance().phone5);
 			}
@@ -894,6 +916,24 @@ package view.window.shop
 				tutorialAddMoney.numberTxt.text = MainData.getInstance().phone5;
 				
 				tutorialAddMoney.closeBtn.addEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);
+				
+			}*/
+			
+			if (MainData.getInstance().isFacebookVersion || MainData.getInstance().isOnIos) 
+			{
+				tutorialAddMoney = new TutorialAddMoneyPopup();
+				myContent.addChild(tutorialAddMoney);
+				tutorialAddMoney.x = 47 + (865 - tutorialAddMoney.width) / 2;
+				tutorialAddMoney.y = 136 + (363 - tutorialAddMoney.height) / 2;
+				
+				tutorialAddMoney.contentMess.text = "SB G " + MainData.getInstance().chooseChannelData.myInfo.name;
+				tutorialAddMoney.numberTxt.text = MainData.getInstance().phone5;
+				
+				tutorialAddMoney.closeBtn.addEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);
+			}
+			else 
+			{
+				turnOnSendSMS("SB G " + MainData.getInstance().chooseChannelData.myInfo.name, MainData.getInstance().phone5);
 				
 			}
 		}
