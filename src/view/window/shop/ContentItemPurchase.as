@@ -72,7 +72,7 @@ package view.window.shop
 			
 			content.itemNameTxt.text = nameAvt;
 			content.itemGoldTxt.text = format(Number(gold));
-			content.itemChipTxt.text = "$" + format(Number(chip));
+			content.itemChipTxt.text = "$" + (String(chip));
 			
 			
 			
