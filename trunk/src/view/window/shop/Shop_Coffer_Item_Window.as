@@ -254,7 +254,7 @@ package view.window.shop
 			myContent.chooseInAddMoneyMc.creditCard.addEventListener(MouseEvent.MOUSE_UP, onClickShowAddMoneyPurchase);
 			
 			myContent.chooseInAddMoneyMc.purchase.visible = false;
-			myContent.chooseInAddMoneyMc.creditCard.visible = false;
+			//myContent.chooseInAddMoneyMc.creditCard.visible = false;
 			
 			
 			myContent.rakingBg.userNameTxt.text = MainData.getInstance().chooseChannelData.myInfo.name;
