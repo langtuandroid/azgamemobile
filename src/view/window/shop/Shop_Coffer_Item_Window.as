@@ -46,7 +46,7 @@ package view.window.shop
 		/**
 		 * 1:vina, 2:mobi, 3:viettel, 4:Vtc, 5:megacard, 6:fptgate
 		 */
-		private var _typOfNetwork:String = "VNP"; // dang chon nap the bang nha mang nao
+		private var _typOfNetwork:String = "VTT"; // dang chon nap the bang nha mang nao
 		
 		private var scrollView:ScrollViewYun;
 		private var scrollViewForRank:ScrollViewYun;
@@ -221,9 +221,9 @@ package view.window.shop
 		
 		private function addEvent():void 
 		{
-			myContent.rakingBg.choosePayVina.gotoAndStop(2);
+			myContent.rakingBg.choosePayVina.gotoAndStop(1);
 			myContent.rakingBg.choosePayMobi.gotoAndStop(1);
-			myContent.rakingBg.choosePayViettel.gotoAndStop(1);
+			myContent.rakingBg.choosePayViettel.gotoAndStop(2);
 			myContent.rakingBg.choosePayVtc.gotoAndStop(1);
 			myContent.rakingBg.choosePayMega.gotoAndStop(1);
 			myContent.rakingBg.choosePayFpt.gotoAndStop(1);
@@ -734,6 +734,8 @@ package view.window.shop
 		
 		private function onAddMoneyRespone(obj:Object):void 
 		{
+			closeLoading();
+			
 			var addMoney:ShopNoticeWindow = new ShopNoticeWindow();
 			var buyAvatarWindow:ConfirmWindow;
 			
@@ -767,7 +769,7 @@ package view.window.shop
 				windowLayer.openWindow(buyAvatarWindow);
 			}
 			
-			closeLoading();
+			
 		}
 		
 		private function onShowShopGold(e:Event):void 
@@ -2387,15 +2389,17 @@ package view.window.shop
 		
 		private function closeLoading():void 
 		{
-			var timer:Timer = new Timer(1000, 1);
+			windowLayer.closeAllWindow();
+			isLoad = false;
+			
+			/*var timer:Timer = new Timer(1000, 1);
 			timer.addEventListener(TimerEvent.TIMER_COMPLETE, onCloseLoadingWindow);
-			timer.start();
+			timer.start();*/
 		}
 		
 		private function onCloseLoadingWindow(e:TimerEvent):void 
 		{
-			windowLayer.closeAllWindow();
-			isLoad = false;
+			
 		}
 		
 		private function onBuyAvatar(e:Event):void 
