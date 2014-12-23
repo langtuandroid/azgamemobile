@@ -208,8 +208,14 @@ package view.screen
 			content = new PlayScreenTlmnMc();
 			gameLayer.addChild(content);
 			
+			content.showTimeNotice.visible = false;
+			content.whiteWinSam.visible = false;
+			content.samNotice.visible = false;
+			
 			var background:MovieClip = new zGameBackground();
 			content.backGround.addChild(background);
+			
+			content.noc.gotoAndStop(1);
 			
 			if (MyDataTLMN.getInstance().isGame == 1) 
 			{
@@ -283,14 +289,14 @@ package view.screen
 			for (j = 0; j < arrTest.length; j++) 
 			{
 				var card:CardTlmn = new CardTlmn(arrTest[j]);
-				card.x = 102 + 35 * j;
+				card.x = 102 + 34 * j;
 				card.y = 110;
 				card.scaleX = card.scaleY = .8;
 				_containCard.addChild(card);
 				_arrCardDiscard.push(card);
 			}
 			
-			_containCard.x = 180;
+			_containCard.x = 176;
 			_containCard.y = 155;*/
 			
 			containerCardResult = new Sprite();
@@ -333,6 +339,14 @@ package view.screen
 			heartbeart.start();
 			
 			createEmo();
+			
+			/*var j:int;
+			var arrTest:Array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 40, 44, 36];
+			//var arrTest:Array = [1];
+			for (j = 0; j < _arrUserInfo.length; j++) 
+			{
+				addCardImage(arrTest, j);
+			}*/
 		}
 		
 		
@@ -996,8 +1010,6 @@ package view.screen
 			content.noc.visible = false;
 			_stageGame = 2;
 			
-			writelog("have white win, removeallcard, reset variable");
-			
 			content.noticeForUserTxt.text = "";
 			content.noticeForUserTxt.visible = false;
 			GameDataTLMN.getInstance().firstGame = false;
@@ -1072,7 +1084,7 @@ package view.screen
 					for (j = 0; j < arrCardWin.length; j++) 
 					{
 						card = new CardTlmn(arrCardWin[j]);
-						card.x = 102 + 35 * j;
+						card.x = 102 + 34 * j;
 						card.y = 110;
 						card.scaleX = card.scaleY = .8;
 						_containCard.addChild(card);
@@ -1108,7 +1120,7 @@ package view.screen
 			
 			
 			
-			_containCard.x = 180;
+			_containCard.x = 176;
 			_containCard.y = 155;
 			content.specialCard.gotoAndStop(6);
 			content.specialCard.visible = true;
@@ -1118,7 +1130,7 @@ package view.screen
 			
 			content.setChildIndex(content.whiteWin, content.numChildren - 1);
 			
-			var result:int;
+			var result:Number = 0;
 			var outGame:Boolean = false;
 			var objResult:Object;
 			for (i = 0; i < obj[ConstTlmn.PLAYER_LIST].length; i++) 
@@ -1128,8 +1140,8 @@ package view.screen
 					objResult = new Object();
 					objResult[ConstTlmn.MONEY] = obj[ConstTlmn.PLAYER_LIST][i][ConstTlmn.MONEY];
 					
-					result = int(MyDataTLMN.getInstance().myMoney[0]) + int(objResult[ConstTlmn.MONEY]);
-					if (result < int(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet) 
+					result = Number(MyDataTLMN.getInstance().myMoney[0]) + Number(objResult[ConstTlmn.MONEY]);
+					if (result < Number(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet) 
 					{
 						outGame = true;
 					}
@@ -1196,7 +1208,7 @@ package view.screen
 				_resultWindow.addEventListener("out game", onOutGame);
 			}
 			checkShowTextNotice()
-			if (int(MyDataTLMN.getInstance().myMoney[0]) < int(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet) 
+			if (Number(MyDataTLMN.getInstance().myMoney[0]) < Number(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet) 
 			{
 				EffectLayer.getInstance().removeAllEffect();
 				
@@ -1304,9 +1316,6 @@ package view.screen
 					
 					_myInfo._isPassTurn = false;
 					_myInfo.checkPosClock();
-					content.userTurn.x = _myInfo.x + 20;
-					content.userTurn.y = _myInfo.y - 80;
-					content.userTurn.rotation = 0;
 					
 					if (SoundManager.getInstance().isSoundOn) 
 					{
@@ -1317,25 +1326,19 @@ package view.screen
 				else if (_arrUserInfo[0] && GameDataTLMN.getInstance().currentPlayer == _arrUserInfo[0]._userName && _isPlaying) 
 				{
 					_arrUserInfo[0].checkPosClock();
-					content.userTurn.x = _arrUserInfo[0].x - 100;
-					content.userTurn.y = _arrUserInfo[0].y + 100;
-					content.userTurn.rotation = -90;
+					
 				}
 				else if (_arrUserInfo[1] && GameDataTLMN.getInstance().currentPlayer == _arrUserInfo[1]._userName && _isPlaying) 
 				{
 					_arrUserInfo[1].checkPosClock();
-					content.userTurn.x = _arrUserInfo[1].x + 90;
-					content.userTurn.y = _arrUserInfo[1].y + 230;
-					content.userTurn.rotation = 180;
+					
 				}
 				else if (_arrUserInfo[2] && GameDataTLMN.getInstance().currentPlayer == _arrUserInfo[2]._userName && _isPlaying) 
 				{
 					_arrUserInfo[2].checkPosClock();
-					content.userTurn.x = _arrUserInfo[2].x + 280;
-					content.userTurn.y = _arrUserInfo[2].y + 30;
-					content.userTurn.rotation = 90;
+					
 				}
-				content.userTurn.visible = false;// true;
+				
 			}
 		}
 		
@@ -1396,10 +1399,22 @@ package view.screen
 			{
 				timerDealCard.stop();
 				timerDealCard.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealCard);
+				content.noc.visible = false;
+			}
+			if (timerDealcardForme) 
+			{
+				timerDealcardForme.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcardForMe);
+				timerDealcardForme.stop();
+			}
+			if (_timerKickMaster) 
+			{
+				_timerKickMaster.removeEventListener(TimerEvent.TIMER_COMPLETE, onKickMaster);
+				_timerKickMaster.removeEventListener(TimerEvent.TIMER, onTimerKickMaster);
+				_timerKickMaster.stop();
 			}
 			
 			var str:String;
-			content.userTurn.visible = false;
+			
 			content.noticeForUserTxt.text = "";
 			content.noticeForUserTxt.visible = false;
 			GameDataTLMN.getInstance().firstGame = false;
@@ -1444,7 +1459,7 @@ package view.screen
 			_myInfo._cheater = false;
 			
 			var arrResult:Array = obj["resultArr"];
-			var result:int = int(String(MyDataTLMN.getInstance().myMoney[0]).replace(",", ""));
+			var result:Number = Number(String(MyDataTLMN.getInstance().myMoney[0]).replace(",", ""));
 			
 			var userResult:String;
 			
@@ -1462,8 +1477,8 @@ package view.screen
 					objResult = new Object();
 					objResult[ConstTlmn.MONEY] = arrResult[i][ConstTlmn.SUB_MONEY];
 					
-					result = int(MyDataTLMN.getInstance().myMoney[0]) + int(arrResult[i][ConstTlmn.SUB_MONEY]);
-					if (result < int(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet) 
+					result = Number(MyDataTLMN.getInstance().myMoney[0]) + Number(arrResult[i][ConstTlmn.SUB_MONEY]);
+					if (result < Number(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet) 
 					{
 						outGame = true;
 					}
@@ -1535,25 +1550,25 @@ package view.screen
 			{
 				var card:CardTlmn = new CardTlmn(arr[i]);
 				containerCardResult.addChild(card);
-				card.scaleX = card.scaleY = .6;
+				card.scaleX = card.scaleY = .75;
 				_arrCardListOtherUser.push(card);
 				
 				if (pos == 0) 
 				{
 					card.rotation = 90;
-					card.x = _arrUserInfo[0].x - 10;
-					card.y = _arrUserInfo[0].y - 25 + (13 - arr.length) * 10 + 13 * i;
+					card.x = _arrUserInfo[0].x - 14;
+					card.y = _arrUserInfo[0].y - 50 + (13 - arr.length) * 18 + 18 * i;
 				}
 				else if (pos == 2)
 				{
 					card.rotation = 90;
-					card.x = _arrUserInfo[2].x + 215;
-					card.y = _arrUserInfo[2].y - 25 + (13 - arr.length) * 10 + 13 * i;
+					card.x = _arrUserInfo[2].x + 233;
+					card.y = _arrUserInfo[2].y - 50 + (13 - arr.length) * 18 + 18 * i;
 				}
 				else 
 				{
-					card.x = _arrUserInfo[1].x - 230 + (13 - arr.length) * 10 + 13 * i;
-					card.y = _arrUserInfo[1].y + 50;
+					card.x = _arrUserInfo[1].x - 262 + (13 - arr.length) * 18 + 18 * i;
+					card.y = _arrUserInfo[1].y + 30;
 				}
 			}
 		}
@@ -1580,7 +1595,7 @@ package view.screen
 				_arrUserInfo[i].stopTimer();
 			}*/
 			
-			if (int(MyDataTLMN.getInstance().myMoney[0]) < int(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet) 
+			if (Number(MyDataTLMN.getInstance().myMoney[0]) < Number(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet) 
 			{
 				EffectLayer.getInstance().removeAllEffect();
 				
@@ -1600,23 +1615,13 @@ package view.screen
 		private function onCloseResultWindow(e:Event):void 
 		{
 			_stageGame = 0;
-			if (SoundManager.getInstance().isSoundOn) 
-			{
-				var rd:int = int(Math.random() * 5);
-				if (MyDataTLMN.getInstance().sex) 
-				{
-					SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_STARTGAME_ + String(rd + 1) );
-				}
-				else 
-				{
-					SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_STARTGAME_ + String(rd + 1));
-				}
-				
-			}
+			var outedGame:Boolean = false;
+			
+			
 			
 			if (GameDataTLMN.getInstance().notEnoughMoney) 
 			{
-				
+				outedGame = true;
 				writelog("not enogh money --> out room");
 				okOut();
 				GameDataTLMN.getInstance().notEnoughMoney = false;
@@ -1671,7 +1676,19 @@ package view.screen
 			}
 			
 			
-			
+			if (SoundManager.getInstance().isSoundOn && !outedGame) 
+			{
+				var rd:int = int(Math.random() * 5);
+				if (MyDataTLMN.getInstance().sex) 
+				{
+					SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_STARTGAME_ + String(rd + 1) );
+				}
+				else 
+				{
+					SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_STARTGAME_ + String(rd + 1));
+				}
+				
+			}
 			
 		}
 		
@@ -1836,9 +1853,11 @@ package view.screen
 			var str:String;
 			var ihit:Boolean = false;
 			var userSexhit:Boolean = false;
+			var userCardRemain:int;
 			if (obj.userName == _myInfo._userName) 
 			{
 				ihit = true;
+				userCardRemain = _myInfo._arrCardInt.length;
 			}
 			else 
 			{
@@ -1847,6 +1866,7 @@ package view.screen
 					if (_arrUserInfo[i]._userName && obj.userName == _arrUserInfo[i]._userName) 
 					{
 						userSexhit = _arrUserInfo[i]._sex;
+						userCardRemain = _arrUserInfo[i]._remainingCard;
 					}
 				}
 			}
@@ -1871,44 +1891,36 @@ package view.screen
 						{
 							if (ihit) 
 							{
-								/*if (MyDataTLMN.getInstance().sex) 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_ + String(rd + 1) );
-								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_ + String(rd + 1) );
-								}*/
 								
-								if (MyDataTLMN.getInstance().sex) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DANH2_ + String(rd + 1) );
+									if (MyDataTLMN.getInstance().sex) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DANH2_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DANH2_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DANH2_ + String(rd + 1) );
-								}
+								
 							
 							}
 							else 
 							{
-								/*if (userSexhit) 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_ + String(rd + 1) );
-								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE1CARD_ + String(rd + 1) );
-								}*/
 								
-								if (userSexhit) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DANH2_ + String(rd + 1) );
+									if (userSexhit) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DANH2_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DANH2_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DANH2_ + String(rd + 1) );
-								}
+								
 							}
 							
 						}
@@ -1916,25 +1928,33 @@ package view.screen
 						{
 							if (ihit) 
 							{
-								if (MyDataTLMN.getInstance().sex) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DANH2_ + String(rd + 1) );
+									if (MyDataTLMN.getInstance().sex) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DANH2_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DANH2_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DANH2_ + String(rd + 1) );
-								}
+								
 							}
 							else 
 							{
-								if (userSexhit) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DANH2_ + String(rd + 1) );
+									if (userSexhit) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DANH2_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DANH2_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DANH2_ + String(rd + 1) );
-								}
+								
 							}
 						}
 						
@@ -1945,6 +1965,7 @@ package view.screen
 				}
 				else if (arrCard[0] == 0) 
 				{
+					
 					if (SoundManager.getInstance().isSoundOn) 
 					{
 						
@@ -1953,25 +1974,33 @@ package view.screen
 							rd = int(Math.random() * 10);
 							if (ihit) 
 							{
-								if (MyDataTLMN.getInstance().sex) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE1CARD_ + String(rd + 1) );
+									if (MyDataTLMN.getInstance().sex) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE1CARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE1CARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE1CARD_ + String(rd + 1) );
-								}
+								
 							}
 							else 
 							{
-								if (userSexhit) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE1CARD_ + String(rd + 1) );
+									if (userSexhit) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE1CARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE1CARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE1CARD_ + String(rd + 1) );
-								}
+								
 							}
 							
 						}
@@ -1980,52 +2009,37 @@ package view.screen
 							rd = int(Math.random() * 5);
 							if (ihit) 
 							{
-								if (MyDataTLMN.getInstance().sex) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD1CARD_ + String(rd + 1) );
+									if (MyDataTLMN.getInstance().sex) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD1CARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD1CARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD1CARD_ + String(rd + 1) );
-								}
+								
 							}
 							else 
 							{
-								if (userSexhit) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD1CARD_ + String(rd + 1) );
+										if (userSexhit) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD1CARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD1CARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD1CARD_ + String(rd + 1) );
-								}
+								
 							}
 						}
 						
 					}
-					
-					if (obj.userName == MyDataTLMN.getInstance().myId) 
-					{
-						if (_myInfo._arrCardInt.length == 1) 
-						{
-							
-						}
-					}
-					else 
-					{
-						for (i = 0; i < _arrUserInfo.length; i++) 
-						{
-							if (obj.userName == _arrUserInfo[i]._userName) 
-							{
-								if (_arrUserInfo[i]._remainingCard == 1) 
-								{
-									
-								}
-								break;
-							}
-						}
-					}
-					
 					
 				}
 				else
@@ -2038,25 +2052,33 @@ package view.screen
 							rd = int(Math.random() * 10);
 							if (ihit) 
 							{
-								if (MyDataTLMN.getInstance().sex) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE1CARD_ + String(rd + 1) );
+									if (MyDataTLMN.getInstance().sex) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE1CARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE1CARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE1CARD_ + String(rd + 1) );
-								}
+								
 							}
 							else 
 							{
-								if (userSexhit) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE1CARD_ + String(rd + 1) );
+									if (userSexhit) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE1CARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE1CARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE1CARD_ + String(rd + 1) );
-								}
+								
 							}
 							
 						}
@@ -2065,25 +2087,33 @@ package view.screen
 							rd = int(Math.random() * 5);
 							if (ihit) 
 							{
-								if (MyDataTLMN.getInstance().sex) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD1CARD_ + String(rd + 1) );
+									if (MyDataTLMN.getInstance().sex) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD1CARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD1CARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD1CARD_ + String(rd + 1) );
-								}
+								
 							}
 							else 
 							{
-								if (userSexhit) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD1CARD_ + String(rd + 1) );
+									if (userSexhit) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD1CARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD1CARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD1CARD_ + String(rd + 1) );
-								}
+								
 							}
 						}
 						
@@ -2101,25 +2131,33 @@ package view.screen
 					{
 						if (ihit) 
 						{
-							if (MyDataTLMN.getInstance().sex) 
+							if (arrCard.length < userCardRemain) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE2CARD_ + String(rd + 1) );
+								if (MyDataTLMN.getInstance().sex) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE2CARD_ + String(rd + 1) );
+								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE2CARD_ + String(rd + 1) );
+								}
 							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE2CARD_ + String(rd + 1) );
-							}
+							
 						}
 						else 
 						{
-							if (userSexhit) 
+							if (arrCard.length < userCardRemain) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE2CARD_ + String(rd + 1) );
+								if (userSexhit) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE2CARD_ + String(rd + 1) );
+								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE2CARD_ + String(rd + 1) );
+								}
 							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE2CARD_ + String(rd + 1) );
-							}
+							
 						}
 						
 					}
@@ -2127,25 +2165,33 @@ package view.screen
 					{
 						if (ihit) 
 						{
-							if (MyDataTLMN.getInstance().sex) 
+							if (arrCard.length < userCardRemain) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD2CARD_ + String(rd + 1) );
+								if (MyDataTLMN.getInstance().sex) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD2CARD_ + String(rd + 1) );
+								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD2CARD_ + String(rd + 1) );
+								}
 							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD2CARD_ + String(rd + 1) );
-							}
+							
 						}
 						else 
 						{
-							if (userSexhit) 
+							if (arrCard.length < userCardRemain) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD2CARD_ + String(rd + 1) );
+								if (userSexhit) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD2CARD_ + String(rd + 1) );
+								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD2CARD_ + String(rd + 1) );
+								}
 							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD2CARD_ + String(rd + 1) );
-							}
+							
 						}
 					}
 					
@@ -2166,25 +2212,33 @@ package view.screen
 					{
 						if (ihit) 
 						{
-							if (MyDataTLMN.getInstance().sex) 
+							if (arrCard.length < userCardRemain) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+								if (MyDataTLMN.getInstance().sex) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
+								}
 							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
-							}
+							
 						}
 						else 
 						{
-							if (userSexhit) 
+							if (arrCard.length < userCardRemain) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+								if (userSexhit) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
+								}
 							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
-							}
+							
 						}
 						
 					}
@@ -2192,25 +2246,33 @@ package view.screen
 					{
 						if (ihit) 
 						{
-							if (MyDataTLMN.getInstance().sex) 
+							if (arrCard.length < userCardRemain) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+								if (MyDataTLMN.getInstance().sex) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
+								}
 							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
-							}
+							
 						}
 						else 
 						{
-							if (userSexhit) 
+							if (arrCard.length < userCardRemain) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+								if (userSexhit) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
+								}
 							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
-							}
+							
 						}
 					}
 					
@@ -2230,37 +2292,68 @@ package view.screen
 						{
 							if (ihit) 
 							{
-								if (MyDataTLMN.getInstance().sex) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_ + String(rd + 1) );
+									if (MyDataTLMN.getInstance().sex) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_ + String(rd + 1) );
-								}
+								
 							}
 							else 
 							{
-								if (userSexhit) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_ + String(rd + 1) );
+									if (userSexhit) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_ + String(rd + 1) );
-								}
+								
 							}
 						}
 						else 
 						{
-							if (MyDataTLMN.getInstance().sex) 
+							if (ihit) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+								if (arrCard.length < userCardRemain) 
+								{
+									if (MyDataTLMN.getInstance().sex) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_ + String(rd + 1) );
+									}
+								}
+								
 							}
 							else 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
+								if (arrCard.length < userCardRemain) 
+								{
+									if (userSexhit) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_ + String(rd + 1) );
+									}
+								}
+								
 							}
+							
 						}
 						
 						
@@ -2288,25 +2381,33 @@ package view.screen
 						{
 							if (ihit) 
 							{
-								if (MyDataTLMN.getInstance().sex) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+									if (MyDataTLMN.getInstance().sex) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
-								}
+								
 							}
 							else 
 							{
-								if (userSexhit) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+									if (userSexhit) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
-								}
+								
 							}
 							
 						}
@@ -2314,25 +2415,33 @@ package view.screen
 						{
 							if (ihit) 
 							{
-								if (MyDataTLMN.getInstance().sex) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+									if (MyDataTLMN.getInstance().sex) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
-								}
+								
 							}
 							else 
 							{
-								if (userSexhit) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+									if (userSexhit) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
-								}
+								
 							}
 						}
 						
@@ -2351,25 +2460,33 @@ package view.screen
 					{
 						if (ihit) 
 						{
-							if (MyDataTLMN.getInstance().sex) 
+							if (arrCard.length < userCardRemain) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+								if (MyDataTLMN.getInstance().sex) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
+								}
 							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
-							}
+							
 						}
 						else 
 						{
-							if (userSexhit) 
+							if (arrCard.length < userCardRemain) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+								if (userSexhit) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
+								}
 							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
-							}
+							
 						}
 						
 					}
@@ -2377,25 +2494,33 @@ package view.screen
 					{
 						if (ihit) 
 						{
-							if (MyDataTLMN.getInstance().sex) 
+							if (arrCard.length < userCardRemain) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+									if (MyDataTLMN.getInstance().sex) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
+								}
 							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
-							}
+							
 						}
 						else 
 						{
-							if (userSexhit) 
+							if (arrCard.length < userCardRemain) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+								if (userSexhit) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
+								}
 							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
-							}
+							
 						}
 					}
 					
@@ -2420,36 +2545,66 @@ package view.screen
 						{
 							if (ihit) 
 							{
-								if (MyDataTLMN.getInstance().sex) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_ + String(rd + 1) );
+									if (MyDataTLMN.getInstance().sex) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_ + String(rd + 1) );
-								}
+								
 							}
 							else 
 							{
-								if (userSexhit) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_ + String(rd + 1) );
+									if (userSexhit) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_ + String(rd + 1) );
-								}
+								
 							}
 						}
 						else 
 						{
-							if (MyDataTLMN.getInstance().sex) 
+							if (ihit) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+								if (arrCard.length < userCardRemain) 
+								{
+										if (MyDataTLMN.getInstance().sex) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
+									}
+								}
+								
 							}
 							else 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
+								if (arrCard.length < userCardRemain) 
+								{
+									if (userSexhit) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
+									}
+								}
+								
 							}
 						}
 						
@@ -2474,25 +2629,33 @@ package view.screen
 						{
 							if (ihit) 
 							{
-								if (MyDataTLMN.getInstance().sex) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+									if (MyDataTLMN.getInstance().sex) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
-								}
+								
 							}
 							else 
 							{
-								if (userSexhit) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+									if (userSexhit) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
-								}
+								
 							}
 							
 						}
@@ -2500,25 +2663,33 @@ package view.screen
 						{
 							if (ihit) 
 							{
-								if (MyDataTLMN.getInstance().sex) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+									if (MyDataTLMN.getInstance().sex) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
-								}
+								
 							}
 							else 
 							{
-								if (userSexhit) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+									if (userSexhit) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
-								}
+								
 							}
 						}
 						
@@ -2541,25 +2712,33 @@ package view.screen
 					{
 						if (ihit) 
 						{
-							if (MyDataTLMN.getInstance().sex) 
+							if (arrCard.length < userCardRemain) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+								if (MyDataTLMN.getInstance().sex) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
+								}
 							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
-							}
+							
 						}
 						else 
 						{
-							if (userSexhit) 
+							if (arrCard.length < userCardRemain) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+								if (userSexhit) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
+								}
 							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
-							}
+							
 						}
 						
 					}
@@ -2567,25 +2746,33 @@ package view.screen
 					{
 						if (ihit) 
 						{
-							if (MyDataTLMN.getInstance().sex) 
+							if (arrCard.length < userCardRemain) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+								if (MyDataTLMN.getInstance().sex) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
+								}
 							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
-							}
+							
 						}
 						else 
 						{
-							if (userSexhit) 
+							if (arrCard.length < userCardRemain) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+								if (userSexhit) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
+								}
 							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
-							}
+							
 						}
 					}
 					
@@ -2609,36 +2796,66 @@ package view.screen
 						{
 							if (ihit) 
 							{
-								if (MyDataTLMN.getInstance().sex) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_ + String(rd + 1) );
+									if (MyDataTLMN.getInstance().sex) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_ + String(rd + 1) );
-								}
+								
 							}
 							else 
 							{
-								if (userSexhit) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_ + String(rd + 1) );
+									if (userSexhit) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_ + String(rd + 1) );
-								}
+								
 							}
 						}
 						else 
 						{
-							if (MyDataTLMN.getInstance().sex) 
+							if (ihit) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+								if (arrCard.length < userCardRemain) 
+								{
+									if (MyDataTLMN.getInstance().sex) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_ + String(rd + 1) );
+									}
+								}
+								
 							}
 							else 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
+								if (arrCard.length < userCardRemain) 
+								{
+									if (userSexhit) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDESPECIALCARD_ + String(rd + 1) );
+									}
+								}
+								
 							}
 						}
 						
@@ -2671,25 +2888,33 @@ package view.screen
 						{
 							if (ihit) 
 							{
-								if (MyDataTLMN.getInstance().sex) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+									if (MyDataTLMN.getInstance().sex) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
-								}
+								
 							}
 							else 
 							{
-								if (userSexhit) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+									if (userSexhit) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
-								}
+								
 							}
 							
 						}
@@ -2697,25 +2922,33 @@ package view.screen
 						{
 							if (ihit) 
 							{
-								if (MyDataTLMN.getInstance().sex) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+									if (MyDataTLMN.getInstance().sex) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
-								}
+								
 							}
 							else 
 							{
-								if (userSexhit) 
+								if (arrCard.length < userCardRemain) 
 								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+									if (userSexhit) 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+									}
+									else 
+									{
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
+									}
 								}
-								else 
-								{
-									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
-								}
+								
 							}
 						}
 						
@@ -2729,7 +2962,7 @@ package view.screen
 				}
 				
 			}
-			else if (arrCard.length == 9) 
+			else if (arrCard.length >= 9) 
 			{
 				if (SoundManager.getInstance().isSoundOn) 
 				{
@@ -2738,25 +2971,33 @@ package view.screen
 					{
 						if (ihit) 
 						{
-							if (MyDataTLMN.getInstance().sex) 
+							if (arrCard.length < userCardRemain) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+								if (MyDataTLMN.getInstance().sex) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
+								}
 							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
-							}
+							
 						}
 						else 
 						{
-							if (userSexhit) 
+							if (arrCard.length < userCardRemain) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+								if (userSexhit) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
+								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
+								}
 							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
-							}
+							
 						}
 						
 					}
@@ -2764,25 +3005,33 @@ package view.screen
 					{
 						if (ihit) 
 						{
-							if (MyDataTLMN.getInstance().sex) 
+							if (arrCard.length < userCardRemain) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+								if (MyDataTLMN.getInstance().sex) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
+								}
 							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
-							}
+							
 						}
 						else 
 						{
-							if (userSexhit) 
+							if (arrCard.length < userCardRemain) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+									if (userSexhit) 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
+								}
+								else 
+								{
+									SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
+								}
 							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
-							}
+							
 						}
 					}
 					
@@ -2794,239 +3043,8 @@ package view.screen
 					checkAnimationChatSanh7 = true;
 				}
 			}
-			else if (arrCard.length == 10) 
-			{
-				if (SoundManager.getInstance().isSoundOn) 
-				{
-					rd = int(Math.random() * 5);
-					if (_arrLastCard.length > 0) 
-					{
-						if (ihit) 
-						{
-							if (MyDataTLMN.getInstance().sex) 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
-							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
-							}
-						}
-						else 
-						{
-							if (userSexhit) 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
-							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
-							}
-						}
-						
-					}
-					else 
-					{
-						if (ihit) 
-						{
-							if (MyDataTLMN.getInstance().sex) 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
-							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
-							}
-						}
-						else 
-						{
-							if (userSexhit) 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
-							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
-							}
-						}
-					}
-					
-					
-				}
-				check = cardTlmn.isNamDoiThong(arrCard);
-				if (check) 
-				{
-					cardsName = "5 đôi thông";
-				}
-				else 
-				{
-					cardsName = "Sảnh 10";
-					if (_arrLastCard && _arrLastCard.length == 10) 
-					{
-						checkAnimationChatSanh7 = true;
-					}
-				}
-				
-			}
-			else if (arrCard.length == 11) 
-			{
-				if (SoundManager.getInstance().isSoundOn) 
-				{
-					rd = int(Math.random() * 5);
-					if (_arrLastCard.length > 0) 
-					{
-						if (ihit) 
-						{
-							if (MyDataTLMN.getInstance().sex) 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
-							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
-							}
-						}
-						else 
-						{
-							if (userSexhit) 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
-							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
-							}
-						}
-						
-					}
-					else 
-					{
-						if (ihit) 
-						{
-							if (MyDataTLMN.getInstance().sex) 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
-							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
-							}
-						}
-						else 
-						{
-							if (userSexhit) 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
-							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
-							}
-						}
-					}
-					
-					
-				}
-				cardsName = "Sảnh 11";
-				if (_arrLastCard && _arrLastCard.length == 11) 
-				{
-					checkAnimationChatSanh7 = true;
-				}
-			}
-			else if (arrCard.length == 12) 
-			{
-				if (SoundManager.getInstance().isSoundOn) 
-				{
-					rd = int(Math.random() * 5);
-					if (_arrLastCard.length > 0) 
-					{
-						if (ihit) 
-						{
-							if (MyDataTLMN.getInstance().sex) 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
-							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
-							}
-						}
-						else 
-						{
-							if (userSexhit) 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_CHATDE3CARD_ + String(rd + 1) );
-							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_CHATDE3CARD_ + String(rd + 1) );
-							}
-						}
-						
-					}
-					else 
-					{
-						if (ihit) 
-						{
-							if (MyDataTLMN.getInstance().sex) 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
-							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
-							}
-						}
-						else 
-						{
-							if (userSexhit) 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_DISCARD3CARD_ + String(rd + 1) );
-							}
-							else 
-							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_DISCARD3CARD_ + String(rd + 1) );
-							}
-						}
-					}
-					
-					
-				}
-				cardsName = "Sảnh 12";
-				if (_arrLastCard && _arrLastCard.length == 12) 
-				{
-					checkAnimationChatSanh7 = true;
-				}
-			}
-			else if (arrCard.length == 13) 
-			{
-				cardsName = "Sảnh rồng";
-			}
 			
 			var cardChilds:Array = [];
-			
-			/*var arrSave:Array = [];
-			for (i = 0; i < _arrCardDiscard.length; i++) 
-			{
-				arrSave.push(_arrCardDiscard[i]);
-			}
-			
-			if (arrSave.length > 0) 
-			{
-				var rdX:int = int(Math.random() * 20);
-				var rdY:int = int(Math.random() * 20);
-				
-				for (i = 0; i < arrSave.length; i++) 
-				{
-					var card:CardTlmn = new CardTlmn(arrSave[i].id);
-					//card.rotation = angel;
-					_containCardSave.addChild(card);
-					_arrCardSave.push(card);
-					card.x = _containCard.x + 30 * i;
-					card.y = _containCard.y + 5;
-				}
-			}*/
-			
 			
 			removeAllDisCard();
 			_cardsName = cardsName;
@@ -3752,14 +3770,15 @@ package view.screen
 			_chatBox.visible = false;
 			
 			mainData.addEventListener(MainData.UPDATE_SYSTEM_NOTICE, onUpdateSystemNotice);
-			if (timerToGetSystemNoticeInfo)
+			/*if (timerToGetSystemNoticeInfo)
 			{
 				timerToGetSystemNoticeInfo.removeEventListener(TimerEvent.TIMER, onGetSystemNoticeInfo);
 				timerToGetSystemNoticeInfo.stop();
 			}
 			timerToGetSystemNoticeInfo = new Timer(30000);
 			timerToGetSystemNoticeInfo.addEventListener(TimerEvent.TIMER, onGetSystemNoticeInfo);
-			timerToGetSystemNoticeInfo.start();
+			timerToGetSystemNoticeInfo.start();*/
+			
 			for (var j:int = 0; j < mainData.systemNoticeList.length; j++) 
 			{
 				var textField:TextField = new TextField();
@@ -3773,7 +3792,7 @@ package view.screen
 			
 			_waitToReady.visible = _waitToStart.visible = false;
 			_waitToReady.visible = false;
-			content.userTurn.visible = false;
+			
 			content.specialCard.visible = false;
 			content.xChat.visible = false;
 			content.whiteWin.visible = false;
@@ -4272,7 +4291,6 @@ package view.screen
 			_myInfo.removeAllCard();
 			_myInfo.removeAllEvent();
 			_myInfo._isPlaying = false;
-			content.userTurn.visible = false;
 			
 			_arrLastCard = [];
 			_arrUserList = [];
@@ -4449,6 +4467,7 @@ package view.screen
 			var j:int;
 			var obj:Object;
 			var objUser:Object;
+			var sex:Boolean;
 			_numUser++;
 			for (j = 0; j < _arrRealUser.length; j++) 
 			{
@@ -4462,10 +4481,14 @@ package view.screen
 						{
 							if (_arrUserInfo[i]._userName == "") 
 							{
-								
+								sex = false;
+								if (obj[DataField.SEX] == "M") 
+								{
+									sex = true;
+								}
 								_arrUserInfo[i].getInfoPlayer(i + 1, obj[DataField.USER_NAME], obj[DataField.MONEY], obj[DataField.AVATAR], 
 								0, String(obj[DataField.LEVEL]), false, _isPlaying, false,
-								obj[DataField.DISPLAY_NAME], obj[DataField.SEX], obj[DataField.IP], obj[DataField.DEVICE_ID],
+								obj[DataField.DISPLAY_NAME], sex, obj[DataField.IP], obj[DataField.DEVICE_ID],
 								obj[DataField.WIN], obj[DataField.LOSE]);
 								
 								objUser = new Object();
@@ -4479,7 +4502,7 @@ package view.screen
 								
 								objUser["isMaster"] = false;
 								objUser[DataField.DISPLAY_NAME] = obj[DataField.DISPLAY_NAME];
-								objUser[DataField.SEX] = obj[DataField.SEX];
+								objUser[DataField.SEX] = sex;
 								_arrUserList[i + 1] = objUser;
 								/*if (_stageId == 1) 
 								{
@@ -4502,10 +4525,14 @@ package view.screen
 						
 						if (_arrUserInfo[i]._userName == "") 
 						{
-							
+							sex = false;
+							if (obj[DataField.SEX] == "M") 
+							{
+								sex = true;
+							}
 							_arrUserInfo[i].getInfoPlayer(i + 1, obj[DataField.USER_NAME], obj[DataField.MONEY], obj[DataField.AVATAR], 
 								0, String(obj[DataField.LEVEL]), false, _isPlaying, false,
-								obj[DataField.DISPLAY_NAME], obj[DataField.SEX], obj[DataField.IP], obj[DataField.DEVICE_ID],
+								obj[DataField.DISPLAY_NAME], sex, obj[DataField.IP], obj[DataField.DEVICE_ID],
 								obj[DataField.WIN], obj[DataField.LOSE]);
 							
 							
@@ -4524,12 +4551,27 @@ package view.screen
 							
 							objUser["isMaster"] = false;
 							objUser[DataField.DISPLAY_NAME] = obj[DataField.DISPLAY_NAME];
-							objUser[DataField.SEX] = obj[DataField.SEX];
+							objUser[DataField.SEX] = sex;
 							_arrUserList[i + 1] = objUser;
 						}
 					}
 					
 					break;
+				}
+			}
+			
+			var rd:int;
+			if (SoundManager.getInstance().isSoundOn) 
+			{
+				rd = int(Math.random() * 5);
+				
+				if (sex) 
+				{
+					SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_JOINGAME_ + String(rd + 1) );
+				}
+				else 
+				{
+					SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_JOINGAME_ + String(rd + 1) );
 				}
 			}
 			
