@@ -21,9 +21,15 @@ package view.window
 		private var mainData:MainData = MainData.getInstance();
 		public var email:String;
 		
-		public function RegisterFacebookWindow() 
+		public function RegisterFacebookWindow(isFacebook:Boolean = true) 
 		{
 			addContent("zRegisterFacebookWindow");
+			
+			if (isFacebook)
+				zRegisterFacebookWindow(content).mobilezDes.visible = false;
+			else
+				zRegisterFacebookWindow(content).facebookDes.visible = false;
+			
 			zRegisterFacebookWindow(content).registerButton.addEventListener(MouseEvent.CLICK, onConfirm);
 			zRegisterFacebookWindow(content).helpButton.addEventListener(MouseEvent.CLICK, onHelpButtonClick);
 			
