@@ -150,6 +150,7 @@ package event
 		public static const DEVICE_ID: String = "deviceId";
 		static public var WIN:String = "win";
 		static public var LOSE:String = "lose";
+		public static const CURRENT_WINNER:String = "currentWinner";
 		
 		public function DataField() 
 		{

@@ -40,6 +40,7 @@ package model.playingData
 		public static const NEXTTURN:String = "nextturn";
 		public static const END_ROUND:String = "endRound";
 		public static const UPDATE_MONEY_SPECIAL:String = "updateMoney_special";
+		static public const SHOW_WARNNING:String = "showWarnning";
 		
 		public var actionName:String;
 		public var data:Object;

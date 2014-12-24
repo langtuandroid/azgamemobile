@@ -1,6 +1,7 @@
 package view.card 
 {
 	import flash.display.MovieClip;
+	import model.MyDataTLMN;
 	import view.Base;
 	
 	/**
@@ -14,6 +15,16 @@ package view.card
 		{
 			content = new MyCardDeck();
 			addChild(content);
+			
+			if (MyDataTLMN.getInstance().isGame == 1) 
+			{
+				content.gotoAndStop(1);
+			}
+			else if (MyDataTLMN.getInstance().isGame == 2) 
+			{
+				content.gotoAndStop(2);
+			}
+			
 		}
 		
 	}

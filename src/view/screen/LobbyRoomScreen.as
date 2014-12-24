@@ -868,6 +868,8 @@ package view.screen
 				mainData.playingData.gameRoomData.channelName = channelObject[DataFieldMauBinh.CHANNEL_NAME];
 				mainData.channelNum = String(channelObject[DataFieldMauBinh.CHANNEL_NUM]).charAt(0);
 				
+				var rd:int;
+				
 				switch (mainData.gameType) 
 				{
 					case MainData.MAUBINH:
@@ -881,8 +883,31 @@ package view.screen
 						
 						if (SoundManager.getInstance().isSoundOn) 
 						{
-							var rd:int = int(Math.random() * 2) + 1;
-							SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_HELLO_ + String(rd));
+							rd = int(Math.random() * 2) + 1;
+							if (mainData.chooseChannelData.myInfo.sex == "M") 
+							{
+								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_HELLO_ + String(rd));
+							}
+							else 
+							{
+								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_HELLO_ + String(rd));
+							}
+							
+						}
+					break;
+					case MainData.SAM:
+						
+						if (SoundManager.getInstance().isSoundOn) 
+						{
+							rd = int(Math.random() * 2) + 1;
+							if (mainData.chooseChannelData.myInfo.sex == "M") 
+							{
+								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_HELLO_ + String(rd));
+							}
+							else 
+							{
+								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_HELLO_ + String(rd));
+							}
 						}
 					break;
 					default:

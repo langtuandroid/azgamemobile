@@ -28,7 +28,9 @@ package view
 			_textformatMoney.bold = true;
 			
 			_textformatNormal.color = 0xD3D3D3;
+			_textformatNormal.bold = false;
 			_textformatNormalMoney.color = 0xA4A400;
+			_textformatNormalMoney.bold = false;
 			
 			
 		}

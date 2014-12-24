@@ -6,6 +6,7 @@ package miniGame
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
+	import flash.events.MouseEvent;
 	import flash.media.Sound;
 	import flash.net.URLRequest;
 	import flash.system.ApplicationDomain;
@@ -45,11 +46,13 @@ package miniGame
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			// entry point
 			
+			
 			var shadow:Sprite = new Sprite();
 			shadow.graphics.beginFill(0x000000, .9);
 			shadow.graphics.drawRect(0, 0, 1024, 600);
 			shadow.graphics.endFill();
 			addChild(shadow);
+			shadow.addEventListener(MouseEvent.CLICK, onCloseMiniGame);
 			
 			playGameLayer = new Sprite();
 			popupLayer = new Sprite();
@@ -63,6 +66,11 @@ package miniGame
 			
 			//addInfoGame("849", 80);
 			//addInfoGame("haonam01", 60000, "http://wss.test.azgame.us/");
+		}
+		
+		private function onCloseMiniGame(e:MouseEvent):void 
+		{
+			removeMiniGame();
 		}
 		
 		private function addSound():void 

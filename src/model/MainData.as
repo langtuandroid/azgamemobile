@@ -606,7 +606,7 @@ package model
 		public var currentPort:int = 0;
 		public var currentIp:String;
 
-		public var kickTime:int = 15;
+		public var kickTime:int = 45;
 		public var isOpeningKickOutWindow:Boolean;
 		public var isLoadSound:Boolean = true;
 		public var tokenTime:int = 0;
@@ -615,7 +615,7 @@ package model
 		public var version:String = "v1.5.3";
 		public var isTest:Boolean = false; // biến để check xem đang chạy trên server test hay server thật
 
-		public var isFacebookVersion:Boolean = true; // biến để check xem có phải là bản nhúng vào facebook không
+		public var isFacebookVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào facebook không
 		public var isShowScroll:Boolean;
 		public var country:String = "";
 		public var joinedGame:Boolean = false;
