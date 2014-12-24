@@ -121,6 +121,7 @@ package control
 			var server:Server = new Server("server1");
 			var availConn:AvailableConnection = new AvailableConnection(configuration.ip, configuration.port, configuration.protocol.name);
 			//var availConn:AvailableConnection = new AvailableConnection(configuration.ip, 3101, configuration.protocol.name);
+			//var availConn:AvailableConnection = new AvailableConnection(configuration.ip, 3401, configuration.protocol.name);
 			server.addAvailableConnection(availConn);
 			
 			electroServer.engine.addServer(server);
@@ -237,7 +238,7 @@ package control
 		
 		public function onPublicMessageEvent(e:PublicMessageEvent):void
 		{
-			//trace("onPublicMessageEvent");
+			trace("onPublicMessageEvent", e.esObject.getString(DataFieldMauBinh.COMMAND));
 			var i:int;
 			var startGameObject:Object;
 			switch(e.esObject.getString(DataFieldMauBinh.COMMAND))
@@ -258,6 +259,22 @@ package control
 					
 					
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.PUBLIC_CHAT, publicChatObject));
+				break;
+				case CommandTlmn.CHAT:
+					var chatObject:Object = new Object();
+					chatObject[DataField.USER_NAME] = e.userName;
+					chatObject[DataField.DISPLAY_NAME] = e.esObject.getString(DataField.DISPLAY_NAME);
+					chatObject[DataField.CHAT_CONTENT] = e.esObject.getString(DataField.CHAT_CONTENT);
+					if (e.esObject.doesPropertyExist(DataField.IS_EMO)) 
+					{
+						chatObject[DataField.IS_EMO] = e.esObject.getBoolean(DataField.IS_EMO);
+					}
+					else 
+					{
+						chatObject[DataField.IS_EMO] = false;
+					}
+					
+					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.PUBLIC_CHAT, chatObject));
 				break;
 				case CommandTlmn.READY:
 					var readyObject:Object = new Object();
@@ -284,6 +301,16 @@ package control
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.NEXTTURN, objNextturn));
 				break;
 				
+				
+				case CommandTlmn.WARNNING:
+					
+					trace(e.esObject.getString(ConstTlmn.PLAYER_NAME), e.esObject.getInteger(ConstTlmn.WARNNING))
+					obj = new Object();
+					obj[ConstTlmn.WARNNING] = e.esObject.getInteger(ConstTlmn.WARNNING);
+					obj[ConstTlmn.PLAYER_NAME] = e.esObject.getString(ConstTlmn.PLAYER_NAME);
+					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.SHOW_WARNNING, obj));
+					
+				break;
 				
 				case CommandTlmn.WINNER:
 					GameDataTLMN.getInstance().currentPlayer = e.esObject.getString("playerName");
@@ -326,7 +353,15 @@ package control
 					var disCardObject:Object = new Object();
 					disCardObject[DataField.USER_NAME] = e.esObject.getString("playerName");
 					//disCardObject[DataField.NEXT_TURN] = e.esObject.getString(DataField.NEXT_TURN);
-					disCardObject[DataField.CARD_VALUES] = e.esObject.getIntegerArray(DataField.CARD_VALUES);
+					if (MyDataTLMN.getInstance().isGame == 1) 
+					{
+						disCardObject[DataField.CARD_VALUES] = e.esObject.getIntegerArray(DataField.CARD_VALUES);
+					}
+					else if (MyDataTLMN.getInstance().isGame == 2) 
+					{
+						disCardObject[DataField.CARD_VALUES] = e.esObject.getIntegerArray(ConstTlmn.CARDS);
+					}
+					
 					trace(disCardObject[DataField.USER_NAME], disCardObject[DataField.CARD])
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.HAVE_USER_DISCARD, disCardObject));
 				break;
@@ -409,10 +444,10 @@ package control
 			GameDataTLMN.getInstance().roomId = e.roomId;
 			
 			 //Gửi pluginRequest lên lấy thông tin friendList
-			var pluginMessage:EsObject = new EsObject();
+			/*var pluginMessage:EsObject = new EsObject();
 			pluginMessage.setString("command", CommandTlmn.GET_FRIEND_LIST);
 			sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().lobbyRoomId, 
-			GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);
+			GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);*/
 			
 			electroServer.engine.addEventListener(MessageType.UserVariableUpdateEvent.name, onUserVariableUpdateEvent);
 			electroServer.engine.addEventListener(MessageType.RoomVariableUpdateEvent.name, onRoomVariableUpdateEvent);
@@ -472,7 +507,7 @@ package control
 			var tempArray:Array;
 			var readyObject:Object;
 			var command:String = e.parameters.getString("command");
-			//trace("command plugin: ", command, "==============================")
+			trace("command plugin: ", command, "==============================")
 			//trace(e.parameters)
 			var i:int;
 			var j:int;
@@ -497,11 +532,16 @@ package control
 				case CommandTlmn.ENDROUND:
 					GameDataTLMN.getInstance().finishRound = true;
 					GameDataTLMN.getInstance().firstPlayer = e.parameters.getString("userName");
-					//dispatchEvent(new ElectroServerEvent(ElectroServerEvent.END_ROUND, GameDataTLMN.getInstance().currentPlayer));
+					if (MyDataTLMN.getInstance().isGame == 2) 
+					{
+						dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.END_ROUND, GameDataTLMN.getInstance().currentPlayer));
+					}
 				break;
 				case CommandTlmn.CURRENTPLAYER:
 					GameDataTLMN.getInstance().currentPlayer = e.parameters.getString("currentTurn");
-					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.GET_CURRENT_PLAYER, GameDataTLMN.getInstance().currentPlayer));
+					var objCurrent:Object = new Object();
+					objCurrent[ConstTlmn.NEXT_TURN] = e.parameters.getString("currentTurn");
+					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.GET_CURRENT_PLAYER, objCurrent));
 				break;
 				case ElectroServerEventTlmn.HAVE_UPDATE_MASTER:
 					
@@ -587,12 +627,26 @@ package control
 				break;
 				case CommandTlmn.DEAL_CARD: // thông báo chia bài của server
 					var dealCardObject:Object = new Object();
-					GameDataTLMN.getInstance().currentPlayer = e.parameters.getString("currentTurn");
-					GameDataTLMN.getInstance().firstPlayer = e.parameters.getString("currentTurn");
+					if (e.parameters.doesPropertyExist("currentTurn")) 
+					{
+						GameDataTLMN.getInstance().currentPlayer = e.parameters.getString("currentTurn");
+						GameDataTLMN.getInstance().firstPlayer = e.parameters.getString("currentTurn");
+					}
+					
 					if (e.parameters.doesPropertyExist(DataField.PLAYER_CARDS))
 					{
 						dealCardObject[DataField.PLAYER_CARDS] = e.parameters.getIntegerArray(DataField.PLAYER_CARDS);
-						var cardArray:Array = dealCardObject[DataField.PLAYER_CARDS];
+						
+					}
+					if (e.parameters.doesPropertyExist(DataField.CARDS))
+					{
+						dealCardObject[DataField.PLAYER_CARDS] = e.parameters.getIntegerArray(DataField.CARDS);
+						
+					}
+					
+					if (e.parameters.doesPropertyExist(DataField.CURRENT_WINNER))
+					{
+						dealCardObject[DataField.CURRENT_WINNER] = e.parameters.getString(DataField.CURRENT_WINNER);
 						
 					}
 					
@@ -635,7 +689,7 @@ package control
 					
 					var resultData:Object = new Object();
 					resultData["resultArr"] = resultArr;
-					resultData["winner"] = e.parameters.getString("winner");
+					
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.GAME_OVER, resultData));
 				break;
 				
@@ -766,7 +820,15 @@ package control
 					var resultData1:Object = new Object();
 					resultData1[ConstTlmn.PLAYER_LIST] = resultArr1;
 					resultData1["whiteWinType"] = e.parameters.getInteger("whiteWinType");
-					resultData1["winner"] = e.parameters.getString("winner");
+					if (MyDataTLMN.getInstance().isGame == 1) 
+					{
+						resultData1["winner"] = e.parameters.getString("winner");
+					}
+					else if (MyDataTLMN.getInstance().isGame == 2) 
+					{
+						var arrWinner:Array = e.parameters.getStringArray("winners");
+						resultData1["winner"] = arrWinner[0];
+					}
 					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.WHITE_WIN, resultData1));
 				break;
 				
@@ -1093,7 +1155,15 @@ package control
 					//userRecentlyJoinRoomObject[DataField.CASH] = object[DataField.CASH];
 					userRecentlyJoinRoomObject[DataField.AVATAR] = userJoinRoom.getString(DataField.AVATAR);
 					userRecentlyJoinRoomObject[DataField.DISPLAY_NAME] = userJoinRoom.getString(DataField.DISPLAY_NAME);
-					userRecentlyJoinRoomObject[DataField.SEX] = userJoinRoom.getString(DataField.SEX);
+					if (userJoinRoom.getString(DataField.SEX) == "F") 
+					{
+						userRecentlyJoinRoomObject[DataField.SEX] = false;
+					}
+					else 
+					{
+						userRecentlyJoinRoomObject[DataField.SEX] = true;
+					}
+					
 					userRecentlyJoinRoomObject[DataField.WIN] = userJoinRoom.getInteger(DataField.WIN);
 					userRecentlyJoinRoomObject[DataField.LOSE] = userJoinRoom.getInteger(DataField.LOSE);
 					//userRecentlyJoinRoomObject[DataField.LOGO] = object[DataField.LOGO];
@@ -1295,22 +1365,26 @@ package control
 			var gameDetails:EsObject = new EsObject();
 			gameDetails.setString(DataFieldMauBinh.ROOM_NAME, gameOption[DataFieldMauBinh.ROOM_NAME]);
 			gameDetails.setString(DataFieldMauBinh.ROOM_BET, gameOption[DataFieldMauBinh.ROOM_BET]);
-			//gameDetails.setBoolean(DataFieldMauBinh.IS_SEND_CARD, gameOption[DataFieldMauBinh.IS_SEND_CARD]);
+			gameDetails.setBoolean(DataFieldMauBinh.IS_SEND_CARD, false); //gameOption[DataFieldMauBinh.IS_SEND_CARD]);
 			gameDetails.setInteger(DataFieldMauBinh.MAX_PLAYER, gameOption[DataFieldMauBinh.MAX_PLAYER]);
 			//var createGameRequest:CreateGameRequest = new CreateGameRequest();
 			var createGameRequest:QuickJoinGameRequest = new QuickJoinGameRequest();
-			createGameRequest.gameType = myData.gameType;
-			createGameRequest.zoneName = mainData.game_id + "_" + myData.channelId;
+			createGameRequest.gameType = GameDataTLMN.getInstance().gameType;
+			if (MyDataTLMN.getInstance().isGame == 1) 
+			{
+				createGameRequest.zoneName = mainData.game_id + "_" + String(myData.channelId);
+			}
+			else if (MyDataTLMN.getInstance().isGame == 2) 
+			{
+				//createGameRequest.zoneName = mainData.game_id + "_" + "1"; //String(myData.channelId);
+				createGameRequest.zoneName = "AZGB_SAM_1";
+			}
+			
 			createGameRequest.gameDetails = gameDetails;
 			createGameRequest.createOnly = true;
 			createGameRequest.password = password;
 			electroServer.engine.addEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
-			writelog("create room " + myData.gameType + " - " + createGameRequest.zoneName + " - " + String(Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id) 
-											+ " - " + String(myData.roomId));
-			if (electroServer.engine.connected) 
-			{
-				electroServer.engine.send(createGameRequest);
-			}
+			electroServer.engine.send(createGameRequest);
 			
 		}
 		
@@ -1349,7 +1423,16 @@ package control
 		{
 			leaveRoom();
 			var quickJoinGameRequest:QuickJoinGameRequest = new QuickJoinGameRequest();
-			quickJoinGameRequest.zoneName = mainData.game_id + "_" + myData.channelId;
+			if (MyDataTLMN.getInstance().isGame == 1) 
+			{
+				quickJoinGameRequest.zoneName = mainData.game_id + "_" + String(myData.channelId);
+			}
+			else if (MyDataTLMN.getInstance().isGame == 2) 
+			{
+				//createGameRequest.zoneName = mainData.game_id + "_" + "1"; //String(myData.channelId);
+				quickJoinGameRequest.zoneName = "AZGB_SAM_1";
+			}
+			
 			quickJoinGameRequest.gameType = GameDataTLMN.getInstance().gameType;
 			var searchCriteria:SearchCriteria = new SearchCriteria();
 			searchCriteria.gameType = GameDataTLMN.getInstance().gameType;
@@ -1418,7 +1501,14 @@ package control
 			esObject.setString(DataField.DISPLAY_NAME, displayName);
 			esObject.setString(DataField.CHAT_CONTENT, chatContent);
 			esObject.setBoolean(DataField.IS_EMO, emo);
-			sendPublicMessage(CommandTlmn.PUBLIC_CHAT, esObject);
+			if (MyDataTLMN.getInstance().isGame == 1) 
+			{
+				sendPublicMessage(CommandTlmn.PUBLIC_CHAT, esObject);
+			}
+			else if (MyDataTLMN.getInstance().isGame == 2) 
+			{
+				sendPublicMessage(CommandTlmn.CHAT, esObject);
+			}
 		}
 		
 		// Gửi publicMessage lên thông báo người chơi đã sẵn sàng chơi
@@ -1546,11 +1636,10 @@ package control
 		{
 			if (GameDataTLMN.getInstance().roomId == -1)
 				return;
-			if (_roomId != Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id)
+			if (electroServer.managerHelper.zoneManager.zones.length > 0 && _roomId != Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id)
 				return;
 
-			writelog("send plugin request " + pluginName + " - " + String(Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id) 
-											+ " - " + String(_roomId));
+			
 
 			var pluginRequest:PluginRequest = new PluginRequest();
 			pluginRequest.zoneId = _zoneId;
@@ -1574,7 +1663,15 @@ package control
 			}
 			//trace("CreateRoomRequest CreateRoomRequest CreateRoomRequest CreateRoomRequest ",Math.random());
 			var createRoomRequest:CreateRoomRequest = new CreateRoomRequest();
-			createRoomRequest.zoneName = mainData.game_id + "_" + myData.channelId;
+			if (MyDataTLMN.getInstance().isGame == 1) 
+			{
+				createRoomRequest.zoneName = mainData.game_id + "_" + String(myData.channelId);
+			}
+			else if (MyDataTLMN.getInstance().isGame == 2) 
+			{
+				//createGameRequest.zoneName = mainData.game_id + "_" + "1"; //String(myData.channelId);
+				createRoomRequest.zoneName = "AZGB_SAM_1";
+			}
 			createRoomRequest.roomName = roomName;
 			createRoomRequest.roomDescription = roomDescription;
 			createRoomRequest.capacity = roomCapacity;
@@ -1617,7 +1714,15 @@ package control
 		 */		
 		public function getUserInRoom(roomId:int):void
 		{
-			var zoneName:String = mainData.game_id + "_" + myData.channelId;
+			var zoneName:String;
+			if (MyDataTLMN.getInstance().isGame == 1) 
+			{
+				zoneName = mainData.game_id + "_" + myData.channelId;
+			}
+			else if (MyDataTLMN.getInstance().isGame == 2) 
+			{
+				zoneName = "AZGB_SAM_1";
+			}
 			var zoneId: int = electroServer.managerHelper.zoneManager.zoneByName(zoneName).id;
 			var getUsersInRoomRequest:GetUsersInRoomRequest = new GetUsersInRoomRequest();
 			getUsersInRoomRequest.roomId = roomId;
@@ -1839,27 +1944,16 @@ package control
 		
 		private function leaveRoom(): void
 		{
-			if (GameDataTLMN.getInstance().roomId == -1)
+			if (myData.roomId == -1)
 				return;
-			if (electroServer.managerHelper.zoneManager.zones.length == 0)
-			{
-				//trace("kddfdaddffdccccccccccccccccccccccccccc");
+			if (electroServer.managerHelper.zoneManager.zones.length > 0 && myData.roomId != Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id)
 				return;
-			}
-			if (GameDataTLMN.getInstance().roomId != Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id)
-				return;
-			//trace("leaveRoom leaveRoom leaveRoom leaveRoom leaveRoom leaveRoom leaveRoom",Math.random());
-			writelog("send leave room " + String(GameDataTLMN.getInstance().roomId) + " - " + String(Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id));
 			var leaveRoomRequest:LeaveRoomRequest = new LeaveRoomRequest();
-			leaveRoomRequest.zoneId = GameDataTLMN.getInstance().zoneId;
-			leaveRoomRequest.roomId = GameDataTLMN.getInstance().roomId;
-			GameDataTLMN.getInstance().roomId = -1;
-			myData.roomId = -1;
-			if (electroServer.engine.connected) 
-			{
-				electroServer.engine.send(leaveRoomRequest);
-			}
+			leaveRoomRequest.zoneId = myData.zoneId;
+			leaveRoomRequest.roomId = myData.roomId;
 			
+			myData.roomId = -1;
+			electroServer.engine.send(leaveRoomRequest);
 			
 		}
 		
@@ -1962,7 +2056,14 @@ package control
 		public function myDiscard(arr:Array):void 
 		{
 			var esObject:EsObject = new EsObject();
-			esObject.setIntegerArray("cardValues", arr);
+			if (MyDataTLMN.getInstance().isGame == 1) 
+			{
+				esObject.setIntegerArray("cardValues", arr);
+			}
+			else if (MyDataTLMN.getInstance().isGame == 2) 
+			{
+				esObject.setIntegerArray("cards", arr);
+			}
 			esObject.setString("playerName", MyDataTLMN.getInstance().myId);
 			sendPublicMessage(CommandTlmn.DISCARD, esObject);
 		}
@@ -2021,6 +2122,24 @@ package control
 		{
 			
 		}
+		
+		
+		public function noticeSam(boolean:Boolean):void 
+		{
+			var pluginMessage:EsObject = new EsObject();
+			var isSam:int = 0;
+			if (boolean) 
+			{
+				isSam = 1;
+			}
+			
+			pluginMessage.setInteger(ConstTlmn.WARNNING, isSam);
+			pluginMessage.setString(ConstTlmn.PLAYER_NAME, MyDataTLMN.getInstance().myId);
+			pluginMessage.setString("command", CommandTlmn.WARNNING);
+			
+			sendPublicMessage(CommandTlmn.WARNNING, pluginMessage);
+		}
+		
 	}
 
 }

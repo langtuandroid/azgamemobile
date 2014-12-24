@@ -4,6 +4,7 @@ package
 	import flash.desktop.SystemIdleMode;
 	import model.GameDataTLMN;
 	import model.MyDataTLMN;
+	import view.screen.PlayGameScreenSam;
 	
 	import flash.desktop.NativeApplication;
 	import flash.display.MovieClip;
@@ -646,7 +647,12 @@ package
 				break;
 				case MainData.TLMN:
 					playingScreen = new PlayGameScreenTlmn();
+					//playingScreen = new PlayGameScreenSam();
 					//playingScreen = new PlayingScreenTlmnYun();
+				break;
+				case MainData.SAM:
+					playingScreen = new PlayGameScreenSam();
+					//playingScreen = new PlayGameScreenTlmn();
 				break;
 				default:
 					playingScreen = new PlayingScreenMauBinh();

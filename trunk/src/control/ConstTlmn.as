@@ -87,6 +87,8 @@ package control
 		public static var USE_AVATAR:String = "useAvatar";
 		public static var BUY_ITEM:String = "buyItem";
 		
+		public static var WARNNING:String = "isSam";
+		
 		/**
 		 * type: CONG = 1, 2_DEN = 2, 2_DO = 3, 3_BICH = 4, 4_QUY = 5, 4_DOI_THONG = 6, 3_DOI_THONG = 7
 		 */

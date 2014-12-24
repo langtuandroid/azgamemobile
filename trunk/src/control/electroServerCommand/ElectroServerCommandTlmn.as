@@ -135,6 +135,13 @@ package control.electroServerCommand
 			coreAPI.addEventListener(ElectroServerEventTlmn.NEXTTURN, haveUserNextTurn);
 			
 			coreAPI.addEventListener(ElectroServerEventTlmn.END_ROUND, onEndRound);
+			
+			coreAPI.addEventListener(ElectroServerEventTlmn.SHOW_WARNNING, haveuserWarning);
+		}
+		
+		private function haveuserWarning(e:ElectroServerEventTlmn):void 
+		{
+			callPlayingScreenAction(PlayingScreenActionTlmn.SHOW_WARNNING, e.data);
 		}
 		
 		private function removeEventForCoreAPI():void
@@ -905,6 +912,11 @@ package control.electroServerCommand
 		public function addFriend(userName:String, roomType:String):void
 		{
 			coreAPI.addFriend(userName, roomType);
+		}
+		
+		public function noticeSam(boolean:Boolean):void 
+		{
+			coreAPI.noticeSam(boolean);
 		}
 		
 	}

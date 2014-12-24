@@ -560,7 +560,15 @@ package view.window.loginWindow
 			MyDataTLMN.getInstance().myMoney[0] = value.Data["Money"];
 			MyDataTLMN.getInstance().myMoney[1] = value.Data["Cash"];
 			MyDataTLMN.getInstance().myAvatar = value.Data["Avatar"];
-			MyDataTLMN.getInstance().sex = value.Data["GenderCode"];
+			if (value.Data["GenderCode"] == "F") 
+			{
+				MyDataTLMN.getInstance().sex = false;
+			}
+			else 
+			{
+				MyDataTLMN.getInstance().sex = true;
+			}
+			
 			
 			mainData.chooseChannelData.myInfo = myInfo;
 			

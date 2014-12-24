@@ -64,7 +64,7 @@ package view.screen.play
 		
 		private var isMove:Boolean = false;
 		private var isHit:Boolean = false;
-		private var _parent:PlayGameScreenTlmn;
+		private var _parent:*;
 		
 		public var _isMyTurn:Boolean = false;
 		private var _sortToIdCard:Boolean = true; // mặc định khi ấn xếp bài lần đầu thì xếp theo các bộ bài, đôi, 3
@@ -110,8 +110,8 @@ package view.screen.play
 		private var _countComplete:int;
 		
 		private var addEventCardTimer:Timer;
-		
-		public function MyInfoTLMN(playgame:PlayGameScreenTlmn) 
+		public var onSamWarning:Boolean = false;
+		public function MyInfoTLMN(playgame:*) 
 		{
 			_glowFilter.color = 0x663311;
 			
@@ -156,7 +156,6 @@ package view.screen.play
 				_distance = 55;
 			}
 			
-			content.samNotice.visible = false;
 			content.samResult.visible = false;
 			
 			if (!_clock) 
@@ -183,7 +182,7 @@ package view.screen.play
 			content.iconMobile.visible = false;
 			content.effectMoney.visible = false;
 			content.effectMoneySpecial.visible = false;
-			content.effectMoneySpecial.y = 75;
+			
 			content.nextturn.visible = false;
 			content.chatde.visible = false;
 			content.readyBtn.buttonMode = true;
@@ -200,6 +199,8 @@ package view.screen.play
 			content.showDetailUser.addEventListener(MouseEvent.CLICK, onClickShowContex);
 			buttonForMe();
 			//addMoneyEffect();
+			
+			//dealCard([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 		}
 		
 		private function onClickShowContex(e:MouseEvent):void 
@@ -341,6 +342,8 @@ package view.screen.play
 				_timerDealcard.stop();
 			}
 			
+			killAllTween();
+			
 			removeAllCardDeal();
 			
 			_ready = false;
@@ -378,7 +381,7 @@ package view.screen.play
 				
 				if (!outGame) 
 				{
-					_timerVoiceLose = new Timer(500, 3);
+					_timerVoiceLose = new Timer(1000, 3);
 					_timerVoiceLose.addEventListener(TimerEvent.TIMER_COMPLETE, onShowVoiceLose);
 					_timerVoiceLose.start();
 				}
@@ -392,7 +395,15 @@ package view.screen.play
 			content.resultGame.visible = true;
 			//content.effectMoneySpecial.visible = true;
 			content.effectMoneySpecial.visible = false;
-			content.effectMoneySpecial.text = format(Number(obj[ConstTlmn.MONEY]));
+			var money:Number = Number(obj[ConstTlmn.MONEY]);
+			if (Number(money) < 0) 
+			{
+				content.effectMoneySpecial.text = "-" + format(Number(money) * -1);
+			}
+			else 
+			{
+				content.effectMoneySpecial.text = "+" + format(Number(money));
+			}
 			//trace("xem lai tien cua minh: ", MyDataTLMN.getInstance().myMoney[0], obj[ConstTlmn.MONEY])
 			//MyDataTLMN.getInstance().myMoney[0] = int(MyDataTLMN.getInstance().myMoney[0]) + int(obj[ConstTlmn.MONEY]);
 			TweenMax.to(content.effectMoneySpecial, 3, { y:content.effectMoneySpecial.y - 0, onComplete:onCompleteShowMoney } );
@@ -400,7 +411,7 @@ package view.screen.play
 		
 		private function onShowVoiceLose(e:TimerEvent):void 
 		{
-			if (int(MyDataTLMN.getInstance().myMoney[0]) < int(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet)
+			//if (int(MyDataTLMN.getInstance().myMoney[0]) < int(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet)
 			{
 				if (SoundManager.getInstance().isSoundOn) 
 				{
@@ -442,17 +453,21 @@ package view.screen.play
 			content.effectMoneySpecial.visible = false;
 			content.effectMoneySpecial.y += 0;
 			content.userMoney.text = format(Number(MyDataTLMN.getInstance().myMoney[0]));
-			if (SoundManager.getInstance().isSoundOn && int(MyDataTLMN.getInstance().myMoney[0]) < 10000) 
+			if (SoundManager.getInstance().isSoundOn) 
 			{
-				var rd:int = int(Math.random() * 5);
-				if (MyDataTLMN.getInstance().sex) 
+				if (Number(MyDataTLMN.getInstance().myMoney[0]) < Number(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet) 
 				{
-					SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_OVERMONEY_ + String(rd + 1) );
+					var rd:int = int(Math.random() * 5);
+					if (MyDataTLMN.getInstance().sex) 
+					{
+						SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_OVERMONEY_ + String(rd + 1) );
+					}
+					else 
+					{
+						SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_OVERMONEY_ + String(rd + 1) );
+					}
 				}
-				else 
-				{
-					SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_OVERMONEY_ + String(rd + 1) );
-				}
+				
 			}
 		}
 		
@@ -488,7 +503,18 @@ package view.screen.play
 			if (_arrCardChoose.length > 0) 
 			{
 				hideChooseAgainCard();
-				if (checkCanHit()) 
+				
+				var canHit:Boolean;
+				if (MyDataTLMN.getInstance().isGame == 1) 
+				{
+					canHit = checkCanHit();
+				}
+				else if (MyDataTLMN.getInstance().isGame == 2) 
+				{
+					canHit = checkCanHitSam();
+				}
+				
+				if (canHit)  
 				{
 					
 					if (_isMyTurn) 
@@ -554,7 +580,7 @@ package view.screen.play
 			}
 			else 
 			{
-				content.effectMoneySpecial.text = format(Number(money));
+				content.effectMoneySpecial.text = "+" + format(Number(money));
 			}
 			
 			
@@ -590,7 +616,15 @@ package view.screen.play
 			var myMoney:Number = Number(str) + Number(money);
 			content.userMoney.text = format(myMoney);
 			
-			content.effectMoneySpecial.text = format(Number(money));
+			
+			if (Number(money) < 0) 
+			{
+				content.effectMoneySpecial.text = "-" + format(Number(money) * -1);
+			}
+			else 
+			{
+				content.effectMoneySpecial.text = "+" + format(Number(money));
+			}
 			//MyDataTLMN.getInstance().myMoney[0] = int(MyDataTLMN.getInstance().myMoney[0]) + int(money);
 			TweenMax.to(content.effectMoneySpecial, 3, { y: content.effectMoneySpecial.y - 0, onComplete:onCompleteMoneySpecial } );
 			
@@ -719,7 +753,7 @@ package view.screen.play
 			content.visibleSortCard.visible = true;
 		}
 		
-		private function showPassTurn():void 
+		public function showPassTurn():void 
 		{
 			//trace("ko ther click nut bo luot")
 			content.visiblePassturn.visible = true;
@@ -1246,6 +1280,14 @@ package view.screen.play
 			content.cardContainer.addChild(cardDeck);
 			cardDeck.x = _posCardX + 150;
 			cardDeck.y = -150;
+			if (MyDataTLMN.getInstance().isGame == 1) 
+			{
+				cardDeck.gotoAndStop(1);
+			}
+			else if (MyDataTLMN.getInstance().isGame == 2) 
+			{
+				cardDeck.gotoAndStop(2);
+			}
 			//cardDeck.scaleY = 0;
 			arrCardDeal.push(cardDeck);
 			
@@ -1264,19 +1306,6 @@ package view.screen.play
 			//TweenMax.to(cardDeck, 1, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, ease:Back.easeOut, onComplete:onComplete } );
 			TweenMax.to(cardDeck, .8, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, 
 										onComplete:onCompleteMove } );
-			/////////////////
-			/*var card:CardTlmn = new CardTlmn(_arrCardInt[_countCard]);
-			card.x = _posCardX;
-			card.y = -90;
-			//card.scaleX = card.scaleY = .80;
-			content.cardContainer.addChild(card);
-			_arrCardImage.push(card);
-			card.buttonMode = true;
-			card._posCardY = _distanceConstanY;
-			card.pos = _countCard;
-			//TweenMax.to(card, .1, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, onComplete:onComplete } );
-			//TweenMax.to(card, .3, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, ease:Back.easeOut, onComplete:onComplete});
-			TweenMax.to(card, 1.5, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, ease:Back.easeOut});*/
 			
 		}
 		
@@ -1293,25 +1322,26 @@ package view.screen.play
 		{
 			_countComplete++;
 			
-			if (_countComplete == 13) 
+			if (MyDataTLMN.getInstance().isGame == 1) 
 			{
-				
-				addEventCardTimer = new Timer(500, 1);
-				addEventCardTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onAddEventForCard);
-				addEventCardTimer.start();
+				if (_countComplete == 13) 
+				{
+					
+					addEventCardTimer = new Timer(500, 1);
+					addEventCardTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onAddEventForCard);
+					addEventCardTimer.start();
+				}
 			}
-			
-			/*if (_countCard < _arrCardInt.length) 
+			else if (MyDataTLMN.getInstance().isGame == 2) 
 			{
-				effectDealCard(_countCard);
+				if (_countComplete == 10) 
+				{
+					
+					addEventCardTimer = new Timer(500, 1);
+					addEventCardTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onAddEventForCard);
+					addEventCardTimer.start();
+				}
 			}
-			else 
-			{
-				hideSortCard();
-				
-				addClickCard();
-				_parent.canExitGame = true;
-			}*/
 			
 		}
 		
@@ -1468,7 +1498,18 @@ package view.screen.play
 			if (_arrCardChoose.length > 0) 
 			{
 				hideChooseAgainCard();
-				if (checkCanHit()) 
+				var canHit:Boolean = false;
+				
+				if (MyDataTLMN.getInstance().isGame == 1) 
+				{
+					canHit = checkCanHit();
+				}
+				else if (MyDataTLMN.getInstance().isGame == 2) 
+				{
+					canHit = checkCanHitSam();
+				}
+				
+				if (canHit) 
 				{
 					
 					if (_isMyTurn) 
@@ -1528,6 +1569,252 @@ package view.screen.play
 			
 		}
 		
+		private function checkCanHitSam():Boolean 
+		{
+			var hit:Boolean;
+			var cardTlmn:CardsTlmn = new CardsTlmn();
+			trace(_isPassTurn, "turn cua thang nao =============")
+			//trace(_isPassTurn, "turn cua thang nao =============")
+			trace(_arrCardChoose, "cac quan bai dang doi danh ra =============")
+			var check:Boolean = false;
+			var arrCard:Array = [];
+			var arrCardChoose:Array = [];
+			var arrCardTest:Array = [];
+			var j:int;
+			for (j = 0; j < _arrCardChoose.length; j++) 
+			{
+				arrCardChoose.push(_arrCardChoose[j]);
+			}
+			for (j = 0; j < _parent._arrLastCard.length; j++) 
+			{
+				arrCard.push(_parent._arrLastCard[j]);
+			}
+			arrCardChoose = arrCardChoose.sort(Array.NUMERIC);
+			arrCard = arrCard.sort(Array.NUMERIC);
+			var i:int;
+			trace(arrCardChoose, "cac quan bai dang doi danh ra sap xep lai=============")
+			
+			if (!_isPassTurn) 
+			{
+				if (GameDataTLMN.getInstance().firstPlayer == _userName) 
+				{
+					hit = true;
+				}
+				else if (GameDataTLMN.getInstance().finishRound) 
+				{
+					hit = true;
+				}
+				else if (!arrCard || arrCard.length == 0) 
+				{
+					hit = true;
+				}
+				
+				//neu truoc do chi co 1 quan bai danh ra, va ko phai quan 2
+				else if (arrCard.length == 1 && !cardTlmn.isHai(arrCard[0])) 
+				{
+					if (arrCardChoose.length == arrCard.length && int(arrCardChoose[0] / 4) > int(arrCard[0] / 4)) 
+					{
+						hit = true;
+					}
+					else 
+					{
+						hit = false;
+					}
+					
+				}
+				//neu truoc do danh 1 quan bai va la quan 2
+				else if (arrCard.length == 1 && cardTlmn.isHai(arrCard[0])) 
+				{
+					if (arrCardChoose.length == 4)
+					{
+						if (cardTlmn.isTuQuy(arrCardChoose)) 
+						{
+							hit = true;
+						}
+						else 
+						{
+							hit = false;
+						}
+					}
+					else 
+					{
+						hit = false;
+					}
+				}
+				//neu truoc do danh ra 2 cay bt
+				else if (arrCard.length == 2 && !cardTlmn.isHai(arrCard[0])) 
+				{
+					if (arrCardChoose.length == arrCard.length && 
+							int(arrCardChoose[1] / 4) > int(arrCard[1] / 4) && cardTlmn.isDoiThong(arrCardChoose)) 
+					{
+						hit = true;
+					}
+					else 
+					{
+						hit = false;
+					}
+				}
+				//neu danh ra doi 2
+				else if (arrCard.length == 2 && cardTlmn.isHai(arrCard[0]))
+				{
+					hit = false;
+					
+				}
+				//neu danh ra 3 cay bt
+				else if (arrCard.length == 3 && !cardTlmn.isHai(arrCard[0]))
+				{
+					//neu 3 cay nay la sanh 3
+					arrCardTest = [];
+					for (i = 0; i < arrCard.length; i++) 
+					{
+						arrCardTest.push(arrCard[i]);
+					}
+					if (cardTlmn.isSpecialDay(arrCardTest)) 
+					{
+						for (i = 0; i < arrCard.length; i++) 
+						{
+							if (arrCard[i] > 43) 
+							{
+								arrCard[i] = arrCard[i] - 52;
+							}
+						}
+						arrCard = arrCard.sort(Array.NUMERIC);
+						arrCardTest = [];
+						for (i = 0; i < arrCardChoose.length; i++) 
+						{
+							arrCardTest.push(arrCardChoose[i]);
+						}
+						if (arrCardChoose.length == arrCard.length &&
+							int(arrCardChoose[2] / 4) > int(arrCard[2] / 4) && 
+							(cardTlmn.isDay(arrCardTest) || cardTlmn.isSpecialDay(arrCardTest))) 
+						{
+							hit = true;
+						}
+					}
+					//sanh thuong
+					else if (arrCardChoose.length == arrCard.length &&
+							int(arrCardChoose[2] / 4) > int(arrCard[2] / 4) && cardTlmn.isDay(arrCardChoose)) 
+					{
+						hit = true;
+					}
+					//neu 3 cay nay la xam
+					else if (arrCardChoose.length == arrCard.length &&
+							arrCardChoose[2] > arrCard[2] && cardTlmn.isBaLa(arrCardChoose)) 
+					{
+						hit = true;
+					}
+					else 
+					{
+						hit = false;
+					}
+				}
+				//neu danh ra 3 cay 2
+				else if (arrCard.length == 3 && cardTlmn.isHai(arrCard[0]))
+				{
+					hit = false;
+				}
+				//neu truoc do danh ra sanh 4
+				else if (arrCard.length == 4) 
+				{
+					arrCardTest = [];
+					for (i = 0; i < arrCard.length; i++) 
+					{
+						arrCardTest.push(arrCard[i]);
+					}
+					if (cardTlmn.isSpecialDay(arrCardTest)) 
+					{
+						for (i = 0; i < arrCard.length; i++) 
+						{
+							if (arrCard[i] > 43) 
+							{
+								arrCard[i] = arrCard[i] - 52;
+							}
+						}
+						arrCard = arrCard.sort(Array.NUMERIC);
+						arrCardTest = [];
+						for (i = 0; i < arrCardChoose.length; i++) 
+						{
+							arrCardTest.push(arrCardChoose[i]);
+						}
+						if (arrCardChoose.length == arrCard.length &&
+							int(arrCardChoose[3] / 4) > int(arrCard[3] / 4) && 
+							(cardTlmn.isDay(arrCardTest) || cardTlmn.isSpecialDay(arrCardTest))) 
+						{
+							hit = true;
+						}
+					}
+					//sanh thuong
+					else if (arrCardChoose.length == 4 && int(arrCardChoose[3] / 4) > int(arrCard[3] / 4) && cardTlmn.isDay(arrCardChoose)) 
+					{
+						hit = true;
+					}
+					//neu la danh ra tu qui
+					else if (arrCardChoose.length == 4 && arrCardChoose[3] > arrCard[3] && cardTlmn.isTuQuy(arrCardChoose)) 
+					{
+						hit = true;
+					}
+					
+					else 
+					{
+						hit = false;
+					}
+				}
+				//neu truoc do danh ra sanh 5
+				else if (arrCard.length >= 5) 
+				{
+					arrCardTest = [];
+					for (i = 0; i < arrCard.length; i++) 
+					{
+						arrCardTest.push(arrCard[i]);
+					}
+					if (cardTlmn.isSpecialDay(arrCardTest)) 
+					{
+						for (i = 0; i < arrCard.length; i++) 
+						{
+							if (arrCard[i] > 43) 
+							{
+								arrCard[i] = arrCard[i] - 52;
+							}
+						}
+						arrCard = arrCard.sort(Array.NUMERIC);
+						arrCardTest = [];
+						for (i = 0; i < arrCardChoose.length; i++) 
+						{
+							arrCardTest.push(arrCardChoose[i]);
+						}
+						if (arrCardChoose.length == arrCard.length &&
+							int(arrCardChoose[arrCardChoose.length - 1] / 4) > int(arrCard[arrCard.length - 1] / 4) && 
+							(cardTlmn.isDay(arrCardTest) || cardTlmn.isSpecialDay(arrCardTest))) 
+						{
+							hit = true;
+						}
+					}
+					//sanh thuong
+					else if (arrCardChoose.length == arrCard.length && 
+								int(arrCardChoose[arrCardChoose.length - 1] / 4) > int(arrCard[arrCard.length - 1] / 4)
+								&& cardTlmn.isDay(arrCardChoose)) 
+					{
+						hit = true;
+					}
+					else 
+					{
+						hit = false;
+					}
+				}
+				
+				else 
+				{
+					hit = false;
+				}
+			}
+			
+			else 
+			{
+				hit = false;
+			}
+			
+			return hit;
+		}
 		
 		private function checkCanHit():Boolean 
 		{
@@ -2188,6 +2475,7 @@ package view.screen.play
 				}
 			}
 			
+			showChooseAgainCard();
 			
 		}
 		
@@ -2233,6 +2521,36 @@ package view.screen.play
 			
 			_checkSort = false;
 		}
+		
+		public function showTimerSam(time:int):void 
+		{
+			_clock.countTime(time);
+			_clock.visible = true;
+		}
+		
+		public function waitTimeSam(time:int):void 
+		{
+			_clock.visible = true;
+			_clock.countTime(time);
+		}
+		
+		public function samResult(result:int):void 
+		{
+			content.samResult.gotoAndStop(result);
+			content.samResult.visible = true;
+			content.resultGame.visible = false;
+		}
+		public function showWinNotice():void 
+		{
+			content.samResult.gotoAndStop(3);
+			content.samResult.visible = true;
+		}
+		
+		public function hideWinNotice():void 
+		{
+			content.samResult.visible = false;
+		}
+		
 		
 	}
 	

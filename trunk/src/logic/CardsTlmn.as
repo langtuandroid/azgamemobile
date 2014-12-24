@@ -237,6 +237,100 @@ package logic
 			}
 			return true;
 		}
+		
+		
+		public function isSpecialDay(cardArr:Array):Boolean
+		{
+			if(cardArr.length<3)return false;
+			cardArr = cardArr.sort(Array.NUMERIC);
+			var arrAt:Array = [];
+			var arrHai:Array = [];
+			
+			var card1:int;
+			var card2:int;
+			
+			var i:int;
+			
+			for(i = 0; i < cardArr.length; i++)
+			{
+				if(isHai(cardArr[i]))
+				{
+					arrHai.push(cardArr[i]);
+					cardArr.splice(i, 1);
+					i--;
+				}
+				else if(cardArr[i] > 43 && cardArr[i] < 48)
+				{
+					arrAt.push(cardArr[i]);
+					cardArr.splice(i, 1);
+					i--;
+				}
+			}
+			
+			cardArr = cardArr.sort(Array.NUMERIC);
+			if(arrAt.length != 1 && arrHai.length != 1)
+			{
+				return false;
+			}
+			else if(arrAt.length == 1 && arrHai.length == 1)
+			{
+				if(cardArr[cardArr.length - 1] < 44 && cardArr[cardArr.length - 1] > 31)
+				{
+					return false;
+				}
+				
+				arrAt[0] -= 52;
+				arrHai[0] -= 52;
+				cardArr = cardArr.concat(arrAt, arrHai);
+				
+				if(isDay(cardArr))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+				
+			}
+			else if(arrAt.length == 0 && arrHai.length == 1)
+			{
+				arrHai[0] -= 52;
+				cardArr = cardArr.concat(arrHai);
+				cardArr.sort(Array.NUMERIC);
+				if(isDay(cardArr))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else if(arrAt.length == 1 && arrHai.length == 0)
+			{
+				arrAt[0] -= 52;
+				cardArr = cardArr.concat(arrAt);
+				cardArr.sort(Array.NUMERIC);
+				if(isDay(cardArr))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				return false;
+			}
+			
+			
+			return true;
+		}
+		
+		
 		/**
 		 * tra ve gia tri quan bai.
 		 * vi du cardValue: 0 -> quan 3 BICH 

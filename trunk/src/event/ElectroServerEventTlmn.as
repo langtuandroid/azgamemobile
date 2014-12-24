@@ -63,6 +63,8 @@ package event
 		public static const HAVE_USER_DISCARD:String = "haveUserDiscard";
 		public static const UPDATE_MONEY_SPECIAL:String = "updateMoney_special";
 		
+		static public const SHOW_WARNNING:String = "showWarnning";
+		
 		public static const LIST_BEFORE_START:String = "resetNewGame";
 		
 		public static const NEXTTURN:String = "nextturn";

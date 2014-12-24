@@ -8,6 +8,7 @@ package event
 	{
 		public static const PRIVATE_CHAT: String = "privateChat";
 		public static const PUBLIC_CHAT: String = "publicChat";
+		public static const CHAT: String = "chat";
 		public static const START_GAME_1: String = "startGame1";
 		public static var UPDATE_CURRENT_GAME_ROOM:String = "updateCurrentGameRoom";
 		public static var INVITE_PLAY:String = "invitePlay";
@@ -71,6 +72,7 @@ package event
 		public static var CURRENTPLAYER:String = "updateCurrentTurn";
 		public static var UPDATE_MONEY:String = "updateMoney";
 		public static var WINNER:String = "winner";
+		public static var WARNNING:String = "sam";
 		
 		public function CommandTlmn() 
 		{

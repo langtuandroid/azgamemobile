@@ -68,6 +68,8 @@ package view.screen.play
 		public var _win:int;
 		public var _lose:int;
 		
+		public var onSamWarning:Boolean = true;
+		
 		public function PlayerInfoTLMN(pos:int) 
 		{
 			
@@ -107,7 +109,7 @@ package view.screen.play
 				content.level.x = 107;
 				content.iconMobile.x = 110;
 				content.iconMaster.x = 0;
-				content.effectMoneySpecial.y = 70;
+				
 				content.numCardRemainTxt.x = 203;
 				content.numCardRemainTxt.y = 156;
 				
@@ -128,7 +130,7 @@ package view.screen.play
 				content.iconMobile.x = -8;
 				
 				content.iconMaster.x = 100;
-				content.effectMoneySpecial.y = 70;
+				
 				content.numCardRemainTxt.x = -41;
 				content.numCardRemainTxt.y = 105;
 				
@@ -149,7 +151,7 @@ package view.screen.play
 				content.iconMobile.x = -8;
 				
 				content.iconMaster.x = 100;
-				content.effectMoneySpecial.y = 70;
+				
 				content.numCardRemainTxt.x = -47;
 				content.numCardRemainTxt.y = 156;
 				
@@ -180,6 +182,10 @@ package view.screen.play
 			content.inviteBtn.addEventListener(MouseEvent.CLICK, onClickInvite);
 			content.showDetailUser.addEventListener(MouseEvent.CLICK, onClickShowContex);
 			nothing();
+			
+			//ready = true;
+			//dealCard([]);
+			//addCardDeck(13);
 		}
 		
 		private function onLoadAvatarError(e:Event):void 
@@ -336,6 +342,7 @@ package view.screen.play
 				_timerDealcard.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
 				_timerDealcard.stop();
 			}
+			
 			if (int(obj[ConstTlmn.MONEY]) > 0) 
 			{
 				content.resultGame.gotoAndStop(1);
@@ -370,7 +377,15 @@ package view.screen.play
 			
 			////trace("xem lai tien cua nguoi choi: ", _money, obj[ConstTlmn.MONEY])
 			_money = _money + Number(obj[ConstTlmn.MONEY]);
-			content.effectMoneySpecial.text = format(Number(obj[ConstTlmn.MONEY]));
+			var money:Number = Number(obj[ConstTlmn.MONEY]);
+			if (Number(money) < 0) 
+			{
+				content.effectMoneySpecial.text = "-" + format(Number(money) * -1);
+			}
+			else 
+			{
+				content.effectMoneySpecial.text = "+" + format(Number(money));
+			}
 			TweenMax.to(content.effectMoneySpecial, 3, { y:content.effectMoneySpecial.y - 0, onComplete:onCompleteShowMoney } );
 			
 			//addCardImage(obj[ConstTlmn.CARDS]);
@@ -518,7 +533,7 @@ package view.screen.play
 			}
 			else 
 			{
-				content.effectMoneySpecial.text = format(Number(money));
+				content.effectMoneySpecial.text = "+" + format(Number(money));
 			}
 			
 			TweenMax.to(content.effectMoneySpecial, 3, { y: content.effectMoneySpecial.y - 0, onComplete:onCompleteMoneySpecial } );
@@ -558,14 +573,14 @@ package view.screen.play
 				
 			}
 			var friend:Boolean = false;
-			for (var i:int = 0; i < GameDataTLMN.getInstance().friendList[DataField.FRIEND_LIST].length; i++) 
+			/*for (var i:int = 0; i < GameDataTLMN.getInstance().friendList[DataField.FRIEND_LIST].length; i++) 
 			{
 				////trace("thang ban co ten la j`: ", GameDataTLMN.getInstance().friendList[DataField.FRIEND_LIST][i].userName)
 				if (GameDataTLMN.getInstance().friendList[DataField.FRIEND_LIST][i].userName == _userName) 
 				{
 					friend = true;
 				}
-			}
+			}*/
 			dispatchEvent(new Event("showInfo"));
 			var ismaster:Boolean = false;
 			if (GameDataTLMN.getInstance().master == MyDataTLMN.getInstance().myId) 
@@ -1063,7 +1078,15 @@ package view.screen.play
 			{
 				if (_remainingCard < 1) 
 				{
-					_timerDealcard = new Timer(150, 13);
+					if (MyDataTLMN.getInstance().isGame == 1) 
+					{
+						_timerDealcard = new Timer(150, 13);
+					}
+					else if (MyDataTLMN.getInstance().isGame == 2) 
+					{
+						_timerDealcard = new Timer(150, 10);
+					}
+					
 					_timerDealcard.addEventListener(TimerEvent.TIMER, onTimerDealCard);
 					_timerDealcard.addEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
 					_timerDealcard.start();
@@ -1090,9 +1113,59 @@ package view.screen.play
 			{
 				_isPlaying = false;
 			}
-			content.numCardRemainTxt.visible = true;
-			content.setChildIndex(content.numCardRemainTxt, content.numChildren - 1);
-			content.numCardRemainTxt.text = String(_remainingCard);
+			
+			var timer:Timer;
+			
+			if (MyDataTLMN.getInstance().isGame == 1) 
+			{
+				if (_remainingCard == 13) 
+				{
+					timer = new Timer(1200, 1);
+					timer.addEventListener(TimerEvent.TIMER_COMPLETE, onShowCardRemain);
+					timer.start();
+				}
+			}
+			else if (MyDataTLMN.getInstance().isGame == 2) 
+			{
+				if (_remainingCard == 10) 
+				{
+					timer = new Timer(1200, 1);
+					timer.addEventListener(TimerEvent.TIMER_COMPLETE, onShowCardRemain);
+					timer.start();
+				}
+			}
+			
+			
+		}
+		
+		private function onShowCardRemain(e:TimerEvent):void 
+		{
+			if (content) 
+			{
+				if (MyDataTLMN.getInstance().isGame == 1) 
+				{
+					if (_remainingCard == 13) 
+					{
+						content.numCardRemainTxt.visible = true;
+						content.setChildIndex(content.numCardRemainTxt, content.numChildren - 1);
+						content.numCardRemainTxt.text = String(_remainingCard);
+					}
+				}
+				else if (MyDataTLMN.getInstance().isGame == 2) 
+				{
+					if (_remainingCard == 10) 
+					{
+						content.numCardRemainTxt.visible = true;
+						content.setChildIndex(content.numCardRemainTxt, content.numChildren - 1);
+						content.numCardRemainTxt.text = String(_remainingCard);
+					}
+				}
+				
+			}
+			else 
+			{
+				
+			}
 		}
 		
 		private function onTimerDealCard(e:TimerEvent):void 
@@ -1159,54 +1232,66 @@ package view.screen.play
 		private function effectDealCard(cardDeck:CardDeck):void 
 		{
 			_cardDeck = new CardDeck();
-				
-			if (cardDeck) 
+			if (MyDataTLMN.getInstance().isGame == 1) 
 			{
-				////trace("check carddeck khi bat dau tween: ", cardDeck)
-				if (_pos == 2) 
+				if (cardDeck) 
 				{
 					
-					/*TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: 225, y:-25 + distance * _remainingCard} ], 
-								ease:Back.easeOut, onComplete:onComleteDeal } ); */
-								
-					TweenMax.to(cardDeck, 1.2, { x:235, y:-25 + distance * _remainingCard, ease:Back.easeOut} ); 
-					//TweenMax.to(_arrCardDeck[type], 1, { x:0 * type, y:0} ); 
-					//////trace("di chuyen den con , vị trí là:  ", _pos)
-				}
-				else 
-				{
-					if (_pos == 1) 
+					if (_pos == 2) 
 					{
-						/*TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: -200 + distance * _remainingCard, y:30} ], 
-								ease:Back.easeOut, onComplete:onComleteDeal } ); */
-						TweenMax.to(cardDeck, 1.2, {x:-215 + distance * _remainingCard, y:30, ease:Back.easeOut} ); 
+						
+						
+						TweenMax.to(cardDeck, 1.2, { x:235, y:-25 + distance * _remainingCard, ease:Back.easeOut} ); 
+						
 					}
 					else 
 					{
-						/*TweenMax.to(cardDeck, .1, { bezierThrough:[ { x: -3, y: -25 + distance * _remainingCard} ], 
-								ease:Back.easeOut, onComplete:onComleteDeal} ); */
-						TweenMax.to(cardDeck, 1.2, { x:-15, y:-25 + distance * _remainingCard, ease:Back.easeOut} ); 
+						if (_pos == 1) 
+						{
+							
+							TweenMax.to(cardDeck, 1.2, {x:-215 + distance * _remainingCard, y:30, ease:Back.easeOut} ); 
+						}
+						else 
+						{
+							
+							TweenMax.to(cardDeck, 1.2, { x:-15, y:-25 + distance * _remainingCard, ease:Back.easeOut} ); 
+						}
+						
 					}
-					//////trace("di chuyen den con , vị trí là:  ", _pos)
 					
-					//TweenMax.to(_arrCardDeck[type], 1, { x:0 * type, y:0} ); 
 				}
-				
 			}
-			/*if (_pos == 2) 
+			else if (MyDataTLMN.getInstance().isGame == 2) 
+			{
+				if (cardDeck) 
 				{
-					_cardDeck.x = content.numCard.x + 25 + 10 * i;
-					_cardDeck.y = content.numCard.y - 6;
+					
+					if (_pos == 2) 
+					{
+						
+						
+						TweenMax.to(cardDeck, 1.2, { x:235, y:5 + distance * _remainingCard, ease:Back.easeOut} ); 
+						
+					}
+					else 
+					{
+						if (_pos == 1) 
+						{
+							
+							TweenMax.to(cardDeck, 1.2, {x:-185 + distance * _remainingCard, y:30, ease:Back.easeOut} ); 
+						}
+						else 
+						{
+							
+							TweenMax.to(cardDeck, 1.2, { x:-15, y:5 + distance * _remainingCard, ease:Back.easeOut} ); 
+						}
+						
+					}
 					
 				}
-				else 
-				{
-					
-					_cardDeck.x = content.numCard.x + 25;
-					_cardDeck.y = content.numCard.y - 6 - 10 * i;
-					
-				}*/
-			//////trace("xem effect chia bai: ", type,"==", _arrCardDeck)
+			}
+			
+			
 			
 		}
 		
@@ -1430,6 +1515,44 @@ package view.screen.play
 			
 			content.bubbleChatMc.visible = false;
 			content.bubbleChatMc.txtChat.text = "";
+		}
+		
+		
+		public function dealCardSam():void 
+		{
+			_remainingCard = 0;
+			removeAllCards();
+			_isPlaying = true;
+			content.confirmReady.visible = false;
+			_timerDealcard = new Timer(120, 10);
+			_timerDealcard.addEventListener(TimerEvent.TIMER, onTimerDealCard);
+			_timerDealcard.addEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
+			_timerDealcard.start();
+		}
+		
+		
+		public function showTimerSam(time:int):void 
+		{
+			_clock.countTime(time);
+			_clock.visible = true;
+		}
+		
+		public function samResult(result:int):void 
+		{
+			content.samResult.gotoAndStop(result);
+			content.samResult.visible = true;
+			content.resultGame.visible = false;
+		}
+		
+		public function showWinNotice():void 
+		{
+			content.samResult.gotoAndStop(3);
+			content.samResult.visible = true;
+		}
+		
+		public function hideWinNotice():void 
+		{
+			content.samResult.visible = false;
 		}
 		
 	}

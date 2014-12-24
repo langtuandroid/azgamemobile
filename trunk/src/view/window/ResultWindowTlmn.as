@@ -37,7 +37,7 @@ package view.window
 		private var showUser:int;
 		private var _win:Boolean = false;
 		private var _top:int;
-		
+		private var winMoney:int;
 		
 		public function ResultWindowTlmn() 
 		{
@@ -167,7 +167,8 @@ package view.window
 				timerToCounDown.removeEventListener(TimerEvent.TIMER_COMPLETE, onCoundDownToClose);
 				timerToCounDown.stop();
 			}
-			for (var i:int = 0; i < arrUserResult.length; i++) 
+			var i:int;
+			for (i = 0; i < arrUserResult.length; i++) 
 			{
 				for (var j:int = 0; j < arrUserResult[i]["cards"].length; j++) 
 				{
@@ -176,6 +177,12 @@ package view.window
 				}
 				
 				arrUserResult[i]["cards"] = [];
+			}
+			for (i = 0; i < arrUserResult.length; i++) 
+			{
+				arrUserResult[i]["user"].userNameTxt.text = "";
+				arrUserResult[i]["user"].betResultTxt.text = "";
+				arrUserResult[i]["user"].noticeTxt.text = "";
 			}
 			
 			content.outGame.removeEventListener(MouseEvent.CLICK, onOutGameClick);
@@ -237,7 +244,7 @@ package view.window
 		
 		public function setInfoWhiteWin(obj:Object):void
 		{
-			var i:int;
+			/*var i:int;
 			var arrResult:Array = obj[ConstTlmn.PLAYER_LIST];
 			arrResult.sortOn(ConstTlmn.MONEY, Array.NUMERIC);
 			var count:int = 0;
@@ -306,6 +313,98 @@ package view.window
 				
 				count++;
 				//addImageCard(arrResult[i]["cards"], arrUserResult[i]);
+			}*/
+			
+			var i:int;
+			var arrResult:Array = obj[ConstTlmn.PLAYER_LIST];
+			arrResult.sortOn(ConstTlmn.MONEY, Array.NUMERIC);
+			var count:int = 0;
+			
+			for (i = 0; i < arrUserResult.length; i++) 
+			{
+				
+				arrUserResult[i]["user"].myResult.visible = false;
+				arrUserResult[i].visible = false;
+				TextField(arrUserResult[i]["user"].userNameTxt).defaultTextFormat = _textformatNormal;
+				TextField(arrUserResult[i]["user"].betResultTxt).defaultTextFormat = _textformatNormalMoney;
+				TextField(arrUserResult[i]["user"].noticeTxt).defaultTextFormat = _textformatNormalMoney;
+			}
+			
+			for (i = arrResult.length - 1; i > -1; i--) 
+			//for (i = 0; i < arrResult.length; i++) 
+			{
+				trace("den thang nao duoc ghi ten: ", arrResult[i][ConstTlmn.DISPLAY_NAME])
+				trace("tien: ", int(arrResult[i][ConstTlmn.MONEY]))
+				if (arrResult[i][ConstTlmn.PLAYER_NAME] == MyDataTLMN.getInstance().myId) 
+				{
+					
+					TextField(arrUserResult[count]["user"].userNameTxt).defaultTextFormat = _textformatUser;
+					TextField(arrUserResult[count]["user"].betResultTxt).defaultTextFormat = _textformatMoney;
+					arrUserResult[count]["user"].myResult.visible = true;
+					if (int(arrResult[i][ConstTlmn.MONEY]) > 0)
+					{
+						
+						_win = true;
+						//content.outGame.visible = true;
+						winMoney = int(arrResult[i][ConstTlmn.MONEY]);
+					}
+				}
+				else 
+				{
+					TextField(arrUserResult[count]["user"].userNameTxt).defaultTextFormat = _textformatNormal;
+					TextField(arrUserResult[count]["user"].betResultTxt).defaultTextFormat = _textformatNormalMoney;
+					arrUserResult[count]["user"].myResult.visible = false;
+				}
+				TextField(arrUserResult[count]["user"].noticeTxt).defaultTextFormat = _textformatNormal;
+				
+				arrUserResult[count]["user"].userNameTxt.text = "  " + String(count + 1) + "  " + 
+																arrResult[i][ConstTlmn.DISPLAY_NAME];
+				
+				if (int(arrResult[i][ConstTlmn.MONEY]) > 0) 
+				{
+					arrUserResult[count]["user"].betResultTxt.text = "+" + format(Number(arrResult[i][ConstTlmn.MONEY])) ;
+					//TextField(arrUserResult[i]["user"].betResultTxt).defaultTextFormat = _textformatWin;
+					trace("chi thang thang moi ddc add : ", obj["whiteWinType"]);
+					
+					if (MyDataTLMN.getInstance().isGame == 1) 
+					{
+						arrUserResult[count]["user"].noticeTxt.text = whiteWin(obj["whiteWinType"]) ;
+					}
+					else if (MyDataTLMN.getInstance().isGame == 2) 
+					{
+						arrUserResult[count]["user"].noticeTxt.text = whiteWinSam(obj["whiteWinType"]) ;
+					}
+					
+					if (arrUserResult[count]["user"].userNameTxt.text != MyDataTLMN.getInstance().myName) 
+					{
+						//arrUserResult[i].user.win.visible = true;
+						//arrUserResult[i].user.lose.visible = false;
+					}
+					else 
+					{
+						_win = true;
+						
+					}
+				}
+				else 
+				{
+					trace("thang thua ko add wintype")
+					arrUserResult[count]["user"].betResultTxt.text = "-" + format(Number(arrResult[i][ConstTlmn.MONEY]) * -1) ;
+					arrUserResult[count]["user"].noticeTxt.text = "";
+				}
+				arrUserResult[count]["user"].visible = true;
+				trace(arrUserResult[count]["user"].userNameTxt.text)
+				count++;
+				//addImageCard(arrResult[i]["cards"], arrUserResult[i]);
+			}
+			showUser = arrResult.length;
+			for (i = 0; i < showUser; i++) 
+			{
+				arrUserResult[i]["user"].visible = true;
+			}
+			for (i = showUser; i < arrUserResult.length; i++) 
+			{
+				arrUserResult[i]["user"].visible = false;
 			}
 		}
 		
@@ -386,9 +485,14 @@ package view.window
 					
 			for (i = 0; i < arrUserResult.length; i++) 
 			{
+				
 				arrUserResult[i]["user"].myResult.visible = false;
-				arrUserResult[i]["user"].visible = true;
+				arrUserResult[i].visible = false;
+				TextField(arrUserResult[i]["user"].userNameTxt).defaultTextFormat = _textformatNormal;
+				TextField(arrUserResult[i]["user"].betResultTxt).defaultTextFormat = _textformatNormalMoney;
+				TextField(arrUserResult[i]["user"].noticeTxt).defaultTextFormat = _textformatNormalMoney;
 			}
+			
 			if (obj["resultArr"]) 
 			{
 				for (i = 0; i < arrUserResult.length; i++) 
@@ -616,6 +720,523 @@ package view.window
 			}
 			
 		}
+		
+		public function denlang(arr:Array):void 
+		{
+			
+			content.timeRemain.visible = true;
+			//content.close.visible = true;
+			var i:int;
+			var j:int;
+			var count:int = 0;
+			
+			for (i = 0; i < arrUserResult.length; i++) 
+			{
+				
+				arrUserResult[i]["user"].myResult.visible = false;
+				arrUserResult[i].visible = false;
+				TextField(arrUserResult[i]["user"].userNameTxt).defaultTextFormat = _textformatNormal;
+				TextField(arrUserResult[i]["user"].betResultTxt).defaultTextFormat = _textformatNormalMoney;
+				TextField(arrUserResult[i]["user"].noticeTxt).defaultTextFormat = _textformatNormalMoney;
+			}
+			
+			_win = false;
+			arr.sortOn(ConstTlmn.SUB_MONEY, Array.NUMERIC);
+			for (i = arr.length - 1; i > -1; i--) 
+			{
+				trace(arr[i][0][ConstTlmn.PLAYER_NAME], "user ddang choi")
+				if (arr[i][0][ConstTlmn.PLAYER_NAME] == MyDataTLMN.getInstance().myId) 
+				{
+					TextField(arrUserResult[count]["user"].userNameTxt).defaultTextFormat = _textformatUser;
+					TextField(arrUserResult[count]["user"].betResultTxt).defaultTextFormat = _textformatMoney;
+					arrUserResult[count]["user"].myResult.visible = true;
+					if (int(arr[i][0][ConstTlmn.SUB_MONEY]) > 0) 
+					{
+						_win = true;
+						//content.outGame.visible = true;
+						winMoney = int(arr[i][ConstTlmn.SUB_MONEY]);
+					}
+					
+				}
+				else 
+				{
+					TextField(arrUserResult[count]["user"].userNameTxt).defaultTextFormat = _textformatNormal;
+					TextField(arrUserResult[count]["user"].betResultTxt).defaultTextFormat = _textformatNormalMoney;
+					arrUserResult[count]["user"].myResult.visible = false;
+				}
+				TextField(arrUserResult[count]["user"].noticeTxt).defaultTextFormat = _textformatNormal;
+				
+				arrUserResult[count]["user"].userNameTxt.text = "  " + String(count + 1) + "  " + 
+																arr[i][0][ConstTlmn.DISPLAY_NAME];
+				
+				if (int(arr[i][0][ConstTlmn.SUB_MONEY]) >= 0) 
+				{
+					arrUserResult[count]["user"].betResultTxt.text = "+" + format(Number(arr[i][0][ConstTlmn.SUB_MONEY])) ;
+					//TextField(arrUserResult[i]["user"].betResultTxt).defaultTextFormat = _textformatWin;
+					if (arrUserResult[count]["user"].userNameTxt.text != MyDataTLMN.getInstance().myName) 
+					{
+						_win = false;	
+					}
+					else 
+					{
+						_win = true;
+						
+					}
+				}
+				else 
+				{
+					//TextField(arrUserResult[i]["user"].betResultTxt).defaultTextFormat = _textformatLose;
+					arrUserResult[count]["user"].betResultTxt.text = "-" + format(Number(arr[i][0][ConstTlmn.SUB_MONEY]) * -1) ;
+					
+				}
+				
+				count++;
+				
+			}
+			
+			count = 0;
+			for (i = 0; i < arr.length; i++) 
+			{
+				
+				if (arr[i][0][ConstTlmn.SUB_MONEY] < 0 && arr[i][1] == "Đền làng") 
+				{
+					arrUserResult[count]["user"].noticeTxt.text = "Đánh 2 cuối bị đền";
+					for (j = 0; j < arrUserResult.length; j++) 
+					{
+						if (j != count) 
+						{
+							arrUserResult[j]["user"].noticeTxt.text = "";
+						}
+					}
+					break;
+				}
+				
+				count++;
+			}
+				
+			for (i = 0; i < arr.length; i++) 
+			{
+				
+				arrUserResult[i]["user"].visible = true;
+			}
+			for (i = arr.length; i < arrUserResult.length; i++) 
+			{
+				
+				arrUserResult[i]["user"].visible = false;
+			}
+		}
+		
+		public function samSuccess(arr:Array, samSuccess:int):void 
+		{
+			content.timeRemain.visible = true;
+			//content.close.visible = true;
+			var i:int;
+			var j:int;
+			var count:int = 0;
+			
+			for (i = 0; i < arrUserResult.length; i++) 
+			{
+				
+				arrUserResult[i]["user"].myResult.visible = false;
+				arrUserResult[i].visible = false;
+				TextField(arrUserResult[i]["user"].userNameTxt).defaultTextFormat = _textformatNormal;
+				TextField(arrUserResult[i]["user"].betResultTxt).defaultTextFormat = _textformatNormalMoney;
+				TextField(arrUserResult[i]["user"].noticeTxt).defaultTextFormat = _textformatNormalMoney;
+			}
+			
+			
+			
+			arr.sortOn(ConstTlmn.SUB_MONEY, Array.NUMERIC);
+			for (i = arr.length - 1; i > -1; i--) 
+			{
+				
+				if (arr[i][ConstTlmn.PLAYER_NAME] == MyDataTLMN.getInstance().myId) 
+				{
+					TextField(arrUserResult[count]["user"].userNameTxt).defaultTextFormat = _textformatUser;
+					TextField(arrUserResult[count]["user"].betResultTxt).defaultTextFormat = _textformatMoney;
+					arrUserResult[count]["user"].myResult.visible = true;
+					if (int(arr[i][ConstTlmn.SUB_MONEY]) > 0) 
+					{
+						_win = true;
+						//content.outGame.visible = true;
+						winMoney = int(arr[i][ConstTlmn.SUB_MONEY]);
+					}
+				}
+				else 
+				{
+					TextField(arrUserResult[count]["user"].userNameTxt).defaultTextFormat = _textformatNormal;
+					TextField(arrUserResult[count]["user"].betResultTxt).defaultTextFormat = _textformatNormalMoney;
+					arrUserResult[count]["user"].myResult.visible = false;
+				}
+				TextField(arrUserResult[count]["user"].noticeTxt).defaultTextFormat = _textformatNormal;
+				
+				arrUserResult[count]["user"].userNameTxt.text = "  " + String(count + 1) + "  " + 
+																arr[i][ConstTlmn.DISPLAY_NAME];
+				
+				if (int(arr[i][ConstTlmn.SUB_MONEY]) >= 0) 
+				{
+					arrUserResult[count]["user"].betResultTxt.text = "+" + format(Number(arr[i][ConstTlmn.SUB_MONEY])) ;
+					
+				}
+				else 
+				{
+					//TextField(arrUserResult[i]["user"].betResultTxt).defaultTextFormat = _textformatLose;
+					arrUserResult[count]["user"].betResultTxt.text = "-" + format(Number(arr[i][ConstTlmn.SUB_MONEY]) * -1) ;
+					if (arrUserResult[count]["user"].userNameTxt.text != MyDataTLMN.getInstance().myName) 
+					{
+						//arrUserResult[i].user.win.visible = false;
+						//arrUserResult[i].user.lose.visible = true;
+					}
+					
+				}
+				
+				count++;
+				
+			}
+			
+			count = 0;
+			for (i = arr.length - 1; i > -1; i--) 
+			{
+				
+				if (arr[i][ConstTlmn.SUB_MONEY] < 0 && samSuccess == 2) 
+				{
+					arrUserResult[count]["user"].noticeTxt.text = "Sâm thất bại";
+					for (j = 0; j < arrUserResult.length; j++) 
+					{
+						if (j != count) 
+						{
+							arrUserResult[j]["user"].noticeTxt.text = "";
+						}
+					}
+					break;
+				}
+				else if (arr[i][ConstTlmn.SUB_MONEY] > 0 && samSuccess == 1) 
+				{
+					arrUserResult[count]["user"].noticeTxt.text = "Sâm thành công";
+					for (j = 0; j < arrUserResult.length; j++) 
+					{
+						if (j != count) 
+						{
+							arrUserResult[j]["user"].noticeTxt.text = "";
+						}
+					}
+					break;
+				}
+				count++;
+			}
+				
+			for (i = 0; i < arr.length; i++) 
+			{
+				trace("thang nay hien ra: ", i, arrUserResult[i]["user"].userNameTxt.text)
+				arrUserResult[i]["user"].visible = true;
+			}
+			for (i = arr.length; i < arrUserResult.length; i++) 
+			{
+				trace("thang nay ko dc hien ra: ", i, arrUserResult[i]["user"].userNameTxt.text)
+				arrUserResult[i]["user"].visible = false;
+			}
+		}
+		
+		private function whiteWinSam(type:String):String 
+		{
+			var result:String = "";
+			
+			switch (type) 
+			{
+				
+				case "1":
+					result = "5 đôi";
+				break;
+				case "2":
+					result = "3 xám";
+				break;
+				case "3":
+					result = "10 cây cùng màu";
+				break;
+				case "4":
+					result = "Tứ quí 2";
+				break;
+				case "5":
+					result = "Sảnh rồng";
+				break;
+				
+				default:
+			}
+			
+			return result;
+		}
+		
+		public function setInfoSam(obj:Object):void
+		{
+			content.timeRemain.visible = true;
+			//content.close.visible = true;
+			var i:int;
+			var arrResult:Array = obj["resultArr"];
+			trace(arrResult)
+			var objU:Object = arrResult[0];
+			var count:int = 0;
+			/*for (i = 0; i < arrResult.length; i++) 
+			{
+				if (arrResult[i][Const.MONEY]) 
+				{
+					if (int(arrResult[i][Const.MONEY]) > 0) 
+					{
+						
+						arrResult[0] = arrResult[i];
+						arrResult[i] = objU;
+						break;
+					}
+				}
+			}*/
+			
+			for (i = 0; i < arrUserResult.length; i++) 
+			{
+				
+				arrUserResult[i]["user"].myResult.visible = false;
+				arrUserResult[i].visible = false;
+				TextField(arrUserResult[i]["user"].userNameTxt).defaultTextFormat = _textformatNormal;
+				TextField(arrUserResult[i]["user"].betResultTxt).defaultTextFormat = _textformatNormalMoney;
+				TextField(arrUserResult[i]["user"].noticeTxt).defaultTextFormat = _textformatNormalMoney;
+			}
+			/**
+			 * arrresult chua nhieu object
+			 * moi obj chua:
+				 * gameOverObject["userName"] : ten user
+				 * gameOverObject["cards"] : mang chua cac id quan bai
+				 * gameOverObject["money"] = data.getString("money"); tien dang co
+					gameOverObject["subMoney"] = data.getString("subMoney"); :so tien bi tru
+					gameOverObject["description"] = data.getString("description"); : thong bao thoi nhung cai j`
+			 */
+					
+			 
+			for (i = 0; i < arrUserResult.length; i++) 
+			{
+				arrUserResult[i]["user"].myResult.visible = false;
+				arrUserResult[i]["user"].visible = true;
+			}
+			
+			if (obj["resultArr"]) 
+			{
+				
+				arrResult.sortOn(ConstTlmn.SUB_MONEY, Array.NUMERIC);
+				for (i = arrResult.length - 1; i > -1; i--) 
+				{
+					trace("den thang nao duoc ghi ten: ", arrResult[i][ConstTlmn.DISPLAY_NAME])
+					if (arrResult[i][ConstTlmn.PLAYER_NAME] == MyDataTLMN.getInstance().myId) 
+					{
+						TextField(arrUserResult[count]["user"].userNameTxt).defaultTextFormat = _textformatUser;
+						TextField(arrUserResult[count]["user"].betResultTxt).defaultTextFormat = _textformatMoney;
+						arrUserResult[count]["user"].myResult.visible = true;
+						if (int(arrResult[i][ConstTlmn.SUB_MONEY]) > 0)
+						{
+							
+							_win = true;
+							//content.outGame.visible = true;
+							winMoney = int(arrResult[i][ConstTlmn.SUB_MONEY]);
+						}
+					}
+					else 
+					{
+						TextField(arrUserResult[count]["user"].userNameTxt).defaultTextFormat = _textformatNormal;
+						TextField(arrUserResult[count]["user"].betResultTxt).defaultTextFormat = _textformatNormalMoney;
+						arrUserResult[count]["user"].myResult.visible = false;
+					}
+					TextField(arrUserResult[count]["user"].noticeTxt).defaultTextFormat = _textformatNormal;
+					
+					arrUserResult[count]["user"].userNameTxt.text = "  " + String(count + 1) + "  " + 
+																	arrResult[i][ConstTlmn.DISPLAY_NAME];
+					
+					if (int(arrResult[i][ConstTlmn.SUB_MONEY]) > 0) 
+					{
+						arrUserResult[count]["user"].betResultTxt.text = "+" + format(Number(arrResult[i][ConstTlmn.SUB_MONEY])) ;
+						
+					}
+					else 
+					{
+						//TextField(arrUserResult[i]["user"].betResultTxt).defaultTextFormat = _textformatLose;
+						arrUserResult[count]["user"].betResultTxt.text = "-" + format(Number(arrResult[i][ConstTlmn.SUB_MONEY]) * -1) ;
+						if (arrUserResult[count]["user"].userNameTxt.text != MyDataTLMN.getInstance().myName) 
+						{
+							//arrUserResult[i].user.win.visible = false;
+							//arrUserResult[i].user.lose.visible = true;
+						}
+						
+					}
+					
+					if (arrResult[i][ConstTlmn.SUB_MONEY] < 0) 
+					{
+						trace("den thang nao duoc ghi thoi: ", arrResult[i]["description"])
+						
+						arrUserResult[count]["user"].noticeTxt.text = typeOfReamainSam(arrResult[i]["description"]);
+					}
+					else 
+					{
+						arrUserResult[count]["user"].noticeTxt.text = "";
+					}
+					count++;
+					//addImageCard(arrResult[i]["cards"], arrUserResult[i]);
+				}
+			}
+			
+			/*
+			for (i = 0; i < arrResult.length; i++) 
+			{
+				arrUserResult[i]["user"].visible = true;
+				if (arrUserResult[i]["user"].userNameTxt.text == MyDataTLMN.getInstance().myName) 
+				{
+					_top = i;
+				}
+			}*/
+			showUser = arrResult.length;
+			trace("nhung thang nao ko dc hien ra: ", showUser)
+			for (i = arrResult.length; i < arrUserResult.length; i++) 
+			{
+				trace("thang nay ko dc hien ra: ", i, arrUserResult[i]["user"].userNameTxt.text)
+				arrUserResult[i]["user"].visible = false;
+			}
+			
+		}
+		
+		private function typeOfReamainSam(string:String):String 
+		{
+			var i:int;
+			var j:int;
+			var str:String = "Thối ";
+			var arrSpecial:Array = [];
+			var checkcayle:Boolean = false;
+			var count:int;
+			
+			var arrTypeResult:Array = [];
+			var pos:int;
+			for (i = 0; i < string.length; i++)
+			{
+				if (string.charAt(i) == ";") 
+				{
+					pos = i;
+					break;
+				}
+			}
+			
+			if (string.charAt(string.length - 1) == "8") 
+			{
+				return "Thối trắng";
+			}
+			
+			var arrThoi:Array = [];
+			for (i = 0; i < pos; i++) 
+			{
+				if (string.charAt(i) != ",") 
+				{
+					arrThoi.push(string.charAt(i));
+					if (string.charAt(i) == "_")
+					{
+						arrTypeResult.splice(arrTypeResult.length - 1, 1);
+					}
+					else 
+					{
+						arrTypeResult.push(string.charAt(i));
+					}
+					
+				}
+				else 
+				{
+					
+				}
+			}
+			
+			if (str == "Thối " && arrThoi.length > 0) 
+			{
+				var isTuqui:Boolean = false;
+				if (arrThoi[2] == 2) 
+				{
+					isTuqui = true;
+				}
+				if (isTuqui) 
+				{
+					str = str + typeOfThoiSam(arrThoi[0], true, isTuqui) + typeOfThoiSam(arrThoi[2], false, isTuqui);
+				}
+				else 
+				{
+					str = str + typeOfThoiSam(arrThoi[0], true, false) + typeOfThoiSam(arrThoi[2], false, false);
+				}
+				
+				arrThoi = [];
+			}
+			
+			if (string.charAt(pos + 1) != "0") 
+			{
+				str = str + string.charAt(pos + 1) + " cây";
+			}
+			else 
+			{
+				str = str.slice(0, str.length - 3);
+			}
+			
+			return str;
+		}
+		
+		private function typeOfThoiSam(type:int, out:Boolean, isTuqui:Boolean):String 
+		{
+			var str:String = "";
+			if (out) 
+			{
+				switch (type) 
+				{
+					case 1:
+						str = "1 cây ";
+						if (isTuqui) 
+						{
+							str = "1 bộ ";
+						}
+					break;
+					case 2:
+						str = "2 cây ";
+						if (isTuqui) 
+						{
+							str = "2 bộ ";
+						}
+					break;
+					case 3:
+						str = "3 cây ";
+						if (isTuqui) 
+						{
+							str = "3 bộ ";
+						}
+					break;
+					case 4:
+						str = "4 cây ";
+						if (isTuqui) 
+						{
+							str = "4 bộ ";
+						}
+					break;
+					default:
+				}
+			}
+			else 
+			{
+				switch (type) 
+				{
+					case 1:
+					str += "hai, ";
+					break;
+					case 2:
+					str += "tứ quí, ";
+					break;
+					case 8:
+					str += "trắng, ";
+					break;
+					default:
+					str += "";
+					break;
+					
+				}
+			}
+			
+			
+			return str;
+		}
+		
 		
 	}
 
