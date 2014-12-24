@@ -10,7 +10,7 @@ package view.topMenu
 	import model.chooseChannelData.ChooseChannelData;
 	import model.MainData;
 	import view.userInfo.avatar.Avatar;
-	import view.window.AddMoneyWindow;
+	//import view.window.AddMoneyWindow;
 	import view.window.windowLayer.WindowLayer;
 	
 	/**
@@ -71,8 +71,8 @@ package view.topMenu
 			switch (e.currentTarget) 
 			{
 				case content.addMoneyButton:
-					var addMoneyWindow:AddMoneyWindow = new AddMoneyWindow();
-					WindowLayer.getInstance().openWindow(addMoneyWindow);
+					//var addMoneyWindow:AddMoneyWindow = new AddMoneyWindow();
+					//WindowLayer.getInstance().openWindow(addMoneyWindow);
 				break;
 				case content.settingButton:
 					content.settingBoard.visible = !content.settingBoard.visible;

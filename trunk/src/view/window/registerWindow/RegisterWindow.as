@@ -187,6 +187,10 @@ package view.window.registerWindow
 					object.nick_name = zRegisterWindow(content).userName.text;
 					object.user_name = zRegisterWindow(content).email.text;
 					object.password = zRegisterWindow(content).password.text;
+					if (mainData.isOnIos)
+						object.DeviceId = 5;
+					else
+						object.DeviceId = 4;
 					if (zRegisterWindow(content).maleSelectBox.currentLabel == "selected")
 						object.gender_code = 'M';
 					else

@@ -9,7 +9,7 @@ package control.getInfoCommand
 	import flash.utils.ByteArray;
 	import model.chooseChannelData.MyInfo;
 	import model.MainData;
-	import view.window.AddMoneyWindow;
+	//import view.window.AddMoneyWindow;
 	import view.window.AddMoneyWindow2;
 	import view.window.windowLayer.WindowLayer;
 	//import org.bytearray.decoder.JPEGDecoder;

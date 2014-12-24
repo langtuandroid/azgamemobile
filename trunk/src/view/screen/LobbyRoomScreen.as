@@ -22,7 +22,7 @@ package view.screen
 	import view.SelectGameWindow;
 	import view.SystemNoticeBar;
 	import view.window.AddFriendWindow;
-	import view.window.AddMoneyWindow;
+	//import view.window.AddMoneyWindow;
 	import view.window.AddMoneyWindow2;
 	import view.window.BaseWindow;
 	import view.window.loginWindow.LoginWindow;

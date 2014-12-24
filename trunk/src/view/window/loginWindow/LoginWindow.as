@@ -57,7 +57,7 @@ package view.window.loginWindow
 		public function LoginWindow() 
 		{
 			addContent("zLoginWindow");
-			mainData.loginType = '1';
+			//mainData.loginType = '1';
 			
 			loginFacebookBtn = zLoginWindow(content).fastLogin["loginFacebookBtn"];
 			loginMobileBtn = zLoginWindow(content).fastLogin["loginMobileBtn"];
@@ -122,17 +122,29 @@ package view.window.loginWindow
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 			
-			/*try 
+			try 
 			{
-				if (mainData.isOnAndroid || mainData.isOnIos)
-					deviceId = AirDeviceId.getInstance().getID("SanhBai");
-				else
-					deviceId = 'simulator';
+				//if (mainData.isOnAndroid)
+				//{
+					//deviceId = AirDeviceId.getInstance().getID("SanhBai");
+				//}
+				//else
+				//{
+					if (sharedObject.data.hasOwnProperty("deviceId"))
+					{
+						deviceId = sharedObject.data.deviceId;
+					}
+					else
+					{
+						deviceId = String(Math.random() * 100000000000) + String(Math.random() * 100000000000);
+						sharedObject.setProperty("deviceId", deviceId);
+					}
+				//}
 			}
 			catch (err:Error)
 			{
 				
-			}*/
+			}
 			
 			zLoginWindow(content).loadingSoundLayer["percentTxt"].text = '0%';
 			zLoginWindow(content).loadingSoundLayer.visible = false;
@@ -178,6 +190,7 @@ package view.window.loginWindow
 		
 		private function loginFacebook():void 
 		{
+			mainData.addEventListener(MainData.UPDATE_FACEBOOK_DATA, onUpdateFacebookData);
 			zLoginWindow(content).loadingLayer.visible = true;
 			sharedObject.setProperty("loginType", '2');	
 			try 
@@ -281,7 +294,6 @@ package view.window.loginWindow
 			//zLoginWindow(content).pass.textField.addEventListener(MouseEvent.CLICK, onShowVirtualKeyBoard);
 			
 			////
-			mainData.addEventListener(MainData.UPDATE_FACEBOOK_DATA, onUpdateFacebookData);
 			mainData.addEventListener(MainData.LOGIN_FACEBOOK_FAIL, onLoginFacebookFail);
 			mainData.chooseChannelData.addEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
 			mainData.isOnLoginWindow = true;
@@ -361,7 +373,7 @@ package view.window.loginWindow
 		
 		private function onUpdateFacebookData(e:Event):void 
 		{
-			//WindowLayer.getInstance().openAlertWindow("onUpdateFacebookData");
+			mainData.removeEventListener(MainData.UPDATE_FACEBOOK_DATA, onUpdateFacebookData);
 			if (timerToCloseLoadingLayer)
 			{
 				timerToCloseLoadingLayer.removeEventListener(TimerEvent.TIMER_COMPLETE, onCloseLoadingLayer);
@@ -395,7 +407,10 @@ package view.window.loginWindow
 			if (value.TypeMsg == 2)
 			{
 				zLoginWindow(content).loadingLayer.visible = false;
-				var registerFacebookWindow:RegisterFacebookWindow = new RegisterFacebookWindow();
+				if (sharedObject.data.loginType == '1')
+					var registerFacebookWindow:RegisterFacebookWindow = new RegisterFacebookWindow(false);
+				else
+					registerFacebookWindow = new RegisterFacebookWindow();
 				registerFacebookWindow.email = value.Data.email;
 				WindowLayer.getInstance().openWindow(registerFacebookWindow);
 				return;
