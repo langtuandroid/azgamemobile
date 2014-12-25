@@ -411,8 +411,7 @@ package
 				var obj:Object;
 				
 				url = "http://wss.azgame.us/Service01/Billings/OnplayMobile.asmx/CardCharging";
-				//url = "http://wss.azgame.vn/Service02/OnplayUserExt.asmx/GetListTwav00" + String(1)
-									//+ "?rowStart=0&rowEnd=10";
+				
 				
 				obj = new Object();
 				obj.nick_name = "78";
