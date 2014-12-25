@@ -522,7 +522,7 @@ package view.window.loginWindow
 			if (mainData.isTest)
 				mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileGetUserInfo", data, onLoginRespond, true);
 			else
-				mainRequest.sendRequest_Post("http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileGetUserInfo", data, onLoginRespond, true);
+				mainRequest.sendRequest_Post("http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileGetUserInfo", data, onLoginRespond, true);
 		}
 		
 		private function onLoginRespond(value:Object):void 

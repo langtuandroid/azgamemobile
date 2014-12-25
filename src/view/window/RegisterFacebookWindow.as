@@ -95,7 +95,7 @@ package view.window
 			if (mainData.isTest)
 				mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileRegister", object, onRegisterRespond, true);
 			else
-				mainRequest.sendRequest_Post("http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileRegister", object, onRegisterRespond, true);
+				mainRequest.sendRequest_Post("http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileRegister", object, onRegisterRespond, true);
 		}
 		
 		private function onLoginFacebookRespond(value:Object):void 
@@ -128,7 +128,7 @@ package view.window
 				if (mainData.isTest)
 					mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileGetUserInfo", data, onLoginRespond, true);
 				else
-					mainRequest.sendRequest_Post("http://wss.azgame.vn/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileGetUserInfo", data, onLoginRespond, true);
+					mainRequest.sendRequest_Post("http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileGetUserInfo", data, onLoginRespond, true);
 			}
 			else if (value.status == "IO_ERROR")
 			{
