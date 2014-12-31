@@ -429,7 +429,15 @@ package view.screen.play
 		{
 			content.effectMoneySpecial.visible = false;
 			content.effectMoneySpecial.y += 0;
-			content.txtMoney.text = format(_money);
+			if (Number(_money) > 0) 
+			{
+				content.txtMoney.text = format(_money);
+			}
+			else 
+			{
+				content.txtMoney.text = "0";
+			}
+			
 			
 		}
 		
@@ -492,7 +500,15 @@ package view.screen.play
 		
 		public function addMyMoney(money:Number):void 
 		{
-			content.txtMoney.text = format(money);
+			if (Number(money) > 0) 
+			{
+				content.txtMoney.text = format(money);
+			}
+			else 
+			{
+				content.txtMoney.text = "0";
+			}
+			
 		}
 		
 		public function addMoney(money:String):void 
@@ -521,7 +537,15 @@ package view.screen.play
 			}
 			////trace("money bi chat info: ", str, money)
 			var myMoney:Number = Number(str) + Number(money);
-			content.txtMoney.text = format(myMoney);
+			if (Number(myMoney) > 0) 
+			{
+				content.txtMoney.text = format(myMoney);
+			}
+			else 
+			{
+				content.txtMoney.text = "0";
+			}
+			
 			
 			//var myMoney:int = int(content.txtMoney.text) + int(money);
 			//content.txtMoney.text = format(myMoney);
@@ -544,7 +568,15 @@ package view.screen.play
 		{
 			content.effectMoneySpecial.visible = false;
 			content.effectMoneySpecial.y += 0;
-			content.txtMoney.text = format(_money);
+			if (Number(_money) > 0) 
+			{
+				content.txtMoney.text = format(_money);
+			}
+			else 
+			{
+				content.txtMoney.text = "0";
+			}
+			
 		}
 		
 		private function onClickShowContex(e:Event):void 
@@ -1140,6 +1172,7 @@ package view.screen.play
 		
 		private function onShowCardRemain(e:TimerEvent):void 
 		{
+			content.setChildIndex(content.bubbleChatMc, content.numChildren - 1);
 			if (content) 
 			{
 				if (MyDataTLMN.getInstance().isGame == 1) 

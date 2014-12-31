@@ -44,6 +44,8 @@ package control
 		public static var OUT_ROOM:String = "outRoom";
 		public static var ROOM:String = "room";
 		
+		static public var POSSITION:String = "position";
+		
 		public static var ADD_NEW_SWF:String = "addNewSwf";
 		
 		public static var ID:String = "id";

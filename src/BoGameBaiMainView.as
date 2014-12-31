@@ -218,8 +218,8 @@ package
 			else if (MyDataTLMN.getInstance().isGame == 2) 
 			{
 				mainData.gameName = 'Sâm';
-				//mainData.gameType = 'SAM';
-				mainData.gameType = 'TLMN';
+				mainData.gameType = 'SAM';
+				//mainData.gameType = 'TLMN';
 				mainData.game_id = 'AZGB_SAM';
 				
 				GameDataTLMN.getInstance().gameName = "Sam";
