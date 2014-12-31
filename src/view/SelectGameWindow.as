@@ -40,7 +40,7 @@ package view
 		private var phomIcon:Sprite;
 		private var maubinhIcon:Sprite;
 		private var xitoIcon:Sprite;
-		private var xizachIcon:Sprite;
+		private var samIcon:Sprite;
 		private var pokerIcon:Sprite;
 		private var gameList:Array;
 		private var mainData:MainData = MainData.getInstance();
@@ -85,22 +85,22 @@ package view
 			phomIcon = content["phomIcon"];
 			maubinhIcon = content["maubinhIcon"];
 			xitoIcon = content["xitoIcon"];
-			xizachIcon = content["xizachIcon"];
+			samIcon = content["samIcon"];
 			pokerIcon = content["pokerIcon"];
 			
 			tlmnIcon.x = tlmnIcon.y = 0;
 			phomIcon.x = phomIcon.y = 0;
 			maubinhIcon.x = maubinhIcon.y = 0;
 			xitoIcon.x = xitoIcon.y = 0;
-			xizachIcon.x = xizachIcon.y = 0;
+			samIcon.x = samIcon.y = 0;
 			pokerIcon.x = pokerIcon.y = 0;
 			
 			gameList = new Array();
 			gameList.push(tlmnIcon);
 			gameList.push(phomIcon);
 			gameList.push(maubinhIcon);
+			gameList.push(samIcon);
 			gameList.push(xitoIcon);
-			gameList.push(xizachIcon);
 			gameList.push(pokerIcon);
 			
 			tlmnIcon.addEventListener(MouseEvent.MOUSE_UP, onSelectGame);
@@ -373,6 +373,10 @@ package view
 				gameContainer.itemList = gameList;*/
 				
 				gameContainer2 = new PanelScrollYun();
+				//gameContainer2.horizontalNumber = 20;
+				gameContainer2.addScrollRectDistance = 130;
+				gameContainer2.headDistance = 8;
+				gameContainer2.tailDistance = 8;
 				gameContainer2.addEventListener(PanelScrollYun.PANEL_SCROLL_MOUSE_UP, onPanelScrollMouseUp);
 				gameContainer2.x = content["container"].x;
 				gameContainer2.y = content["container"].y;

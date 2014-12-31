@@ -38,6 +38,9 @@ package  view.itemContainer
 		public var startX:Number;
 		public var endX:Number;
 		public var isMoving:Boolean;
+		public var headDistance:Number = 0;
+		public var tailDistance:Number = 0;
+		public var addScrollRectDistance:Number = 0;
 
 		public function PanelScrollYun() {
 			
@@ -83,7 +86,7 @@ package  view.itemContainer
 		 */
 		public function addContent(arr:Array, rec:Rectangle):void 
 		{
-			scrollRect = new Rectangle(0, 0, rec.width, rec.height);
+			scrollRect = new Rectangle(0, 0, rec.width + addScrollRectDistance, rec.height);
 			_panelBounds = rec;
 			_panelCount = arr.length;
 			_container = new Sprite();
@@ -178,7 +181,7 @@ package  view.itemContainer
 			
 			var tempArray:Array = new Array();
 			//rowNumber = Math.ceil(viewList.length / columnNumber);
-			var horizontalDistance:Number = (view.width - (viewList[0].width * columnNumber)) / (columnNumber - 1);
+			var horizontalDistance:Number = (view.width - (viewList[0].width * columnNumber)) / (columnNumber - 1) - headDistance - tailDistance;
 			if (rowNumber - 1 > 0)
 			{
 				if (viewList[0]["standardHeight"])
@@ -190,7 +193,7 @@ package  view.itemContainer
 				verticalDistance = 0;
 			for (var i:int = 0; i < viewList.length; i++) 
 			{
-				viewList[i].x = (i % columnNumber) * (viewList[0].width + horizontalDistance);
+				viewList[i].x = (i % columnNumber) * (viewList[0].width + horizontalDistance) + headDistance;
 				var tempIndex:int = (i % (rowNumber * columnNumber)) / columnNumber;
 				viewList[i].y = Math.floor(tempIndex) * (viewList[0].height + verticalDistance);
 				var pageIndex:int = Math.floor((i / (columnNumber * rowNumber)));
