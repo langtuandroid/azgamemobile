@@ -114,7 +114,8 @@ package view.window.shop
 			scrollView = new ScrollViewYun();
 			scrollView.isForMobile = !mainData.isShowScroll;
 			scrollView.setData(myContent.containerItemMc, 10);
-			scrollView.distanceInColumn = 25;
+			//scrollView.distanceInColumn = 25;
+			scrollView.distanceInColumn = 3;
 			scrollView.distanceInRow = 10;
 			scrollView.columnNumber = 2;
 			scrollView.isScrollVertical = true;
@@ -1493,7 +1494,12 @@ package view.window.shop
 		
 		private function showHeaderChose(header:int, type:int):void 
 		{
+			
 			trace("da chon cai j`: ", header, type)
+			if (mainData.isFacebookVersion) 
+			{
+				myContent.chooseInAddMoneyMc.creditCard.visible = false;
+			}
 			if (header == 0 && type == 0) //bang xep hang: dai gia, cao thu, dang cap
 			{
 				myContent.chooseInStandingMc.richBtn.gotoAndStop(1);

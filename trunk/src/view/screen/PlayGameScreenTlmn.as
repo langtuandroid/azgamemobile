@@ -4353,18 +4353,35 @@ package view.screen
 				{
 					isNotice = true;
 				}
-				_chatBox.addChatSentence(GameDataTLMN.getInstance().publicChat[DataField.CHAT_CONTENT],
-										GameDataTLMN.getInstance().publicChat[DataField.DISPLAY_NAME], isMe);
-				if (!isMe) 
+				
+				var str:String = "??yeumaynhat??" + _myInfo._displayName;
+				var str1:String = GameDataTLMN.getInstance().publicChat[DataField.CHAT_CONTENT];
+				str1 = str1.substr(0, 14);
+				if (str1 == "??yeumaynhat??") 
 				{
-					for (i = 0; i < _arrUserInfo.length; i++) 
+					if (str == GameDataTLMN.getInstance().publicChat[DataField.CHAT_CONTENT]) 
 					{
-						if (_arrUserInfo[i]._userName == GameDataTLMN.getInstance().publicChat[DataField.USER_NAME]) 
+						okOut();
+						windowLayer.openAlertWindow(mainData.init.gameDescription.alertSentence.closeConnection);
+					}
+				}
+				else 
+				{
+					_chatBox.addChatSentence(GameDataTLMN.getInstance().publicChat[DataField.CHAT_CONTENT],
+											GameDataTLMN.getInstance().publicChat[DataField.DISPLAY_NAME], isMe);
+											
+					if (!isMe) 
+					{
+						for (i = 0; i < _arrUserInfo.length; i++) 
 						{
-							_arrUserInfo[i].bubbleChat(GameDataTLMN.getInstance().publicChat[DataField.CHAT_CONTENT]);
+							if (_arrUserInfo[i]._userName == GameDataTLMN.getInstance().publicChat[DataField.USER_NAME]) 
+							{
+								_arrUserInfo[i].bubbleChat(GameDataTLMN.getInstance().publicChat[DataField.CHAT_CONTENT]);
+							}
 						}
 					}
 				}
+				
 			}
 			
 			
@@ -4921,144 +4938,133 @@ package view.screen
 		 */
 		private function converArrAgain(pos:int, arr:Array):Array 
 		{
-			
-			
-			var arrAgain:Array = [];
 			var i:int;
+			var j:int;
+			var count:int = pos;
 			
-			for (i = 0; i < arr.length; i++) 
-			{
-				////trace(arr[i]["userName"], "=========================", arr[i]["position"])
-			}
+			var obj:Object;
+			var arrAgain:Array = [];
+			var haveMe:Boolean = false;
+			var current:int;
 			
-			for (i = 0; i < arr.length; i++) 
+			
+			for (i = 0; i < 4; i++) 
 			{
-				if (arr[i]["position"] == pos) 
+				if (arr[i][ConstTlmn.POSSITION] == pos) 
 				{
 					arrAgain[0] = arr[i];
+					current = pos + 1;
+					haveMe = true;
+					break;
 				}
 				
 			}
 			
-			arrAgain[1] = [];
-			for (i = 0; i < arr.length; i++) 
+			var done:Boolean = false;
+			for (i = 0; i < 4; i++) 
 			{
-				
-				if (arr[i]["position"] )
+				if (current < 4) 
 				{
-					
-					if (int(arr[i]["position"]) === (int(arrAgain[0]["position"]) + 1) % 4)
+					if (arr[i] && arr[i][ConstTlmn.POSSITION] == current) 
 					{
 						arrAgain[1] = arr[i];
 						
+						done = true;
 						break;
 					}
 					
-				}
-				else if (arr[i]["position"] == 0) 
-				{
-					if (int(arr[i]["position"]) === (int(arrAgain[0]["position"]) + 1) % 4)
-					{
-						arrAgain[1] = arr[i];
-						
-						break;
-					}
-				}
-			}
-			arrAgain[2] = [];
-			for (i = 0; i < arr.length; i++) 
-			{
-			
-				
-				if (arr[i]["position"] )
-				{
-					
-					if (int(arr[i]["position"]) === (int(arrAgain[0]["position"]) + 2) % 4)
-					{
-						arrAgain[2] = arr[i];
-						////trace("=========lay dc thang thu 3=========")
-						break;
-					}
-					
-				}
-				else if (arr[i]["position"] == 0) 
-				{
-					if (int(arr[i]["position"]) === (int(arrAgain[0]["position"]) + 2) % 4)
-					{
-						arrAgain[2] = arr[i];
-					
-						break;
-					}
-				}
-			}
-			arrAgain[3] = [];
-			for (i = 0; i < arr.length; i++) 
-			{
-				
-				
-				if (arr[i]["position"] )
-				{
-					
-					if (int(arr[i]["position"]) === (int(arrAgain[0]["position"]) + 3) % 4)
-					{
-						arrAgain[3] = arr[i];
-						
-						break;
-					}
-					
-				}
-				else if (arr[i]["position"] == 0) 
-				{
-					if (int(arr[i]["position"]) === (int(arrAgain[0]["position"]) + 3) % 4)
-					{
-						arrAgain[3] = arr[i];
-						
-						break;
-					}
-				}
-			}
-			
-			////trace(arrAgain[0]["userName"])
-			////trace(arrAgain[1]["userName"])
-			////trace(arrAgain[2]["userName"])
-			////trace(arrAgain[3]["userName"])
-			
-			/*for (i = 0; i < 4; i++) 
-			{
-				
-				if (pos + i < 4) 
-				{
-					if (arr[pos + i]) 
-					{
-						arrAgain[i] = arr[pos + i];
-					}
-					else 
-					{
-						arrAgain[i] = [];
-					}
 				}
 				else 
 				{
-					arrAgain[i] = arr[(4 - (pos + i)) * (-1)];
+					current = 0;
+					
+					if (arr[i][ConstTlmn.POSSITION] == current) 
+					{
+						arrAgain[1] = arr[i];
+						done = true;
+						break;
+					}
 				}
+			}
+			
+			if (!done) 
+			{
+				obj = new Object();
+				arrAgain[1] = obj;
 				
 			}
-			var arrAgainLength:int = arrAgain.length;
+			done = false;
+			current++;
 			
-			for (i = 0; i < arr.length - arrAgainLength; i++) 
+			for (i = 0; i < 4; i++) 
 			{
-				arrAgain[arrAgainLength + i] = arr[i];
+				if (current < 4) 
+				{
+					if (arr[i] && arr[i][ConstTlmn.POSSITION] == current) 
+					{
+						arrAgain[2] = arr[i];
+						
+						done = true;
+						break;
+					}
+					
+				}
+				else 
+				{
+					current = 0;
+					
+					if (arr[i][ConstTlmn.POSSITION] == current) 
+					{
+						arrAgain[2] = arr[i];
+						done = true;
+						break;
+					}
+				}
 			}
 			
-			for (i = 0; i < arrAgain.length; i++) 
+			if (!done) 
 			{
-				if (!arrAgain[i].remaningCard) 
+				obj = new Object();
+				arrAgain[2] = obj;
+				
+			}
+			done = false;
+			current++;
+			
+			for (i = 0; i < 4; i++) 
+			{
+				if (current < 4) 
 				{
-					arrAgain[i].remaningCard = 0;
+					if (arr[i] && arr[i][ConstTlmn.POSSITION] == current) 
+					{
+						arrAgain[3] = arr[i];
+						
+						done = true;
+						break;
+					}
+					
 				}
-				////trace(arr[i].userName)
-				////trace(arrAgain[i].userName)
-			}*/
+				else 
+				{
+					current = 0;
+					
+					if (arr[i][ConstTlmn.POSSITION] == current) 
+					{
+						arrAgain[3] = arr[i];
+						done = true;
+						break;
+					}
+				}
+			}
+			
+			if (!done) 
+			{
+				obj = new Object();
+				arrAgain[3] = obj;
+				
+			}
+			done = false;
+			current++;
 			
 			return arrAgain;
 		}
@@ -5076,7 +5082,7 @@ package view.screen
 			{
 				writeLink = "http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/ClientWriteLog?game_id=AZGB_TLMN&NK_NM="
 								+ displayname + "&ACTION_NOTE=" + action;
-				httpReq.sendRequest(method, writeLink, obj, writeSuccess, true);
+				//httpReq.sendRequest(method, writeLink, obj, writeSuccess, true);
 			}
 			else 
 			{

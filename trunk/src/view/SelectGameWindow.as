@@ -13,7 +13,9 @@ package view
 	import flash.text.TextField;
 	import logic.PlayingLogic;
 	import model.chooseChannelData.ChooseChannelData;
+	import model.GameDataTLMN;
 	import model.MainData;
+	import model.MyDataTLMN;
 	import request.MainRequest;
 	import sound.SoundManager;
 	import view.itemContainer.ItemContainerYun;
@@ -104,6 +106,7 @@ package view
 			gameList.push(pokerIcon);
 			
 			tlmnIcon.addEventListener(MouseEvent.MOUSE_UP, onSelectGame);
+			samIcon.addEventListener(MouseEvent.MOUSE_UP, onSelectGame);
 			phomIcon.addEventListener(MouseEvent.MOUSE_UP, onSelectGame);
 			maubinhIcon.addEventListener(MouseEvent.MOUSE_UP, onSelectGame);
 			
@@ -426,10 +429,46 @@ package view
 					gameId = 3;
 					mainData.minBetRate = 1;
 					mainData.game_id = 'AZGB_TLMN';
-					mainData.gameName = 'TLMN';
+					
 					mainData.portNumber = 5101;
+					
+					mainData.gameName = 'Tiến lên';
+					mainData.gameType = 'TLMN';
+				
+					
+					GameDataTLMN.getInstance().gameName = "TienLenMN";
+					GameDataTLMN.getInstance().gameType = "TienLenMNPlugin";
+					GameDataTLMN.getInstance().lobbyName = "TienLenMN";
+					GameDataTLMN.getInstance().lobbyPluginName = "LobbyTLMNPlugin";
+					GameDataTLMN.getInstance().gameZone = "tlmnZone";
+				
+					MyDataTLMN.getInstance().isGame = 1;
 					if (mainData.isTest)
 						mainData.portNumber = 3101;
+					if (!SoundManager.getInstance().isLoadSoundTlmn)
+						SoundManager.getInstance().addSound();
+				break;
+				case samIcon:
+					gameId = 4;
+					mainData.minBetRate = 10;
+					mainData.game_id = 'AZGB_SAM';
+					
+					mainData.portNumber = 5401;
+					
+					mainData.gameName = 'Sâm';
+					mainData.gameType = 'SAM';
+					
+					mainData.game_id = 'AZGB_SAM';
+					
+					GameDataTLMN.getInstance().gameName = "Sam";
+					GameDataTLMN.getInstance().gameType = "SamPlugin";
+					GameDataTLMN.getInstance().lobbyName = "Sam";
+					GameDataTLMN.getInstance().lobbyPluginName = "LobbyPlugin";
+					GameDataTLMN.getInstance().gameZone = "SAM";
+					
+					MyDataTLMN.getInstance().isGame = 2;
+					if (mainData.isTest)
+						mainData.portNumber = 3401;
 					if (!SoundManager.getInstance().isLoadSoundTlmn)
 						SoundManager.getInstance().addSound();
 				break;
@@ -465,6 +504,10 @@ package view
 			{
 				case 3:
 					mainData.gameType = MainData.TLMN;
+					mainData.minBetRate = 10;
+				break;
+				case 4:
+					mainData.gameType = MainData.SAM;
 					mainData.minBetRate = 10;
 				break;
 				case 2:

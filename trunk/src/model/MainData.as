@@ -612,7 +612,7 @@ package model
 		public var tokenTime:int = 0;
 		public var token:String;
 		//public var version:String = "v1.4.1";
-		public var version:String = "v1.5.5";
+		public var version:String = "v1.5.6";
 		public var isTest:Boolean = false; // biến để check xem đang chạy trên server test hay server thật
 
 		public var isFacebookVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào facebook không

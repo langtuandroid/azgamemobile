@@ -46,6 +46,9 @@ package control
 				case MainData.TLMN:
 					electroServerCommand = electroServerCommandTlmn;
 				break;
+				case MainData.SAM:
+					electroServerCommand = electroServerCommandTlmn;
+				break;
 				default:
 			}
 		}

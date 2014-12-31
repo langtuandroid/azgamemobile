@@ -452,7 +452,15 @@ package view.screen.play
 			}
 			content.effectMoneySpecial.visible = false;
 			content.effectMoneySpecial.y += 0;
-			content.userMoney.text = format(Number(MyDataTLMN.getInstance().myMoney[0]));
+			if (Number(MyDataTLMN.getInstance().myMoney[0]) > 0) 
+			{
+				content.userMoney.text = format(Number(MyDataTLMN.getInstance().myMoney[0]));
+			}
+			else 
+			{
+				content.userMoney.text = "0";
+			}
+			
 			if (SoundManager.getInstance().isSoundOn) 
 			{
 				if (Number(MyDataTLMN.getInstance().myMoney[0]) < Number(GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET]) * ConstTlmn.xBet) 
@@ -546,7 +554,15 @@ package view.screen.play
 		
 		public function addMyMoney():void 
 		{
-			content.userMoney.text = format(Number(MyDataTLMN.getInstance().myMoney[0]));
+			if (Number(MyDataTLMN.getInstance().myMoney[0]) > 0) 
+			{
+				content.userMoney.text = format(Number(MyDataTLMN.getInstance().myMoney[0]));
+			}
+			else 
+			{
+				content.userMoney.text = "0";
+			}
+			
 		}
 		
 		public function addMoneySpecial(money:String):void 
@@ -614,7 +630,15 @@ package view.screen.play
 			
 			//trace("money bi chat: ", str, money)
 			var myMoney:Number = Number(str) + Number(money);
-			content.userMoney.text = format(myMoney);
+			if (myMoney > 0) 
+			{
+				content.userMoney.text = format(myMoney);
+			}
+			else 
+			{
+				content.userMoney.text = "0";
+			}
+			
 			
 			
 			if (Number(money) < 0) 
@@ -1176,7 +1200,15 @@ package view.screen.play
 			
 			content.userName.text = displayName;
 			_displayName = displayName;
-			content.userMoney.text = format(Number(money));
+			
+			if (Number(money) > 0) 
+			{
+				content.userMoney.text = format(Number(money));
+			}
+			else 
+			{
+				content.userMoney.text = "0";
+			}
 			
 			content.level.txt.text = level;
 			
@@ -1382,7 +1414,7 @@ package view.screen.play
 			}
 			TweenMax.killChildTweensOf(this);
 			_clock.removeTween();
-			removeAllCard();
+			//removeAllCard();
 			_clock.visible = false;
 			/*if (_arrcardDeck && _arrcardDeck.length > 0) 
 			{

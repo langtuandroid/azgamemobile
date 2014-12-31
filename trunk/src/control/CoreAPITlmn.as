@@ -1376,8 +1376,8 @@ package control
 			}
 			else if (MyDataTLMN.getInstance().isGame == 2) 
 			{
-				//createGameRequest.zoneName = mainData.game_id + "_" + "1"; //String(myData.channelId);
-				createGameRequest.zoneName = "AZGB_SAM_1";
+				createGameRequest.zoneName = mainData.game_id + "_" + String(myData.channelId);
+				//createGameRequest.zoneName = "AZGB_SAM_1";
 			}
 			
 			createGameRequest.gameDetails = gameDetails;
@@ -1429,8 +1429,8 @@ package control
 			}
 			else if (MyDataTLMN.getInstance().isGame == 2) 
 			{
-				//createGameRequest.zoneName = mainData.game_id + "_" + "1"; //String(myData.channelId);
-				quickJoinGameRequest.zoneName = "AZGB_SAM_1";
+				quickJoinGameRequest.zoneName = mainData.game_id + "_" + String(myData.channelId);
+				//quickJoinGameRequest.zoneName = "AZGB_SAM_1";
 			}
 			
 			quickJoinGameRequest.gameType = GameDataTLMN.getInstance().gameType;
@@ -1669,8 +1669,8 @@ package control
 			}
 			else if (MyDataTLMN.getInstance().isGame == 2) 
 			{
-				//createGameRequest.zoneName = mainData.game_id + "_" + "1"; //String(myData.channelId);
-				createRoomRequest.zoneName = "AZGB_SAM_1";
+				createRoomRequest.zoneName = mainData.game_id + "_" + String(myData.channelId);
+				//createRoomRequest.zoneName = "AZGB_SAM_1";
 			}
 			createRoomRequest.roomName = roomName;
 			createRoomRequest.roomDescription = roomDescription;
@@ -1721,7 +1721,8 @@ package control
 			}
 			else if (MyDataTLMN.getInstance().isGame == 2) 
 			{
-				zoneName = "AZGB_SAM_1";
+				zoneName = mainData.game_id + "_" + myData.channelId;
+				//zoneName = "AZGB_SAM_1";
 			}
 			var zoneId: int = electroServer.managerHelper.zoneManager.zoneByName(zoneName).id;
 			var getUsersInRoomRequest:GetUsersInRoomRequest = new GetUsersInRoomRequest();

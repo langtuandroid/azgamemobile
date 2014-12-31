@@ -67,6 +67,11 @@ package control.getInfoCommand
 					object = new Object();
 					object.game_id = 'AZGB_TLMN';
 				break;
+				case MainData.SAM:
+					url = /*mainData.basepath + */mainData.init.requestLink.getChannelLink.@url;
+					object = new Object();
+					object.game_id = 'AZGB_SAM';
+				break;
 				case MainData.PHOM:
 					url = /*mainData.basepath + */mainData.init.requestLink.getChannelLink.@url;
 					object = new Object();
