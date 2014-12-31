@@ -606,7 +606,7 @@ package model
 		public var currentPort:int = 0;
 		public var currentIp:String;
 
-		public var kickTime:int = 45;
+		public var kickTime:int = 15;
 		public var isOpeningKickOutWindow:Boolean;
 		public var isLoadSound:Boolean = true;
 		public var tokenTime:int = 0;

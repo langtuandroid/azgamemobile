@@ -124,12 +124,12 @@ package view.window.loginWindow
 			
 			try 
 			{
-				//if (mainData.isOnAndroid)
-				//{
-					//deviceId = AirDeviceId.getInstance().getID("SanhBai");
-				//}
-				//else
-				//{
+				if (mainData.isOnAndroid)
+				{
+					deviceId = AirDeviceId.getInstance().getID("SanhBai");
+				}
+				else
+				{
 					if (sharedObject.data.hasOwnProperty("deviceId"))
 					{
 						deviceId = sharedObject.data.deviceId;
@@ -139,7 +139,7 @@ package view.window.loginWindow
 						deviceId = String(Math.random() * 100000000000) + String(Math.random() * 100000000000);
 						sharedObject.setProperty("deviceId", deviceId);
 					}
-				//}
+				}
 			}
 			catch (err:Error)
 			{
@@ -415,6 +415,23 @@ package view.window.loginWindow
 				WindowLayer.getInstance().openWindow(registerFacebookWindow);
 				return;
 			}
+			if (value.TypeMsg < 1)
+			{
+				zLoginWindow(content).loadingLayer.visible = false;
+				if (int(value.TypeMsg) == -10)
+				{
+					var alertWindow:AlertWindow = new AlertWindow();
+					alertWindow.setNotice(value.Msg);
+					alertWindow.url = value.Data.AppsStoreUrl;
+					alertWindow.showUpdateButton();
+					WindowLayer.getInstance().openWindow(alertWindow);
+				}
+				else
+				{
+					WindowLayer.getInstance().openAlertWindow(value.Msg);
+				}
+				return;
+			}
 			if (value.TypeMsg == 1)
 			{
 				mainData.loginData = value;
@@ -423,7 +440,6 @@ package view.window.loginWindow
 				close(BaseWindow.MIDDLE_EFFECT);
 				return;
 			}
-			WindowLayer.getInstance().openAlertWindow(value.Msg);
 		}
 		
 		private function onForgetPassClick(e:MouseEvent):void 
@@ -478,7 +494,7 @@ package view.window.loginWindow
 			if (mainData.isTest)
 				mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileLogin", data, onLoginValidateRespond, true);
 			else
-				mainRequest.sendRequest_Post("http://wss.sanhbai.com/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileLogin", data, onLoginValidateRespond, true);
+				mainRequest.sendRequest_Post("http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileLogin", data, onLoginValidateRespond, true);
 			
 			if (zLoginWindow(content).savePassword["check"].visible)
 			{
