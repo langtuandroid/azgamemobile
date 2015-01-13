@@ -110,6 +110,7 @@ package view.screen.play
 		private var _countComplete:int;
 		
 		private var addEventCardTimer:Timer;
+		private var _timerShowChatBubble:Timer;
 		public var onSamWarning:Boolean = false;
 		public function MyInfoTLMN(playgame:*) 
 		{
@@ -190,6 +191,10 @@ package view.screen.play
 			content.confirmReady.visible = false;
 			content.resultGame.visible = false;
 			content.defaltAvatar.visible = false;
+			
+			content.bubbleChatMc.visible = false;
+			content.bubbleChatMc.chatRight.visible = false;
+			content.bubbleChatMc.txtChat.text = "";
 			
 			//content.nextturn.x = 535;
 			//content.nextturn.y = -84;
@@ -676,6 +681,11 @@ package view.screen.play
 				_clock.removeAllEvent();
 				_avatar.removeEventListener("loaderror", onLoadAvatarError);
 				//_avatar.removeEventListener("loadcomplete", onHideAvatarDefalt);
+				if (_timerShowChatBubble) 
+				{
+					_timerShowChatBubble.removeEventListener(TimerEvent.TIMER_COMPLETE, onShowChatBubble);
+					_timerShowChatBubble.stop();
+				}
 				if (_timerShowChatde) 
 				{
 					_timerShowChatde.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteShowChatde);
@@ -1630,7 +1640,20 @@ package view.screen.play
 			{
 				if (GameDataTLMN.getInstance().firstPlayer == _userName) 
 				{
-					hit = true;
+					if (arrCardChoose.length == 1 || (arrCardChoose.length == 2 && cardTlmn.isDoiThong(arrCardChoose)) ||
+						(arrCardChoose.length == 3 && cardTlmn.isDay(arrCardChoose)) || (arrCardChoose.length == 3 && cardTlmn.isSpecialDay(arrCardChoose))
+						|| (arrCardChoose.length == 3 && cardTlmn.isBaLa(arrCardChoose)) || (arrCardChoose.length == 4 && cardTlmn.isTuQuy(arrCardChoose))
+						|| (arrCardChoose.length == 4 && cardTlmn.isDay(arrCardChoose)) || (arrCardChoose.length == 4 && cardTlmn.isSpecialDay(arrCardChoose))
+						|| (arrCardChoose.length >= 5 && cardTlmn.isDay(arrCardChoose)) || (arrCardChoose.length >= 5 && cardTlmn.isSpecialDay(arrCardChoose))
+						)
+						
+					{
+						hit = true;
+					}
+					else 
+					{
+						hit = false;
+					}
 				}
 				else if (GameDataTLMN.getInstance().finishRound) 
 				{
@@ -1638,7 +1661,22 @@ package view.screen.play
 				}
 				else if (!arrCard || arrCard.length == 0) 
 				{
-					hit = true;
+					
+					
+					if (arrCardChoose.length == 1 || (arrCardChoose.length == 2 && cardTlmn.isDoiThong(arrCardChoose)) ||
+						(arrCardChoose.length == 3 && cardTlmn.isDay(arrCardChoose)) || (arrCardChoose.length == 3 && cardTlmn.isSpecialDay(arrCardChoose))
+						|| (arrCardChoose.length == 3 && cardTlmn.isBaLa(arrCardChoose)) || (arrCardChoose.length == 4 && cardTlmn.isTuQuy(arrCardChoose))
+						|| (arrCardChoose.length == 4 && cardTlmn.isDay(arrCardChoose)) || (arrCardChoose.length == 4 && cardTlmn.isSpecialDay(arrCardChoose))
+						|| (arrCardChoose.length >= 5 && cardTlmn.isDay(arrCardChoose)) || (arrCardChoose.length >= 5 && cardTlmn.isSpecialDay(arrCardChoose))
+						)
+						
+					{
+						hit = true;
+					}
+					else 
+					{
+						hit = false;
+					}
 				}
 				
 				//neu truoc do chi co 1 quan bai danh ra, va ko phai quan 2
@@ -2583,6 +2621,29 @@ package view.screen.play
 			content.samResult.visible = false;
 		}
 		
+		
+		public function bubbleChat(chat:String):void 
+		{
+			if (_timerShowChatBubble) 
+			{
+				_timerShowChatBubble.removeEventListener(TimerEvent.TIMER_COMPLETE, onShowChatBubble);
+				_timerShowChatBubble.stop();
+			}
+			
+			content.bubbleChatMc.visible = true;
+			content.bubbleChatMc.txtChat.text = chat;
+			
+			_timerShowChatBubble = new Timer(1000, 5);
+			_timerShowChatBubble.addEventListener(TimerEvent.TIMER_COMPLETE, onShowChatBubble);
+			_timerShowChatBubble.start();
+			
+		}
+		
+		private function onShowChatBubble(e:TimerEvent):void 
+		{
+			content.bubbleChatMc.visible = false;
+			content.bubbleChatMc.txtChat.text = "";
+		}
 		
 	}
 	

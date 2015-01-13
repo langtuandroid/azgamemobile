@@ -24,6 +24,7 @@ package view
 	import view.window.BaseWindow;
 	import view.window.GiftCodeWindow;
 	import view.window.shop.Shop_Coffer_Item_Window;
+	import view.window.shop.Shop_Coffer_Item_Window_New;
 	import view.window.windowLayer.WindowLayer;
 	
 	/**
@@ -62,7 +63,10 @@ package view
 		private var inventoryTabDisable:MovieClip;
 		
 		private var shopLayer:Sprite;
-		private var _shopWindow:Shop_Coffer_Item_Window;
+		//private var _shopWindow:Shop_Coffer_Item_Window;
+		//private var _shopWindow:Shop_Coffer_Item_Window_New;
+		private var _shopWindow:*;
+		private var testNew:Boolean = false;//true la test voi design moi
 		private var windowLayer:WindowLayer = WindowLayer.getInstance();
 		
 		private var avatar:Avatar;
@@ -269,7 +273,17 @@ package view
 						removeChild(_shopWindow);
 						_shopWindow = null;
 					}
-					_shopWindow = new Shop_Coffer_Item_Window();
+					
+					if (testNew) 
+					{
+						_shopWindow = new Shop_Coffer_Item_Window_New();
+					}
+					else 
+					{
+						_shopWindow = new Shop_Coffer_Item_Window();
+					}
+					
+					
 					addChild(_shopWindow);
 					_shopWindow.x = -470;
 					_shopWindow.y = -300;
@@ -288,7 +302,14 @@ package view
 						removeChild(_shopWindow);
 						_shopWindow = null;
 					}
-					_shopWindow = new Shop_Coffer_Item_Window();
+					if (testNew) 
+					{
+						_shopWindow = new Shop_Coffer_Item_Window_New();
+					}
+					else 
+					{
+						_shopWindow = new Shop_Coffer_Item_Window();
+					}
 					addChild(_shopWindow);
 					_shopWindow.x = -470;
 					_shopWindow.y = -300;
@@ -307,7 +328,14 @@ package view
 						removeChild(_shopWindow);
 						_shopWindow = null;
 					}
-					_shopWindow = new Shop_Coffer_Item_Window();
+					if (testNew) 
+					{
+						_shopWindow = new Shop_Coffer_Item_Window_New();
+					}
+					else 
+					{
+						_shopWindow = new Shop_Coffer_Item_Window();
+					}
 					addChild(_shopWindow);
 					_shopWindow.x = -470;
 					_shopWindow.y = -300;
@@ -325,10 +353,18 @@ package view
 						removeChild(_shopWindow);
 						_shopWindow = null;
 					}
-					_shopWindow = new Shop_Coffer_Item_Window();
+					if (testNew) 
+					{
+						_shopWindow = new Shop_Coffer_Item_Window_New();
+					}
+					else 
+					{
+						_shopWindow = new Shop_Coffer_Item_Window();
+					}
 					addChild(_shopWindow);
 					_shopWindow.x = -470;
 					_shopWindow.y = -300;
+					//_shopWindow.onClickShowMyInfo(null);
 					_shopWindow.onClickShowMyAvatar(null);
 					
 				break;
@@ -427,7 +463,7 @@ package view
 			{
 				case tlmnIcon:
 					gameId = 3;
-					mainData.minBetRate = 1;
+					mainData.minBetRate = 10;
 					mainData.game_id = 'AZGB_TLMN';
 					
 					mainData.portNumber = 5101;

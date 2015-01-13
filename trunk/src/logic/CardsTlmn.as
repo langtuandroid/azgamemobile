@@ -241,49 +241,61 @@ package logic
 		
 		public function isSpecialDay(cardArr:Array):Boolean
 		{
-			if(cardArr.length<3)return false;
-			cardArr = cardArr.sort(Array.NUMERIC);
+			if (cardArr.length < 3)
+			{
+				return false;
+			}
+			
+			var arr:Array = [];
+			
+			var i:int;
+			for (i = 0; i < cardArr.length; i++)
+			{
+				arr.push(cardArr[i]);
+			}
+			
+			arr = arr.sort(Array.NUMERIC);
 			var arrAt:Array = [];
 			var arrHai:Array = [];
 			
 			var card1:int;
 			var card2:int;
 			
-			var i:int;
 			
-			for(i = 0; i < cardArr.length; i++)
+			
+			for(i = 0; i < arr.length; i++)
 			{
-				if(isHai(cardArr[i]))
+				if(isHai(arr[i]))
 				{
-					arrHai.push(cardArr[i]);
-					cardArr.splice(i, 1);
+					arrHai.push(arr[i]);
+					arr.splice(i, 1);
 					i--;
 				}
-				else if(cardArr[i] > 43 && cardArr[i] < 48)
+				else if(arr[i] > 43 && arr[i] < 48)
 				{
-					arrAt.push(cardArr[i]);
-					cardArr.splice(i, 1);
+					arrAt.push(arr[i]);
+					arr.splice(i, 1);
 					i--;
 				}
 			}
 			
-			cardArr = cardArr.sort(Array.NUMERIC);
+			arr = arr.sort(Array.NUMERIC);
 			if(arrAt.length != 1 && arrHai.length != 1)
 			{
 				return false;
 			}
 			else if(arrAt.length == 1 && arrHai.length == 1)
 			{
-				if(cardArr[cardArr.length - 1] < 44 && cardArr[cardArr.length - 1] > 31)
+				if(arr[arr.length - 1] < 44 && arr[arr.length - 1] > 31)
 				{
 					return false;
 				}
 				
 				arrAt[0] -= 52;
 				arrHai[0] -= 52;
-				cardArr = cardArr.concat(arrAt, arrHai);
+				arr = arr.concat(arrAt, arrHai);
 				
-				if(isDay(cardArr))
+				if(isDay(arr))
 				{
 					return true;
 				}
@@ -296,9 +308,9 @@ package logic
 			else if(arrAt.length == 0 && arrHai.length == 1)
 			{
 				arrHai[0] -= 52;
-				cardArr = cardArr.concat(arrHai);
-				cardArr.sort(Array.NUMERIC);
-				if(isDay(cardArr))
+				arr = arr.concat(arrHai);
+				arr.sort(Array.NUMERIC);
+				if(isDay(arr))
 				{
 					return true;
 				}
@@ -310,9 +322,9 @@ package logic
 			else if(arrAt.length == 1 && arrHai.length == 0)
 			{
 				arrAt[0] -= 52;
-				cardArr = cardArr.concat(arrAt);
-				cardArr.sort(Array.NUMERIC);
-				if(isDay(cardArr))
+				arr = arr.concat(arrAt);
+				arr.sort(Array.NUMERIC);
+				if(isDay(arr))
 				{
 					return true;
 				}

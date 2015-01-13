@@ -124,7 +124,7 @@ package view.window.loginWindow
 			
 			try 
 			{
-				if (mainData.isOnAndroid)
+				/*if (mainData.isOnAndroid)
 				{
 					deviceId = AirDeviceId.getInstance().getID("SanhBai");
 				}
@@ -139,7 +139,7 @@ package view.window.loginWindow
 						deviceId = String(Math.random() * 100000000000) + String(Math.random() * 100000000000);
 						sharedObject.setProperty("deviceId", deviceId);
 					}
-				}
+				}*/
 			}
 			catch (err:Error)
 			{
