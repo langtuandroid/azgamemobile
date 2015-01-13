@@ -181,7 +181,7 @@ package view.screen
 		private var _containCardSave:Sprite;
 		
 		private var is3bich:Boolean;
-		
+		private var timerHideIpBoard:Timer;
 		
 		public function PlayGameScreenTlmn() 
 		{
@@ -3622,6 +3622,12 @@ package view.screen
 				
 				haveUserReady = false;
 				
+				if (timerHideIpBoard) 
+				{
+					timerHideIpBoard.stop();
+					timerHideIpBoard.removeEventListener(TimerEvent.TIMER_COMPLETE, onHidIpBoard);
+				}
+				
 				if (_timerKickMaster) 
 				{
 					_timerKickMaster.removeEventListener(TimerEvent.TIMER_COMPLETE, onKickMaster);
@@ -3730,7 +3736,6 @@ package view.screen
 				gameLayer.removeChild(content);
 				content = null;
 				
-				electroServerCommand.joinLobbyRoom();
 			}
 			
 		}
@@ -4277,6 +4282,9 @@ package view.screen
 			{
 				return;
 			}
+			
+			GameDataTLMN.getInstance().playingData.removeEventListener(PlayingData.UPDATE_PLAYING_SCREEN, onUpdatePlayingScreen);
+			
 			if (_chatBox) 
 			{
 				_chatBox.removeAllChat();
@@ -4309,7 +4317,7 @@ package view.screen
 			_isPlaying = false;
 			
 			
-			
+			electroServerCommand.joinLobbyRoom();
 			dispatchEvent(new Event(ConstTlmn.OUT_ROOM, true));
 			
 			
@@ -4362,7 +4370,14 @@ package view.screen
 					if (str == GameDataTLMN.getInstance().publicChat[DataField.CHAT_CONTENT]) 
 					{
 						okOut();
-						windowLayer.openAlertWindow(mainData.init.gameDescription.alertSentence.closeConnection);
+						windowLayer.isNoCloseAll = true;
+				
+						var kickOutWindow:AlertWindow = new AlertWindow();
+						
+						kickOutWindow.setNotice(mainData.init.gameDescription.alertSentence.closeConnection);
+						
+						windowLayer.openWindow(kickOutWindow);
+						
 					}
 				}
 				else 
@@ -4379,6 +4394,10 @@ package view.screen
 								_arrUserInfo[i].bubbleChat(GameDataTLMN.getInstance().publicChat[DataField.CHAT_CONTENT]);
 							}
 						}
+					}
+					else 
+					{
+						_myInfo.bubbleChat(GameDataTLMN.getInstance().publicChat[DataField.CHAT_CONTENT]);
 					}
 				}
 				
@@ -4600,6 +4619,39 @@ package view.screen
 				_chatBox.addChatSentence(str, "Thông báo", false, false);
 			}
 			
+			var conflickIp:Boolean = false;
+			
+			for (i = 0; i < _arrUserInfo.length; i++) 
+			{
+				if (_arrUserInfo[i].userIp == _myInfo.myIp) 
+				{
+					conflickIp = true;
+				}
+				for (j = 0; j < _arrUserInfo.length; j++) 
+				{
+					if (_arrUserInfo[i].userIp == _arrUserInfo[j].userIp && 
+						_arrUserInfo[i]._userName != _arrUserInfo[j]._userName) 
+					{
+						conflickIp = true;
+					}
+				}
+			}
+			
+			if (timerHideIpBoard) 
+			{
+				timerHideIpBoard.stop();
+				timerHideIpBoard.removeEventListener(TimerEvent.TIMER_COMPLETE, onHidIpBoard);
+			}
+			
+			if (conflickIp) 
+			{
+				content.ipBoard.visible = true;
+				getIpAllPlayer();
+				timerHideIpBoard = new Timer(1000, 3);
+				timerHideIpBoard.addEventListener(TimerEvent.TIMER_COMPLETE, onHidIpBoard);
+				timerHideIpBoard.start();
+			}
+			
 			checkShowTextNotice();
 		}
 		
@@ -4682,8 +4734,48 @@ package view.screen
 				
 			}
 			
-			
 			checkShowTextNotice();
+			
+			var conflickIp:Boolean = false;
+			
+			for (i = 1; i < _arrUserList.length; i++) 
+			{
+				if (_arrUserList[0].ip == _arrUserList[i].ip) 
+				{
+					conflickIp = true;
+				}
+				
+				for (j = 0; j < _arrUserList.length; j++) 
+				{
+					if (_arrUserList[i].ip == _arrUserList[j].ip && _arrUserList[i].userName != _arrUserList[j].userName) 
+					{
+						conflickIp = true;
+					}
+				}
+			}
+			
+			if (timerHideIpBoard) 
+			{
+				timerHideIpBoard.stop();
+				timerHideIpBoard.removeEventListener(TimerEvent.TIMER_COMPLETE, onHidIpBoard);
+			}
+			
+			if (conflickIp) 
+			{
+				content.ipBoard.visible = true;
+				getIpAllPlayer();
+				timerHideIpBoard = new Timer(1000, 3);
+				timerHideIpBoard.addEventListener(TimerEvent.TIMER_COMPLETE, onHidIpBoard);
+				timerHideIpBoard.start();
+			}
+		}
+		
+		private function onHidIpBoard(e:TimerEvent):void 
+		{
+			if (content.ipBoard.visible) 
+			{
+				content.ipBoard.visible = false;
+			}
 			
 		}
 		

@@ -215,6 +215,8 @@ package view.screen.play
 			
 			_userName = "";
 			_linkAvatar = "";
+			userIp = "";
+			
 			_remainingCard = 0;
 			
 			content.level.visible = false;
@@ -695,6 +697,7 @@ package view.screen.play
 			var count:int = 0;
 			var i:int = 0;
 			var j:int = 0;
+			
 			var newIp:String = "*.*";
 			for (i = 0; i < ip.length; i++) 
 			{
@@ -1007,7 +1010,11 @@ package view.screen.play
 				
 				removeAllCards();
 				
-				
+				if (_timerShowChatBubble) 
+				{
+					_timerShowChatBubble.removeEventListener(TimerEvent.TIMER_COMPLETE, onShowChatBubble);
+					_timerShowChatBubble.stop();
+				}
 				
 				_clock.removeEventListener(Clock.COUNT_TIME_FINISH, onOverTimer);
 				_clock.removeAllEvent();
