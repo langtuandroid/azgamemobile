@@ -316,7 +316,7 @@
 		{
 			isLoadSoundTlmn = true;
 			var arrSoundName:Array = [
-			ConstTlmn.SOUND_BOY_HELLO_1, ConstTlmn.SOUND_BOY_HELLO_2,
+			ConstTlmn.SOUND_BOY_HELLO_1, ConstTlmn.SOUND_BOY_HELLO_2, ConstTlmn.SOUND_BOY_HELLO_SAM_1, ConstTlmn.SOUND_BOY_HELLO_SAM_2,
 			ConstTlmn.SOUND_BOY_BYE_1, ConstTlmn.SOUND_BOY_BYE_2, ConstTlmn.SOUND_BOY_BYE_3, ConstTlmn.SOUND_BOY_BYE_4,
 			ConstTlmn.SOUND_BOY_BYE_5, ConstTlmn.SOUND_BOY_JOINGAME_1, ConstTlmn.SOUND_BOY_JOINGAME_2, 
 			ConstTlmn.SOUND_BOY_JOINGAME_3, ConstTlmn.SOUND_BOY_JOINGAME_4, ConstTlmn.SOUND_BOY_JOINGAME_5,
@@ -341,13 +341,17 @@
 			ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_3, ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_4, ConstTlmn.SOUND_BOY_CHATDESPECIALCARD_5,
 			ConstTlmn.SOUND_BOY_PASSTURN_1, ConstTlmn.SOUND_BOY_PASSTURN_2, ConstTlmn.SOUND_BOY_PASSTURN_3,
 			ConstTlmn.SOUND_BOY_PASSTURN_4, ConstTlmn.SOUND_BOY_PASSTURN_5, ConstTlmn.SOUND_BOY_WIN_1,
-			ConstTlmn.SOUND_BOY_WIN_2, ConstTlmn.SOUND_BOY_WIN_3, ConstTlmn.SOUND_BOY_WIN_4,
-			ConstTlmn.SOUND_BOY_WIN_5, ConstTlmn.SOUND_BOY_LOSE_1, ConstTlmn.SOUND_BOY_LOSE_2,
+			ConstTlmn.SOUND_BOY_WIN_2, ConstTlmn.SOUND_BOY_WIN_3, ConstTlmn.SOUND_BOY_WIN_4, 
+			ConstTlmn.SOUND_BOY_WIN_5, ConstTlmn.SOUND_BOY_WIN_SAM_1,
+			ConstTlmn.SOUND_BOY_WIN_SAM_2, ConstTlmn.SOUND_BOY_WIN_SAM_3, ConstTlmn.SOUND_BOY_WIN_SAM_4,
+			ConstTlmn.SOUND_BOY_WIN_SAM_5, ConstTlmn.SOUND_BOY_LOSE_SAM_1, ConstTlmn.SOUND_BOY_LOSE_SAM_2,
+			ConstTlmn.SOUND_BOY_LOSE_SAM_3, ConstTlmn.SOUND_BOY_LOSE_SAM_4, ConstTlmn.SOUND_BOY_LOSE_SAM_5,
+			ConstTlmn.SOUND_BOY_LOSE_1, ConstTlmn.SOUND_BOY_LOSE_2,
 			ConstTlmn.SOUND_BOY_LOSE_3, ConstTlmn.SOUND_BOY_LOSE_4, ConstTlmn.SOUND_BOY_LOSE_5,
 			ConstTlmn.SOUND_BOY_OVERMONEY_1, ConstTlmn.SOUND_BOY_OVERMONEY_2, ConstTlmn.SOUND_BOY_OVERMONEY_3,
 			ConstTlmn.SOUND_BOY_OVERMONEY_4, ConstTlmn.SOUND_BOY_OVERMONEY_5, 
 			
-			ConstTlmn.SOUND_GIRL_HELLO_1, ConstTlmn.SOUND_GIRL_HELLO_2,
+			ConstTlmn.SOUND_GIRL_HELLO_1, ConstTlmn.SOUND_GIRL_HELLO_2, ConstTlmn.SOUND_GIRL_HELLO_SAM_1, ConstTlmn.SOUND_GIRL_HELLO_SAM_2,
 			ConstTlmn.SOUND_GIRL_BYE_1, ConstTlmn.SOUND_GIRL_BYE_2, ConstTlmn.SOUND_GIRL_BYE_3, ConstTlmn.SOUND_GIRL_BYE_4,
 			ConstTlmn.SOUND_GIRL_BYE_5, ConstTlmn.SOUND_GIRL_JOINGAME_1, ConstTlmn.SOUND_GIRL_JOINGAME_2, 
 			ConstTlmn.SOUND_GIRL_JOINGAME_3, ConstTlmn.SOUND_GIRL_JOINGAME_4, ConstTlmn.SOUND_GIRL_JOINGAME_5,
@@ -373,7 +377,12 @@
 			ConstTlmn.SOUND_GIRL_PASSTURN_1, ConstTlmn.SOUND_GIRL_PASSTURN_2, ConstTlmn.SOUND_GIRL_PASSTURN_3,
 			ConstTlmn.SOUND_GIRL_PASSTURN_4, ConstTlmn.SOUND_GIRL_PASSTURN_5, ConstTlmn.SOUND_GIRL_WIN_1,
 			ConstTlmn.SOUND_GIRL_WIN_2, ConstTlmn.SOUND_GIRL_WIN_3, ConstTlmn.SOUND_GIRL_WIN_4,
-			ConstTlmn.SOUND_GIRL_WIN_5, ConstTlmn.SOUND_GIRL_LOSE_1, ConstTlmn.SOUND_GIRL_LOSE_2,
+			ConstTlmn.SOUND_GIRL_WIN_5, 
+			ConstTlmn.SOUND_GIRL_WIN_SAM_1,
+			ConstTlmn.SOUND_GIRL_WIN_SAM_2, ConstTlmn.SOUND_GIRL_WIN_SAM_3, ConstTlmn.SOUND_GIRL_WIN_SAM_4,
+			ConstTlmn.SOUND_GIRL_WIN_SAM_5, ConstTlmn.SOUND_GIRL_LOSE_SAM_1, ConstTlmn.SOUND_GIRL_LOSE_SAM_2,
+			ConstTlmn.SOUND_GIRL_LOSE_SAM_3, ConstTlmn.SOUND_GIRL_LOSE_SAM_4, ConstTlmn.SOUND_GIRL_LOSE_SAM_5,
+			ConstTlmn.SOUND_GIRL_LOSE_1, ConstTlmn.SOUND_GIRL_LOSE_2,
 			ConstTlmn.SOUND_GIRL_LOSE_3, ConstTlmn.SOUND_GIRL_LOSE_4, ConstTlmn.SOUND_GIRL_LOSE_5,
 			ConstTlmn.SOUND_GIRL_OVERMONEY_1, ConstTlmn.SOUND_GIRL_OVERMONEY_2, ConstTlmn.SOUND_GIRL_OVERMONEY_3,
 			ConstTlmn.SOUND_GIRL_OVERMONEY_4, ConstTlmn.SOUND_GIRL_OVERMONEY_5, 
@@ -381,10 +390,12 @@
 			];
 			//"Ready", , "Bichat"
 			var arrSound:Array;
-			if (MyDataTLMN.getInstance().isGame == 1) 
+			//if (MyDataTLMN.getInstance().isGame == 1) 
 			{
 				arrSound = [
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0083.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0084.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0429.az",
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0084.az",
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0090.az",
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0091.az",
@@ -462,6 +473,16 @@
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0152.az",
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0153.az",
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0154.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0525.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0526.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0527.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0528.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0529.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0530.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0531.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0532.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0533.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0534.az",
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0155.az",
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0156.az",
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0157.az",
@@ -475,6 +496,8 @@
 									
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0001.az",
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0002.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0513.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0514.az",
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0008.az",
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0009.az",
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0010.az",
@@ -551,6 +574,16 @@
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0070.az",
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0071.az",
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0072.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0515.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0516.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0517.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0518.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0519.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0520.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0521.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0522.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0523.az",
+									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0524.az",
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0073.az",
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0074.az",
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0075.az",
@@ -563,7 +596,7 @@
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0082.az"
 								];
 			}
-			else 
+			/*else 
 			{
 				arrSound = [
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0429.az",
@@ -744,7 +777,7 @@
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0081.az",
 									"http://203.162.121.120/gamebai/bimkute/newSound/SBV.0082.az"
 								];
-			}
+			}*/
 			
 			for (var i:int = 0; i < arrSoundName.length; i++) 
 			{

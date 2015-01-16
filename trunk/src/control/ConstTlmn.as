@@ -276,6 +276,9 @@ package control
 		public static var SOUND_BOY_HELLO_:String = "boy_hello_";
 		public static var SOUND_BOY_HELLO_1:String = "boy_hello_1";
 		public static var SOUND_BOY_HELLO_2:String = "boy_hello_2";
+		public static var SOUND_BOY_HELLO_SAM_1:String = "boy_hello_SAM_1";
+		public static var SOUND_BOY_HELLO_SAM_2:String = "boy_hello_SAM_2";
+		
 		public static var SOUND_BOY_BYE_:String = "boy_bye_";
 		public static var SOUND_BOY_BYE_1:String = "boy_bye_1";
 		public static var SOUND_BOY_BYE_2:String = "boy_bye_2";
@@ -371,6 +374,31 @@ package control
 		public static var SOUND_BOY_WIN_3:String = "boy_WIN_3";
 		public static var SOUND_BOY_WIN_4:String = "boy_WIN_4";
 		public static var SOUND_BOY_WIN_5:String = "boy_WIN_5";
+		
+		public static var SOUND_BOY_WIN_SAM_1:String = "boy_WIN_SAM_1";
+		public static var SOUND_BOY_WIN_SAM_2:String = "boy_WIN_SAM_2";
+		public static var SOUND_BOY_WIN_SAM_3:String = "boy_WIN_SAM_3";
+		public static var SOUND_BOY_WIN_SAM_4:String = "boy_WIN_SAM_4";
+		public static var SOUND_BOY_WIN_SAM_5:String = "boy_WIN_SAM_5";
+		
+		public static var SOUND_BOY_LOSE_SAM_1:String = "boy_LOSE_SAM_1";
+		public static var SOUND_BOY_LOSE_SAM_2:String = "boy_LOSE_SAM_2";
+		public static var SOUND_BOY_LOSE_SAM_3:String = "boy_LOSE_SAM_3";
+		public static var SOUND_BOY_LOSE_SAM_4:String = "boy_LOSE_SAM_4";
+		public static var SOUND_BOY_LOSE_SAM_5:String = "boy_LOSE_SAM_5";
+		
+		public static var SOUND_GIRL_WIN_SAM_1:String = "GIRL_WIN_SAM_1";
+		public static var SOUND_GIRL_WIN_SAM_2:String = "GIRL_WIN_SAM_2";
+		public static var SOUND_GIRL_WIN_SAM_3:String = "GIRL_WIN_SAM_3";
+		public static var SOUND_GIRL_WIN_SAM_4:String = "GIRL_WIN_SAM_4";
+		public static var SOUND_GIRL_WIN_SAM_5:String = "GIRL_WIN_SAM_5";
+		
+		public static var SOUND_GIRL_LOSE_SAM_1:String = "GIRL_LOSE_SAM_1";
+		public static var SOUND_GIRL_LOSE_SAM_2:String = "GIRL_LOSE_SAM_2";
+		public static var SOUND_GIRL_LOSE_SAM_3:String = "GIRL_LOSE_SAM_3";
+		public static var SOUND_GIRL_LOSE_SAM_4:String = "GIRL_LOSE_SAM_4";
+		public static var SOUND_GIRL_LOSE_SAM_5:String = "GIRL_LOSE_SAM_5";
+		
 		public static var SOUND_BOY_LOSE_:String = "boy_LOSE_";
 		public static var SOUND_BOY_LOSE_1:String = "boy_LOSE_1";
 		public static var SOUND_BOY_LOSE_2:String = "boy_LOSE_2";
@@ -387,6 +415,8 @@ package control
 		public static var SOUND_GIRL_HELLO_:String = "GIRL_hello_";
 		public static var SOUND_GIRL_HELLO_1:String = "GIRL_hello_1";
 		public static var SOUND_GIRL_HELLO_2:String = "GIRL_hello_2";
+		public static var SOUND_GIRL_HELLO_SAM_1:String = "GIRL_hello_SAM_1";
+		public static var SOUND_GIRL_HELLO_SAM_2:String = "GIRL_hello_SAM_2";
 		public static var SOUND_GIRL_BYE_:String = "GIRL_bye_";
 		public static var SOUND_GIRL_BYE_1:String = "GIRL_bye_1";
 		public static var SOUND_GIRL_BYE_2:String = "GIRL_bye_2";

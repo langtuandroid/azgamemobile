@@ -354,18 +354,22 @@ package
 		private function getInfoEvent(obj:Object):void 
 		{
 			trace("check event exist: ", obj.Data.status)
-			if (obj.Data) 
+			if (!mainData.isNotLobby) 
 			{
-				if (obj.Data.status == 0) 
+				if (obj.Data) 
 				{
-					hideMiniGame();
+					if (obj.Data.status == 0) 
+					{
+						hideMiniGame();
+					}
+					else if (obj.Data.status == 1) 
+					{
+						showMiniGame();
+					}
+					mainData.typeOfEvent = obj.Data.status;
 				}
-				else if (obj.Data.status == 1) 
-				{
-					showMiniGame();
-				}
-				mainData.typeOfEvent = obj.Data.status;
 			}
+			
 			
 			
 		}
@@ -381,6 +385,7 @@ package
 		
 		public function showMiniGame():void 
 		{
+			
 			if (minigame) 
 			{
 				
