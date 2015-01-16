@@ -121,7 +121,7 @@ package view.window
 			{
 				infoObject[DataFieldMauBinh.ROOM_PASSWORD] = mainData.playingData.gameRoomData.roomPassword;
 				infoObject[DataFieldMauBinh.AVATAR] = mainData.chooseChannelData.myInfo.avatar;
-				infoObject[DataFieldMauBinh.ROOM_BET] = mainData.playingData.gameRoomData.roomBet;
+				infoObject[DataFieldMauBinh.ROOM_BET] = GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET];
 				infoObject[DataFieldMauBinh.MONEY] = mainData.chooseChannelData.myInfo.money;
 				infoObject[DataFieldMauBinh.SEX] = mainData.chooseChannelData.myInfo.sex;
 				infoObject[DataFieldMauBinh.MESSAGE] = "";

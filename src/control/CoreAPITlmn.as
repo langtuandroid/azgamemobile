@@ -185,7 +185,7 @@ package control
 					invitePlayObject[DataFieldMauBinh.AVATAR] = e.esObject.getString(DataFieldMauBinh.AVATAR);
 					invitePlayObject[DataFieldMauBinh.MONEY] = e.esObject.getString(DataFieldMauBinh.MONEY);
 					invitePlayObject[DataFieldMauBinh.SEX] = e.esObject.getString(DataFieldMauBinh.SEX);
-					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.HAVE_INVITE_PLAY,invitePlayObject));
+					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.HAVE_INVITE_PLAY, invitePlayObject));
 				break;
 				case CommandTlmn.INVITE_ADD_FRIEND: // Lời mời kết bạn
 					var inviteAddFriendObject:Object = new Object();

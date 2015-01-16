@@ -1424,11 +1424,11 @@ package view.screen
 						rd = int(Math.random() * 5);
 						if (_arrUserInfo[j]._sex) 
 						{
-							SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_WIN_ + String(rd + 1) );
+							SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_WIN_ + "SAM_" + String(rd + 1) );
 						}
 						else 
 						{
-							SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_WIN_ + String(rd + 1) );
+							SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_WIN_ + "SAM_" + String(rd + 1) );
 						}
 					}
 				}
@@ -1446,11 +1446,11 @@ package view.screen
 							rd = int(Math.random() * 5);
 							if (_arrUserInfo[j]._sex) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_WIN_ + String(rd + 1) );
+								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_WIN_ + "SAM_" + String(rd + 1) );
 							}
 							else 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_WIN_ + String(rd + 1) );
+								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_WIN_ + "SAM_" + String(rd + 1) );
 							}
 						}
 						
@@ -1971,11 +1971,11 @@ package view.screen
 							rd = int(Math.random() * 5);
 							if (MyDataTLMN.getInstance().sex) 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_WIN_ + String(rd + 1) );
+								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_WIN_ + "SAM_" + String(rd + 1) );
 							}
 							else 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_WIN_ + String(rd + 1) );
+								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_WIN_ + "SAM_" + String(rd + 1) );
 							}
 						}
 						
@@ -1996,11 +1996,11 @@ package view.screen
 									rd = int(Math.random() * 5);
 									if (_arrUserInfo[j]._sex) 
 									{
-										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_WIN_ + String(rd + 1) );
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_WIN_ + "SAM_" + String(rd + 1) );
 									}
 									else 
 									{
-										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_WIN_ + String(rd + 1) );
+										SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_WIN_ + "SAM_" + String(rd + 1) );
 									}
 								}
 								

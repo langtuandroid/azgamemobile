@@ -255,6 +255,14 @@ package view.window.shop
 			myContent.chooseInAddMoneyMc.creditCard.addEventListener(MouseEvent.MOUSE_UP, onClickShowAddMoneyPurchase);
 			
 			myContent.chooseInAddMoneyMc.purchase.visible = false;
+			if(MainData.getInstance().isOnAndroid)
+			{
+				myContent.chooseInAddMoneyMc.creditCard.visible = false;
+			}
+			else if(MainData.getInstance().isOnIos)
+			{
+				myContent.chooseInAddMoneyMc.creditCard.visible = true;
+			}
 			//myContent.chooseInAddMoneyMc.creditCard.visible = false;
 			
 			

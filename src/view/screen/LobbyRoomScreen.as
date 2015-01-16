@@ -119,6 +119,8 @@ package view.screen
 		private var menuLayer:Sprite;
 		private var firstChannelId:int;
 		
+		
+		
 		public function LobbyRoomScreen() 
 		{
 			super();
@@ -188,6 +190,8 @@ package view.screen
 				selectGameWindow.visible = true;
 			}
 			selectGameLayer.addChild(selectGameWindow);
+			
+			mainData.isNotLobby = true;
 		}
 		
 		private function createLayer():void 
@@ -229,6 +233,7 @@ package view.screen
 		
 		public function excuteWhenJoinLobby():void
 		{	
+			mainData.isNotLobby = false;
 			mainCommand.getInfoCommand.getChannelInfo();
 			mainCommand.getInfoCommand.getVirtualRoomInfo();
 			mainCommand.getInfoCommand.getMessageInfo();
@@ -268,6 +273,7 @@ package view.screen
 		{
 			var loginWindow:LoginWindow = new LoginWindow();
 			windowLayer.openWindow(loginWindow);
+			mainData.isNotLobby = true;
 		}
 		
 		public function showLoginWindow():void
@@ -277,7 +283,7 @@ package view.screen
 			var loginWindow:LoginWindow = new LoginWindow();
 			windowLayer.openWindow(loginWindow);
 			
-			
+			mainData.isNotLobby = true;
 		}
 		
 		private function addChannelButton():void 
@@ -470,6 +476,7 @@ package view.screen
 		
 		private function checkEventExist():void 
 		{
+			
 			var httpReq:HTTPRequest = new HTTPRequest();
 			var method:String = "POST";
 			var str:String; 
@@ -490,23 +497,27 @@ package view.screen
 				
 		private function getInfoEvent(obj:Object):void 
 		{
-			if (obj.Data) 
+			if (!mainData.isNotLobby) 
 			{
-				
-				mainData.typeOfEvent = obj.Data.status;
-				
-				if (mainData.typeOfEvent > 0) 
+				if (obj.Data) 
 				{
-					mainData.isShowMiniGame = true;
+					
+					mainData.typeOfEvent = obj.Data.status;
+					
+					if (mainData.typeOfEvent > 0) 
+					{
+						mainData.isShowMiniGame = true;
+					}
+					else if (mainData.typeOfEvent == 0) 
+					{
+						var alertWindow:AlertWindow = new AlertWindow();
+						alertWindow.setNotice("Sự kiện đang bảo trì, xin vui lòng quay lại sau!");	
+						windowLayer.openWindow(alertWindow);
+					}
+					
 				}
-				else if (mainData.typeOfEvent == 0) 
-				{
-					var alertWindow:AlertWindow = new AlertWindow();
-					alertWindow.setNotice("Sự kiện đang bảo trì, xin vui lòng quay lại sau!");	
-					windowLayer.openWindow(alertWindow);
-				}
-				
 			}
+			
 			
 			
 		}
@@ -902,11 +913,11 @@ package view.screen
 							rd = int(Math.random() * 2) + 1;
 							if (mainData.chooseChannelData.myInfo.sex == "M") 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_HELLO_ + String(rd));
+								SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_HELLO_ + "SAM_" + String(rd));
 							}
 							else 
 							{
-								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_HELLO_ + String(rd));
+								SoundManager.getInstance().playSound(ConstTlmn.SOUND_GIRL_HELLO_ + "SAM_" + String(rd));
 							}
 						}
 					break;
