@@ -2,7 +2,6 @@ package view.window.loginWindow
 {
 	import br.com.stimuli.loading.BulkLoader;
 	import com.adobe.serialization.json.JSON;
-	import com.freshplanet.ane.AirDeviceId;
 	import com.gsolo.encryption.MD5;
 	import com.gsolo.encryption.SHA1;
 	import fl.controls.TextInput;
@@ -126,9 +125,9 @@ package view.window.loginWindow
 			{
 				if (mainData.isOnAndroid)
 				{
-					deviceId = AirDeviceId.getInstance().getID("SanhBai");
+					deviceId = MyAirDeviceId.getInstance().getID("SanhBai");
 				}
-				else
+				else if (mainData.isOnIos)
 				{
 					if (sharedObject.data.hasOwnProperty("deviceId"))
 					{
