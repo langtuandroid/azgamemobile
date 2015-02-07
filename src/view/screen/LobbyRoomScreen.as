@@ -253,7 +253,7 @@ package view.screen
 				timerToGetSystemNoticeInfo.removeEventListener(TimerEvent.TIMER, onGetSystemNoticeInfo);
 				timerToGetSystemNoticeInfo.stop();
 			}
-			timerToGetSystemNoticeInfo = new Timer(30000);
+			timerToGetSystemNoticeInfo = new Timer(300000);
 			timerToGetSystemNoticeInfo.addEventListener(TimerEvent.TIMER, onGetSystemNoticeInfo);
 			timerToGetSystemNoticeInfo.start();
 		}
@@ -885,6 +885,9 @@ package view.screen
 				{
 					case MainData.MAUBINH:
 						SoundManager.getInstance().soundManagerMauBinh.playLobbyPlayerSound(mainData.chooseChannelData.myInfo.sex);
+					break;
+					case MainData.XITO:
+						SoundManager.getInstance().soundManagerXito.playLobbyPlayerSound(mainData.chooseChannelData.myInfo.sex);
 					break;
 					case MainData.PHOM:
 						//SoundManager.getInstance().playSound(ConstTlmn.SOUND_BOY_HELLO_1);

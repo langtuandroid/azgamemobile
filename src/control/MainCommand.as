@@ -3,6 +3,7 @@ package control
 	import control.electroServerCommand.ElectroServerCommandMauBinh;
 	import control.electroServerCommand.ElectroServerCommandPhom;
 	import control.electroServerCommand.ElectroServerCommandTlmn;
+	import control.electroServerCommand.ElectroServerCommandXito;
 	import control.getInfoCommand.GetInfoCommand;
 	import control.initCommand.InitCommand;
 	import flash.events.Event;
@@ -20,6 +21,7 @@ package control
 		public var electroServerCommand:*;
 		public var electroServerCommandMauBinh:ElectroServerCommandMauBinh;
 		public var electroServerCommandPhom:ElectroServerCommandPhom;
+		public var electroServerCommandXito:ElectroServerCommandXito;
 		//public var electroServerCommandTlmn:ElectroServerCommandTlmnYun;
 		public var electroServerCommandTlmn:ElectroServerCommandTlmn;
 		private var mainData:MainData = MainData.getInstance();
@@ -31,6 +33,7 @@ package control
 			electroServerCommandMauBinh = new ElectroServerCommandMauBinh();
 			electroServerCommandPhom = new ElectroServerCommandPhom();
 			electroServerCommandTlmn = new ElectroServerCommandTlmn();
+			electroServerCommandXito = new ElectroServerCommandXito();
 		}
 		
 		public function initVar():void
@@ -48,6 +51,9 @@ package control
 				break;
 				case MainData.SAM:
 					electroServerCommand = electroServerCommandTlmn;
+				break;
+				case MainData.XITO:
+					electroServerCommand = electroServerCommandXito;
 				break;
 				default:
 			}

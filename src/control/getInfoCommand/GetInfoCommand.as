@@ -83,7 +83,9 @@ package control.getInfoCommand
 					object.game_id = 'AZGB_BINH';
 				break;
 				case MainData.XITO:
-					url = "http://" + mainData.gameIp + "/javajson/Getgamegroup2/5";
+					url = /*mainData.basepath + */mainData.init.requestLink.getChannelLink.@url;
+					object = new Object();
+					object.game_id = 'AZGB_XITO';
 				break;
 				default:
 			}
@@ -110,32 +112,35 @@ package control.getInfoCommand
 		// Lấy thông tin các tin nhắn gửi cho mình
 		public function getMessageInfo():void
 		{
-			var tokenTime:Number = mainData.tokenTime;
-			if (tokenTime == 0)
-			{
-				var tempRequest:MainRequest = new MainRequest();
-				var url:String = mainData.init.requestLink.getAccessTokenLink.@url;
-				var object:Object = new Object();
-				object.client_id = mainData.client_id
-				object.client_secret = mainData.client_secret
-				object.client_timestamp = (new Date()).getTime();
-				object.nick_name = mainData.chooseChannelData.myInfo.name;
-				object.client_hash = MD5.encrypt(object.client_id + object.client_timestamp + object.client_secret + object.nick_name);
-				tempRequest.sendRequest_Post(url, object, getAccessTokenFn, true);
-			}
-			else
-			{
+			var tempRequest:MainRequest;
+			var url:String;
+			var object:Object;
+			//var tokenTime:Number = mainData.tokenTime;
+			//if (tokenTime == 0)
+			//{
+				//var tempRequest:MainRequest = new MainRequest();
+				//var url:String = mainData.init.requestLink.getAccessTokenLink.@url;
+				//var object:Object = new Object();
+				//object.client_id = mainData.client_id
+				//object.client_secret = mainData.client_secret
+				//object.client_timestamp = (new Date()).getTime();
+				//object.nick_name = mainData.chooseChannelData.myInfo.name;
+				//object.client_hash = MD5.encrypt(object.client_id + object.client_timestamp + object.client_secret + object.nick_name);
+				//tempRequest.sendRequest_Post(url, object, getAccessTokenFn, true);
+			//}
+			//else
+			//{
 				tempRequest = new MainRequest();
 				url = mainData.init.requestLink.getMessageInfoLink.@url;
 				object = new Object();
-				object.access_token = mainData.token;
+				//object.access_token = mainData.token;
 				tempRequest.sendRequest_Post(url, object, getMessageInfoFn, true);
-			}
+			//}
 		}
 		
 		private function getAccessTokenFn(value:Object):void 
 		{
-			if (value.TypeMsg == '1')
+			/*if (value.TypeMsg == '1')
 			{
 				mainData.token = value.Data.access_token;
 				mainData.tokenTime = (new Date()).getTime();
@@ -152,14 +157,14 @@ package control.getInfoCommand
 			else
 			{
 				WindowLayer.getInstance().openAlertWindow("get access token from get message list fail !!");
-			}
+			}*/
 		}
 		
 		private function getMessageInfoFn(value:Object):void 
 		{
 			//mainData.chooseChannelData.channelInfoArray = value as Array;
 			
-			if (value.TypeMsg == '1')
+			if (value.TypeMsg == '1' && value.Data)
 			{
 				var dataList:Array = value.Data.List_Message;
 				dataList.reverse();
@@ -199,7 +204,7 @@ package control.getInfoCommand
 					object.client_secret = mainData.client_secret
 					object.access_token = mainData.token;
 					object.client_hash = MD5.encrypt(object.client_id + object.client_secret + object.access_token);
-					tempRequest.sendRequest_Post(url, object, getAccessTokenFn, true);
+					//tempRequest.sendRequest_Post(url, object, getAccessTokenFn, true);
 				}
 				else
 				{
@@ -303,28 +308,31 @@ package control.getInfoCommand
 		// Lấy thông tin thông báo hệ thống
 		public function getSystemNoticeInfo():void
 		{
-			var tokenTime:Number = mainData.tokenTime;
-			if (tokenTime == 0)
-			{
-				var tempRequest:MainRequest = new MainRequest();
-				var url:String = mainData.init.requestLink.getAccessTokenLink.@url;
-				var object:Object = new Object();
-				object.client_id = mainData.client_id
-				object.client_secret = mainData.client_secret
-				object.client_timestamp = (new Date()).getTime();
-				object.nick_name = mainData.chooseChannelData.myInfo.name;
-				object.client_hash = MD5.encrypt(object.client_id + object.client_timestamp + object.client_secret + object.nick_name);
-				tempRequest.sendRequest_Post(url, object, getAccessTokenFromSystemNoticeFn, true);
-			}
-			else
-			{
+			var tempRequest:MainRequest;
+			var url:String;
+			var object:Object;
+			//var tokenTime:Number = mainData.tokenTime;
+			//if (tokenTime == 0)
+			//{
+				//var tempRequest:MainRequest = new MainRequest();
+				//var url:String = mainData.init.requestLink.getAccessTokenLink.@url;
+				//var object:Object = new Object();
+				//object.client_id = mainData.client_id
+				//object.client_secret = mainData.client_secret
+				//object.client_timestamp = (new Date()).getTime();
+				//object.nick_name = mainData.chooseChannelData.myInfo.name;
+				//object.client_hash = MD5.encrypt(object.client_id + object.client_timestamp + object.client_secret + object.nick_name);
+				//tempRequest.sendRequest_Post(url, object, getAccessTokenFromSystemNoticeFn, true);
+			//}
+			//else
+			//{
 				tempRequest = new MainRequest();
 				url = mainData.init.requestLink.getMessageInfoLink.@url;
 				object = new Object();
-				object.access_token = mainData.token;
+				//object.access_token = mainData.token;
 				object.nick_receiver = "system_notify_top";
 				tempRequest.sendRequest_Post(url, object, getSystemNoticeInfoFn, true);
-			}
+			//}
 		}
 		
 		private function getAccessTokenFromSystemNoticeFn(value:Object):void 
@@ -338,7 +346,7 @@ package control.getInfoCommand
 				var object:Object = new Object();
 				object.access_token = mainData.token;
 				object.nick_receiver = "system_notify_top";
-				tempRequest.sendRequest_Post(url, object, getSystemNoticeInfoFn, true);
+				//tempRequest.sendRequest_Post(url, object, getSystemNoticeInfoFn, true);
 			}
 			else
 			{
@@ -350,7 +358,7 @@ package control.getInfoCommand
 		{
 			//mainData.chooseChannelData.channelInfoArray = value as Array;
 			
-			if (value.TypeMsg == '1')
+			if (value.TypeMsg == '1' && value.Data)
 			{
 				var dataList:Array = value.Data.List_Message;
 				dataList.reverse();
@@ -383,7 +391,7 @@ package control.getInfoCommand
 					object.client_secret = mainData.client_secret
 					object.access_token = mainData.token;
 					object.client_hash = MD5.encrypt(object.client_id + object.client_secret + object.access_token);
-					tempRequest.sendRequest_Post(url, object, getAccessTokenFromSystemNoticeFn, true);
+					//tempRequest.sendRequest_Post(url, object, getAccessTokenFromSystemNoticeFn, true);
 				}
 				else
 				{

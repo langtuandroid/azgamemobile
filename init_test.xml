@@ -634,6 +634,233 @@
 		<child>B.F044 (5)</child>
 	</soundMauBinhList>
 	
+	<soundXitoList>
+		<child>SBV.0607</child>
+		<child>SBV.0084</child>
+		<child>SBV.0535</child>
+		<child>SBV.0002</child>
+		
+		<child>SBV.0608</child>
+		<child>SBV.0609</child>
+		<child>SBV.0610</child>
+		<child>SBV.0611</child>
+		<child>SBV.0612</child>
+		
+		<child>SBV.0536</child>
+		<child>SBV.0537</child>
+		<child>SBV.0538</child>
+		<child>SBV.0539</child>
+		<child>SBV.0540</child>
+		
+		<child>SBV.0613</child>
+		<child>SBV.0614</child>
+		<child>SBV.0615</child>
+		<child>SBV.0616</child>
+		<child>SBV.0617</child>
+		
+		<child>SBV.0541</child>
+		<child>SBV.0542</child>
+		<child>SBV.0543</child>
+		<child>SBV.0544</child>
+		<child>SBV.0545</child>
+		
+		<child>SBV.0619</child>
+		<child>SBV.0620</child>
+		<child>SBV.0621</child>
+		<child>SBV.0622</child>
+		<child>SBV.0623</child>
+		
+		<child>SBV.0546</child>
+		<child>SBV.0013</child>
+		<child>SBV.0180</child>
+		<child>SBV.0014</child>
+		<child>SBV.0547</child>
+		
+		<child>SBV.0618</child>
+		<child>SBV.0635</child>
+		<child>SBV.0636</child>
+		<child>SBV.0653</child>
+		<child>SBV.0655</child>
+		
+		<child>SBV.0560</child>
+		<child>SBV.0561</child>
+		<child>SBV.0562</child>
+		<child>SBV.0563</child>
+		<child>SBV.0564</child>
+		
+		<child>SBV.0642</child>
+		<child>SBV.0643</child>
+		<child>SBV.0644</child>
+		<child>SBV.0645</child>
+		<child>SBV.0646</child>
+		
+		<child>SBV.0571</child>
+		<child>SBV.0572</child>
+		<child>SBV.0574</child>
+		<child>SBV.0575</child>
+		<child>SBV.0577</child>
+		
+		<child>SBV.0637</child>
+		<child>SBV.0638</child>
+		<child>SBV.0639</child>
+		<child>SBV.0640</child>
+		<child>SBV.0641</child>
+		
+		<child>SBV.0565</child>
+		<child>SBV.0566</child>
+		<child>SBV.0567</child>
+		<child>SBV.0568</child>
+		<child>SBV.0569</child>
+		
+		<child>SBV.0657</child>
+		<child>SBV.0670</child>
+		<child>SBV.0675</child>
+		<child>SBV.0676</child>
+		<child>SBV.0680</child>
+		
+		<child>SBV.0583</child>
+		<child>SBV.0584</child>
+		<child>SBV.0585</child>
+		<child>SBV.0586</child>
+		<child>SBV.0587</child>
+		
+		<child>SBV.0671</child>
+		<child>SBV.0673</child>
+		<child>SBV.0674</child>
+		<child>SBV.0675</child>
+		<child>SBV.0668</child>
+		
+		<child>SBV.0600</child>
+		<child>SBV.0601</child>
+		<child>SBV.0602</child>
+		<child>SBV.0603</child>
+		<child>SBV.0604</child>
+		
+		<child>SBV.0672</child>
+		<child>SBV.0669</child>
+		<child>SBV.0678</child>
+		<child>SBV.0679</child>
+		<child>SBV.0681</child>
+		
+		<child>SBV.0589</child>
+		<child>SBV.0588</child>
+		<child>SBV.0573</child>
+		<child>SBV.0576</child>
+		<child>SBV.0570</child>
+		
+		<child>SBV.0658</child>
+		<child>SBV.0659</child>
+		<child>SBV.0664</child>
+		<child>SBV.0665</child>
+		<child>SBV.0666</child>
+		
+		<child>SBV.0590</child>
+		<child>SBV.0591</child>
+		<child>SBV.0592</child>
+		<child>SBV.0593</child>
+		<child>SBV.0594</child>
+		
+		<child>SBV.0660</child>
+		<child>SBV.0661</child>
+		<child>SBV.0662</child>
+		<child>SBV.0663</child>
+		<child>SBV.0667</child>
+		
+		<child>SBV.0595</child>
+		<child>SBV.0596</child>
+		<child>SBV.0597</child>
+		<child>SBV.0598</child>
+		<child>SBV.0599</child>
+		
+		<child>SBV.0656</child>
+		<child>SBV.0683</child>
+		<child>SBV.0650</child>
+		<child>SBV.0652</child>
+		<child>SBV.0654</child>
+		
+		<child>SBV.0578</child>
+		<child>SBV.0579</child>
+		<child>SBV.0580</child>
+		<child>SBV.0581</child>
+		<child>SBV.0582</child>
+		
+		<child>SBV.0467</child>
+		<child>SBV.0468</child>
+		<child>SBV.0469</child>
+		<child>SBV.0470</child>
+		<child>SBV.0471</child>
+		<child>SBV.0472</child>
+		<child>SBV.0473</child>
+		<child>SBV.0474</child>
+		<child>SBV.0475</child>
+		<child>SBV.0476</child>
+		<child>SBV.0682</child>
+		<child>SBV.0478</child>
+		<child>SBV.0479</child>
+		<child>SBV.0480</child>
+		<child>SBV.0481</child>
+		<child>SBV.0482</child>
+		<child>SBV.0483</child>
+		<child>SBV.0484</child>
+		
+		<child>SBV.0383</child>
+		<child>SBV.0384</child>
+		<child>SBV.0385</child>
+		<child>SBV.0386</child>
+		<child>SBV.0387</child>
+		<child>SBV.0388</child>
+		<child>SBV.0389</child>
+		<child>SBV.0390</child>
+		<child>SBV.0391</child>
+		<child>SBV.0392</child>
+		<child>SBV.0393</child>
+		<child>SBV.0394</child>
+		<child>SBV.0395</child>
+		<child>SBV.0396</child>
+		<child>SBV.0399</child>
+		<child>SBV.0400</child>
+		
+		<child>SBV.0624</child>
+		<child>SBV.0625</child>
+		<child>SBV.0625</child>
+		<child>SBV.0627</child>
+		<child>SBV.0628</child>
+		
+		<child>SBV.0406</child>
+		<child>SBV.0548</child>
+		<child>SBV.0549</child>
+		<child>SBV.0550</child>
+		<child>SBV.0551</child>
+		
+		<child>SBV.0629</child>
+		<child>SBV.0630</child>
+		<child>SBV.0631</child>
+		<child>SBV.0632</child>
+		<child>SBV.0633</child>
+		
+		<child>SBV.0555</child>
+		<child>SBV.0556</child>
+		<child>SBV.0557</child>
+		<child>SBV.0558</child>
+		<child>SBV.0559</child>
+		
+		<child>SBV.0634</child>
+		<child>SBV.0651</child>
+		<child>SBV.0647</child>
+		<child>SBV.0652</child>
+		<child>SBV.0649</child>
+		
+		<child>SBV.0552</child>
+		<child>SBV.0554</child>
+		<child>SBV.0605</child>
+		<child>SBV.0606</child>
+		<child>SBV.0553</child>
+		
+		<child>SBV.0016</child>
+		<child>SBV.0017</child>
+		<child>SBV.0018</child>
+	</soundXitoList>
+	
 	<soundPhomList>
 		<child>P.M001 (1)</child>
 		<child>P.M001 (2)</child>

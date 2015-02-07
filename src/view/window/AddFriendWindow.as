@@ -121,6 +121,12 @@ package view.window
 								case MainData.TLMN_ID:
 									gameTxt.text = "TLMN";
 								break;
+								case MainData.SAM_ID:
+									gameTxt.text = "SÂM";
+								break;
+								case MainData.XITO_ID:
+									gameTxt.text = "XÌ TỐ";
+								break;
 								default:
 							}
 							if (UserDataULC(mainData.lobbyRoomData.friendList[i]).roomID == mainData.lobbyRoomId)
@@ -279,6 +285,12 @@ package view.window
 							break;
 							case MainData.TLMN_ID:
 								gameTxt.text = "TLMN";
+							break;
+							case MainData.SAM_ID:
+								gameTxt.text = "SÂM";
+							break;
+							case MainData.XITO_ID:
+								gameTxt.text = "XÌ TỐ";
 							break;
 							default:
 						}

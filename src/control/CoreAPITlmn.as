@@ -757,6 +757,12 @@ package control
 								case "AZGB_TLMN":
 									userData.gameId = MainData.TLMN_ID;
 								break;
+								case "AZGB_SAM":
+									userData.gameId = MainData.SAM_ID;
+								break;
+								case "AZGB_XITO":
+									userData.gameId = MainData.XITO_ID;
+								break;
 								default:
 							}
 						}

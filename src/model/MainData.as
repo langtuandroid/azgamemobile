@@ -588,6 +588,8 @@ package model
 		public static const MAUBINH_ID:int = 1;
 		public static const PHOM_ID:int = 2;
 		public static const TLMN_ID:int = 3;
+		public static const SAM_ID:int = 4;
+		public static const XITO_ID:int = 5;
 		
 		public var facebook_access_token:String = 'facebook_access_token=CAADlgiW8vk0BAOQZAcSPfgh0Y9lTpZAbTMD6fJ8IFrBgZC19Lii9G1LEflZAkZCeUIGZCQip7MuXqbNGzWkyaZBmHdf5kZCpC69RfOkhwUQk5qb3FxUDReWoUmnSa4HVsWdjzZB4zdj7ALvuXtui13jpjP8lF8ul3MPf1CmaMk396JZCO90VzppbOd3opU79j1kJfMKT9JJGQLuAZDZD&amp';
 		public var isLoginFacebook:Boolean;
@@ -612,8 +614,8 @@ package model
 		public var tokenTime:int = 0;
 		public var token:String;
 		//public var version:String = "v1.4.1";
-		public var version:String = "v1.6.2";
-		public var isTest:Boolean = false; // biến để check xem đang chạy trên server test hay server thật
+		public var version:String = "v1.6.3";
+		public var isTest:Boolean = true; // biến để check xem đang chạy trên server test hay server thật
 
 		public var isFacebookVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào facebook không
 		public var isShowScroll:Boolean;

@@ -4427,7 +4427,7 @@ package view.screen
 			}
 			timerToGetSystemNoticeInfo = new Timer(30000);
 			timerToGetSystemNoticeInfo.addEventListener(TimerEvent.TIMER, onGetSystemNoticeInfo);
-			timerToGetSystemNoticeInfo.start();
+			//timerToGetSystemNoticeInfo.start();
 			for (var j:int = 0; j < mainData.systemNoticeList.length; j++) 
 			{
 				var textField:TextField = new TextField();
