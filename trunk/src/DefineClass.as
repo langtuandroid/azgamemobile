@@ -99,6 +99,9 @@ package
 			Emo15;
 			Emo16;
 			zGameBackground;
+			zChipContainer;
+			zChipContainer2;
+			zCardXito;
 			
 			MyInfoTlmnMc;
 			MyClock;

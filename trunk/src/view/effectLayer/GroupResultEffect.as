@@ -1,6 +1,7 @@
 package view.effectLayer 
 {
 	import flash.display.MovieClip;
+	import model.MainData;
 	/**
 	 * ...
 	 * @author 
@@ -8,6 +9,7 @@ package view.effectLayer
 	public class GroupResultEffect extends BaseEffect 
 	{
 		private var mc:MovieClip;
+		private var mainData:MainData = MainData.getInstance();;
 		public function GroupResultEffect() 
 		{
 			super();
@@ -110,7 +112,10 @@ package view.effectLayer
 					mc.gotoAndStop("sanh");
 				break;
 				case '4':
-					mc.gotoAndStop("xamchi");
+					if (mainData.gameType == MainData.MAUBINH)
+						mc.gotoAndStop("xamchi");
+					else
+						mc.gotoAndStop("xamco");
 				break;
 				case '3':
 					mc.gotoAndStop("thu");

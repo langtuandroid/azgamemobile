@@ -208,6 +208,7 @@ package view.screen
 			autoReady.addEventListener(MouseEvent.CLICK, onAutoReadyClick);
 			
 			ipBoard = content["ipBoard"];
+			chatboxLayer.addChild(ipBoard);
 			ipBoard.addEventListener(MouseEvent.CLICK, onIpBoardClick);
 			ipBoard.visible = false;
 			
@@ -396,6 +397,7 @@ package view.screen
 			emoticonButton = content["emoticonButton"];
 			chatButton = content["chatButton"];
 			settingBoard = content["settingBoard"];
+			chatboxLayer.addChild(settingBoard);
 			settingBoard.visible = false;
 			settingButton = content["settingButton"];
 			snapShotButton = settingBoard["snapShotButton"];

@@ -5,13 +5,14 @@ package view.userInfo.playerInfo
 	import com.gskinner.motion.easing.Back;
 	import com.gskinner.motion.GTween;
 	import com.hallopatidu.utils.StringFormatUtils;
+	import control.CoreAPIXito;
 	import control.MainCommand;
-	import event.DataField;
-	import flash.desktop.NativeApplication;
+	import event.DataFieldMauBinh;
+	import flash.display.MovieClip;
+	import flash.display.Shape;
 	import flash.display.SimpleButton;
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.filters.GlowFilter;
@@ -25,24 +26,31 @@ package view.userInfo.playerInfo
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getTimer;
 	import flash.utils.Timer;
+	import logic.MauBinhLogic;
 	import logic.PlayingLogic;
 	import model.MainData;
 	import model.modelField.ModelField;
+	import sound.SoundLibChung;
+	import sound.SoundManager;
 	import view.BubbleChat;
 	import view.button.BigButton;
-	import view.card.CardPhom;
-	import view.card.CardManager;
+	import view.button.MobileButton;
+	import view.card.CardManagerXito;
+	import view.card.CardMauBinh;
+	import view.card.CardManagerMauBinh;
+	import view.card.CardXito;
+	import view.ChipContainer;
 	import view.contextMenu.MyContextMenu;
 	import view.effectLayer.EffectLayer;
-	//import view.screen.PlayingScreen;
-	import view.timeBar.TimeBar;
+	import view.screen.PlayingScreenMauBinh;
+	import view.timeBar.TimeBarMauBinh;
+	import view.timeBar.TimeBarXito;
 	import view.userInfo.avatar.Avatar;
 	import view.window.AlertWindow;
 	import view.window.BaseWindow;
-	import view.window.ConfirmFullDeckWindow;
 	import view.window.ConfirmWindow;
 	import view.window.InvitePlayWindow;
-	import view.window.ConfirmFullDeckWindow;
+	import view.window.OrderCardWindow;
 	import view.window.windowLayer.WindowLayer;
 	
 	/**
@@ -53,6 +61,7 @@ package view.userInfo.playerInfo
 	{
 		public static const EXIT:String = "exit";
 		public static const AVATAR_CLICK:String = "avatarClick";
+		public static const UPDATE_THREE_GROUP:String = "updateThreeGroup";
 		
 		public static const BELOW_USER:String = "belowUserInfo";
 		public static const ABOVE_LEFT_USER:String = "aboveLeftUserInfo";
@@ -64,95 +73,70 @@ package view.userInfo.playerInfo
 		public static const RAISE:String = "raise";
 		public static const ALL_IN:String = "allIn";
 		public static const RAISE_DOUBLE:String = "raiseDouble";
-		public static const RAISE_QUATER:String = "raiseQuater";
-		public static const RAISE_HALF:String = "raiseHalf";
+		public static const RAISE_FOURPLE:String = "raiseFourple";
+		public static const RAISE_TRIPLE:String = "raiseTriple";
 		public static const FOLD:String = "fold";
 		public static const CHECK:String = "check";
 		
 		public static const SELECT_OPEN_CARD:String = "selectOpenCard";
 		public static const SELECT_ACTION:String = "selectAction"; // đến lượt mình chọn hành động
 		public static const DO_NOTHING:String = "doNothing";
-		public static const PLAY_CARD:String = "playCard";
-		public static const GET_CARD:String = "getCard";
-		public static const DOWN_CARD:String = "downCard";
-		public static const SEND_CARD:String = "sendCard";
-		
-		public static const GET_CARD_TURN:String = "getCardTurn";
-		public static const STEAL_CARD:String = "stealCard";
 		
 		public var unLeaveCardPosition:Array; // vị trí các quân bài chưa đánh
-		public var leavedCardPosition:Array; // vị trí các quân bài đã đánh
-		public var downCardPosition:Point; // vị trí để xác định quân bài vừa hạ phỏm
 		
-		private const belowUserCardSize:Object = {"unLeaveCard":0.88,"leavedCard":0.55,"downCard":0.55}; // kích thước các quân bài của user bên dưới
-		private const leftUserCardSize:Object = {"unLeaveCard":0.55,"leavedCard":0.55,"downCard":0.55}; // kích thước các quân bài của user bên trái
-		private const rightUserCardSize:Object = {"unLeaveCard":0.55,"leavedCard":0.55,"downCard":0.55}; // kích thước các quân bài của user bên phải
-		private const aboveLeftUserCardSize:Object = { "unLeaveCard":0.55, "leavedCard":0.55, "downCard":0.55 }; // kích thước các quân bài của user bên trên
-		private const aboveUserCardSize:Object = { "unLeaveCard":0.55, "leavedCard":0.55, "downCard":0.55 }; // kích thước các quân bài của user bên trên
+		private const belowUserCardSize:Object = {"unLeaveCard":1}; // kích thước các quân bài của user bên dưới
+		private const leftUserCardSize:Object = {"unLeaveCard":0.68}; // kích thước các quân bài của user bên trái
+		private const rightUserCardSize:Object = {"unLeaveCard":0.68}; // kích thước các quân bài của user bên phải
+		private const aboveLeftUserCardSize:Object = { "unLeaveCard":0.68}; // kích thước các quân bài của user bên trên
+		private const aboveUserCardSize:Object = { "unLeaveCard":0.68}; // kích thước các quân bài của user bên trên
 		
-		private const belowUserCardRotation:Object = {"unLeaveCard":0,"leavedCard":0,"downCard":0}; // góc quay của các quân bài của user bên dưới
-		private const leftUserCardRotation:Object = {"unLeaveCard":90,"leavedCard":0,"downCard":0}; // góc quay của các quân bài của user bên trái
-		private const rightUserCardRotation:Object = {"unLeaveCard":90,"leavedCard":0,"downCard":0}; // góc quay của các quân bài của user bên phải
-		private const aboveUserCardRotation:Object = { "unLeaveCard":0, "leavedCard":0, "downCard":0 }; // góc quay của các quân bài của user bên trên
+		private const belowUserCardRotation:Object = {"unLeaveCard":0, "downCard":0}; // góc quay của các quân bài của user bên dưới
+		private const leftUserCardRotation:Object = {"unLeaveCard":0, "downCard":0}; // góc quay của các quân bài của user bên trái
+		private const rightUserCardRotation:Object = {"unLeaveCard":0, "downCard":0}; // góc quay của các quân bài của user bên phải
+		private const aboveUserCardRotation:Object = { "unLeaveCard":0, "downCard":0 }; // góc quay của các quân bài của user bên trên
 		
 		public var unLeaveCardSize:Number;
-		public var leavedCardSize:Number;
 		public var downCardSize:Number;
 		
 		public var unLeaveCardRotation:Number;
-		public var leavedCardRotation:Number;
 		public var downCardRotation:Number;
 		
-		private const distanceDeckVertical:Number = 25; // khoảng cách giữa các phỏm nằm dọc
-		private const distanceDeckHorizontal:Number = 10; // khoảng cách giữa các phỏm nằm ngang
-		
-		public var timeBar:TimeBar; // thanh đếm thời gian
 		private var content:Sprite;
 		public var formName:String;
-		public var deckNumber:int = 0; // số phỏm của người chơi
-		private var totalDownCard:int = 0; // Tổng số lá của các phỏm cộng lại
+		public var ip:String;
 		
-		private const smallDistance:Number = 14; // khoảng cách giữa các quân bài kích thước nhỏ
-		private const normalDistance:Number = 12.5; // khoảng cách giữa các quân bài kích thước vừa
-		private const largeDistance:Number = 20; // khoảng cách giữa các quân bài kích thước to
-		private const largeDistance_2:Number = 15; // khoảng cách giữa các quân bài đã đánh, hoặc đã hạ
+		private const smallDistance:Number = 11.5; // khoảng cách giữa các quân bài kích thước nhỏ
+		private const normalDistance:Number = 23; // khoảng cách giữa các quân bài kích thước vừa
+		private const largeDistance:Number = 55; // khoảng cách giữa các quân bài kích thước to
+		private const largeDistance_2:Number = 15; // khoảng cách giữa các quân bài đã đánh
+		private const largeDistance_3:Number = 14; // khoảng cách giữa các quân bài đã hạ
 		
 		public var unLeaveCards:Array; // Mảng chứa các lá bài chưa đánh
-		public var leavedCards:Array; // Mảng chứa các lá bài đã đánh
-		public var downCards_1:Array; // Mảng chứa các lá bài của phỏm 1
-		public var downCards_2:Array; // Mảng chứa các lá bài của phỏm 2
-		public var downCards_3:Array; // Mảng chứa các lá bài của phỏm 3
 		
-		private var callButton:BigButton;
-		private var raiseButton:BigButton;
-		private var allInButton:BigButton;
-		private var raiseDoubleButton:BigButton;
-		private var raiseQuaterButton:BigButton;
-		private var raiseHalfButton:BigButton;
-		private var checkButton:BigButton;
-		private var foldButton:BigButton;
-		
-		private var getCardButton:BigButton; // Nút bốc bài
-		public var stealCardButton:BigButton; // Nút ăn bài
-		public var arrangeCardButton:BigButton; // Nút xếp bài
-		private var playCardButton:BigButton; // Nút đánh bài
-		private var reSelectButton:BigButton; // Nút chọn lại
-		private var downCardButton:BigButton; // Nút hạ bài
-		private var downCardFinishButton:BigButton; // Nút hạ bài xong
-		private var sendCardButton:BigButton; // Nút gửi bài
-		private var sendCardFinishButton:BigButton; // Nút gửi bài xong
 		private var buttonArray:Array; // mảng chứa tất cả các nút
 		
 		private var mainData:MainData = MainData.getInstance();
 		
 		private var playerName:TextField;
-		private var level:TextField;
 		private var money:TextField;
+		private var level:TextField;
+		private var deviceIcon:MovieClip;
 		private var homeIcon:Sprite;
 		private var readyIcon:Sprite;
 		public var moneyNumber:Number;
-		private var addMoneyText:TextField;
-		private var actionName:TextField;
+		public var levelNumber:Number;
+		public var winLoseIcon:MovieClip;
+		public var giveUpIcon:MovieClip;
+		private var actionIcon:MovieClip;
+		
+		private var callButton:MobileButton;
+		private var allInButton:MobileButton;
+		private var raiseButton:MobileButton;
+		private var raiseDoubleButton:MobileButton;
+		private var raiseFourpleButton:MobileButton;
+		private var raiseTripleButton:MobileButton;
+		private var checkButton:MobileButton;
+		private var foldButton:MobileButton;
 		
 		public var cardInfoArray:Array;
 		
@@ -166,133 +150,167 @@ package view.userInfo.playerInfo
 		public var moneyEffectPosition:Point;
 		
 		private var avatar:Avatar;
-		private var myStatus:String; // Lưu lại trạng thái hiện tại của user
 		private var selectedCardArray:Array;
 		
-		public var currentSelectedCard:CardPhom; // lá bài đang được chọn
-		public var currentDraggingCard:CardPhom; // lá bài đang được kéo
-		public var currentSwapCard:CardPhom; // lá bài sẽ được đổi vị trị với lá bài được kéo
-		public var cardOfPreviousPlayer:CardPhom; // lá bài vừa đánh của người chơi trước mình
-		public var isHaveUserDownCard:Boolean; // Biến cờ đánh dấu xem đã có user nào trước đó hạ bài hay chưa
+		public var currentSelectedCard:CardMauBinh; // lá bài đang được chọn
+		public var currentDraggingCard:CardMauBinh; // lá bài đang được kéo
+		public var currentSwapCard:CardMauBinh; // lá bài sẽ được đổi vị trị với lá bài được kéo
 		
 		private var mainCommand:MainCommand = MainCommand.getInstance();
 		private var electroServerCommand:* = mainCommand.electroServerCommand;
+		private var coreApi:CoreAPIXito = MainCommand.getInstance().electroServerCommand.coreAPI;
 		
 		private var leftLimit:Point; // Giới hạn di chuyển phía trái, khi drag quân bài về phía trái không thể dịch quá giới hạn này
 		private var rightLimit:Point; // Giới hạn di chuyển phía phải, khi drag quân bài về phía phải không thể dịch quá giới hạn này
 		
-		private var invitePlayButton:SimpleButton; // Nút mời chơi
 		private var exitButton:SimpleButton; // Nút thoát
+		private var selectOpenCardAnim:MovieClip;
 		
 		private var invitePlayWindow:InvitePlayWindow; // Cửa sổ mời chơi
+		private var orderCardWindow:OrderCardWindow; // Cửa sổ order bài
 		private var windowLayer:WindowLayer = WindowLayer.getInstance(); // windowLayer để mở cửa sổ bất kỳ
 		
 		private const effectTime:Number = 0.5;
 		public var playingPlayerArray:Array; // Danh sách những người đang chơi
 		
-		private var confirmDownCardFinishWindow:ConfirmWindow; // Bảng xác nhận hạ xong
-		private var confirmSendCardFinishWindow:ConfirmWindow; // Bảng xác nhận gửi xong
+		public var isWaitingToReady:Boolean;
 		private var confirmExitWindow:ConfirmWindow; // Bảng xác nhận thoát ra khỏi phòng
 		
-		private var countShowTooltipPlayCard:int = 0;
-		private var countShowTooltipDownCard:int = 0;
-		private var countShowTooltipSendCard:int = 0;
+		public var deckRank:Array; // Mảng để lưu cấp đọ của các chi
 		
-		public var isWaitingToReady:Boolean;
-		public var avatarString:String;
-		public var logoString:String;
+		public var sex:String;
 		
-		private var tooltip:Sprite; // tooltip
 		private var bubbleChat:BubbleChat;
 		private var timerToHideBubbleChat:Timer;
 		
-		public var currentMoneyOfRound:Number; // Số tiền người chơi đã bỏ ra trong vòng cược hiện tại
+		private var chipPosition:Sprite;
+		private var chipArray:Array;
+		private var chipContainer1:ChipContainer;
+		private var chipContainer2:ChipContainer;
 		
 		public function PlayerInfoXito() 
 		{
 			unLeaveCards = new Array();
-			leavedCards = new Array();
-			downCards_1 = new Array();
-			downCards_2 = new Array();
-			downCards_3 = new Array();
-			//cacheAsBitmap = true;
+			deckRank = new Array();
+			deckRank[0] = -1;
+			
+			chipContainer1 = new ChipContainer();
+			chipContainer2 = new ChipContainer();
 			
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		}
 		
-		public function addChatSentence(sentence:String):void
+		private function onRemovedFromStage(e:Event):void 
 		{
-			if (timerToHideBubbleChat)
+			if (chipContainer1)
 			{
-				timerToHideBubbleChat.removeEventListener(TimerEvent.TIMER_COMPLETE, onHideBubbleChat);
-				timerToHideBubbleChat.stop();	
+				if (chipContainer1.parent)
+					chipContainer1.parent.removeChild(chipContainer1);
 			}
-			
-			if (!bubbleChat)
-				bubbleChat = new BubbleChat("");
-			bubbleChat.addString(sentence);
-			bubbleChat.x = avatar.x;
-			bubbleChat.y = avatar.y;
-			var globalPosition:Point = new Point(bubbleChat.x, bubbleChat.y);
-			globalPosition = localToGlobal(globalPosition);
-			if (globalPosition.x + bubbleChat.width > mainData.stageWidth)
-				bubbleChat.x = - (globalPosition.x + bubbleChat.width - mainData.stageWidth);
-				
-			bubbleChat.x = globalPosition.x;
-			bubbleChat.y = globalPosition.y;
-			
-			parent.addChild(bubbleChat);
-			bubbleChat.visible = true;
-			
-			timerToHideBubbleChat = new Timer(mainData.showBubbleChatTime * 1000, 1);
-			timerToHideBubbleChat.addEventListener(TimerEvent.TIMER_COMPLETE, onHideBubbleChat);
-			timerToHideBubbleChat.start();
 		}
 		
-		private function onHideBubbleChat(e:TimerEvent):void 
+		public function showEmo(emoType:int):void
+		{
+			if (timerToHideEmo)
+			{
+				timerToHideEmo.removeEventListener(TimerEvent.TIMER_COMPLETE, onHideEmo);
+				timerToHideEmo.stop();
+			}
+			if (emo)
+			{
+				if (emo.parent)
+					emo.parent.removeChild(emo);
+			}
+			var tempClass:Class;
+			tempClass = Class(getDefinitionByName("Emo" + String(emoType)));
+			emo = Sprite(new tempClass());
+			emo.x = content["emoPosition"].x;
+			emo.y = content["emoPosition"].y;
+			addChild(emo);
+			timerToHideEmo = new Timer(5000, 1);
+			timerToHideEmo.addEventListener(TimerEvent.TIMER_COMPLETE, onHideEmo);
+			timerToHideEmo.start();
+		}
+		
+		public function setAction(type:String = '', value:Number = 0, isNoShowIcon:Boolean = false):void
+		{
+			if (type == '')
+				type = 'none';
+			actionIcon.gotoAndStop(type);
+			stopCountTime();
+			if (formName == BELOW_USER)
+			{
+				selectOpenCardAnim.visible = false;
+				disableAllButton();
+			}
+				
+			switch (type) 
+			{
+				case CALL:
+					var callMoney:Number = mainData.maxMoneyOfRound - currentMoneyOfRound;
+					saveCurrentMoneyOfRound = mainData.maxMoneyOfRound;
+					moveChip(callMoney);
+					if (callMoney >= moneyNumber)
+						SoundManager.getInstance().soundManagerXito.playCallAllSound(sex);
+					else
+						SoundManager.getInstance().soundManagerXito.playCallSound(sex);
+				break;
+				case RAISE:
+					saveCurrentMoneyOfRound = currentMoneyOfRound + value;
+					moveChip(value);
+					if (!isNoShowIcon)
+						SoundManager.getInstance().soundManagerXito.playRaiseSound(sex);
+				break;
+				case RAISE_DOUBLE:
+					saveCurrentMoneyOfRound = currentMoneyOfRound + value;
+					moveChip(value);
+					SoundManager.getInstance().soundManagerXito.playRaiseDoubleSound(sex);
+				break;
+				case RAISE_TRIPLE:
+					saveCurrentMoneyOfRound = currentMoneyOfRound + value;
+					moveChip(value);
+					SoundManager.getInstance().soundManagerXito.playRaiseTripleSound(sex);
+				break;
+				case RAISE_FOURPLE:
+					saveCurrentMoneyOfRound = currentMoneyOfRound + value;
+					moveChip(value);
+					SoundManager.getInstance().soundManagerXito.playRaiseFourpleSound(sex);
+				break;
+				case ALL_IN:
+					saveCurrentMoneyOfRound = currentMoneyOfRound + value;
+					moveChip(value);
+					SoundManager.getInstance().soundManagerXito.playAllInSound(sex);
+				break;
+				case FOLD:
+					isFold = true;
+					SoundManager.getInstance().soundManagerXito.playFoldSound(sex);
+				break;
+				case CHECK:
+					SoundManager.getInstance().soundManagerXito.playCheckSound(sex);
+				break;
+				default:
+			}
+			if (isNoShowIcon)
+				actionIcon.gotoAndStop("none");
+		}
+		
+		private function onHideEmo(e:TimerEvent):void 
 		{
 			if (!stage)
 				return;
-			bubbleChat.visible = false;
-		}
-		
-		private function onRemovedFromStage(e:Event):void 
-		{
-			if (mainData.isOnAndroid)
-				NativeApplication.nativeApplication.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown, false);
-				
-			if (bubbleChat)
+			if (emo)
 			{
-				if (bubbleChat.parent)
-					bubbleChat.parent.removeChild(bubbleChat);
+				if (emo.parent)
+					emo.parent.removeChild(emo);
 			}
 		}
 		
-		private function onKeyDown(e:KeyboardEvent):void
-		{
-			switch(e.keyCode)
-			{
-				case 16777238:
-				e.preventDefault();
-				e.stopImmediatePropagation();
-				e.stopPropagation();
-				
-				if (isPlaying)
-				{
-					confirmExitWindow = new ConfirmWindow();
-					confirmExitWindow.setNotice(mainData.init.gameDescription.playingScreen.confirmExit);
-					confirmExitWindow.addEventListener(ConfirmWindow.CONFIRM, onConfirmWindow);
-					windowLayer.openWindow(confirmExitWindow);
-				}
-				else
-				{
-					exitButton.removeEventListener(MouseEvent.CLICK, onOtherButtonClick);
-					dispatchEvent(new Event(EXIT, true));
-					electroServerCommand.joinLobbyRoom();
-					EffectLayer.getInstance().removeAllEffect();
-				}
-				break;
-			}
+		public function updateMoneyNumber(value:Number):void
+		{	
+			moneyNumber = value;
+			
+			if(formName == PlayerInfoXito.BELOW_USER) // Nếu là user của mình thì cập nhật lại tiền cho phòng chờ và phòng chọn kênh
+				mainData.chooseChannelData.myInfo.money = value;
 		}
 		
 		private function addAvatar():void 
@@ -300,76 +318,55 @@ package view.userInfo.playerInfo
 			if (!avatar)
 			{				
 				avatar = new Avatar();
-				if (formName == PlayerInfo.BELOW_USER)
-				{
-					avatar.setForm(Avatar.MY_AVATAR);
-				}
-				else
-				{
-					avatar.setForm(Avatar.FRIEND_AVATAR);
-					avatar.buttonMode = true;
-				}
+				avatar.setForm(Avatar.MY_AVATAR);
 			}
 			avatar.x = content["avatarPosition"].x;
 			avatar.y = content["avatarPosition"].y;
 			content["avatarPosition"].visible = false;
 			content.addChild(avatar);
+			actionIcon.parent.addChild(actionIcon);
+			
+			//if (formName != BELOW_USER)
+			//{
+				avatar.buttonMode = true;
+				avatar.addEventListener(MouseEvent.CLICK, onAvatarClick);
+			//}
+		}
+		
+		private function onAvatarClick(e:MouseEvent):void 
+		{
+			dispatchEvent(new Event(AVATAR_CLICK));
+		}
+		
+		private function removeAllButton():void
+		{
+			for (var i:int = 0; i < buttonArray.length; i++) 
+			{
+				if (contains(buttonArray[i]))
+					removeChild(buttonArray[i]);
+				BigButton(buttonArray[i]).enable = false;
+			}
 		}
 		
 		private function setupPersonalInfo():void 
 		{
 			playerName = content["playerName"];
 			level = content["level"];
+			deviceIcon = content["deviceIcon"];
+			deviceIcon.gotoAndStop("none");
 			money = content["money"];
-			//if (formName == BELOW_USER)
-			//{
-				//addMoneyText = content["addMoneyText"];
-				//addMoneyText.selectable = false;
-			//}
-			actionName = content["actionName"];
-			actionName.text = "";
-			playerName.selectable = /*level.selectable = */money.selectable = false;
+			money.autoSize = TextFieldAutoSize.CENTER;
+			actionIcon = content["actionIcon"];
+			actionIcon.gotoAndStop("none");
+			playerName.text = '';
+			money.text = '';
+			level.text = '';
+			playerName.selectable = money.selectable = false;
 			homeIcon = content["homeIcon"];
 			content.removeChild(homeIcon);
 			readyIcon = content["readyIcon"];
-			readyIcon.cacheAsBitmap = true;
-			if (formName == PlayerInfo.BELOW_USER)
-			{
-				tooltip = content["tooltip"];
-				TextField(tooltip["description"]).selectable = false;
-				hideToolTip();
-			}
+			
 			content.removeChild(readyIcon);
-		}
-		
-		public function showTooltip(description:String):void
-		{
-			if (formName != PlayerInfo.BELOW_USER)
-				return;
-			tooltip["description"].text = description;
-			tooltip.visible = true;
-			if (stage)
-			{
-				if (tooltip.parent != stage && tooltip.parent == content)
-				{
-					var tempPoint:Point = localToGlobal(new Point(tooltip.x, tooltip.y));
-					tooltip.x = tempPoint.x;
-					tooltip.y = tempPoint.y;
-				}
-				stage.addChild(tooltip);
-			}
-		}
-		
-		public function hideToolTip():void
-		{
-			if (formName != PlayerInfo.BELOW_USER)
-				return;
-			tooltip.visible = false;
-			if (stage)
-			{
-				if (tooltip.parent == stage)
-					stage.removeChild(tooltip);
-			}
 		}
 		
 		public function setForm(_formName:String):void
@@ -379,22 +376,19 @@ package view.userInfo.playerInfo
 			switch (formName) 
 			{
 				case PlayerInfoXito.BELOW_USER:
+					case PlayerInfoXito.BELOW_USER:
 					addContent(1);
 					createAllButton();
-					disableAllButton();
 					createOtherButton();
-					
-					if (mainData.isOnAndroid)
-						NativeApplication.nativeApplication.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown, false, 0, true);
 				break;
 				case PlayerInfoXito.LEFT_USER:
-					addContent(2);
-				break;
-				case PlayerInfoXito.RIGHT_USER:
 					addContent(3);
 				break;
+				case PlayerInfoXito.RIGHT_USER:
+					addContent(2);
+				break;
 				case PlayerInfoXito.ABOVE_LEFT_USER:
-					addContent(4);
+					addContent(5);
 				break;
 				case PlayerInfoXito.ABOVE_RIGHT_USER:
 					addContent(4);
@@ -413,8 +407,13 @@ package view.userInfo.playerInfo
 		// update text tên, cấp độ và số tiền
 		public function updatePersonalInfo(infoObject:Object):void
 		{
+			win = infoObject[DataFieldMauBinh.WIN];
+			lose = infoObject[DataFieldMauBinh.LOSE];
+			sex = infoObject[DataFieldMauBinh.SEX];
+			deviceIcon.gotoAndStop(infoObject[DataFieldMauBinh.DEVICE_ID]);
 			userName = infoObject[ModelField.USER_NAME];
 			displayName = infoObject[ModelField.DISPLAY_NAME];
+			ip = infoObject[DataFieldMauBinh.IP];
 			var nameString:String;
 			if(formName == BELOW_USER)
 				nameString = StringFormatUtils.shortenedString(infoObject[ModelField.DISPLAY_NAME], 14);
@@ -422,87 +421,43 @@ package view.userInfo.playerInfo
 				nameString = StringFormatUtils.shortenedString(infoObject[ModelField.DISPLAY_NAME], 11);
 			playerName.text = nameString;
 			
-			if (formName == BELOW_USER)
-			{
-				var phoneNumber_1:String = mainData.init.gameDescription.chooseChannelScreen.addMoneyNumber_1;
-				//if (mainData.init.gameDescription.isTurnOnSms == '1')
-					//addMoneyText.text = 'Soạn "' + mainData.init.gameDescription.moneyUnit + ' ' + String(mainData.chooseChannelData.myInfo.uId) + '" gửi ' + phoneNumber_1 + ' (15k/tin)';
-				//else
-					//addMoneyText.text = '';
-			}
-			//level.text = infoObject[ModelField.LEVEL];
-			moneyNumber = infoObject[ModelField.MONEY];
+			levelNumber = infoObject[ModelField.LEVEL];
+			level.text = infoObject[ModelField.LEVEL];
 			
+			moneyNumber = infoObject[ModelField.MONEY];
 			money.text = PlayingLogic.format(moneyNumber,1);
 			
 			if (moneyNumber <= 0)
 				money.text = '0';
 				
 			updateAvatar(infoObject[ModelField.AVATAR], infoObject[ModelField.LOGO]);
-			
-			avatar.addEventListener(MouseEvent.CLICK, onAvatarClick, true);
-			
-			contextMenuPosition = new Point();
-			contextMenuPosition.x = content["contextMenuPosition"].x;
-			contextMenuPosition.y = content["contextMenuPosition"].y;
-			content["contextMenuPosition"].visible = false;
-		}
-		
-		private function onAvatarClick(e:MouseEvent):void 
-		{
-			if (formName == BELOW_USER)
-				return;
-			e.stopPropagation();
-			dispatchEvent(new Event(AVATAR_CLICK));
+			content["emoPosition"].visible = false;
 		}
 		
 		public function updateMoney(value:Number):void
 		{
-			moneyNumber = value;
 			if (value == 0)
 				money.text = "0";
 			else
 				money.text = PlayingLogic.format(value, 1);
-			/*moneyNumber += value;
+				
+			moneyNumber = value;
 			
-			if (moneyNumber <= 0)
-			{
-				money.text = '0';
-				moneyNumber = 0;
-			}
-			else
-			{
-				money.text = PlayingLogic.format(moneyNumber, 1);
-			}*/
-			
-			if (formName == PlayerInfo.BELOW_USER) // Nếu là user của mình thì cập nhật lại tiền cho phòng chờ và phòng chọn kênh
-			{
+			if(formName == PlayerInfoXito.BELOW_USER) // Nếu là user của mình thì cập nhật lại tiền cho phòng chờ và phòng chọn kênh
 				mainData.chooseChannelData.myInfo.money = value;
-				mainData.chooseChannelData.myInfo = mainData.chooseChannelData.myInfo;
-			}
 		}
 		
 		public function removeAllCards():void
 		{
 			removeCardsArray(unLeaveCards);
-			removeCardsArray(leavedCards);
-			removeCardsArray(downCards_1);
-			removeCardsArray(downCards_2);
-			removeCardsArray(downCards_3);
 			
 			unLeaveCards = new Array();
-			leavedCards = new Array();
-			downCards_1 = new Array();
-			downCards_2 = new Array();
-			downCards_3 = new Array();
 			unLeaveCardPosition = new Array();
-			leavedCardPosition = new Array();
 			selectedCardArray = new Array();
 			
-			deckNumber = 0;
-			totalDownCard = 0;
-			cardOfPreviousPlayer = null;
-			isHaveUserDownCard = false;
+			chipContainer1.value = 0;
+			chipContainer2.value = 0;
+			
 			currentSelectedCard = null;
 			currentDraggingCard = null;
 			currentSwapCard = null;
@@ -510,7 +465,6 @@ package view.userInfo.playerInfo
 			isWaitingToReady = false;
 			
 			createPosition("unLeaveCardPosition", "unLeaveCardPosition", 10); // tạo vị trí cho quân bài chưa đánh
-			createPosition("leavedCardPosition", "leavedCardPosition", 4); // tạo vị trí cho quân bài đã đánh
 		}
 		
 		public function getUnUsePosition(positionType:String):Object
@@ -518,11 +472,8 @@ package view.userInfo.playerInfo
 			var tempPositionArray:Array;
 			switch (positionType) 
 			{
-				case CardPhom.UN_LEAVE_CARD:
+				case CardMauBinh.UN_LEAVE_CARD:
 					tempPositionArray = unLeaveCardPosition;
-				break;
-				case CardPhom.LEAVED_CARD:
-					tempPositionArray = leavedCardPosition;
 				break;
 			}
 			var i:int;
@@ -536,16 +487,13 @@ package view.userInfo.playerInfo
 			return tempPositionArray[0];
 		}
 		
-		public function getCardById(cardType:String,cardId:int):CardPhom
+		public function getCardById(cardType:String,cardId:int):CardMauBinh
 		{
 			var cardArray:Array;
 			switch (cardType) 
 			{
-				case CardPhom.UN_LEAVE_CARD:
+				case CardMauBinh.UN_LEAVE_CARD:
 					cardArray = unLeaveCards;
-				break;
-				case CardPhom.LEAVED_CARD:
-					cardArray = leavedCards;
 				break;
 			}
 			
@@ -554,173 +502,13 @@ package view.userInfo.playerInfo
 			{
 				if (cardArray[i].id == cardId) 
 				{
-					var card:CardPhom = cardArray[i];
+					var card:CardMauBinh = cardArray[i];
 					//cardArray.splice(i, 1);
 					return card;
 				}
 			}
+			trace("Không có quân bài nào có giá trị là " + cardId);
 			return cardArray[cardArray.length - 1];
-		}
-		
-		public function playOneCard(cardId:int):void
-		{
-			var tempPoint:Point;
-			var tempCardInfo:Array;
-			var movingType:String;
-			var tempCard:CardPhom;
-			movingType = CardManager.OPEN_FINISH_STYLE;
-			
-			// tìm quân bài cần đánh
-			tempCard = getCardById(CardPhom.UN_LEAVE_CARD, cardId);
-			
-			// Tìm vị trí chưa sử dụng để chia bài vào trị trí đó của người chơi
-			tempPoint = getPointByCardType(CardPhom.LEAVED_CARD);
-			
-			// gọi hàm di chuyển
-			tempCard.moving(tempPoint, CardManager.playCardTime , movingType, leavedCardSize);
-			
-			moveUnleaveToLeavedCard(cardId);
-		}
-		
-		// Xét đến lượt mình đánh
-		public function setMyTurn(status:String):void
-		{
-			myStatus = status;
-			hideToolTip();
-			switch (status) 
-			{
-				case PlayerInfoXito.DO_NOTHING:
-					timeBar.stopCountTime();
-					disableAllButton();
-				break;
-				case PlayerInfoXito.SELECT_ACTION:
-					checkAvailableAction();
-				break;
-				case PlayerInfoXito.SELECT_OPEN_CARD:
-					actionName.text = mainData.init.gameDescription.playingScreen.selectOpenCard;
-				break;
-			}
-		}
-		
-		private function checkAvailableAction():void 
-		{
-			disableAllButton();
-			enableAllButton();
-			if (mainData.actionStatus == 1) // trường hợp chưa có ai tố
-			{
-				callButton.enable = false;
-				raiseDoubleButton.enable = false;
-				
-				if (calculateBetMoney(RAISE) > mainData.chooseChannelData.myInfo.money)
-					raiseButton.enable = false;
-				if (calculateBetMoney(RAISE_QUATER) > mainData.chooseChannelData.myInfo.money)
-					raiseQuaterButton.enable = false;
-				if (calculateBetMoney(RAISE_HALF) > mainData.chooseChannelData.myInfo.money)
-					raiseHalfButton.enable = false;
-				if (calculateBetMoney(RAISE_DOUBLE) > mainData.chooseChannelData.myInfo.money)
-					raiseDoubleButton.enable = false;
-				if (calculateBetMoney(ALL_IN) > mainData.chooseChannelData.myInfo.money)
-					allInButton.enable = false;
-			}
-			else
-			{
-				checkButton.enable = false;
-				//var money:Number;
-				if (calculateBetMoney(RAISE) > mainData.chooseChannelData.myInfo.money)
-					raiseButton.enable = false;
-				if (calculateBetMoney(RAISE_QUATER) > mainData.chooseChannelData.myInfo.money)
-					raiseQuaterButton.enable = false;
-				if (calculateBetMoney(RAISE_HALF) > mainData.chooseChannelData.myInfo.money)
-					raiseHalfButton.enable = false;
-				if (calculateBetMoney(RAISE_DOUBLE) > mainData.chooseChannelData.myInfo.money)
-					raiseDoubleButton.enable = false;
-				if (calculateBetMoney(ALL_IN) > mainData.chooseChannelData.myInfo.money)
-					allInButton.enable = false;
-			}
-		}
-		
-		private function calculateBetMoney(type:String):Number
-		{
-			var money:Number;
-			var callMoney:Number;
-			callMoney = mainData.maxMoneyOfRound - currentMoneyOfRound;
-			switch (type) 
-			{
-				case RAISE:
-					money = (callMoney + Number(roomBet));
-				break;
-				case RAISE_QUATER:
-					money = (callMoney + (callMoney + mainData.currentTotalMoney) * 1 / 4);
-				break;
-				case RAISE_HALF:
-					money = (callMoney + (callMoney + mainData.currentTotalMoney) * 1 / 2);
-				break;
-				case RAISE_DOUBLE:
-					money = (callMoney + mainData.betMoneyOfPreviousUser * 2);
-				break;
-				case ALL_IN:
-					money = (callMoney * 2 + mainData.currentTotalMoney);
-				break;
-				default:
-			}
-			return Math.floor(money);
-		}
-		
-		private function onConfirmFullDeck(e:Event):void 
-		{
-			setMyTurn(DO_NOTHING);
-		}
-		
-		public function openAllCard():void
-		{
-			for (var i:int = 0; i < unLeaveCards.length; i++) 
-			{
-				CardPhom(unLeaveCards[i]).effectOpen();
-			}
-		}
-		
-		private function disableAllButton():void
-		{
-			for (var i:int = 0; i < buttonArray.length; i++) 
-			{
-				BigButton(buttonArray[i]).enable = false;
-			}
-		}
-		
-		private function enableAllButton():void
-		{
-			for (var i:int = 0; i < buttonArray.length; i++) 
-			{
-				BigButton(buttonArray[i]).enable = true;
-			}
-		}
-		
-		private function removeAllButton():void
-		{
-			for (var i:int = 0; i < buttonArray.length; i++) 
-			{
-				if (contains(buttonArray[i]))
-					removeChild(buttonArray[i]);
-				BigButton(buttonArray[i]).enable = false;
-			}
-		}
-		
-		private function moveUnleaveToLeavedCard(cardId:int):void // gán lá bài vừa đánh sang mảng các lá bài đã đánh
-		{
-			var i:int;
-			for (i = 0; i < unLeaveCards.length; i++) 
-			{
-				if (CardPhom(unLeaveCards[i]).id == cardId)
-				{
-					if (!leavedCards)
-						leavedCards = new Array();
-					leavedCards.push(unLeaveCards[i]);
-					CardPhom(unLeaveCards[i]).isMouseInteractive = false;
-					unLeaveCards.splice(i, 1);
-					i = unLeaveCards.length + 1;
-				}
-			}
-			reArrangeUnleaveCard();
 		}
 		
 		public function addValueForOneUnleavedCard(cardId:int):void
@@ -728,26 +516,26 @@ package view.userInfo.playerInfo
 			var i:int;
 			for (i = unLeaveCards.length - 1; i >= 0; i--) // tìm xem user này đã có quân bài này chưa, nếu có rồi thì returrn luôn
 			{
-				if (CardPhom(unLeaveCards[i]).id == cardId && cardId != 0)
+				if (CardXito(unLeaveCards[i]).id == cardId && cardId != 0)
 					return;
 			}
 			for (i = unLeaveCards.length - 1; i >= 0; i--) // Nếu chưa có thì gán giá trị quân bài mới vào
 			{
-				if (CardPhom(unLeaveCards[i]).id == 0)
+				if (CardXito(unLeaveCards[i]).id == 0)
 				{
-					CardPhom(unLeaveCards[i]).setId(cardId);
-					CardPhom(unLeaveCards[i]).effectOpen();
+					CardXito(unLeaveCards[i]).setId(cardId);
+					CardXito(unLeaveCards[i]).effectOpen();
 					i = -1;
 				}
 				else if (cardId == 0)
 				{
-					CardPhom(unLeaveCards[i]).setId(cardId);
+					CardXito(unLeaveCards[i]).setId(cardId);
 				}
 			}
 		}
 		
 		// push new card vào mảng các lá bài chưa đánh
-		public function pushNewUnLeaveCard(card:CardPhom):void
+		public function pushNewUnLeaveCard(card:CardXito):void
 		{
 			if (!unLeaveCards)
 				unLeaveCards = new Array();
@@ -756,224 +544,52 @@ package view.userInfo.playerInfo
 			
 			if (isCardInteractive)
 			{
-				//card.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownCard);
-				stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUpStage);
-				card.addEventListener(CardPhom.IS_SELECTED, onCardIsSelected);
-				card.addEventListener(CardPhom.IS_DE_SELECTED, onCardIsDeSelected);
+				card.addEventListener(CardXito.IS_SELECTED, onCardIsSelected);
+				card.addEventListener(CardXito.IS_DE_SELECTED, onCardIsDeSelected);
 			}
 			else
 			{
-				//card.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDownCard);
-				stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUpStage);
-				card.removeEventListener(CardPhom.IS_SELECTED, onCardIsSelected);
-				card.removeEventListener(CardPhom.IS_DE_SELECTED, onCardIsDeSelected);
-			}
-		}
-		
-		private function onMouseDownCard(e:MouseEvent):void 
-		{
-			if (!stage)
-				return;
-			currentDraggingCard = e.currentTarget as CardPhom;
-			stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-			var point_1:Point = localToGlobal(new Point(unLeaveCardPosition[0].x, unLeaveCardPosition[0].y));
-			point_1 = CardPhom(e.currentTarget).parent.globalToLocal(point_1);
-			var point_2:Point = localToGlobal(new Point(unLeaveCardPosition[9].x, unLeaveCardPosition[9].y));
-			point_2 = CardPhom(e.currentTarget).parent.globalToLocal(point_2);
-			CardPhom(e.currentTarget).startDrag(false, new Rectangle(point_1.x, point_1.y - CardPhom(e.currentTarget).height / 3, Math.abs(point_2.x - point_1.x) + 35, CardPhom(e.currentTarget).height / 3 * 2));
-		}
-		
-		private function onMouseUpStage(e:MouseEvent):void 
-		{
-			if (!stage || !currentDraggingCard)
-				return;
-			var i:int;
-			if (currentSwapCard && currentDraggingCard)
-			{
-				var index_1:int;
-				var index_2:int;
-				for (i = 0; i < unLeaveCards.length; i++)
-				{
-					if (unLeaveCards[i] == currentSwapCard)
-						index_1 = i;
-					if (unLeaveCards[i] == currentDraggingCard)
-						index_2 = i;
-				}
-				
-				if (index_2 > index_1)
-				{
-					var tempCard:CardPhom = unLeaveCards[index_2];
-					for (i = index_2; i > index_1; i--)
-					{
-						unLeaveCards[i] = unLeaveCards[i - 1];
-					}
-					unLeaveCards[index_1] = tempCard;
-				}
-				else
-				{
-					tempCard = unLeaveCards[index_2];
-					for (i = index_2; i < index_1 - 1; i++)
-					{
-						unLeaveCards[i] = unLeaveCards[i + 1];
-					}
-					unLeaveCards[index_1 - 1] = tempCard;
-				}
+				card.removeEventListener(CardXito.IS_SELECTED, onCardIsSelected);
+				card.removeEventListener(CardXito.IS_DE_SELECTED, onCardIsDeSelected);
 			}
 			
-			if (currentDraggingCard.isChoose)
-				var distance:Number = Math.sqrt(Math.pow(currentDraggingCard.startX - currentDraggingCard.x, 2) + Math.pow(currentDraggingCard.startY - currentDraggingCard.height / 4 - currentDraggingCard.y, 2));
-			else
-				distance = Math.sqrt(Math.pow(currentDraggingCard.startX - currentDraggingCard.x, 2) + Math.pow(currentDraggingCard.startY - currentDraggingCard.y, 2));
-				
-			if (distance >= 10)
+			if (formName == RIGHT_USER || formName == ABOVE_RIGHT_USER)
 			{
-				if (currentDraggingCard && !currentSwapCard)
+				for (var i:int = unLeaveCards.length - 1; i >= 0; i--) 
 				{
-					if (currentDraggingCard != unLeaveCards[unLeaveCards.length - 1])
-					{
-						if (currentDraggingCard.x >= unLeaveCards[unLeaveCards.length - 1].x + 10)
-						{
-							for (i = 0; i < unLeaveCards.length; i++)
-							{
-								if (unLeaveCards[i] == currentDraggingCard)
-								{
-									index_2 = i;
-									i = unLeaveCards.length + 1;
-								}
-							}
-							
-							index_1 = unLeaveCards.length;
-							tempCard = unLeaveCards[index_2];
-							for (i = index_2; i < index_1 - 1; i++)
-							{
-								unLeaveCards[i] = unLeaveCards[i + 1];
-							}
-							unLeaveCards[index_1 - 1] = tempCard;
-						}
-					}
+					unLeaveCards[i].parent.addChild(unLeaveCards[i]);
 				}
-				reArrangeUnleaveCard(0,false);
-			}
-			else
-			{
-				//reArrangeUnleaveCard(0,true);
-				reAddUnleaveCard();
-			}
-			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-			currentSwapCard = null;
-			currentDraggingCard = null;
-			for (i = 0; i < unLeaveCards.length; i++) 
-			{
-				CardPhom(unLeaveCards[i]).stopDrag();
-				var filterTemp:GlowFilter = new GlowFilter(0xFF0033, 1, 5, 5, 10, 1);
-				if(CardPhom(unLeaveCards[i]).isStealCard)
-					CardPhom(unLeaveCards[i]).filters = [filterTemp];
-				else
-					CardPhom(unLeaveCards[i]).filters = null;
 			}
 		}
 		
-		private function reAddUnleaveCard():void 
+		public function openAllCard():void
 		{
-			var tempPoint:Point;
-			var i:int;
-			for (i = 0; i < unLeaveCards.length; i++) 
-			{
-				//tempPoint = getPointByCardType(CardPhom.UN_LEAVE_CARD);
-				//CardPhom(unLeaveCards[i]).moving(tempPoint, 0, CardManager.TURN_OVER_STYLE, unLeaveCardSize, unLeaveCardRotation);
-				CardPhom(unLeaveCards[i]).parent.addChild(unLeaveCards[i]);
-			}
-		}
-		
-		private function onMouseMove(e:MouseEvent):void 
-		{
-			if (!currentDraggingCard)
-				return;
 			for (var i:int = 0; i < unLeaveCards.length; i++) 
 			{
-				if (currentSwapCard)
-				{
-					if (Math.abs(currentDraggingCard.x - currentSwapCard.x) > 10)
-					{
-						var filterTemp:GlowFilter = new GlowFilter(0xFF0033, 1, 5, 5, 10, 1);
-						if(currentSwapCard.isStealCard)
-							currentSwapCard.filters = [filterTemp];
-						else
-							currentSwapCard.filters = null;
-						currentSwapCard = null;
-					}
-				}
-				if (unLeaveCards[i] != currentDraggingCard)
-				{
-					if (Math.abs(currentDraggingCard.x - unLeaveCards[i].x) <= 10)
-					{
-						if (unLeaveCards[i] != currentSwapCard)
-						{
-							if (currentSwapCard)
-							{
-								filterTemp = new GlowFilter(0xFF0033, 1, 5, 5, 10, 1);
-								if(currentSwapCard.isStealCard)
-									currentSwapCard.filters = [filterTemp];
-								else
-									currentSwapCard.filters = null;
-							}
-							currentSwapCard = unLeaveCards[i];
-							filterTemp = new GlowFilter(0xFF6600, 1, 5, 5, 10, 1);
-							currentSwapCard.filters = [filterTemp];
-							currentDraggingCard.parent.addChild(currentDraggingCard);
-						}
-					}
-				}
+				CardXito(unLeaveCards[i]).effectOpen();
+				CardXito(unLeaveCards[i]).overLayer.visible = false;
+				CardXito(unLeaveCards[i]).cardBorder.visible = false;
 			}
 		}
 		
 		private function onCardIsSelected(e:Event):void // chọn bài
 		{
-			if (formName != PlayerInfo.BELOW_USER || mainData.isSelectOpenCard)
+			if (formName != PlayerInfoXito.BELOW_USER || mainData.isSelectOpenCard)
 				return;
 			mainData.isSelectOpenCard = true;
-			actionName.text = '';
+			actionIcon.gotoAndStop("none");
 			stopCountTime();
 			for (var i:int = 0; i < unLeaveCards.length; i++) 
 			{
+				CardXito(unLeaveCards[i]).hideTwinkle();
 				if (e.currentTarget != unLeaveCards[i])
-					CardPhom(unLeaveCards[i]).alpha = 0.7;
-			}
-			electroServerCommand.selectOpenCard(userName, [CardPhom(e.currentTarget).id - 1]);
-		}
-		
-		private function getPreviousPlayer():PlayerInfo
-		{
-			var previousPlayer:PlayerInfo;
-			for (var i:int = 0; i < playingPlayerArray.length; i++)
-			{
-				if (PlayerInfo(playingPlayerArray[i]).userName == userName)
 				{
-					if (i == 0)
-						previousPlayer = playingPlayerArray[playingPlayerArray.length - 1];
-					else
-						previousPlayer = playingPlayerArray[i - 1];
-					return previousPlayer;
+					CardXito(unLeaveCards[i]).overLayer.visible = true;
+					CardXito(unLeaveCards[i]).cardBorder.visible = true;
 				}
 			}
-			return null;
-		}
-		
-		private function getNextPlayer():PlayerInfo
-		{
-			var nextPlayer:PlayerInfo;
-			for (var i:int = 0; i < playingPlayerArray.length; i++)
-			{
-				if (PlayerInfo(playingPlayerArray[i]).userName == userName)
-				{
-					if (i == playingPlayerArray.length - 1)
-						nextPlayer = playingPlayerArray[0];
-					else
-						nextPlayer = playingPlayerArray[i + 1];
-					return nextPlayer;
-				}
-			}
-			return null;
+			coreApi.selectOpenCard(userName, [CardXito(e.currentTarget).id - 1]);
+			selectOpenCardAnim.visible = false;
 		}
 		
 		private function onCardIsDeSelected(e:Event):void // bỏ chọn bài
@@ -981,76 +597,38 @@ package view.userInfo.playerInfo
 			
 		}
 		
-		// push thêm một lá bài vào các quân bài đã đánh - dùng trong trường hợp mình bị ng khác ăn bài, và chuyển bài từ chỗ khác vào bài mình đã đánh
-		public function pushNewLeavedCard(card:CardPhom, time:Number = 0):void
-		{
-			if (time == 0)
-				time = CardManager.playCardTime;
-			if (!leavedCards)
-				leavedCards = new Array();
-			leavedCards.push(card);
-			card.isMouseInteractive = false;
-			
-			// Tìm vị trí chưa sử dụng để chia bài vào trị trí đó của người chơi
-			var tempPoint:Point = getPointByCardType(CardPhom.LEAVED_CARD);
-			
-			// gọi hàm di chuyển
-			card.moving(tempPoint, time , CardManager.TURN_OVER_STYLE, leavedCardSize);
-		}
-		
 		private function removeCardsArray(cardsArray:Array):void
 		{
 			var i:int;
+			if (!cardsArray)
+				return;
 			for (i = 0; i < cardsArray.length; i++) 
 			{
 				if (cardsArray[i])
 				{
-					if (cardsArray[i] is CardPhom)
+					if (cardsArray[i] is CardXito)
 					{
-						//CardPhom(cardsArray[i]).removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDownCard);
-						CardPhom(cardsArray[i]).removeEventListener(CardPhom.IS_SELECTED, onCardIsSelected);
-						CardPhom(cardsArray[i]).removeEventListener(CardPhom.IS_DE_SELECTED, onCardIsDeSelected);
-						CardPhom(cardsArray[i]).destroy();
+						CardXito(cardsArray[i]).removeEventListener(CardXito.IS_SELECTED, onCardIsSelected);
+						CardXito(cardsArray[i]).removeEventListener(CardXito.IS_DE_SELECTED, onCardIsDeSelected);
+						CardXito(cardsArray[i]).destroy();
 						cardsArray[i] = null;
 					}
 				}
 			}
 		}
 		
-		public function reArrangeUnleaveCard(time:Number = 0, isRotate:Boolean = true):void
+		public function reArrangeUnleaveCard(time:Number = 0, isRotate:Boolean = false):void
 		{
 			if (!stage || !unLeaveCards)
 				return;
 				
 			if (time == 0)
-				time = CardManager.arrangeCardTime;
+				time = CardManagerXito.arrangeCardTime;
 				
 			var index:int;
-			var scaleNumber:Number;
 			var i:int;
 			
 			currentSelectedCard = null;
-			if (playCardButton)
-				playCardButton.enable = false;
-			
-			switch (formName) 
-			{
-				case PlayerInfoXito.BELOW_USER:
-					scaleNumber = belowUserCardSize[CardPhom.UN_LEAVE_CARD];
-				break;
-				case PlayerInfoXito.LEFT_USER:
-					scaleNumber = leftUserCardSize[CardPhom.UN_LEAVE_CARD];
-				break;
-				case PlayerInfoXito.RIGHT_USER:
-					scaleNumber = rightUserCardSize[CardPhom.UN_LEAVE_CARD];
-				break;
-				case PlayerInfoXito.ABOVE_LEFT_USER:
-					scaleNumber = aboveUserCardSize[CardPhom.UN_LEAVE_CARD];
-				break;
-				case PlayerInfoXito.ABOVE_RIGHT_USER:
-					scaleNumber = aboveUserCardSize[CardPhom.UN_LEAVE_CARD];
-				break;
-			}
 			
 			for (i = 0; i < unLeaveCardPosition.length; i++) 
 			{
@@ -1060,16 +638,12 @@ package view.userInfo.playerInfo
 			var tempPoint:Point;
 			for (i = 0; i < unLeaveCards.length; i++) 
 			{
-				tempPoint = getPointByCardType(CardPhom.UN_LEAVE_CARD);
-				CardPhom(unLeaveCards[i]).isChoose = false;
-				if (isRotate)
-				{
-					CardPhom(unLeaveCards[i]).moving(tempPoint, time, CardManager.TURN_OVER_STYLE, unLeaveCardSize, unLeaveCardRotation);
-				}
+				tempPoint = getPointByCardType(CardXito.UN_LEAVE_CARD);
+				CardXito(unLeaveCards[i]).isChoose = false;
+				if(isRotate)
+					CardXito(unLeaveCards[i]).moving(tempPoint, time, CardManagerXito.TURN_OVER_STYLE, unLeaveCardSize, unLeaveCardRotation);
 				else
-				{
-					CardPhom(unLeaveCards[i]).moving(tempPoint, time, CardManager.TURN_OVER_STYLE, unLeaveCardSize, unLeaveCardRotation, true, true, false);
-				}
+					CardXito(unLeaveCards[i]).moving(tempPoint, time, CardManagerXito.TURN_OVER_STYLE, unLeaveCardSize, unLeaveCardRotation, true, true, isRotate, 1, false);
 			}
 		}
 		
@@ -1091,6 +665,9 @@ package view.userInfo.playerInfo
 				break;
 				case 4:
 					className = "zPlayUserProfileForm_4_Xito";
+				break;
+				case 5:
+					className = "zPlayUserProfileForm_5_Xito";
 				break;
 				default:
 					
@@ -1119,6 +696,20 @@ package view.userInfo.playerInfo
 			content["effectMoneyPosition"].visible = false;
 			
 			addAvatar();
+			addChild(content["levelIcon"]);
+			addChild(level);
+			if (isRoomMaster)
+				addChild(homeIcon);
+			winLoseIcon = content["winLoseIcon"];
+			addChild(winLoseIcon);
+			winLoseIcon.visible = false;
+			winLoseIcon.stop();
+			
+			giveUpIcon = content["giveUpIcon"];
+			if (giveUpIcon)
+				giveUpIcon.visible = false;
+				
+			content["bubbleChatPosition"].visible = false;
 		}
 		
 		private function addTimeBar():void 
@@ -1142,9 +733,9 @@ package view.userInfo.playerInfo
 			}
 			if (!timeBar)
 			{
-				timeBar = new TimeBar(_type);
+				timeBar = new TimeBarXito(_type);
 				timeBar.visible = false;
-				timeBar.addEventListener(TimeBar.COUNT_TIME_FINISH, onCountTimeFinish);
+				timeBar.addEventListener(TimeBarXito.COUNT_TIME_FINISH, onCountTimeFinish);
 			}
 			timeBar.x = content["timeBarPosition"].x;
 			timeBar.y = content["timeBarPosition"].y;
@@ -1152,34 +743,40 @@ package view.userInfo.playerInfo
 			addChild(timeBar);
 		}
 		
+		public function setStatus(type:String):void
+		{
+			if (type == '')
+			{
+				winLoseIcon.visible = false;
+				return;
+			}
+			winLoseIcon.parent.addChild(winLoseIcon);
+			winLoseIcon.gotoAndStop(type);
+			winLoseIcon.visible = true;
+		}
+		
 		private function onCountTimeFinish(e:Event):void 
 		{
-			if (formName != PlayerInfo.BELOW_USER)
+			if (formName != PlayerInfoXito.BELOW_USER)
 				return;
 			switch (myStatus) 
 			{
 				case SELECT_OPEN_CARD: // Tự động chọn 1 quân bài để lật
-					unLeaveCards[1].moveUp();
+					CardXito(unLeaveCards[1]).moveUp();
 				break;
 				case SELECT_ACTION: // Nếu hết thời gian mà chưa chọn action thì tự động ụp bài
-					electroServerCommand.fold(userName);
+					coreApi.fold(userName);
 				break;
 			}
 		}
 		
-		public function countTime(time:Number):void
+		public function countTime(timeNumber:Number):void
 		{
-			if (formName != BELOW_USER)
-				isMyTurn = true;
-			timeBar.countTime(time);
+			timeBar.countTime(timeNumber);
 		}
 		
 		public function stopCountTime():void
 		{
-			if (formName != BELOW_USER)
-				isMyTurn = false;
-			else
-				disableAllButton();
 			timeBar.stopCountTime();
 		}
 		
@@ -1188,15 +785,92 @@ package view.userInfo.playerInfo
 			if (!unLeaveCardPosition)
 			{
 				unLeaveCardPosition = new Array();
-				leavedCardPosition = new Array();
-				downCardPosition = new Point();
 			}
 			createPosition("unLeaveCardPosition", "unLeaveCardPosition", 10); // tạo vị trí cho quân bài chưa đánh
-			createPosition("leavedCardPosition", "leavedCardPosition", 4); // tạo vị trí cho quân bài đã đánh
-			downCardPosition.x = content["downCardPosition"].x;
-			downCardPosition.y = content["downCardPosition"].y;
-			content["downCardPosition"].visible = false;
+			
+			if (content["chipPosition"])
+			{
+				chipPosition = content["chipPosition"];
+				chipPosition.visible = false;
+			}
 		}
+		
+		public function receiveChip(addUpPosition:Sprite, winMoney:Number):void
+		{
+			if (winMoney <= 0)
+				return;
+			SoundManager.getInstance().soundManagerXito.playReceiveChipSound();
+			var tempPoint:Point = new Point(addUpPosition.x, addUpPosition.y);
+			tempPoint = addUpPosition.parent.localToGlobal(tempPoint);
+			//tempPoint = globalToLocal(tempPoint);
+			
+			chipContainer1.value = winMoney;
+			chipContainer1.x = tempPoint.x;
+			chipContainer1.y = tempPoint.y;
+			parent.addChild(chipContainer1);
+			tempPoint.x = avatar.x + avatar.width / 2;
+			tempPoint.y = avatar.y + avatar.height / 2;
+			tempPoint = localToGlobal(tempPoint);
+			var movingTween:GTween = new GTween(chipContainer1, 0.5, { x:tempPoint.x, y:tempPoint.y } );
+			movingTween.addEventListener(Event.COMPLETE, receiveChipComlete);
+		}
+		
+		private function receiveChipComlete(e:Event):void 
+		{
+			chipContainer1.parent.removeChild(chipContainer1);
+		}
+		
+		public function addUpChip(addUpPosition:Sprite):void
+		{
+			var tempPoint:Point = new Point(addUpPosition.x, addUpPosition.y);
+			tempPoint = addUpPosition.parent.localToGlobal(tempPoint);
+			//tempPoint = globalToLocal(tempPoint);
+			var movingTween:GTween = new GTween(chipContainer1, 0.5, { x:tempPoint.x, y:tempPoint.y } );
+			movingTween.addEventListener(Event.COMPLETE, addUpChipComlete);
+		}
+		
+		private function addUpChipComlete(e:Event):void 
+		{
+			if (chipContainer1.parent)
+				chipContainer1.parent.removeChild(chipContainer1);
+			chipContainer1.value = 0;
+			chipContainer2.value = 0;
+		}
+		
+		private function moveChip(value:Number):void 
+		{
+			SoundManager.getInstance().soundManagerXito.playRaiseChipSound();
+			if (chipContainer1.value == 0)
+			{
+				chipContainer1.value = value;
+				var tempPoint:Point = new Point(avatar.x + avatar.width / 2, avatar.y + avatar.height / 2);
+				tempPoint = localToGlobal(tempPoint);
+				chipContainer1.x = tempPoint.x;
+				chipContainer1.y = tempPoint.y;
+				parent.addChild(chipContainer1);
+				tempPoint.x = chipPosition.x;
+				tempPoint.y = chipPosition.y;
+				tempPoint = localToGlobal(tempPoint);
+				var movingTween:GTween = new GTween(chipContainer1, 0.4, { x:tempPoint.x, y:tempPoint.y } );
+			}
+			else
+			{
+				chipContainer2.value = value;
+				chipContainer2.x = avatar.x + avatar.width / 2;
+				chipContainer2.y = avatar.y + avatar.height / 2;
+				addChild(chipContainer2);
+				movingTween = new GTween(chipContainer2, 0.4, { x:chipPosition.x, y:chipPosition.y } );
+				movingTween.addEventListener(Event.COMPLETE, moveChipComlete);
+			}
+		}
+		
+		private function moveChipComlete(e:Event):void 
+		{
+			chipContainer1.value = saveCurrentMoneyOfRound;
+			chipContainer2.parent.removeChild(chipContainer2);
+		}
+		
+		private var saveCurrentMoneyOfRound:Number;
 		
 		/**
 		 * 
@@ -1223,11 +897,7 @@ package view.userInfo.playerInfo
 					break;
 					case PlayerInfoXito.LEFT_USER:
 					case PlayerInfoXito.RIGHT_USER:
-						isVertical = true;
-					break;
 					case PlayerInfoXito.ABOVE_LEFT_USER:
-						tempDistance = normalDistance;
-					break;
 					case PlayerInfoXito.ABOVE_RIGHT_USER:
 						tempDistance = normalDistance;
 					break;
@@ -1254,11 +924,14 @@ package view.userInfo.playerInfo
 			for (i = 1; i < positionNumber; i++) 
 			{
 				this[positionName][i] = new Object();
-				this[positionName][i].x = this[positionName][i - 1].x + horizontalDistance;
+				if (formName == RIGHT_USER || formName == ABOVE_RIGHT_USER)
+					this[positionName][i].x = this[positionName][i - 1].x - horizontalDistance;
+				else
+					this[positionName][i].x = this[positionName][i - 1].x + horizontalDistance;
 				this[positionName][i].y = this[positionName][i - 1].y + verticalDistance;
 			}
 			
-			if (formName == PlayerInfo.BELOW_USER)
+			if (formName == PlayerInfoXito.BELOW_USER)
 			{
 				leftLimit = globalToLocal(new Point(unLeaveCardPosition[0].x, unLeaveCardPosition[0].y));
 				rightLimit = globalToLocal(new Point(unLeaveCardPosition[9].x, unLeaveCardPosition[9].y));
@@ -1267,49 +940,32 @@ package view.userInfo.playerInfo
 		
 		public function destroy():void
 		{
+			if (bubbleChat)
+			{
+				if (bubbleChat.parent)
+					bubbleChat.parent.removeChild(bubbleChat);
+			}
+			
 			removeAllCards();
 			unLeaveCardPosition = null;
-			leavedCardPosition = null;
-			downCardPosition = null;
 			
 			unLeaveCardSize = 0;
-			leavedCardSize = 0;
-			downCardSize = 0;
 			
 			unLeaveCardRotation = 0;
-			leavedCardRotation = 0;
-			downCardRotation = 0;
 			
-			timeBar = null;
 			content = null;
 			formName = null;
-			deckNumber = 0;
-			totalDownCard = 0;
 			
 			playerName = null;
-			level = null
-			money = null
+			money = null;
 			homeIcon = null;
+			readyIcon = null;
 			
 			invitePlayWindow = null;
 			windowLayer = null;
 			
 			removeCardsArray(unLeaveCards);
-			removeCardsArray(leavedCards);
-			removeCardsArray(downCards_1);
-			removeCardsArray(downCards_2);
-			removeCardsArray(downCards_3);
 			unLeaveCards = null;
-			leavedCards = null;
-			downCards_1 = null;
-			downCards_2 = null;
-			downCards_3 = null;
-			
-			if (stage)
-			{
-				stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUpStage);
-				stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseUpStage);
-			}
 			
 			if (formName == BELOW_USER)
 			{
@@ -1317,15 +973,92 @@ package view.userInfo.playerInfo
 				{
 					buttonArray[i].removeEventListener(MouseEvent.CLICK, onButtonClick);
 				}
-				invitePlayButton.removeEventListener(MouseEvent.CLICK, onOtherButtonClick);
 				exitButton.removeEventListener(MouseEvent.CLICK, onOtherButtonClick);
 				
-				invitePlayButton = null;
 				exitButton = null;
 			}
 			
 			if (parent)
 				parent.removeChild(this);
+		}
+		
+		// Xét đến lượt mình đánh
+		public function setMyTurn(status:String):void
+		{
+			myStatus = status;
+			switch (status) 
+			{
+				case PlayerInfoXito.DO_NOTHING:
+					timeBar.stopCountTime();
+					disableAllButton();
+				break;
+				case PlayerInfoXito.SELECT_ACTION:
+					checkAvailableAction();
+					SoundManager.getInstance().playSound(SoundLibChung.MY_TURN_SOUND);
+				break;
+				case PlayerInfoXito.SELECT_OPEN_CARD:
+					selectOpenCardAnim.visible = true;
+					
+					for (var i:int = 0; i < unLeaveCards.length; i++)
+					{
+						//CardXito(unLeaveCards[i]).redBorder.visible = true;
+						CardXito(unLeaveCards[i]).showTwinkle();
+						if (i == 0)
+							CardXito(unLeaveCards[i]).filterNumber = 7;
+					}
+				break;
+			}
+		}
+		
+		public function addChatSentence(sentence:String):void
+		{
+			if (timerToHideBubbleChat)
+			{
+				timerToHideBubbleChat.removeEventListener(TimerEvent.TIMER_COMPLETE, onHideBubbleChat);
+				timerToHideBubbleChat.stop();	
+			}
+			
+			if (!bubbleChat)
+			{
+				if (formName == BELOW_USER)
+					bubbleChat = new BubbleChat(BubbleChat.RIGHT);
+				else
+					bubbleChat = new BubbleChat(BubbleChat.LEFT);
+			}
+			bubbleChat.addString(sentence);
+			bubbleChat.x = content["bubbleChatPosition"].x;
+			bubbleChat.y = content["bubbleChatPosition"].y;
+			var globalPosition:Point = new Point(bubbleChat.x, bubbleChat.y);
+			globalPosition = localToGlobal(globalPosition);
+			if (globalPosition.x + bubbleChat.width > mainData.stageWidth)
+				bubbleChat.x = - (globalPosition.x + bubbleChat.width - mainData.stageWidth);
+				
+			bubbleChat.x = globalPosition.x;
+			bubbleChat.y = globalPosition.y;
+			
+			parent.addChild(bubbleChat);
+			bubbleChat.visible = true;
+			
+			timerToHideBubbleChat = new Timer(5000, 1);
+			timerToHideBubbleChat.addEventListener(TimerEvent.TIMER_COMPLETE, onHideBubbleChat);
+			timerToHideBubbleChat.start();
+		}
+		
+		private function onHideBubbleChat(e:TimerEvent):void 
+		{
+			if (!stage)
+				return;
+			bubbleChat.visible = false;
+		}
+		
+		public function hideAllInfo():void
+		{
+			avatar.visible = false;
+			homeIcon.visible = false;
+			level.visible = false;
+			content["levelIcon"].visible = false;
+			playerName.visible = false;
+			money.visible = false;
 		}
 		
 		private function getPointByCardType(cardType:String):Point 
@@ -1338,143 +1071,29 @@ package view.userInfo.playerInfo
 			return localToGlobal(tempPoint);
 		}
 		
-		// Sắp xếp lại các quân bài hạ
-		public function reArrangeDownCard():void 
-		{
-			var startX:int;
-			var tempPoint:Point;
-			var movingType:String = CardManager.OPEN_FINISH_STYLE;
-			var i:int;
-			
-			// Nếu người hạ là người chơi bên trái và bên phải thì hạ dọc
-			if (formName == PlayerInfo.LEFT_USER || formName == PlayerInfo.RIGHT_USER)
-			{
-				if (deckNumber >= 3) // hạ phỏm 3
-				{
-					for (i = 0; i < downCards_3.length; i++) 
-					{
-						tempPoint = new Point();
-						if(formName == PlayerInfo.LEFT_USER)
-							tempPoint.x = downCardPosition.x + i * largeDistance_2;
-						else
-							tempPoint.x = downCardPosition.x - (downCards_3.length - i) * largeDistance_2;
-						tempPoint.y = downCardPosition.y - distanceDeckVertical;
-						CardPhom(downCards_3[i]).moving(localToGlobal(tempPoint), CardManager.downCardTime, movingType, downCardSize, downCardRotation);
-					}
-				}
-				
-				if (deckNumber >= 1) // hạ phỏm 1
-				{
-					for (i = 0; i < downCards_1.length; i++) 
-					{
-						tempPoint = new Point();
-						if(formName == PlayerInfo.LEFT_USER)
-							tempPoint.x = downCardPosition.x + i * largeDistance_2;
-						else
-							tempPoint.x = downCardPosition.x - (downCards_1.length - i) * largeDistance_2;
-						tempPoint.y = downCardPosition.y;
-						CardPhom(downCards_1[i]).moving(localToGlobal(tempPoint), CardManager.downCardTime, movingType, downCardSize, downCardRotation);
-					}
-				}
-				
-				if (deckNumber >= 2) // hạ phỏm 2
-				{
-					for (i = 0; i < downCards_2.length; i++) 
-					{
-						tempPoint = new Point();
-						if(formName == PlayerInfo.LEFT_USER)
-							tempPoint.x = downCardPosition.x + i * largeDistance_2;
-						else
-							tempPoint.x = downCardPosition.x - (downCards_2.length - i) * largeDistance_2;
-						tempPoint.y = downCardPosition.y + distanceDeckVertical;
-						CardPhom(downCards_2[i]).moving(localToGlobal(tempPoint), CardManager.downCardTime, movingType, downCardSize, downCardRotation);
-					}
-				}
-			}
-			else // Nếu người hạ là người chơi bên trên và bên dưới thì hạ ngang
-			{
-				// tính toán điểm hạ dựa vào số phỏm và số lượng quân bài tổng của các phỏm - căn vào giữa
-				startX = downCardPosition.x - ((totalDownCard - deckNumber) * largeDistance_2 + distanceDeckHorizontal * (deckNumber - 1) + downCards_1[0].width * deckNumber) /2 + downCards_1[0].width / 2; 
-				
-				// bắt đầu thực hiện di chuyển
-				if (deckNumber >= 1) // hạ phỏm 1
-				{
-					for (i = 0; i < downCards_1.length; i++) 
-					{
-						tempPoint = new Point();
-						tempPoint.x = startX + i * largeDistance_2;
-						tempPoint.y = downCardPosition.y;
-						CardPhom(downCards_1[i]).moving(localToGlobal(tempPoint), CardManager.downCardTime, movingType, downCardSize, downCardRotation);
-					}
-				}
-				
-				if (deckNumber >= 2) // hạ phỏm 2
-				{
-					for (i = 0; i < downCards_2.length; i++) 
-					{
-						tempPoint = new Point();
-						tempPoint.x = startX + (downCards_1.length - 1) * largeDistance_2 + downCards_1[0].width + distanceDeckHorizontal + i * largeDistance_2;
-						tempPoint.y = downCardPosition.y;
-						CardPhom(downCards_2[i]).moving(localToGlobal(tempPoint), CardManager.downCardTime, movingType, downCardSize, downCardRotation);
-					}
-				}
-				
-				if (deckNumber >= 3) // hạ phỏm 3
-				{
-					for (i = 0; i < downCards_3.length; i++) 
-					{
-						tempPoint = new Point();
-						tempPoint.x = startX + (downCards_1.length + downCards_2.length - 2) * largeDistance_2 + downCards_1[0].width * (deckNumber - 1) + distanceDeckHorizontal * (deckNumber - 1) + i * largeDistance_2;
-						tempPoint.y = downCardPosition.y;
-						CardPhom(downCards_3[i]).moving(localToGlobal(tempPoint), CardManager.downCardTime, movingType, downCardSize, downCardRotation);
-					}
-				}
-			}
-		}
-		
 		private function createSizeAndRotation():void 
 		{
 			switch (formName) 
 			{
 				case PlayerInfoXito.BELOW_USER:
-					unLeaveCardSize = belowUserCardSize[CardPhom.UN_LEAVE_CARD];
-					leavedCardSize = belowUserCardSize[CardPhom.LEAVED_CARD];
-					downCardSize = belowUserCardSize[CardPhom.DOWN_CARD];
-					unLeaveCardRotation = belowUserCardRotation[CardPhom.UN_LEAVE_CARD];
-					leavedCardRotation = belowUserCardRotation[CardPhom.LEAVED_CARD];
-					downCardRotation = belowUserCardRotation[CardPhom.DOWN_CARD];
+					unLeaveCardSize = belowUserCardSize[CardXito.UN_LEAVE_CARD];
+					unLeaveCardRotation = belowUserCardRotation[CardXito.UN_LEAVE_CARD];
 				break;
 				case PlayerInfoXito.LEFT_USER:
-					unLeaveCardSize = leftUserCardSize[CardPhom.UN_LEAVE_CARD];
-					leavedCardSize = leftUserCardSize[CardPhom.LEAVED_CARD];
-					downCardSize = leftUserCardSize[CardPhom.DOWN_CARD];
-					unLeaveCardRotation = leftUserCardRotation[CardPhom.UN_LEAVE_CARD];
-					leavedCardRotation = leftUserCardRotation[CardPhom.LEAVED_CARD];
-					downCardRotation = leftUserCardRotation[CardPhom.DOWN_CARD];
+					unLeaveCardSize = leftUserCardSize[CardXito.UN_LEAVE_CARD];
+					unLeaveCardRotation = leftUserCardRotation[CardXito.UN_LEAVE_CARD];
 				break;
 				case PlayerInfoXito.RIGHT_USER:
-					unLeaveCardSize = rightUserCardSize[CardPhom.UN_LEAVE_CARD];
-					leavedCardSize = rightUserCardSize[CardPhom.LEAVED_CARD];
-					downCardSize = rightUserCardSize[CardPhom.DOWN_CARD];
-					unLeaveCardRotation = rightUserCardRotation[CardPhom.UN_LEAVE_CARD];
-					leavedCardRotation = rightUserCardRotation[CardPhom.LEAVED_CARD];
-					downCardRotation = rightUserCardRotation[CardPhom.DOWN_CARD];
+					unLeaveCardSize = rightUserCardSize[CardXito.UN_LEAVE_CARD];
+					unLeaveCardRotation = rightUserCardRotation[CardXito.UN_LEAVE_CARD];
 				break;
 				case PlayerInfoXito.ABOVE_LEFT_USER:
-					unLeaveCardSize = aboveUserCardSize[CardPhom.UN_LEAVE_CARD];
-					leavedCardSize = aboveUserCardSize[CardPhom.LEAVED_CARD];
-					downCardSize = aboveUserCardSize[CardPhom.DOWN_CARD];
-					unLeaveCardRotation = aboveUserCardRotation[CardPhom.UN_LEAVE_CARD];
-					leavedCardRotation = aboveUserCardRotation[CardPhom.LEAVED_CARD];
-					downCardRotation = aboveUserCardRotation[CardPhom.DOWN_CARD];
+					unLeaveCardSize = leftUserCardSize[CardXito.UN_LEAVE_CARD];
+					unLeaveCardRotation = leftUserCardRotation[CardXito.UN_LEAVE_CARD];
 				break;
 				case PlayerInfoXito.ABOVE_RIGHT_USER:
-					unLeaveCardSize = aboveUserCardSize[CardPhom.UN_LEAVE_CARD];
-					leavedCardSize = aboveUserCardSize[CardPhom.LEAVED_CARD];
-					downCardSize = aboveUserCardSize[CardPhom.DOWN_CARD];
-					unLeaveCardRotation = aboveUserCardRotation[CardPhom.UN_LEAVE_CARD];
-					leavedCardRotation = aboveUserCardRotation[CardPhom.LEAVED_CARD];
-					downCardRotation = aboveUserCardRotation[CardPhom.DOWN_CARD];
+					unLeaveCardSize = rightUserCardSize[CardXito.UN_LEAVE_CARD];
+					unLeaveCardRotation = rightUserCardRotation[CardXito.UN_LEAVE_CARD];
 				break;
 			}
 		}
@@ -1484,22 +1103,42 @@ package view.userInfo.playerInfo
 		{
 			buttonArray = new Array();
 			
-			createButton("callButton", "callButtonPosition");
-			createButton("raiseButton", "raiseButtonPosition");
-			createButton("allInButton", "allInButtonPosition");
-			createButton("raiseDoubleButton", "raiseDoubleButtonPosition");
-			createButton("raiseQuaterButton", "raiseQuaterButtonPosition");
-			createButton("raiseHalfButton", "raiseHalfButtonPosition");
-			createButton("checkButton", "checkButtonPosition");
-			createButton("foldButton", "foldButtonPosition");
+			callButton = content["callButton"];
+			allInButton = content["allInButton"];
+			raiseButton = content["raiseButton"];
+			raiseDoubleButton = content["raiseDoubleButton"];
+			raiseFourpleButton = content["raiseFourpleButton"];
+			raiseTripleButton = content["raiseTripleButton"];
+			checkButton = content["checkButton"];
+			foldButton = content["foldButton"];
+			
+			callButton.addEventListener(MouseEvent.CLICK, onButtonClick);
+			allInButton.addEventListener(MouseEvent.CLICK, onButtonClick);
+			raiseButton.addEventListener(MouseEvent.CLICK, onButtonClick);
+			raiseDoubleButton.addEventListener(MouseEvent.CLICK, onButtonClick);
+			raiseFourpleButton.addEventListener(MouseEvent.CLICK, onButtonClick);
+			raiseTripleButton.addEventListener(MouseEvent.CLICK, onButtonClick);
+			checkButton.addEventListener(MouseEvent.CLICK, onButtonClick);
+			foldButton.addEventListener(MouseEvent.CLICK, onButtonClick);
+			
+			buttonArray.push(callButton);
+			buttonArray.push(allInButton);
+			buttonArray.push(raiseButton);
+			buttonArray.push(raiseDoubleButton);
+			buttonArray.push(raiseFourpleButton);
+			buttonArray.push(raiseTripleButton);
+			buttonArray.push(checkButton);
+			buttonArray.push(foldButton);
+			
+			disableAllButton();
 		}
 		
 		// Các nút ngoài chức năng chơi bài
 		private function createOtherButton():void
 		{
-			invitePlayButton = content["invitePlayButton"];
+			selectOpenCardAnim = content["selectOpenCardAnim"];
+			selectOpenCardAnim.visible = false;
 			exitButton = content["exitButton"];
-			invitePlayButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
 			exitButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
 		}
 		
@@ -1522,65 +1161,43 @@ package view.userInfo.playerInfo
 		
 		private function onButtonClick(e:MouseEvent):void 
 		{
-			if (BigButton(e.currentTarget).enable)
+			if (MobileButton(e.currentTarget).enable)
 			{
 				switch (e.currentTarget) 
 				{
 					case callButton:
-						electroServerCommand.call(userName);
+						coreApi.call(userName);
 					break;
 					case raiseButton:
-						electroServerCommand.raise(userName, String(calculateBetMoney(RAISE)), 1);
-					break;
-					case raiseQuaterButton:
-						electroServerCommand.raise(userName, String(calculateBetMoney(RAISE_QUATER)), 2);
-					break;
-					case raiseHalfButton:
-						electroServerCommand.raise(userName, String(calculateBetMoney(RAISE_HALF)), 3);
+						coreApi.raise(userName, String(calculateBetMoney(RAISE)), 1);
 					break;
 					case raiseDoubleButton:
-						electroServerCommand.raise(userName, String(calculateBetMoney(RAISE_DOUBLE)), 4);
+						coreApi.raise(userName, String(calculateBetMoney(RAISE_DOUBLE)), 2);
+					break;
+					case raiseTripleButton:
+						coreApi.raise(userName, String(calculateBetMoney(RAISE_TRIPLE)), 3);
+					break;
+					case raiseFourpleButton:
+						coreApi.raise(userName, String(calculateBetMoney(RAISE_FOURPLE)), 4);
 					break;
 					case allInButton:
-						electroServerCommand.raise(userName, String(calculateBetMoney(ALL_IN)), 5);
+						coreApi.raise(userName, String(calculateBetMoney(ALL_IN)), 5);
 					break;
 					case foldButton:
-						electroServerCommand.fold(userName);
+						coreApi.fold(userName);
 					break;
 					case checkButton:
-						electroServerCommand.check(userName);
+						coreApi.check(userName);
 					break;
 				}
 				disableAllButton();
 			}
 		}
 		
-		public function setAction(type:String):void
-		{
-			actionName.text = mainData.init.gameDescription.playingScreen[type + "Button"];
-			stopCountTime();
-		}
-		
 		private function onConfirmWindow(e:Event):void 
 		{
-			if (e.currentTarget == confirmDownCardFinishWindow)
+			if (e.currentTarget == confirmExitWindow)
 			{
-				downCardFinishButton.enable = false;
-				electroServerCommand.downCardFinish(userName);
-			}
-			else if (e.currentTarget == confirmSendCardFinishWindow)
-			{
-				electroServerCommand.sendCardFinish(userName);
-				setMyTurn(PLAY_CARD);
-			}
-			else if (e.currentTarget == confirmExitWindow)
-			{
-				if (stage)
-				{
-					if (tooltip.parent == stage)
-						stage.removeChild(tooltip);
-				}
-			
 				mainData.chooseChannelData.myInfo.money -= Number(mainData.playingData.gameRoomData.roomBet) * 4;
 				if (mainData.chooseChannelData.myInfo.money < 0)
 					mainData.chooseChannelData.myInfo.money = 0;
@@ -1588,7 +1205,14 @@ package view.userInfo.playerInfo
 				exitButton.removeEventListener(MouseEvent.CLICK, onOtherButtonClick);
 				dispatchEvent(new Event(EXIT, true));
 				electroServerCommand.joinLobbyRoom();
+				
 				EffectLayer.getInstance().removeAllEffect();
+			}
+			else if (e.currentTarget == orderCardWindow)
+			{
+				isReadyPlay = true;
+				//invitePlayWindow = new InvitePlayWindow();
+				//windowLayer.openWindow(invitePlayWindow);
 			}
 		}
 		
@@ -1596,10 +1220,6 @@ package view.userInfo.playerInfo
 		{
 			switch (e.currentTarget) 
 			{
-				case invitePlayButton:
-					invitePlayWindow = new InvitePlayWindow();
-					windowLayer.openWindow(invitePlayWindow);
-				break;
 				case exitButton:
 					if (isPlaying)
 					{
@@ -1619,6 +1239,11 @@ package view.userInfo.playerInfo
 			}
 		}
 		
+		private var _isCurrentWinner:Boolean;
+		public function set isCurrentWinner(value:Boolean):void 
+		{
+			_isCurrentWinner = value;
+		}
 		
 		private var _isReadyPlay:Boolean;
 		public function set isReadyPlay(value:Boolean):void 
@@ -1652,7 +1277,8 @@ package view.userInfo.playerInfo
 		}
 		
 		private var _isRoomMaster:Boolean;
-		public var contextMenuPosition:Point;
+		public var avatarString:String;
+		public var logoString:String;
 		
 		public function get isRoomMaster():Boolean 
 		{
@@ -1664,61 +1290,16 @@ package view.userInfo.playerInfo
 			_isRoomMaster = value;
 			if (value)
 			{
-				content.addChild(homeIcon);
+				addChild(homeIcon);
 			}
 			else
 			{
-				if (content.contains(homeIcon))
-					content.removeChild(homeIcon);
+				if (contains(homeIcon))
+					removeChild(homeIcon);
 			}
-		}
-		
-		// Hàm được gọi khi bốc bài thành công
-		public function getCardSuccess():void
-		{
-			if (myStatus != GET_CARD) // tránh trường hợp quá thời gian và tự động đánh, liên quan đến checkAutoPlayCard() trước đó
-				return;
-			if (leavedCards.length == mainData.cardNumberToDown) // Check xem đến lượt mình hạ chưa
-				setMyTurn(DOWN_CARD);
-			else
-				setMyTurn(PLAY_CARD);
-		}
-		
-		// Hàm dùng để kiểm tra xem user đã quá thời gian chưa, nếu quá thời gian thì đánh tự động luôn
-		public function checkAutoPlayCard():void 
-		{
-			if (myStatus == PLAY_CARD)
-				return;
-			if (myStatus == DO_NOTHING) // Tình huống user quá thời gian thì tự đánh luôn
-			{
-				if (leavedCards.length == mainData.cardNumberToDown)
-				{
-					setMyTurn(DOWN_CARD);
-				}
-				else
-				{
-					setMyTurn(DO_NOTHING);
-					electroServerCommand.playOneCard(CardPhom(unLeaveCards[unLeaveCards.length - 1]).id, getNextPlayer().userName);
-					playOneCard(CardPhom(unLeaveCards[unLeaveCards.length - 1]).id);
-					currentSelectedCard = null;
-				}
-			}
-		}
-		
-		private var _isMyTurn:Boolean;
-		
-		public function set isMyTurn(value:Boolean):void 
-		{
-			_isMyTurn = value;
-			//if (value)
-				//avatar.playingStatus.visible = true;
-			//else
-				//avatar.playingStatus.visible = false;
 		}
 		
 		private var _isPlaying:Boolean; // Biến cờ thể hiện user đó đang chơi hay không
-		private var isNoPlay:Boolean = true;
-		public var countArrangeCard:int = 0;
 		
 		public function get isPlaying():Boolean 
 		{
@@ -1728,15 +1309,142 @@ package view.userInfo.playerInfo
 		public function set isPlaying(value:Boolean):void 
 		{
 			_isPlaying = value;
-			timeBar.visible = value;
+			
 			if (value)
-			{
 				isNoPlay = false;
+		}
+		
+		private function checkAvailableAction():void 
+		{
+			disableAllButton();
+			enableAllButton();
+			
+			var maxMoneyOfPlayer:Number = 0;
+			for (var i:int = 0; i < playingPlayerArray.length; i++) 
+			{
+				if (PlayerInfoXito(playingPlayerArray[i]).userName != mainData.chooseChannelData.myInfo.uId)
+				{
+					if (maxMoneyOfPlayer < PlayerInfoXito(playingPlayerArray[i]).moneyNumber)
+						maxMoneyOfPlayer = PlayerInfoXito(playingPlayerArray[i]).moneyNumber
+				}
+			}
+				
+			if (mainData.actionStatus == 1) // trường hợp chưa có ai tố
+			{
+				callButton.enable = false;
+				raiseDoubleButton.enable = false;
+				raiseTripleButton.enable = false;
+				raiseFourpleButton.enable = false;
+				allInButton.enable = false;
+				raiseButton.parent.addChild(raiseButton);
+				checkButton.parent.addChild(checkButton);
 			}
 			else
 			{
-				actionName.text = '';
-				countArrangeCard = 0;
+				callButton.parent.addChild(callButton);
+				foldButton.parent.addChild(foldButton);
+			}
+			
+			if (calculateBetMoney(RAISE) > mainData.chooseChannelData.myInfo.money)
+				raiseButton.enable = false;
+			if (calculateBetMoney(RAISE) > moneyNumber || calculateBetMoney(RAISE) > maxMoneyOfPlayer)
+				raiseButton.enable = false;
+				
+			if (calculateBetMoney(RAISE_FOURPLE) > mainData.chooseChannelData.myInfo.money)
+				raiseFourpleButton.enable = false;
+			if (calculateBetMoney(RAISE_FOURPLE) > moneyNumber || calculateBetMoney(RAISE_FOURPLE) > maxMoneyOfPlayer)
+				raiseFourpleButton.enable = false;
+				
+			if (calculateBetMoney(RAISE_TRIPLE) > mainData.chooseChannelData.myInfo.money)
+				raiseTripleButton.enable = false;
+			if (calculateBetMoney(RAISE_TRIPLE) > moneyNumber || calculateBetMoney(RAISE_TRIPLE) > maxMoneyOfPlayer)
+				raiseTripleButton.enable = false;
+				
+			if (calculateBetMoney(RAISE_DOUBLE) > mainData.chooseChannelData.myInfo.money)
+				raiseDoubleButton.enable = false;
+			if (calculateBetMoney(RAISE_DOUBLE) > moneyNumber || calculateBetMoney(RAISE_DOUBLE) > maxMoneyOfPlayer)
+				raiseDoubleButton.enable = false;
+				
+			if (calculateBetMoney(ALL_IN) > mainData.chooseChannelData.myInfo.money)
+				allInButton.enable = false;
+			if (calculateBetMoney(ALL_IN) > moneyNumber || calculateBetMoney(ALL_IN) > maxMoneyOfPlayer)
+				allInButton.enable = false;
+		}
+		
+		private function calculateBetMoney(type:String):Number
+		{
+			var money:Number;
+			var callMoney:Number;
+			callMoney = mainData.maxMoneyOfRound - currentMoneyOfRound;
+			switch (type) 
+			{
+				case RAISE:
+					money = Number(roomBet);
+				break;
+				case RAISE_FOURPLE:
+					//money = (callMoney + mainData.betMoneyOfPreviousUser * 3);
+					money = mainData.maxMoneyOfRound - currentMoneyOfRound + (4 - 1) * mainData.maxMoneyOfRound;
+				break;
+				case RAISE_TRIPLE:
+					//money = (callMoney + mainData.betMoneyOfPreviousUser * 2);
+					money = mainData.maxMoneyOfRound - currentMoneyOfRound + (3 - 1) * mainData.maxMoneyOfRound;
+				break;
+				case RAISE_DOUBLE:
+					//money = (callMoney + mainData.betMoneyOfPreviousUser * 1);
+					money = mainData.maxMoneyOfRound - currentMoneyOfRound + (2 - 1) * mainData.maxMoneyOfRound;
+				break;
+				case ALL_IN:
+					money = (callMoney * 2 + mainData.currentTotalMoney);
+				break;
+				default:
+			}
+			return Math.floor(money);
+		}
+		
+		private function disableAllButton():void
+		{
+			for (var i:int = 0; i < buttonArray.length; i++) 
+			{
+				MobileButton(buttonArray[i]).enable = false;
+			}
+		}
+		
+		private function enableAllButton():void
+		{
+			for (var i:int = 0; i < buttonArray.length; i++) 
+			{
+				MobileButton(buttonArray[i]).enable = true;
+			}
+		}
+		
+		public var timeBar:TimeBarXito;
+		private var isNoPlay:Boolean = true;
+		private var isIncreaseArrange:Boolean;
+		private var backupUnleaveCardPosition:Array;
+		public var isFirstClick:Boolean = true;
+		
+		private var _isGiveUp:Boolean;
+		private var emo:Sprite;
+		private var timerToHideEmo:Timer;
+		public var win:int;
+		public var lose:int;
+		private var myStatus:String; // Lưu lại trạng thái hiện tại của user
+		public var isFold:Boolean;
+		public var currentMoneyOfRound:Number; // Số tiền người chơi đã bỏ ra trong vòng cược hiện tại
+		public var isMyTurn:Boolean;
+		
+		public function get isGiveUp():Boolean 
+		{
+			return _isGiveUp;
+		}
+		
+		public function set isGiveUp(value:Boolean):void 
+		{
+			_isGiveUp = value;
+			if (value)
+			{
+				giveUpIcon.visible = true;
+				addChild(giveUpIcon);
 			}
 		}
 		

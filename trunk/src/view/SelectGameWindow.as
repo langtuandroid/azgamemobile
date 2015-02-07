@@ -24,7 +24,7 @@ package view
 	import view.window.BaseWindow;
 	import view.window.GiftCodeWindow;
 	import view.window.shop.Shop_Coffer_Item_Window;
-	import view.window.shop.Shop_Coffer_Item_Window_New;
+	//import view.window.shop.Shop_Coffer_Item_Window_New;
 	import view.window.windowLayer.WindowLayer;
 	
 	/**
@@ -113,6 +113,7 @@ package view
 			samIcon.addEventListener(MouseEvent.MOUSE_UP, onSelectGame);
 			phomIcon.addEventListener(MouseEvent.MOUSE_UP, onSelectGame);
 			maubinhIcon.addEventListener(MouseEvent.MOUSE_UP, onSelectGame);
+			xitoIcon.addEventListener(MouseEvent.MOUSE_UP, onSelectGame);
 			
 			selectGameTabEnable = content["selectGameTabEnable"];
 			rankTabEnable = content["rankTabEnable"];
@@ -149,6 +150,7 @@ package view
 			addChild(avatar);
 			
 			giftCodeButton = content["giftCodeButton"];
+			giftCodeButton.visible = false;
 			exitButton = content["exitButton"];
 			if (mainData.isFacebookVersion)
 				exitButton.visible = false;
@@ -165,6 +167,25 @@ package view
 			
 			exitButton.addEventListener(MouseEvent.CLICK, onExitButtonClick);
 			giftCodeButton.addEventListener(MouseEvent.CLICK, onGiftCodeButtonClick);
+			
+			if (mainData.isOnIos)
+			{
+				var mainRequest:MainRequest = new MainRequest();
+				if (mainData.isTest)
+					mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayIO.asmx/GetCountryCodeFromIp", null, onGetCountryRespond, true);
+				else
+					mainRequest.sendRequest_Post("http://wss.azgame.us/Service02/OnplayIO.asmx/GetCountryCodeFromIp", null, onGetCountryRespond, true);
+			}
+			else
+			{
+				giftCodeButton.visible = true;
+			}
+		}
+		
+		private function onGetCountryRespond(value:Object):void 
+		{
+			if (value.Data == "VN")
+				giftCodeButton.visible = true;
 		}
 		
 		private function onButtonClick(e:MouseEvent):void 
@@ -276,7 +297,7 @@ package view
 					
 					if (testNew) 
 					{
-						_shopWindow = new Shop_Coffer_Item_Window_New();
+						//_shopWindow = new Shop_Coffer_Item_Window_New();
 					}
 					else 
 					{
@@ -304,7 +325,7 @@ package view
 					}
 					if (testNew) 
 					{
-						_shopWindow = new Shop_Coffer_Item_Window_New();
+						//_shopWindow = new Shop_Coffer_Item_Window_New();
 					}
 					else 
 					{
@@ -330,7 +351,7 @@ package view
 					}
 					if (testNew) 
 					{
-						_shopWindow = new Shop_Coffer_Item_Window_New();
+						//_shopWindow = new Shop_Coffer_Item_Window_New();
 					}
 					else 
 					{
@@ -355,7 +376,7 @@ package view
 					}
 					if (testNew) 
 					{
-						_shopWindow = new Shop_Coffer_Item_Window_New();
+						//_shopWindow = new Shop_Coffer_Item_Window_New();
 					}
 					else 
 					{
@@ -471,7 +492,6 @@ package view
 					mainData.gameName = 'Tiến lên';
 					mainData.gameType = 'TLMN';
 				
-					
 					GameDataTLMN.getInstance().gameName = "TienLenMN";
 					GameDataTLMN.getInstance().gameType = "TienLenMNPlugin";
 					GameDataTLMN.getInstance().lobbyName = "TienLenMN";
@@ -531,6 +551,19 @@ package view
 						mainData.portNumber = 3201;
 					if (!SoundManager.getInstance().isLoadSoundMauBinh)
 						SoundManager.getInstance().loadSoundMauBinh();
+				break;
+				case xitoIcon:
+					gameId = 5;
+					mainData.maxPlayer = 5;
+					mainData.gameName = 'Xì tố';
+					mainData.game_id = 'AZGB_XITO';
+					mainData.portNumber = 5501;
+					mainData.minBetRate = 10;
+					mainData.resetMatchTime = 6.5;
+					if (mainData.isTest)
+						mainData.portNumber = 3501;
+					if (!SoundManager.getInstance().isLoadSoundXito)
+						SoundManager.getInstance().loadSoundXito();
 				break;
 				default:
 			}

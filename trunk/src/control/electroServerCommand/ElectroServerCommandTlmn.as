@@ -721,7 +721,10 @@ package control.electroServerCommand
 			{
 				userData = new UserDataULC();
 				userData.isOnline = true;
-				userData.gameId = MainData.MAUBINH_ID;
+				if (MyDataTLMN.getInstance().isGame == 1)
+					userData.gameId = MainData.TLMN_ID;
+				else
+					userData.gameId = MainData.SAM_ID;
 				userData.isJoinRoom = true;
 				userData.isViewPersonalInfo = true;
 				userData.isMakeFriend = true;

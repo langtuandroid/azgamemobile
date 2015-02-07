@@ -29,10 +29,12 @@
 		private var saveSoundVolume:Number;
 		public var soundManagerMauBinh:SoundManagerMauBinh;
 		public var soundManagerPhom:SoundManagerPhom;
+		public var soundManagerXito:SoundManagerXito;
 		
 		public var isLoadSoundChung:Boolean;
 		public var isLoadSoundMauBinh:Boolean;
 		public var isLoadSoundPhom:Boolean;
+		public var isLoadSoundXito:Boolean;
 		public var isLoadSoundTlmn:Boolean;
 		public var isLoadMusicBackground:Boolean;
 		private var mainData:MainData = MainData.getInstance();
@@ -48,6 +50,7 @@
 			musicTransform = new SoundTransform(saveMusicVolume);
 			soundManagerMauBinh = new SoundManagerMauBinh();
 			soundManagerPhom = new SoundManagerPhom();
+			soundManagerXito = new SoundManagerXito();
 		}
 		
 		private static var instance:SoundManager;
@@ -237,7 +240,7 @@
 		
 		private function onLoadSoundBinhComplete(e:Event):void 
 		{
-			trace("onLoadSoundBinhComplete");
+			//trace("onLoadSoundBinhComplete");
 		}
 		
 		public function loadSoundPhom():void 
@@ -256,7 +259,26 @@
 		
 		private function onLoadSoundPhomComplete(e:Event):void 
 		{
-			trace("onLoadSoundPhomComplete");
+			//trace("onLoadSoundPhomComplete");
+		}
+		
+		public function loadSoundXito():void 
+		{
+			isLoadSoundXito = true;
+			for (var i:int = 0; i < mainData.init.soundXitoList.child.length(); i++) 
+			{
+				var soundUrl:String = mainData.init.soundXitoList.child[i];
+				var tempSound:Sound = new Sound();
+				tempSound.load(new URLRequest("http://203.162.121.120/gamebai/bimkute/xito/soundXito/" + soundUrl + ".az"));
+				tempSound.addEventListener(IOErrorEvent.IO_ERROR, onLoadSoundIOError);
+				tempSound.addEventListener(Event.COMPLETE, onLoadSoundXitoComplete);
+				SoundManager.getInstance().registerSound(soundUrl, tempSound);
+			}
+		}
+		
+		private function onLoadSoundXitoComplete(e:Event):void 
+		{
+			//trace("onLoadSoundXitoComplete",e.currentTarget.url);
 		}
 		
 		public function loadSoundChung():void 
@@ -307,7 +329,7 @@
 		
 		private function onLoadSoundIOError(e:IOErrorEvent):void 
 		{
-			
+			trace("onLoadSoundIOError",e.text);
 			mainData.loadSoundPercent++;
 			mainData.loadSoundPercent = mainData.loadSoundPercent;
 		}

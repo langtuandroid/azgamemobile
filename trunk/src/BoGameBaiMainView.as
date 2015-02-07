@@ -748,6 +748,9 @@ package
 				case MainData.TLMN:
 					SoundManager.getInstance().soundManagerMauBinh.playOtherExitGamePlayerSound(mainData.chooseChannelData.myInfo.sex);
 				break;
+				case MainData.XITO:
+					SoundManager.getInstance().soundManagerXito.playOtherExitGamePlayerSound(mainData.chooseChannelData.myInfo.sex);
+				break;
 				default:
 			}
 		}
