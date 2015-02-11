@@ -73,7 +73,7 @@ package view.window.shop
 			
 			//content.itemLimitTxt.text = String(date.dateUTC) + "/" + String(month) + "/" + String(year);
 			//content.itemLimitTxt.text = "30 ngày";
-			content.itemLimitTxt.text = expire;
+			content.itemLimitTxt.text = expire + " ngày";
 			
 			var image:ImageItem = new ImageItem();
 			content.containerImg.addChild(image);

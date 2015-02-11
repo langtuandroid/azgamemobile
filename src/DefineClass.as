@@ -134,6 +134,7 @@ package
 			zCloseConnectionWindow;
 			AddMoneySuccessWindow;
 			BuyItemUnSuccessWindown;
+			NewBgMc;
 		}
 	}
 }

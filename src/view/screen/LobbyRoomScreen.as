@@ -20,6 +20,7 @@ package view.screen
 	import sound.SoundManager;
 	import view.channelList.ChannelList;
 	import view.SelectGameWindow;
+	import view.SelectGameWindowNew;
 	import view.SystemNoticeBar;
 	import view.window.AddFriendWindow;
 	//import view.window.AddMoneyWindow;
@@ -104,10 +105,13 @@ package view.screen
 		private var musicOffButton:SimpleButton;
 		private var sharedObject:SharedObject;
 		
+		private var tutorialBoard:MovieClip;
+		
 		private var channelInfoTxt:TextField;
 		private var currentChannelButton:*;
 		
-		private var selectGameWindow:SelectGameWindow;
+		private var isTestNewDesign:Boolean = true;
+		private var selectGameWindow:*;
 		private var timerToGetChannelInfo:Timer;
 		private var smallButtonMenu:Sprite;
 		private var buttonMenu:Sprite;
@@ -116,10 +120,13 @@ package view.screen
 		
 		private var firstLayer:Sprite;
 		private var selectGameLayer:Sprite;
+		private var bgLayer:Sprite;
 		private var menuLayer:Sprite;
 		private var firstChannelId:int;
 		
-		
+		private var showTabSelectgame:Boolean = false;
+		private var _newBg:MovieClip;
+		private var isClickHelp:Boolean = false;
 		
 		public function LobbyRoomScreen() 
 		{
@@ -130,6 +137,12 @@ package view.screen
 			
 			gameLogo = content["gameLogo"];
 			gameLogo.gotoAndStop("empty");
+			
+			tutorialBoard = content["tutorialBoard"];
+			tutorialBoard.visible = false;
+			
+			_newBg = new NewBgMc();
+			
 			
 			addRoomList();
 			addUserList();
@@ -147,6 +160,11 @@ package view.screen
 			friendBtn = content["friendBtn"];
 			firstLayer.addChild(lobbyBtn);
 			firstLayer.addChild(friendBtn);
+			
+			
+			tutorialBoard.hotlineBtn.addEventListener(MouseEvent.CLICK, onClickHotline );
+			tutorialBoard.mailTutBtn.addEventListener(MouseEvent.CLICK, onClickHotmail );
+			tutorialBoard.otherTutBtn.addEventListener(MouseEvent.CLICK, onClickOtherTut );
 			
 			chatBox = new ChatBoxLobby();
 			chatBox.addEventListener(ChatBox.HAVE_CHAT, onHaveChat);
@@ -176,30 +194,70 @@ package view.screen
 			
 			var loginWindow:LoginWindow = new LoginWindow();
 			windowLayer.openWindow(loginWindow);
+			selectGameWindow.visible = false;
+			selectGameWindow.closeAll();
+		}
+		
+		private function onClickHotline(e:MouseEvent):void 
+		{
+			navigateToURL(new URLRequest("tel:0904545834"));
+		}
+		
+		private function onClickHotmail(e:MouseEvent):void 
+		{
+			navigateToURL(new URLRequest("mailto:hotro@sanhbai.com"));
+		}
+		
+		private function onClickOtherTut(e:MouseEvent):void 
+		{
+			navigateToURL(new URLRequest("http://sanhbai.com/sanhbai-huong-dan.html"));
 		}
 		
 		public function addSelectGameWindow():void
 		{
 			if (!selectGameWindow)
 			{	
-				selectGameWindow = new SelectGameWindow();
+				if (isTestNewDesign) 
+				{
+					selectGameWindow = new SelectGameWindowNew();
+				}
+				else 
+				{
+					selectGameWindow = new SelectGameWindow();
+				}
+				
 				selectGameWindow.addEventListener(SelectGameWindow.SELECT_GAME, onSelectGame);
 				selectGameWindow.addEventListener(SelectGameWindow.RE_LOGIN_CLICK, onReLoginClick);
 				selectGameWindow.x = mainData.stageWidth / 2;
 				selectGameWindow.y = mainData.stageHeight / 2;
 				selectGameWindow.visible = true;
 			}
-			selectGameLayer.addChild(selectGameWindow);
+			else 
+			{
+				selectGameWindow.checkGameOnOff();
+			}
+			/*tutorialBoard.y = 74;
+			helpButton.y = 30;
+			musicOnButton.y = 30;
+			soundOnButton.y = 30;
+			musicOffButton.y = 30;
+			soundOffButton.y = 30;*/
 			
+			bgLayer.addChild(_newBg);
+			_newBg.y = -310;
+			selectGameLayer.addChild(selectGameWindow);
+			//selectGameWindow.showTab(1);
 			mainData.isNotLobby = true;
 		}
 		
 		private function createLayer():void 
 		{
 			firstLayer = new Sprite();
+			bgLayer = new Sprite();
 			selectGameLayer = new Sprite();
 			menuLayer = new Sprite();
 			addChild(firstLayer);
+			addChild(bgLayer);
 			addChild(selectGameLayer);
 			addChild(menuLayer);
 		}
@@ -218,12 +276,18 @@ package view.screen
 		{
 			WindowLayer.getInstance().openLoadingWindow();
 			updateGameType();
-			
+			/*helpButton.y = 6;
+			tutorialBoard.y = 50;
+			musicOnButton.y = 6;
+			soundOnButton.y = 6;
+			musicOffButton.y = 6;
+			soundOffButton.y = 6;*/
 			if (selectGameWindow)
 			{
 				if (selectGameWindow.parent)
 					selectGameWindow.parent.removeChild(selectGameWindow);
 			}
+			bgLayer.removeChild(_newBg);
 			
 			excuteWhenJoinLobby();
 			
@@ -274,6 +338,9 @@ package view.screen
 			var loginWindow:LoginWindow = new LoginWindow();
 			windowLayer.openWindow(loginWindow);
 			mainData.isNotLobby = true;
+			selectGameWindow.visible = false;
+			selectGameWindow.closeAll();
+			selectGameWindow.checkGameOnOff();
 		}
 		
 		public function showLoginWindow():void
@@ -284,6 +351,9 @@ package view.screen
 			windowLayer.openWindow(loginWindow);
 			
 			mainData.isNotLobby = true;
+			selectGameWindow.visible = false;
+			selectGameWindow.closeAll();
+			selectGameWindow.checkGameOnOff();
 		}
 		
 		private function addChannelButton():void 
@@ -346,6 +416,7 @@ package view.screen
 			firstLayer.addChild(chatButton);
 			firstLayer.addChild(messageButton);
 			menuLayer.addChild(helpButton);
+			menuLayer.addChild(tutorialBoard);
 			
 			sharedObject = SharedObject.getLocal("soundConfig");
 			
@@ -363,6 +434,14 @@ package view.screen
 				musicOnButton.visible = true;
 				musicOffButton.visible = false;
 			}
+			
+			
+			/*helpButton.y = 30;
+			tutorialBoard.y = 74;
+			musicOnButton.y = 30;
+			soundOnButton.y = 30;
+			musicOffButton.y = 30;
+			soundOffButton.y = 30;*/
 			
 			chatButton.addEventListener(MouseEvent.CLICK, onChatButtonClick);
 			messageButton.addEventListener(MouseEvent.CLICK, onMessageButtonClick);
@@ -427,7 +506,8 @@ package view.screen
 					musicOffButton.visible = false;
 				break;
 				case helpButton:
-					navigateToURL(new URLRequest("http://sanhbai.com/ho-tro.html"));
+					isClickHelp = true;
+					
 				break;
 				default:
 			}
@@ -746,6 +826,23 @@ package view.screen
 		
 		private function onStageClick(e:MouseEvent):void 
 		{
+			if (isClickHelp) 
+			{
+				if (tutorialBoard.visible) 
+				{
+					tutorialBoard.visible = false;
+				}
+				else 
+				{
+					tutorialBoard.visible = true;
+				}
+				isClickHelp = false;
+			}
+			else 
+			{
+				tutorialBoard.visible = false;
+			}
+			
 			buttonMenu.visible = false;
 			smallButtonMenu.visible = true;
 			if (!channelList)
@@ -759,6 +856,7 @@ package view.screen
 		{
 			roomList.isInvite = false;
 			renderInviteList();
+			showTabSelectgame = false;
 			
 			stage.removeEventListener(MouseEvent.CLICK, onStageClick);
 			mainData.chooseChannelData.removeEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
@@ -1022,6 +1120,16 @@ package view.screen
 			if (mainCommand.electroServerCommand) 
 			{
 				mainCommand.electroServerCommand.updateMoney();
+			}
+			if (selectGameWindow) 
+			{
+				selectGameWindow.visible = true;
+				selectGameWindow.onTimerGetNotice(null);
+			}
+			if (!showTabSelectgame) 
+			{
+				//selectGameWindow.showTab(1);
+				//showTabSelectgame = true;
 			}
 			
 			

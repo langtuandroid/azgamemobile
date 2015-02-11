@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<event>
+		<freeMoneyDay>
+			<titile>Tặng thêm 50k mỗi khi hết gold chơi trong game</titile>
+			<content1>Bạn còn 5 lần nạp miễn phí trong ngày</content1>
+		</freeMoneyDay>
+		<play10>
+			<titile>10</titile>
+			<content1>Số ván chơi hôm nay:</content1>
+			<content2>Số quà đã nhận:</content2>
+			<content3>Số quà chưa nhận:</content3>
+			<content4>Rất tiếc, bạn chưa thể nhận quà tặng!</content4>
+			
+		</play10>
+		<play60>
+			<titile>Quà tặng chơi 60 phút</titile>
+			<content1>Số thời gian chơi hôm nay:</content1>
+			<content2>Số quà đã nhận:</content2>
+			<content3>Số quà chưa nhận:</content3>
+			<content4>Rất tiếc, bạn chưa thể nhận quà tặng!</content4>
+			
+		</play60>
+		<invite>
+			<titile>Quà tặng mời thêm bạn bè</titile>
+			<content1>Số bạn mới đã mời được:</content1>
+			<content2>Số quà đã nhận:</content2>
+			<content3>Số quà chưa nhận:</content3>
+			<content4>Rất tiếc, bạn chưa thể nhận quà tặng!</content4>
+			
+		</invite>
+		<share>
+			<titile>Quà tặng chia sẻ với bạn bè</titile>
+			<content1>Số lần đã chia sẻ cho bạn bè:</content1>
+			<content2>Số quà đã nhận:</content2>
+			<content3>Số quà chưa nhận:</content3>
+			<content4>Rất tiếc, bạn chưa thể nhận quà tặng!</content4>
+			
+		</share>
+			
+	</event>
+</data>

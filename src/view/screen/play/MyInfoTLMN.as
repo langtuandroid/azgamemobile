@@ -1551,6 +1551,7 @@ package view.screen.play
 					canHit = checkCanHitSam();
 				}
 				
+				
 				if (canHit) 
 				{
 					
@@ -1641,8 +1642,9 @@ package view.screen.play
 				if (GameDataTLMN.getInstance().firstPlayer == _userName) 
 				{
 					if (arrCardChoose.length == 1 || (arrCardChoose.length == 2 && cardTlmn.isDoiThong(arrCardChoose)) ||
+						(arrCardChoose.length == 3 && cardTlmn.isBaLa(arrCardChoose)) || 
 						(arrCardChoose.length == 3 && cardTlmn.isDay(arrCardChoose)) || (arrCardChoose.length == 3 && cardTlmn.isSpecialDay(arrCardChoose))
-						|| (arrCardChoose.length == 3 && cardTlmn.isBaLa(arrCardChoose)) || (arrCardChoose.length == 4 && cardTlmn.isTuQuy(arrCardChoose))
+						|| (arrCardChoose.length == 4 && cardTlmn.isTuQuy(arrCardChoose))
 						|| (arrCardChoose.length == 4 && cardTlmn.isDay(arrCardChoose)) || (arrCardChoose.length == 4 && cardTlmn.isSpecialDay(arrCardChoose))
 						|| (arrCardChoose.length >= 5 && cardTlmn.isDay(arrCardChoose)) || (arrCardChoose.length >= 5 && cardTlmn.isSpecialDay(arrCardChoose))
 						)
@@ -1663,9 +1665,10 @@ package view.screen.play
 				{
 					
 					
-					if (arrCardChoose.length == 1 || (arrCardChoose.length == 2 && cardTlmn.isDoiThong(arrCardChoose)) ||
+					if (arrCardChoose.length == 1 || (arrCardChoose.length == 2 && cardTlmn.isDoiThong(arrCardChoose)) || 
+						(arrCardChoose.length == 3 && cardTlmn.isBaLa(arrCardChoose))  ||
 						(arrCardChoose.length == 3 && cardTlmn.isDay(arrCardChoose)) || (arrCardChoose.length == 3 && cardTlmn.isSpecialDay(arrCardChoose))
-						|| (arrCardChoose.length == 3 && cardTlmn.isBaLa(arrCardChoose)) || (arrCardChoose.length == 4 && cardTlmn.isTuQuy(arrCardChoose))
+						|| (arrCardChoose.length == 4 && cardTlmn.isTuQuy(arrCardChoose))
 						|| (arrCardChoose.length == 4 && cardTlmn.isDay(arrCardChoose)) || (arrCardChoose.length == 4 && cardTlmn.isSpecialDay(arrCardChoose))
 						|| (arrCardChoose.length >= 5 && cardTlmn.isDay(arrCardChoose)) || (arrCardChoose.length >= 5 && cardTlmn.isSpecialDay(arrCardChoose))
 						)
