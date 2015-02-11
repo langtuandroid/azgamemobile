@@ -66,7 +66,7 @@ package view
 		//private var _shopWindow:Shop_Coffer_Item_Window;
 		//private var _shopWindow:Shop_Coffer_Item_Window_New;
 		private var _shopWindow:*;
-		private var testNew:Boolean = false;//true la test voi design moi
+		private var testNew:Boolean = true;//true la test voi design moi
 		private var windowLayer:WindowLayer = WindowLayer.getInstance();
 		
 		private var avatar:Avatar;
@@ -385,8 +385,8 @@ package view
 					addChild(_shopWindow);
 					_shopWindow.x = -470;
 					_shopWindow.y = -300;
-					//_shopWindow.onClickShowMyInfo(null);
-					_shopWindow.onClickShowMyAvatar(null);
+					_shopWindow.onClickShowMyInfo(null);
+					//_shopWindow.onClickShowMyAvatar(null);
 					
 				break;
 				default:

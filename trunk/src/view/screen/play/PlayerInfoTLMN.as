@@ -433,7 +433,7 @@ package view.screen.play
 			content.effectMoneySpecial.y += 0;
 			if (Number(_money) > 0) 
 			{
-				content.txtMoney.text = format(_money);
+				content.txtMoney.text = format(Number(_money));
 			}
 			else 
 			{
@@ -504,7 +504,7 @@ package view.screen.play
 		{
 			if (Number(money) > 0) 
 			{
-				content.txtMoney.text = format(money);
+				content.txtMoney.text = format(Number(money));
 			}
 			else 
 			{
@@ -572,7 +572,7 @@ package view.screen.play
 			content.effectMoneySpecial.y += 0;
 			if (Number(_money) > 0) 
 			{
-				content.txtMoney.text = format(_money);
+				content.txtMoney.text = format(Number(_money));
 			}
 			else 
 			{

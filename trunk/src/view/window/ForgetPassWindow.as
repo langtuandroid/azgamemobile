@@ -78,7 +78,8 @@ package view.window
 						mainRequest.sendRequest_Post("http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileRecoverPassword", object, onForgetRespond, true);
 				break;
 				case zForgetPassWindow(content).cancelButton:
-					close(BaseWindow.MIDDLE_EFFECT);
+					//close(BaseWindow.MIDDLE_EFFECT);
+					close(BaseWindow.NO_EFFECT);
 				break;
 			}
 		}
@@ -94,7 +95,8 @@ package view.window
 		
 		private function onCloseWindow(e:MouseEvent):void 
 		{
-			close(BaseWindow.MIDDLE_EFFECT);
+			//close(BaseWindow.MIDDLE_EFFECT);
+			close(BaseWindow.NO_EFFECT);
 		}
 	}
 

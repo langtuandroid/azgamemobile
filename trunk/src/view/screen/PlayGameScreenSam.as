@@ -473,7 +473,7 @@ package view.screen
 		
 		private function onGetSystemNoticeInfo(e:TimerEvent):void 
 		{
-			mainCommand.getInfoCommand.getSystemNoticeInfo();
+			//mainCommand.getInfoCommand.getSystemNoticeInfo();
 		}
 		
 		private function onUpdateSystemNotice(e:Event):void 
@@ -4425,9 +4425,10 @@ package view.screen
 				timerToGetSystemNoticeInfo.removeEventListener(TimerEvent.TIMER, onGetSystemNoticeInfo);
 				timerToGetSystemNoticeInfo.stop();
 			}
-			timerToGetSystemNoticeInfo = new Timer(30000);
+			/*timerToGetSystemNoticeInfo = new Timer(30000);
 			timerToGetSystemNoticeInfo.addEventListener(TimerEvent.TIMER, onGetSystemNoticeInfo);
-			//timerToGetSystemNoticeInfo.start();
+			timerToGetSystemNoticeInfo.start();*/
+
 			for (var j:int = 0; j < mainData.systemNoticeList.length; j++) 
 			{
 				var textField:TextField = new TextField();

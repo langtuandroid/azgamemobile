@@ -35,6 +35,7 @@ package view.window.loginWindow
 	import view.window.windowLayer.WindowLayer;
 	import Date;
 	
+	
 	/**
 	 * ...
 	 * @author ...
@@ -444,7 +445,7 @@ package view.window.loginWindow
 		private function onForgetPassClick(e:MouseEvent):void 
 		{
 			var forgetPassWindow:ForgetPassWindow = new ForgetPassWindow();
-			WindowLayer.getInstance().openWindow(forgetPassWindow);
+			WindowLayer.getInstance().openWindow(forgetPassWindow, null, NO_EFFECT, true);
 		}
 		
 		private function onSavePasswordClick(e:MouseEvent):void 
@@ -468,7 +469,7 @@ package view.window.loginWindow
 		private function onRegisterButtonClick(e:MouseEvent):void 
 		{
 			registerWindow = new RegisterWindow();
-			WindowLayer.getInstance().openWindow(registerWindow);
+			WindowLayer.getInstance().openWindow(registerWindow, null, NO_EFFECT, true);
 		}
 		
 		private function onLoginButtonClick(e:MouseEvent):void 
@@ -559,7 +560,11 @@ package view.window.loginWindow
 			
 			mainData.loginData = value.Data;
 			
-			zLoginWindow(content).loadingLayer.visible = false;
+			if (zLoginWindow(content)) 
+			{
+				zLoginWindow(content).loadingLayer.visible = false;
+			}
+			
 			
 			excuteUserInfo(value);
 			

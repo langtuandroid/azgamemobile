@@ -57,8 +57,19 @@ package view.window.shop
 			
 			content.itemNameTxt.text = nameAvt;
 			
-			content.itemTimeUseTxt.text = timeUse;
-			content.itemLimitTxt.text = expire;
+			content.time.itemTimeUseTxt.text = timeUse + " ngày";
+			content.expire.itemLimitTxt.text = expire + " ngày";
+			
+			if (timeUse == expire) 
+			{
+				content.time.visible = true;
+				content.expire.visible = false;
+			}
+			else 
+			{
+				content.time.visible = false;
+				content.expire.visible = true;
+			}
 			
 			var image:ImageItem = new ImageItem();
 			content.containerImg.addChild(image);

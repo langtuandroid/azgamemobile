@@ -51,7 +51,7 @@ package view.window.registerWindow
 			zRegisterWindow(content).password.setStyle("textFormat", textFormat);
 			zRegisterWindow(content).userName.setStyle("textFormat", textFormat);
 			zRegisterWindow(content).email.setStyle("textFormat", textFormat);
-			zRegisterWindow(content).password.displayAsPassword = false;
+			zRegisterWindow(content).password.displayAsPassword = true;
 			
 			zRegisterWindow(content).showPassword.addEventListener(MouseEvent.CLICK, onShowPasswordClick);
 			zRegisterWindow(content).showPassword.check.visible = true;
@@ -62,8 +62,6 @@ package view.window.registerWindow
 			
 			zRegisterWindow(content).maleSelectBox.addEventListener(MouseEvent.CLICK, onSelectBoxClick);
 			zRegisterWindow(content).femaleSelectBox.addEventListener(MouseEvent.CLICK, onSelectBoxClick);
-			
-			zRegisterWindow(content).alertTxt.visible = false;
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
@@ -152,7 +150,8 @@ package view.window.registerWindow
 				e.preventDefault();
 				e.stopImmediatePropagation();
 				e.stopPropagation();
-				close(BaseWindow.MIDDLE_EFFECT);
+				//close(BaseWindow.MIDDLE_EFFECT);
+				close(BaseWindow.NO_EFFECT);
 				break;
 			}
 		}
@@ -203,7 +202,8 @@ package view.window.registerWindow
 						mainRequest.sendRequest_Post("http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileRegister", object, onRegisterRespond, true);
 				break;
 				case zRegisterWindow(content).cancelButton:
-					close(BaseWindow.MIDDLE_EFFECT);
+					//close(BaseWindow.MIDDLE_EFFECT);
+					close(BaseWindow.NO_EFFECT);
 				break;
 			}
 		}
@@ -261,7 +261,8 @@ package view.window.registerWindow
 			
 			excuteUserInfo(value);
 			
-			close(BaseWindow.MIDDLE_EFFECT);
+			//close(BaseWindow.MIDDLE_EFFECT);
+			close(BaseWindow.NO_EFFECT);
 		}
 		
 		private function excuteUserInfo(value:Object):void

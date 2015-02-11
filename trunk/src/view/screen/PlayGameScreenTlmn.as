@@ -3884,7 +3884,7 @@ package view.screen
 		
 		private function onGetSystemNoticeInfo(e:TimerEvent):void 
 		{
-			mainCommand.getInfoCommand.getSystemNoticeInfo();
+			//mainCommand.getInfoCommand.getSystemNoticeInfo();
 		}
 		
 		private function onUpdateSystemNotice(e:Event):void 
