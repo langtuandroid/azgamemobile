@@ -276,6 +276,7 @@ package view.window.shop
 			myContent.standingBg.topMenu.topBinhBtn.gotoAndStop(2);
 			myContent.standingBg.topMenu.topPhomBtn.gotoAndStop(2);
 			myContent.standingBg.topMenu.topSamBtn.gotoAndStop(2);
+			myContent.standingBg.topMenu.topXitoBtn.gotoAndStop(2);
 			
 			myContent.chooseInShopMc.chooseAvatar.buttonMode = true;
 			myContent.chooseInShopMc.chooseGold.buttonMode = true;
@@ -357,11 +358,13 @@ package view.window.shop
 			myContent.standingBg.topMenu.topBinhBtn.buttonMode = true;
 			myContent.standingBg.topMenu.topPhomBtn.buttonMode = true;
 			myContent.standingBg.topMenu.topSamBtn.buttonMode = true;
+			myContent.standingBg.topMenu.topXitoBtn.buttonMode = true;
 			
 			myContent.standingBg.topMenu.topTlmnBtn.addEventListener(MouseEvent.MOUSE_UP, onClickShowTopTlmn);
 			myContent.standingBg.topMenu.topBinhBtn.addEventListener(MouseEvent.MOUSE_UP, onClickShowTopBinh);
 			myContent.standingBg.topMenu.topPhomBtn.addEventListener(MouseEvent.MOUSE_UP, onClickShowTopPhom);
 			myContent.standingBg.topMenu.topSamBtn.addEventListener(MouseEvent.MOUSE_UP, onClickShowTopSam);
+			myContent.standingBg.topMenu.topXitoBtn.addEventListener(MouseEvent.MOUSE_UP, onClickShowTopXito);
 			
 			
 			myContent.myAllInfo.notActiveMail.buttonMode = true;
@@ -516,6 +519,7 @@ package view.window.shop
 			myContent.standingBg.topMenu.topBinhBtn.gotoAndStop(2);
 			myContent.standingBg.topMenu.topPhomBtn.gotoAndStop(2);
 			myContent.standingBg.topMenu.topSamBtn.gotoAndStop(2);
+			myContent.standingBg.topMenu.topXitoBtn.gotoAndStop(2);
 			loadTop(1, 0);
 		}
 		
@@ -527,6 +531,7 @@ package view.window.shop
 			myContent.standingBg.topMenu.topBinhBtn.gotoAndStop(1);
 			myContent.standingBg.topMenu.topPhomBtn.gotoAndStop(2);
 			myContent.standingBg.topMenu.topSamBtn.gotoAndStop(2);
+			myContent.standingBg.topMenu.topXitoBtn.gotoAndStop(2);
 			loadTop(1, 1);
 		}
 		
@@ -538,6 +543,7 @@ package view.window.shop
 			myContent.standingBg.topMenu.topBinhBtn.gotoAndStop(2);
 			myContent.standingBg.topMenu.topPhomBtn.gotoAndStop(1);
 			myContent.standingBg.topMenu.topSamBtn.gotoAndStop(2);
+			myContent.standingBg.topMenu.topXitoBtn.gotoAndStop(2);
 			loadTop(1, 2);
 			
 		}
@@ -550,7 +556,21 @@ package view.window.shop
 			myContent.standingBg.topMenu.topBinhBtn.gotoAndStop(2);
 			myContent.standingBg.topMenu.topPhomBtn.gotoAndStop(2);
 			myContent.standingBg.topMenu.topSamBtn.gotoAndStop(1);
+			myContent.standingBg.topMenu.topXitoBtn.gotoAndStop(2);
 			loadTop(1, 3);
+			
+		}
+		
+		private function onClickShowTopXito(e:MouseEvent):void 
+		{
+			allHeaderVisible();
+			showHeaderChose(0, 1);
+			myContent.standingBg.topMenu.topTlmnBtn.gotoAndStop(2);
+			myContent.standingBg.topMenu.topBinhBtn.gotoAndStop(2);
+			myContent.standingBg.topMenu.topPhomBtn.gotoAndStop(2);
+			myContent.standingBg.topMenu.topSamBtn.gotoAndStop(2);
+			myContent.standingBg.topMenu.topXitoBtn.gotoAndStop(1);
+			loadTop(1, 4);
 			
 		}
 		
@@ -597,6 +617,11 @@ package view.window.shop
 						{
 							url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserWin?"
 									+ "game_id=AZGB_SAM&row_start=0&row_end=10";
+						}
+						else if (typeGame == 4) 
+						{
+							url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetTopUserWin?"
+									+ "game_id=AZGB_XITO&row_start=0&row_end=10";
 						}
 						
 						obj = new Object();

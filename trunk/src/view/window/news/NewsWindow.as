@@ -773,7 +773,7 @@ package view.window.news
 				arr = arr.sortOn("ordinal", Array.CASEINSENSITIVE);
 				for (var i:int = 0; i < arr.length; i++) 
 				{
-					//if (arr[i]["value"] == "TRUE") 
+					if (arr[i]["value"] == "TRUE") 
 					{
 						var bannerInfo:ContentBannerEvent = new ContentBannerEvent();
 						bannerInfo.addInfo(arr[i]["image_url"], arr[i]["popup_url"]);
