@@ -588,6 +588,7 @@ package view.userInfo.playerInfo
 					CardXito(unLeaveCards[i]).cardBorder.visible = true;
 				}
 			}
+			SoundManager.getInstance().playSound(SoundLibChung.CARD_SOUND);
 			coreApi.selectOpenCard(userName, [CardXito(e.currentTarget).id - 1]);
 			selectOpenCardAnim.visible = false;
 		}
@@ -1369,6 +1370,15 @@ package view.userInfo.playerInfo
 				allInButton.enable = false;
 			if (calculateBetMoney(ALL_IN) > moneyNumber || calculateBetMoney(ALL_IN) > maxMoneyOfPlayer)
 				allInButton.enable = false;
+				
+			if (numRaise >= maxNumRaise)
+			{
+				raiseButton.enable = false;
+				raiseDoubleButton.enable = false;
+				raiseTripleButton.enable = false;
+				raiseFourpleButton.enable = false;
+				allInButton.enable = false;
+			}
 		}
 		
 		private function calculateBetMoney(type:String):Number
@@ -1432,6 +1442,8 @@ package view.userInfo.playerInfo
 		public var isFold:Boolean;
 		public var currentMoneyOfRound:Number; // Số tiền người chơi đã bỏ ra trong vòng cược hiện tại
 		public var isMyTurn:Boolean;
+		public var numRaise:int;
+		public var maxNumRaise:int;
 		
 		public function get isGiveUp():Boolean 
 		{

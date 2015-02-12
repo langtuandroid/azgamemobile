@@ -199,6 +199,7 @@ package view.screen
 			autoReady.addEventListener(MouseEvent.CLICK, onAutoReadyClick);
 			
 			ipBoard = content["ipBoard"];
+			chatboxLayer.addChild(ipBoard);
 			ipBoard.addEventListener(MouseEvent.CLICK, onIpBoardClick);
 			ipBoard.visible = false;
 			
@@ -334,6 +335,7 @@ package view.screen
 			chatButton = content["chatButton"];
 			settingBoard = content["settingBoard"];
 			settingBoard.visible = false;
+			chatboxLayer.addChild(settingBoard);
 			settingButton = content["settingButton"];
 			snapShotButton = settingBoard["snapShotButton"];
 			showIpButton = settingBoard["showIpButton"];
@@ -1103,6 +1105,8 @@ package view.screen
 			{
 				if (allPlayerArray[i])
 				{
+					PlayerInfoXito(allPlayerArray[i]).numRaise = 0;
+					PlayerInfoXito(allPlayerArray[i]).maxNumRaise = 1;
 					if (PlayerInfoXito(allPlayerArray[i]).isReadyPlay || PlayerInfoXito(allPlayerArray[i]).isRoomMaster)
 						playingPlayerArray.push(allPlayerArray[i]);
 				}
@@ -1190,6 +1194,8 @@ package view.screen
 						break;
 						default:
 					}
+					PlayerInfoXito(playingPlayerArray[i]).numRaise = data[DataFieldXito.NUM_RAISE];
+					PlayerInfoXito(playingPlayerArray[i]).maxNumRaise = data[DataFieldXito.MAX_NUM_RAISE];
 					betMoneyOfPreviousUser = data[DataFieldXito.MONEY]/* - (mainData.maxMoneyOfRound - PlayerInfoXito(playingPlayerArray[i]).currentMoneyOfRound)*/;
 					PlayerInfoXito(playingPlayerArray[i]).currentMoneyOfRound += Number(data[DataFieldXito.MONEY]);
 					currentTotalMoney += Number(data[DataFieldXito.MONEY]);
@@ -1280,6 +1286,8 @@ package view.screen
 				PlayerInfoXito(playingPlayerArray[i]).setAction();
 				PlayerInfoXito(playingPlayerArray[i]).currentMoneyOfRound = 0;
 				PlayerInfoXito(playingPlayerArray[i]).addUpChip(cardManager.chipPosition);
+				PlayerInfoXito(playingPlayerArray[i]).numRaise = 0;
+				PlayerInfoXito(playingPlayerArray[i]).maxNumRaise = 1;
 			}
 		}
 		
@@ -1567,49 +1575,6 @@ package view.screen
 						PlayerInfoXito(playingPlayerArray[j]).setAction();
 						PlayerInfoXito(playingPlayerArray[j]).stopCountTime();
 						PlayerInfoXito(playingPlayerArray[j]).addUpChip(cardManager.chipPosition);
-						
-						// add effect cộng trừ tiền
-						time = mainData.init.effect.time.moneyEffect;
-						moneyEffectPosition = PlayerInfoXito(playingPlayerArray[j]).localToGlobal(PlayerInfoXito(playingPlayerArray[j]).moneyEffectPosition);
-						if (playerList[i][DataFieldXito.MONEY])
-						{
-							//effectLayer.addEffect(EffectLayer.MONEY_EFFECT, moneyEffectPosition, time, playerList[i][DataFieldXito.MONEY]);
-						}
-						else
-						{
-							//if (playerList.length < 2)
-								//effectLayer.addEffect(EffectLayer.MONEY_EFFECT, moneyEffectPosition, time, mainData.currentTotalMoney);
-						}
-						resultEffectPosition = PlayerInfoXito(playingPlayerArray[j]).localToGlobal(PlayerInfoXito(playingPlayerArray[j]).resultEffectPosition);
-						if(int(playerList[i][DataFieldXito.GROUP_RANK]) == 1)
-							playerList[i][DataFieldXito.GROUP_RANK] = MauBinhLogic.getInstance().checkMauThau(playerList[i][DataFieldXito.HAND_CARDS]);
-						if (playerList[i][DataFieldXito.GROUP_RANK])
-						{
-							if (playerList[i][DataFieldXito.MONEY])
-							{
-								//effectLayer.addEffect(EffectLayer.MONEY_EFFECT, moneyEffectPosition, time, playerList[i][DataFieldXito.MONEY]);
-								if (playerList[i][DataFieldXito.MONEY] > 0)
-									soundManagerXito.playNormalPlayerSound(PlayerInfoXito(playingPlayerArray[j]).sex, playerList[i][DataFieldXito.GROUP_RANK]);
-							}
-							
-							if (playingPlayerArray[j] == belowUserInfo)
-								effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, resultEffectPosition, time, 0, playerList[i][DataFieldXito.GROUP_RANK]);
-							else 
-								effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, resultEffectPosition, time,1, playerList[i][DataFieldXito.GROUP_RANK]);
-						}
-					}
-					
-					if (PlayerInfoXito(playingPlayerArray[j]).userName == playerList[i][DataFieldXito.USER_NAME] && playingPlayerArray[j] != belowUserInfo)
-					{
-						if (playerList[i][DataFieldXito.HAND_CARDS])
-						{
-							var cardArray:Array = playerList[i][DataFieldXito.HAND_CARDS] as Array;
-							for (var k:int = 0; k < cardArray.length; k++) 
-							{
-								PlayerInfoXito(playingPlayerArray[j]).addValueForOneUnleavedCard(cardArray[k]);
-							}
-							PlayerInfoXito(playingPlayerArray[j]).openAllCard();
-						}
 					}
 				}
 			}
@@ -1629,9 +1594,44 @@ package view.screen
 			timerToResetMatch.addEventListener(TimerEvent.TIMER_COMPLETE, onResetMatch);
 			timerToResetMatch.start();
 			
-			var timerToShowMoneyEffect:Timer = new Timer(2000, 1);
+			var timerToShowMoneyEffect:Timer = new Timer(1000, 1);
 			timerToShowMoneyEffect.addEventListener(TimerEvent.TIMER_COMPLETE, onShowMoneyEffect);
 			timerToShowMoneyEffect.start();
+			
+			var timerToPlayWinSound:Timer = new Timer(3000, 1);
+			timerToPlayWinSound.addEventListener(TimerEvent.TIMER_COMPLETE, onPlayWinSound);
+			timerToPlayWinSound.start();
+		}
+		
+		private function onPlayWinSound(e:TimerEvent):void 
+		{
+			if (!stage)
+				return;
+			var i:int;
+			var playerList:Array = gameOverObject[DataFieldXito.PLAYER_LIST] as Array;
+			var quiterList:Array = gameOverObject[DataFieldXito.QUITERS] as Array;
+			playerList = playerList.concat(quiterList);
+			for (i = 0; i < playerList.length; i++) 
+			{
+				for (var j:int = 0; j < playingPlayerArray.length; j++)
+				{
+					if (playerList[i][DataFieldXito.USER_NAME] == PlayerInfoXito(playingPlayerArray[j]).userName)
+					{
+						if (playerList[i][DataFieldXito.MONEY])
+						{
+							if (playerList[i][DataFieldXito.MONEY] > 0)
+								soundManagerXito.playWinPlayerSound(PlayerInfoXito(playingPlayerArray[j]).sex);
+						}
+						else
+						{
+							if (playerList.length < 2)
+							{
+								soundManagerXito.playWinPlayerSound(PlayerInfoXito(playingPlayerArray[j]).sex);
+							}
+						}
+					}
+				}
+			}
 		}
 		
 		private function onShowMoneyEffect(e:TimerEvent):void 
@@ -1660,12 +1660,24 @@ package view.screen
 						// add effect cộng trừ tiền
 						time = mainData.init.effect.time.moneyEffect;
 						moneyEffectPosition = PlayerInfoXito(playingPlayerArray[j]).localToGlobal(PlayerInfoXito(playingPlayerArray[j]).moneyEffectPosition);
+						resultEffectPosition = PlayerInfoXito(playingPlayerArray[j]).localToGlobal(PlayerInfoXito(playingPlayerArray[j]).resultEffectPosition);
+						if(int(playerList[i][DataFieldXito.GROUP_RANK]) == 1)
+							playerList[i][DataFieldXito.GROUP_RANK] = MauBinhLogic.getInstance().checkMauThau(playerList[i][DataFieldXito.HAND_CARDS]);
+						if (playerList[i][DataFieldXito.GROUP_RANK])
+						{
+							if (playingPlayerArray[j] == belowUserInfo)
+								effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, resultEffectPosition, time, 0, playerList[i][DataFieldXito.GROUP_RANK]);
+							else 
+								effectLayer.addEffect(EffectLayer.GROUP_RESULT_EFFECT, resultEffectPosition, time,1, playerList[i][DataFieldXito.GROUP_RANK]);
+						}
+						
+						// add effect cộng trừ tiền
+						time = mainData.init.effect.time.moneyEffect;
+						moneyEffectPosition = PlayerInfoXito(playingPlayerArray[j]).localToGlobal(PlayerInfoXito(playingPlayerArray[j]).moneyEffectPosition);
 						if (playerList[i][DataFieldXito.MONEY])
 						{
 							effectLayer.addEffect(EffectLayer.MONEY_EFFECT, moneyEffectPosition, time, playerList[i][DataFieldXito.MONEY]);
 							PlayerInfoXito(playingPlayerArray[j]).receiveChip(cardManager.chipPosition, playerList[i][DataFieldXito.MONEY]);
-							if (playerList[i][DataFieldXito.MONEY] > 0)
-								soundManagerXito.playWinPlayerSound(PlayerInfoXito(playingPlayerArray[j]).sex);
 						}
 						else
 						{
@@ -1673,8 +1685,49 @@ package view.screen
 							{
 								PlayerInfoXito(playingPlayerArray[j]).receiveChip(cardManager.chipPosition, mainData.currentTotalMoney);
 								effectLayer.addEffect(EffectLayer.MONEY_EFFECT, moneyEffectPosition, time, mainData.currentTotalMoney);
-								soundManagerXito.playWinPlayerSound(PlayerInfoXito(playingPlayerArray[j]).sex);
 							}
+						}
+						
+						if(int(playerList[i][DataFieldXito.GROUP_RANK]) == 1)
+							playerList[i][DataFieldXito.GROUP_RANK] = MauBinhLogic.getInstance().checkMauThau(playerList[i][DataFieldXito.HAND_CARDS]);
+						if (playerList[i][DataFieldXito.GROUP_RANK])
+						{
+							if (playerList[i][DataFieldXito.MONEY])
+							{
+								if (playerList[i][DataFieldXito.MONEY] > 0)
+								{
+									switch (int(playerList[i][DataFieldXito.GROUP_RANK])) 
+									{
+										case 7:
+											SoundManager.getInstance().playSound(SoundLibChung.SPECIAL_SOUND);
+										break;
+										case 8:
+											SoundManager.getInstance().playSound(SoundLibChung.SPECIAL_SOUND);
+										break;
+										case 9:
+											SoundManager.getInstance().playSound(SoundLibChung.SPECIAL_SOUND);
+										break;
+										case 10:
+											SoundManager.getInstance().playSound(SoundLibChung.SPECIAL_SOUND);
+										break;
+										default:
+									}
+									soundManagerXito.playNormalPlayerSound(PlayerInfoXito(playingPlayerArray[j]).sex, playerList[i][DataFieldXito.GROUP_RANK]);
+								}
+							}
+						}
+					}
+					
+					if (PlayerInfoXito(playingPlayerArray[j]).userName == playerList[i][DataFieldXito.USER_NAME] && playingPlayerArray[j] != belowUserInfo)
+					{
+						if (playerList[i][DataFieldXito.HAND_CARDS])
+						{
+							var cardArray:Array = playerList[i][DataFieldXito.HAND_CARDS] as Array;
+							for (var k:int = 0; k < cardArray.length; k++) 
+							{
+								PlayerInfoXito(playingPlayerArray[j]).addValueForOneUnleavedCard(cardArray[k]);
+							}
+							PlayerInfoXito(playingPlayerArray[j]).openAllCard();
 						}
 					}
 				}
@@ -1702,6 +1755,17 @@ package view.screen
 			var timerToHideAllStatus:Timer = new Timer(mainData.resetMatchTime * 1000, 1);
 			timerToHideAllStatus.addEventListener(TimerEvent.TIMER_COMPLETE, onHideAllStatus);
 			timerToHideAllStatus.start();
+			
+			for (var i:int = 0; i < playerList.length; i++) 
+			{
+				if (belowUserInfo.userName == playerList[i][DataFieldXito.USER_NAME])
+				{
+					if (playerList[i][DataFieldXito.MONEY] > 0)
+						SoundManager.getInstance().playSound(SoundLibChung.WIN_SOUND);
+					else
+						SoundManager.getInstance().playSound(SoundLibChung.LOSE_SOUND);
+				}
+			}
 		}
 		
 		private function onHideAllStatus(e:TimerEvent):void 

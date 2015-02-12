@@ -108,7 +108,7 @@ package view.window
 			infoObject[DataFieldMauBinh.DISPLAY_NAME] = mainData.chooseChannelData.myInfo.name;
 			infoObject[DataFieldMauBinh.USER_NAME] = mainData.chooseChannelData.myInfo.uId;
 			
-			if (mainData.gameType == MainData.TLMN) 
+			if (mainData.gameType == MainData.TLMN || mainData.gameType == MainData.SAM) 
 			{
 				infoObject[DataFieldMauBinh.ROOM_PASSWORD] = mainData.playingData.gameRoomData.roomPassword;
 				infoObject[DataFieldMauBinh.AVATAR] = mainData.chooseChannelData.myInfo.avatar;
@@ -121,7 +121,7 @@ package view.window
 			{
 				infoObject[DataFieldMauBinh.ROOM_PASSWORD] = mainData.playingData.gameRoomData.roomPassword;
 				infoObject[DataFieldMauBinh.AVATAR] = mainData.chooseChannelData.myInfo.avatar;
-				infoObject[DataFieldMauBinh.ROOM_BET] = GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET];
+				infoObject[DataFieldMauBinh.ROOM_BET] = mainData.playingData.gameRoomData.roomBet;
 				infoObject[DataFieldMauBinh.MONEY] = mainData.chooseChannelData.myInfo.money;
 				infoObject[DataFieldMauBinh.SEX] = mainData.chooseChannelData.myInfo.sex;
 				infoObject[DataFieldMauBinh.MESSAGE] = "";

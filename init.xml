@@ -856,6 +856,13 @@
 		<child>SBV.0606</child>
 		<child>SBV.0553</child>
 		
+		<child>SBV.0016</child>
+		<child>SBV.0017</child>
+		<child>SBV.0018</child>
+		
+		<child>SBS.0016</child>
+		<child>SBS.0017</child>
+		<child>SBS.0018</child>
 	</soundXitoList>
 	
 	<soundPhomList>

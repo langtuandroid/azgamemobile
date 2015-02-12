@@ -300,32 +300,20 @@ package sound
 			{
 				switch (bestResult) 
 				{
-					case '14':
+					case '9':
 						SoundManager.getInstance().playSound(SoundLibXito.THUNG_PHA_SANH_SOUND_MALE);
-					break;
-					case '13':
-						SoundManager.getInstance().playSound(SoundLibXito.THUNG_PHA_SANH_SOUND_MALE);
-					break;
-					case '12':
-						SoundManager.getInstance().playSound(SoundLibXito.THUNG_PHA_SANH_SOUND_MALE);
-					break;
-					case '11':
-						SoundManager.getInstance().playSound(SoundLibXito.TU_QUY_SOUND_MALE);
 					break;
 					case '10':
-						SoundManager.getInstance().playSound(SoundLibXito.TU_QUY_SOUND_MALE);
-					break;
-					case '9':
-						SoundManager.getInstance().playSound(SoundLibXito.CU_LU_SOUND_MALE);
+						SoundManager.getInstance().playSound(SoundLibXito.THUNG_PHA_SANH_SOUND_MALE);
 					break;
 					case '8':
-						SoundManager.getInstance().playSound(SoundLibXito.THUNG_SOUND_MALE);
+						SoundManager.getInstance().playSound(SoundLibXito.TU_QUY_SOUND_MALE);
 					break;
 					case '7':
-						SoundManager.getInstance().playSound(SoundLibXito.SANH_SOUND_MALE);
+						SoundManager.getInstance().playSound(SoundLibXito.CU_LU_SOUND_MALE);
 					break;
 					case '6':
-						SoundManager.getInstance().playSound(SoundLibXito.SANH_SOUND_MALE);
+						SoundManager.getInstance().playSound(SoundLibXito.THUNG_SOUND_MALE);
 					break;
 					case '5':
 						SoundManager.getInstance().playSound(SoundLibXito.SANH_SOUND_MALE);
@@ -370,32 +358,20 @@ package sound
 			{
 				switch (bestResult) 
 				{
-					case '14':
+					case '9':
 						SoundManager.getInstance().playSound(SoundLibXito.THUNG_PHA_SANH_SOUND_FEMALE);
-					break;
-					case '13':
-						SoundManager.getInstance().playSound(SoundLibXito.THUNG_PHA_SANH_SOUND_FEMALE);
-					break;
-					case '12':
-						SoundManager.getInstance().playSound(SoundLibXito.THUNG_PHA_SANH_SOUND_FEMALE);
-					break;
-					case '11':
-						SoundManager.getInstance().playSound(SoundLibXito.TU_QUY_SOUND_FEMALE);
 					break;
 					case '10':
-						SoundManager.getInstance().playSound(SoundLibXito.TU_QUY_SOUND_FEMALE);
-					break;
-					case '9':
-						SoundManager.getInstance().playSound(SoundLibXito.CU_LU_SOUND_FEMALE);
+						SoundManager.getInstance().playSound(SoundLibXito.THUNG_PHA_SANH_SOUND_FEMALE);
 					break;
 					case '8':
-						SoundManager.getInstance().playSound(SoundLibXito.THUNG_SOUND_FEMALE);
+						SoundManager.getInstance().playSound(SoundLibXito.TU_QUY_SOUND_FEMALE);
 					break;
 					case '7':
-						SoundManager.getInstance().playSound(SoundLibXito.SANH_SOUND_FEMALE);
+						SoundManager.getInstance().playSound(SoundLibXito.CU_LU_SOUND_FEMALE);
 					break;
 					case '6':
-						SoundManager.getInstance().playSound(SoundLibXito.SANH_SOUND_FEMALE);
+						SoundManager.getInstance().playSound(SoundLibXito.THUNG_SOUND_FEMALE);
 					break;
 					case '5':
 						SoundManager.getInstance().playSound(SoundLibXito.SANH_SOUND_FEMALE);

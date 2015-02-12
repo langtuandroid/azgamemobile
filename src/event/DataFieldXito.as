@@ -175,6 +175,8 @@ package event
 		static public const GAME_RESULT:String = "gameResult";
 		static public const CURRENT_BET:String = "currentBet";
 		static public const WIN_LIST:String = "winList";
+		public static const NUM_RAISE: String = "numRaise";
+		public static const MAX_NUM_RAISE: String = "maxNumRaise";
 		
 		public function DataFieldXito() 
 		{
