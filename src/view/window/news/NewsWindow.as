@@ -626,18 +626,21 @@ package view.window.news
 				scrollViewForNews.removeAll();
 				scrollViewForNews.visible = true;
 				var arr:Array = obj.Data;
-				
-				totalPage = Math.ceil(obj.RowCount / 4);
-				showPageView(currentPage, totalPage);
-				
-				for (var i:int = 0; i < arr.length; i++) 
+				if (arr.length > 0) 
 				{
+					totalPage = Math.ceil(obj.RowCount / 4);
+					showPageView(currentPage, totalPage);
 					
-					var bannerInfo:ContentNews = new ContentNews();
-					bannerInfo.addInfo(arr[i]["article_id"], arr[i]["post_title"], arr[i]["post_date"], arr[i]["post_title_seo"]);
-					scrollViewForNews.addRow(bannerInfo);
-					bannerInfo.addEventListener(MouseEvent.CLICK, showDetailNews);
+					for (var i:int = 0; i < arr.length; i++) 
+					{
+						
+						var bannerInfo:ContentNews = new ContentNews();
+						bannerInfo.addInfo(arr[i]["article_id"], arr[i]["post_title"], arr[i]["post_date"], arr[i]["post_title_seo"]);
+						scrollViewForNews.addRow(bannerInfo);
+						bannerInfo.addEventListener(MouseEvent.CLICK, showDetailNews);
+					}
 				}
+				
 			}
 		}
 		
