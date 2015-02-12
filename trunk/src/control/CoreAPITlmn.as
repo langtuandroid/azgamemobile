@@ -444,10 +444,14 @@ package control
 			GameDataTLMN.getInstance().roomId = e.roomId;
 			
 			 //Gửi pluginRequest lên lấy thông tin friendList
-			/*var pluginMessage:EsObject = new EsObject();
-			pluginMessage.setString("command", CommandTlmn.GET_FRIEND_LIST);
-			sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().lobbyRoomId, 
-			GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);*/
+			if (MyDataTLMN.getInstance().isGame == 1) 
+			{
+				var pluginMessage:EsObject = new EsObject();
+				pluginMessage.setString("command", CommandTlmn.GET_FRIEND_LIST);
+				sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().lobbyRoomId, 
+				GameDataTLMN.getInstance().lobbyPluginName, pluginMessage);
+			}
+			/**/
 			
 			electroServer.engine.addEventListener(MessageType.UserVariableUpdateEvent.name, onUserVariableUpdateEvent);
 			electroServer.engine.addEventListener(MessageType.RoomVariableUpdateEvent.name, onRoomVariableUpdateEvent);
