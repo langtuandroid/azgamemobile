@@ -42,6 +42,7 @@ package
 			zPlayUserProfileForm_2_Xito;
 			zPlayUserProfileForm_3_Xito;
 			zPlayUserProfileForm_4_Xito;
+			zPlayUserProfileForm_5_Xito;
 			zReadyButton;
 			zResultWindowMauBinh;
 			zResultWindowXito;
@@ -102,6 +103,7 @@ package
 			zChipContainer;
 			zChipContainer2;
 			zCardXito;
+			zCardManagerXito;
 			
 			MyInfoTlmnMc;
 			MyClock;

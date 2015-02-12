@@ -346,6 +346,12 @@ package view
 						xitoIcon.buttonMode = false;
 						xitoIcon.removeEventListener(MouseEvent.MOUSE_UP, onSelectGame);
 					}
+					if (mainData.isTest)
+					{
+						xitoIcon.gotoAndStop(1);
+						xitoIcon.buttonMode = true;
+						xitoIcon.addEventListener(MouseEvent.MOUSE_UP, onSelectGame);
+					}
 				break;
 				default:
 			}

@@ -210,7 +210,7 @@ package view.window
 					if (playerList[i][DataFieldMauBinh.USER_NAME] == mainData.chooseChannelData.myInfo.uId)
 					{
 						if (mainData.chooseChannelData.myInfo.money < Number(mainData.playingData.gameRoomData.roomBet) * mainData.minBetRate)
-							SoundManager.getInstance().soundManagerXito.playLosePlayerSound(mainData.chooseChannelData.myInfo.sex);
+							SoundManager.getInstance().soundManagerXito.playLoseAllPlayerSound(mainData.chooseChannelData.myInfo.sex);
 						else
 							SoundManager.getInstance().soundManagerXito.playLosePlayerSound(mainData.chooseChannelData.myInfo.sex);
 					}

@@ -95,18 +95,28 @@ package view.effectLayer
 				break;
 				case '10':
 					mc.gotoAndStop("tuquy");
+					if (mainData.gameType == MainData.XITO)
+						mc.gotoAndStop("thungphasanh");
 				break;
 				case '9':
 					mc.gotoAndStop("culu");
+					if (mainData.gameType == MainData.XITO)
+						mc.gotoAndStop("thungphasanh");
 				break;
 				case '8':
 					mc.gotoAndStop("thung");
+					if (mainData.gameType == MainData.XITO)
+						mc.gotoAndStop("tuquy");
 				break;
 				case '7':
 					mc.gotoAndStop("sanh");
+					if (mainData.gameType == MainData.XITO)
+						mc.gotoAndStop("culu");
 				break;
 				case '6':
 					mc.gotoAndStop("sanh");
+					if (mainData.gameType == MainData.XITO)
+						mc.gotoAndStop("thung");
 				break;
 				case '5':
 					mc.gotoAndStop("sanh");

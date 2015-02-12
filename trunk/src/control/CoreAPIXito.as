@@ -278,7 +278,7 @@ package control
 					object[DataFieldXito.USER_NAME] = e.esObject.getString(DataFieldXito.USER_NAME);
 					object[DataFieldXito.MONEY] = e.esObject.getString(DataFieldXito.MONEY);
 					object[DataFieldXito.RAISE_TYPE] = e.esObject.getInteger(DataFieldXito.RAISE_TYPE);
-					callPlayingScreenAction(PlayingScreenAction.RAISE, object);
+					//callPlayingScreenAction(PlayingScreenAction.RAISE, object);
 				break; 
 				case PlayingScreenAction.CALL: // Người chơi khác theo
 					object = new Object();
@@ -687,6 +687,15 @@ package control
 					addMoneyObject[DataFieldMauBinh.SUCCESS] = e.parameters.getBoolean(DataFieldMauBinh.ADD_MONEY);
 					addMoneyObject[DataFieldMauBinh.NUMBER] = e.parameters.getInteger(DataFieldMauBinh.NUMBER);
 					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.ADD_MONEY, addMoneyObject));
+				break;
+				case PlayingScreenAction.RAISE:
+					object = new Object();
+					object[DataFieldXito.MAX_NUM_RAISE] = e.parameters.getInteger(DataFieldXito.MAX_NUM_RAISE);
+					object[DataFieldXito.NUM_RAISE] = e.parameters.getInteger(DataFieldXito.NUM_RAISE);
+					object[DataFieldXito.USER_NAME] = e.parameters.getString(DataFieldXito.USER_NAME);
+					object[DataFieldXito.MONEY] = e.parameters.getString(DataFieldXito.MONEY);
+					object[DataFieldXito.RAISE_TYPE] = e.parameters.getInteger(DataFieldXito.RAISE_TYPE);
+					callPlayingScreenAction(PlayingScreenAction.RAISE, object);
 				break;
 				case Command.GET_ROOM_LIST: // update roomList và userList
 					var roomList:Array = e.parameters.getEsObjectArray(DataFieldMauBinh.ROOM_LIST);
