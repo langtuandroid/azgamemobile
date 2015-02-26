@@ -799,6 +799,12 @@ package view.screen
 				_timerKickMaster.stop();
 			}
 			
+			var notDeal:Boolean = false;
+			if (obj[DataField.PLAYER_CARDS] && obj[DataField.PLAYER_CARDS][0] == obj[DataField.PLAYER_CARDS][1]) 
+			{
+				notDeal = true;
+			}
+			
 			timerDealCard = new Timer(200, 3);
 			//timer.addEventListener(TimerEvent.TIMER, dealingCard);
 			timerDealCard.addEventListener(TimerEvent.TIMER, onCompleteDealCard);
@@ -806,8 +812,11 @@ package view.screen
 			
 			if (obj[DataField.PLAYER_CARDS]) 
 			{
-				_myInfo._ready = true;
-				_myInfo.dealCard(obj[DataField.PLAYER_CARDS]);
+				if (!notDeal) 
+				{
+					_myInfo._ready = true;
+					_myInfo.dealCard(obj[DataField.PLAYER_CARDS]);
+				}
 				
 			}
 			else 

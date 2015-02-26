@@ -174,7 +174,6 @@ package view.screen.play
 			//addMoneyEffect();
 			
 			content.effectMoney.visible = false;
-			content.effectMoney.visible = false;
 			content.numCardRemainTxt.visible = false;
 			content.level.txt.mouseEnabled = false;
 			content.numCardRemainTxt.mouseEnabled = false;

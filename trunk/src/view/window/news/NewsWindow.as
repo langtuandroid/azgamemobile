@@ -681,7 +681,7 @@ package view.window.news
 				newsDetail = new ShowNewsDetail();
 				content.addChild(newsDetail);
 				newsDetail.x = 152;
-				newsDetail.y = 82;
+				newsDetail.y = 71;
 				newsDetail.addEventListener("close", onCloseNewDetail);
 				newsDetail.addInfo(obj.Data.post_title, obj.Data.post_date, obj.Data.post_content);
 			}

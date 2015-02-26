@@ -26,11 +26,12 @@ package view.window.shop
 		private var _bitmapData:BitmapData;
 		
 		private var textField:TextField;
-		public function ImageItem() 
+		private var _type:String = "";
+		public function ImageItem(type:String = "") 
 		{
 			super();
 			
-			
+			_type = type;
 		}
 		
 		public function addImg(linkAvatar:String):void 
@@ -132,10 +133,22 @@ package view.window.shop
 				_bitmap = new Bitmap(_bitmapData);
 				addChild(_bitmap);
 				
+				
 				_bitmap.smoothing = true;
 				
-				_bitmap.x = (65 - _bitmap.width) / 2;
-				_bitmap.y = (65 - _bitmap.height) / 2;
+				if (_type == "avatar") 
+				{
+					_bitmap.width = 100;
+					_bitmap.height = 100;
+					_bitmap.x = (100 - _bitmap.width) / 2;
+					_bitmap.y = (100 - _bitmap.height) / 2;
+				}
+				else 
+				{
+					_bitmap.x = (65 - _bitmap.width) / 2;
+					_bitmap.y = (65 - _bitmap.height) / 2;
+				}
+				
 				
 				//_bitmap.alpha = .3;
 			}
