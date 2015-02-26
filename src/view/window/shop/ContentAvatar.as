@@ -75,10 +75,11 @@ package view.window.shop
 			//content.itemLimitTxt.text = "30 ngày";
 			content.itemLimitTxt.text = expire + " ngày";
 			
-			var image:ImageItem = new ImageItem();
+			var image:ImageItem = new ImageItem("avatar");
 			content.containerImg.addChild(image);
-			image.x = 5;
-			image.y = 18;
+			
+			image.x = 0;
+			image.y = 0;
 			
 			trace("addavâtrr: ", linkAvt + "/WAZ/" + idWeb + ".png")
 			image.addImg(linkAvt + "/WAZ/" + idWeb + ".png");

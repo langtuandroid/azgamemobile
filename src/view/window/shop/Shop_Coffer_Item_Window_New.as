@@ -90,6 +90,11 @@ package view.window.shop
 		private var isLoad:Boolean = false;
 		private var scrollViewMyAvatar:ScrollViewYun;
 		
+		/**
+		 * 0:tất cả, 2:baby, 3:phong cách, 4:siêu anh hùng
+		 */
+		private var typeOfAvatar:String = "0";
+		
 		public function Shop_Coffer_Item_Window_New() 
 		{
 			super();
@@ -272,6 +277,21 @@ package view.window.shop
 			myContent.rakingBg.choosePayMega.gotoAndStop(1);
 			myContent.rakingBg.choosePayFpt.gotoAndStop(1);
 			
+			myContent.typeOfAvatar.allAvatar.gotoAndStop(1);
+			myContent.typeOfAvatar.babyAvatar.gotoAndStop(2);
+			myContent.typeOfAvatar.styleAvatar.gotoAndStop(2);
+			myContent.typeOfAvatar.heroAvatar.gotoAndStop(2);
+			
+			myContent.typeOfAvatar.allAvatar.buttonMode = true;
+			myContent.typeOfAvatar.babyAvatar.buttonMode = true;
+			myContent.typeOfAvatar.styleAvatar.buttonMode = true;
+			myContent.typeOfAvatar.heroAvatar.buttonMode = true;
+			
+			myContent.typeOfAvatar.allAvatar.addEventListener(MouseEvent.MOUSE_UP, onClickShowAllAvatar);
+			myContent.typeOfAvatar.babyAvatar.addEventListener(MouseEvent.MOUSE_UP, onClickShowBabyAvatar);
+			myContent.typeOfAvatar.styleAvatar.addEventListener(MouseEvent.MOUSE_UP, onClickShowStyleAvatar);
+			myContent.typeOfAvatar.heroAvatar.addEventListener(MouseEvent.MOUSE_UP, onClickShowHeroAvatar);
+			
 			myContent.standingBg.topMenu.topTlmnBtn.gotoAndStop(1);
 			myContent.standingBg.topMenu.topBinhBtn.gotoAndStop(2);
 			myContent.standingBg.topMenu.topPhomBtn.gotoAndStop(2);
@@ -398,6 +418,70 @@ package view.window.shop
 			myContent.acticedAcc.allNotActice.agreeBtn.addEventListener(MouseEvent.MOUSE_UP, sendAllNotActiveHandler);
 			
 			
+		}
+		
+		private function onClickShowAllAvatar(e:MouseEvent):void 
+		{
+			typeOfAvatar = "0";
+			myContent.typeOfAvatar.allAvatar.gotoAndStop(1);
+			myContent.typeOfAvatar.babyAvatar.gotoAndStop(2);
+			myContent.typeOfAvatar.styleAvatar.gotoAndStop(2);
+			myContent.typeOfAvatar.heroAvatar.gotoAndStop(2);
+			tabOn(3);
+			//getNewAccessToken();
+			scrollView.visible = true;
+			scrollViewForRank.visible = false;
+			allHeaderVisible();
+			showHeaderChose(2, 0);
+			loadItem(0);
+		}
+		
+		private function onClickShowBabyAvatar(e:MouseEvent):void 
+		{
+			typeOfAvatar = "2";
+			myContent.typeOfAvatar.allAvatar.gotoAndStop(2);
+			myContent.typeOfAvatar.babyAvatar.gotoAndStop(1);
+			myContent.typeOfAvatar.styleAvatar.gotoAndStop(2);
+			myContent.typeOfAvatar.heroAvatar.gotoAndStop(2);
+			tabOn(3);
+			//getNewAccessToken();
+			scrollView.visible = true;
+			scrollViewForRank.visible = false;
+			allHeaderVisible();
+			showHeaderChose(2, 0);
+			loadItem(0);
+		}
+		
+		private function onClickShowStyleAvatar(e:MouseEvent):void 
+		{
+			typeOfAvatar = "3";
+			myContent.typeOfAvatar.allAvatar.gotoAndStop(2);
+			myContent.typeOfAvatar.babyAvatar.gotoAndStop(2);
+			myContent.typeOfAvatar.styleAvatar.gotoAndStop(1);
+			myContent.typeOfAvatar.heroAvatar.gotoAndStop(2);
+			tabOn(3);
+			//getNewAccessToken();
+			scrollView.visible = true;
+			scrollViewForRank.visible = false;
+			allHeaderVisible();
+			showHeaderChose(2, 0);
+			loadItem(0);
+		}
+		
+		private function onClickShowHeroAvatar(e:MouseEvent):void 
+		{
+			typeOfAvatar = "4";
+			myContent.typeOfAvatar.allAvatar.gotoAndStop(2);
+			myContent.typeOfAvatar.babyAvatar.gotoAndStop(2);
+			myContent.typeOfAvatar.styleAvatar.gotoAndStop(2);
+			myContent.typeOfAvatar.heroAvatar.gotoAndStop(1);
+			tabOn(3);
+			//getNewAccessToken();
+			scrollView.visible = true;
+			scrollViewForRank.visible = false;
+			allHeaderVisible();
+			showHeaderChose(2, 0);
+			loadItem(0);
 		}
 		
 		private function sendNotActiveHandler(e:MouseEvent):void 
@@ -1861,6 +1945,8 @@ package view.window.shop
 		
 		public function onClickShowMyInfo(e:MouseEvent):void 
 		{
+			
+			myContent.typeOfAvatar.visible = false;
 			allHeaderVisible();
 			showHeaderChose(3, 0);
 			boardOn(5);
@@ -1871,6 +1957,7 @@ package view.window.shop
 		{
 			windowLayer.openAlertWindow("Bạn chưa có vật phẩm nào!");
 			return;
+			myContent.typeOfAvatar.visible = false;
 			allHeaderVisible();
 			showHeaderChose(3, 3);
 			loadMyItem(2);
@@ -1880,7 +1967,7 @@ package view.window.shop
 		{
 			windowLayer.openAlertWindow("Giải đấu chưa bắt đầu!");
 			return;
-			
+			myContent.typeOfAvatar.visible = false;
 			allHeaderVisible();
 			showHeaderChose(3, 4);
 			
@@ -1891,6 +1978,7 @@ package view.window.shop
 		{
 			windowLayer.openAlertWindow("Giải đấu chưa bắt đầu!");
 			return;
+			myContent.typeOfAvatar.visible = false;
 			tabOn(3);
 			allHeaderVisible();
 			showHeaderChose(3, 5);
@@ -1902,6 +1990,7 @@ package view.window.shop
 			
 			windowLayer.openAlertWindow("Giải đấu chưa bắt đầu!");
 			return;
+			myContent.typeOfAvatar.visible = false;
 			allHeaderVisible();
 			showHeaderChose(2, 4);
 			tabOn(3);
@@ -1913,6 +2002,7 @@ package view.window.shop
 			
 			windowLayer.openAlertWindow("Giải đấu chưa bắt đầu!");
 			return;
+			myContent.typeOfAvatar.visible = false;
 			tabOn(3);
 			allHeaderVisible();
 			showHeaderChose(2, 3);
@@ -1921,6 +2011,7 @@ package view.window.shop
 		
 		public function onClickShowItem(e:MouseEvent):void 
 		{
+			myContent.typeOfAvatar.visible = false;
 			allHeaderVisible();
 			showHeaderChose(2, 2);
 			loadItem(2);
@@ -1928,6 +2019,7 @@ package view.window.shop
 		
 		public function onClickShowGold(e:MouseEvent):void 
 		{
+			myContent.typeOfAvatar.visible = false;
 			getNewAccessToken();
 			scrollView.visible = true;
 			scrollViewForRank.visible = false;
@@ -1939,6 +2031,8 @@ package view.window.shop
 		
 		public function onClickShowAvatar(e:MouseEvent):void 
 		{
+			myContent.typeOfAvatar.visible = true;
+			myContent.setChildIndex(myContent.typeOfAvatar, myContent.numChildren - 1);
 			tabOn(3);
 			getNewAccessToken();
 			scrollView.visible = true;
@@ -2147,14 +2241,15 @@ package view.window.shop
 				var url:String;
 				var httpRequest:HTTPRequest = new HTTPRequest();
 				var obj:Object;
-				
+				scrollView.y = 0;
 				switch (type) 
 				{
 					case 0:
 						url = basePath + "Service02/OnplayUserExt.asmx/GetListTwav00" + String(1)
 										+ "?rowStart=" + loadAvatarShop * 10 + 1 + "&rowEnd=" + (loadAvatarShop + 1) * 10;
 						obj = new Object();
-						obj.avt_group_id = String(0);
+						obj.avt_group_id = typeOfAvatar;
+						scrollView.y = 30;
 						httpRequest.sendRequest(method, url, obj, loadAvatarSuccess, true);
 					break;
 					case 5:
@@ -2870,7 +2965,7 @@ package view.window.shop
 									+ "?rowStart=" + String(loadAvatarShop * 10 + 1) + "&rowEnd=" 
 									+ String((loadAvatarShop + 1) * 10);
 				obj = new Object();
-				obj.avt_group_id = String(0);
+				obj.avt_group_id = typeOfAvatar;
 				httpRequest.sendRequest(method, url, obj, loadAvatarSuccess, true);
 			}
 			
@@ -3002,6 +3097,8 @@ package view.window.shop
 		
 		public function chooseAddMoney():void 
 		{
+			myContent.typeOfAvatar.visible = false;
+			
 			var httpReq:HTTPRequest = new HTTPRequest();
 			var method:String = "POST";
 			var str:String = basePath + "Service02/OnplayIO.asmx/GetCountryCodeFromIp";
@@ -3103,6 +3200,7 @@ package view.window.shop
 		
 		public function showRank():void 
 		{
+			myContent.typeOfAvatar.visible = false;
 			scrollView.visible = false;
 			scrollViewForRank.visible = true;
 			headerOn(0);

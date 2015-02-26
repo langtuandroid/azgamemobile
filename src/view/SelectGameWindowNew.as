@@ -219,6 +219,7 @@ package view
 		
 		public function checkGameOnOff():void 
 		{
+			
 			var method:String = "POST";
 			var url:String;
 			var httpRequest:HTTPRequest = new HTTPRequest();
@@ -242,29 +243,32 @@ package view
 		
 		private function loadMyGameSuccess(obj:Object):void 
 		{
-			tlmnIcon.buttonMode = true;
-			samIcon.buttonMode = true;
-			phomIcon.buttonMode = true;
-			maubinhIcon.buttonMode = true;
-			luckyCardIcon.buttonMode = true;
-			xitoIcon.buttonMode = false;
-			
-			tlmnIcon.gotoAndStop(1);
-			samIcon.gotoAndStop(1);
-			maubinhIcon.gotoAndStop(1);
-			phomIcon.gotoAndStop(1);
-			luckyCardIcon.gotoAndStop(1);
-			xitoIcon.gotoAndStop(2);
-			
-			xitoIcon.removeEventListener(MouseEvent.MOUSE_UP, onSelectGame);
-			tlmnIcon.removeEventListener(MouseEvent.MOUSE_UP, onSelectGame);
-			samIcon.removeEventListener(MouseEvent.MOUSE_UP, onSelectGame);
-			phomIcon.removeEventListener(MouseEvent.MOUSE_UP, onSelectGame);
-			maubinhIcon.removeEventListener(MouseEvent.MOUSE_UP, onSelectGame);
-			luckyCardIcon.addEventListener(MouseEvent.MOUSE_UP, onClickLucky);
 			
 			if (obj.TypeMsg == 1) 
 			{
+				
+				tlmnIcon.buttonMode = true;
+				samIcon.buttonMode = true;
+				phomIcon.buttonMode = true;
+				maubinhIcon.buttonMode = true;
+				luckyCardIcon.buttonMode = true;
+				xitoIcon.buttonMode = false;
+				
+				tlmnIcon.gotoAndStop(1);
+				samIcon.gotoAndStop(1);
+				maubinhIcon.gotoAndStop(1);
+				phomIcon.gotoAndStop(1);
+				luckyCardIcon.gotoAndStop(1);
+				xitoIcon.gotoAndStop(2);
+				
+				xitoIcon.removeEventListener(MouseEvent.MOUSE_UP, onSelectGame);
+				tlmnIcon.removeEventListener(MouseEvent.MOUSE_UP, onSelectGame);
+				samIcon.removeEventListener(MouseEvent.MOUSE_UP, onSelectGame);
+				phomIcon.removeEventListener(MouseEvent.MOUSE_UP, onSelectGame);
+				maubinhIcon.removeEventListener(MouseEvent.MOUSE_UP, onSelectGame);
+				luckyCardIcon.removeEventListener(MouseEvent.MOUSE_UP, onClickLucky);
+				luckyCardIcon.addEventListener(MouseEvent.MOUSE_UP, onClickLucky);
+				
 				for (var i:int = 0; i < obj.Data.length; i++) 
 				{
 					var objGame:Object = obj.Data[i];
@@ -275,6 +279,7 @@ package view
 		
 		private function showGame(gameName:String, isShow:String):void 
 		{
+			//windowLayer.openAlertWindow(gameName + isShow.toString());
 			switch (gameName) 
 			{
 				case "AZGB_BINH":
@@ -718,6 +723,7 @@ package view
 			/*noticeTimer = new Timer(30000);
 			noticeTimer.addEventListener(TimerEvent.TIMER, onTimerGetNotice);
 			noticeTimer.start();*/
+			onUpdateSystemNotice(null);
 		}
 		
 		private function onUpdateSystemNotice(e:Event):void 
@@ -737,6 +743,7 @@ package view
 			{
 				noticeText.txt.text = arrNotice[countText].message;
 				noticeText.txt.width = noticeText.txt.textWidth + 10;
+				
 			}
 			else 
 			{
@@ -756,15 +763,19 @@ package view
 		
 		private function onEnterFrame(e:Event):void 
 		{
-			noticeText.txt.x-= 2;
-			
-			
-			if (noticeText.txt.x < -noticeText.txt.width) 
+			if (stage) 
 			{
-				stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-				countText++;
-				showText();
+				noticeText.txt.x-= 2;
+				
+				
+				if (noticeText.txt.x < -noticeText.txt.width) 
+				{
+					stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+					countText++;
+					showText();
+				}
 			}
+			
 		}
 		
 		public function onTimerGetNotice(e:TimerEvent):void 
@@ -800,6 +811,8 @@ package view
 			mainData.removeEventListener(MainData.UPDATE_SYSTEM_NOTICE, onUpdateSystemNotice);
 			mainData.isOnSelectGameWindow = false;
 			mainData.chooseChannelData.removeEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
+			stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			noticeText.txt.x = -noticeText.txt.width
 		}
 		
 		private function onUpdateMyInfo(e:Event):void 

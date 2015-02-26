@@ -1348,7 +1348,23 @@ package view.screen.play
 			//TweenMax.to(cardDeck, 1, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, ease:Back.easeOut, onComplete:onComplete } );
 			TweenMax.to(cardDeck, .8, { x:_distanceConstan + _distance * _countCard, y:_distanceConstanY, 
 										onComplete:onCompleteMove } );
-			
+			if (_arrCardImage.length == 2) 
+			{
+				if (_arrCardImage[0].id == _arrCardImage[1].id) 
+				{
+					
+					if (_timerDealcard) 
+					{
+						_timerDealcard.stop();
+						_timerDealcard.removeEventListener(TimerEvent.TIMER, onTimerDealCard);
+						_timerDealcard.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteDealcard);
+						
+					}
+					
+					removeAllCard();
+					removeAllCardDeal();
+				}
+			}
 		}
 		
 		private function onCompleteMove():void 

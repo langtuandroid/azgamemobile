@@ -38,7 +38,7 @@ package view.window
 		private function onCompleteTimerCloseWindow(e:TimerEvent):void 
 		{
 			close(BaseWindow.MIDDLE_EFFECT);
-			WindowLayer.getInstance().openAlertWindow("connection time out");
+			WindowLayer.getInstance().openAlertWindow("Kết nối bị gián đoạn, vui lòng kiểm tra lại đường truyền internet!");
 		}
 		
 		override public function close(closeType:String=BaseWindow.MIDDLE_EFFECT):void

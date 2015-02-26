@@ -235,6 +235,7 @@ package view.screen
 			else 
 			{
 				selectGameWindow.checkGameOnOff();
+				selectGameWindow.onTimerGetNotice(null);
 			}
 			/*tutorialBoard.y = 74;
 			helpButton.y = 30;
@@ -282,12 +283,12 @@ package view.screen
 			soundOnButton.y = 6;
 			musicOffButton.y = 6;
 			soundOffButton.y = 6;*/
-			if (selectGameWindow)
+			/*if (selectGameWindow)
 			{
 				if (selectGameWindow.parent)
 					selectGameWindow.parent.removeChild(selectGameWindow);
 			}
-			bgLayer.removeChild(_newBg);
+			bgLayer.removeChild(_newBg);*/
 			
 			excuteWhenJoinLobby();
 			
@@ -970,6 +971,12 @@ package view.screen
 				
 				//mainData.currentChannelId = 14;
 				//mainData.currentPort = 5131;
+				if (selectGameWindow)
+				{
+					if (selectGameWindow.parent)
+						selectGameWindow.parent.removeChild(selectGameWindow);
+				}
+				bgLayer.removeChild(_newBg);
 				
 				mainCommand.electroServerCommand.startConnect("", mainData.currentChannelId);
 				mainData.fee = channelObject[DataFieldMauBinh.DEALER_FEE];
