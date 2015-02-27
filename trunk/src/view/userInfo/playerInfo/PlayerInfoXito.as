@@ -106,7 +106,7 @@ package view.userInfo.playerInfo
 		public var ip:String;
 		
 		private const smallDistance:Number = 11.5; // khoảng cách giữa các quân bài kích thước nhỏ
-		private const normalDistance:Number = 23; // khoảng cách giữa các quân bài kích thước vừa
+		private const normalDistance:Number = 29; // khoảng cách giữa các quân bài kích thước vừa
 		private const largeDistance:Number = 55; // khoảng cách giữa các quân bài kích thước to
 		private const largeDistance_2:Number = 15; // khoảng cách giữa các quân bài đã đánh
 		private const largeDistance_3:Number = 14; // khoảng cách giữa các quân bài đã hạ
@@ -309,8 +309,11 @@ package view.userInfo.playerInfo
 		{	
 			moneyNumber = value;
 			
-			if(formName == PlayerInfoXito.BELOW_USER) // Nếu là user của mình thì cập nhật lại tiền cho phòng chờ và phòng chọn kênh
+			if (formName == PlayerInfoXito.BELOW_USER) // Nếu là user của mình thì cập nhật lại tiền cho phòng chờ và phòng chọn kênh
+			{
 				mainData.chooseChannelData.myInfo.money = value;
+				mainData.chooseChannelData.myInfo = mainData.chooseChannelData.myInfo;
+			}
 		}
 		
 		private function addAvatar():void 
@@ -443,8 +446,11 @@ package view.userInfo.playerInfo
 				
 			moneyNumber = value;
 			
-			if(formName == PlayerInfoXito.BELOW_USER) // Nếu là user của mình thì cập nhật lại tiền cho phòng chờ và phòng chọn kênh
+			if (formName == PlayerInfoXito.BELOW_USER) // Nếu là user của mình thì cập nhật lại tiền cho phòng chờ và phòng chọn kênh
+			{
 				mainData.chooseChannelData.myInfo.money = value;
+				mainData.chooseChannelData.myInfo = mainData.chooseChannelData.myInfo;
+			}
 		}
 		
 		public function removeAllCards():void
@@ -1230,7 +1236,7 @@ package view.userInfo.playerInfo
 			switch (e.currentTarget) 
 			{
 				case exitButton:
-					if (isPlaying)
+					if (isPlaying && !isFold)
 					{
 						confirmExitWindow = new ConfirmWindow();
 						confirmExitWindow.setNotice(mainData.init.gameDescription.playingScreen.confirmExit);
@@ -1327,13 +1333,14 @@ package view.userInfo.playerInfo
 		{
 			disableAllButton();
 			enableAllButton();
+			trace("aaaaaaaaaaaaaaaaaaaaaaa",unLeaveCards.length);
 			
 			var maxMoneyOfPlayer:Number = 0;
 			for (var i:int = 0; i < playingPlayerArray.length; i++) 
 			{
 				if (PlayerInfoXito(playingPlayerArray[i]).userName != mainData.chooseChannelData.myInfo.uId)
 				{
-					if (maxMoneyOfPlayer < PlayerInfoXito(playingPlayerArray[i]).moneyNumber)
+					if (maxMoneyOfPlayer < PlayerInfoXito(playingPlayerArray[i]).moneyNumber && !PlayerInfoXito(playingPlayerArray[i]).isFold)
 						maxMoneyOfPlayer = PlayerInfoXito(playingPlayerArray[i]).moneyNumber
 				}
 			}
