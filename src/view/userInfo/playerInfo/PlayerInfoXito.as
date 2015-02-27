@@ -534,6 +534,14 @@ package view.userInfo.playerInfo
 			}
 		}
 		
+		public function closeAllCard():void
+		{
+			for (var i:int = unLeaveCards.length - 1; i >= 0; i--) // Nếu chưa có thì gán giá trị quân bài mới vào
+			{
+				CardXito(unLeaveCards[i]).setId(0);
+			}
+		}
+		
 		// push new card vào mảng các lá bài chưa đánh
 		public function pushNewUnLeaveCard(card:CardXito):void
 		{
