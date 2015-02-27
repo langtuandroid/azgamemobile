@@ -811,8 +811,10 @@ package view
 			mainData.removeEventListener(MainData.UPDATE_SYSTEM_NOTICE, onUpdateSystemNotice);
 			mainData.isOnSelectGameWindow = false;
 			mainData.chooseChannelData.removeEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
+
 			stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			noticeText.txt.x = -noticeText.txt.width
+
 		}
 		
 		private function onUpdateMyInfo(e:Event):void 

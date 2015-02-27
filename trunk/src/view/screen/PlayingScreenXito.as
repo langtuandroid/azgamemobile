@@ -1105,6 +1105,7 @@ package view.screen
 			{
 				if (allPlayerArray[i])
 				{
+					PlayerInfoXito(allPlayerArray[i]).isFold = false;
 					PlayerInfoXito(allPlayerArray[i]).numRaise = 0;
 					PlayerInfoXito(allPlayerArray[i]).maxNumRaise = 1;
 					if (PlayerInfoXito(allPlayerArray[i]).isReadyPlay || PlayerInfoXito(allPlayerArray[i]).isRoomMaster)
@@ -1256,7 +1257,7 @@ package view.screen
 					{
 						for (var j:int = 0; j < PlayerInfoXito(playingPlayerArray[i]).unLeaveCards.length; j++) 
 						{
-							PlayerInfoXito(playingPlayerArray[i]).addValueForOneUnleavedCard(0);
+							PlayerInfoXito(playingPlayerArray[i]).closeAllCard();
 						}
 					}
 				}
@@ -1299,10 +1300,10 @@ package view.screen
 			{
 				for (i = 0; i < playingPlayerArray.length; i++) 
 				{
-					if (playingPlayerArray[i] == belowUserInfo && dealMoreCardObject[DataFieldXito.USER_LIST][i])
+					if (playingPlayerArray[i] == belowUserInfo && dealMoreCardObject[DataFieldXito.USER_LIST][0])
 					{
 						//cardManager.divideOneCard(playingPlayerArray[i], dealMoreCardObject[DataFieldXito.USER_LIST][i][DataFieldXito.CARD_ID]);							
-						PlayerInfoXito(playingPlayerArray[i]).cardInfoArray = [dealMoreCardObject[DataFieldXito.USER_LIST][i][DataFieldXito.CARD_ID]];
+						PlayerInfoXito(playingPlayerArray[i]).cardInfoArray = [dealMoreCardObject[DataFieldXito.USER_LIST][0][DataFieldXito.CARD_ID]];
 						tempArray.push(playingPlayerArray[i]);
 					}
 					else if (!PlayerInfoXito(playingPlayerArray[i]).isFold)
