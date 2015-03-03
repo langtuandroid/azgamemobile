@@ -580,7 +580,7 @@ package view.userInfo.playerInfo
 		{
 			for (var i:int = 0; i < unLeaveCards.length; i++) 
 			{
-				CardXito(unLeaveCards[i]).effectOpen();
+				CardXito(unLeaveCards[i]).simpleOpen();
 				CardXito(unLeaveCards[i]).overLayer.visible = false;
 				CardXito(unLeaveCards[i]).cardBorder.visible = false;
 			}
@@ -1008,7 +1008,17 @@ package view.userInfo.playerInfo
 					disableAllButton();
 				break;
 				case PlayerInfoXito.SELECT_ACTION:
-					checkAvailableAction();
+					if (mainData.isRecentlyDealCard)
+					{
+						var timerToCheckAvailableAction:Timer = new Timer(1500, 1);
+						timerToCheckAvailableAction.addEventListener(TimerEvent.TIMER_COMPLETE, onTimerToCheckAvailableAction);
+						timerToCheckAvailableAction.start();
+					}
+					else
+					{
+						checkAvailableAction();
+						countTime(Number(mainData.init.playTime.selectActionTime));
+					}
 					SoundManager.getInstance().playSound(SoundLibChung.MY_TURN_SOUND);
 				break;
 				case PlayerInfoXito.SELECT_OPEN_CARD:
@@ -1023,6 +1033,14 @@ package view.userInfo.playerInfo
 					}
 				break;
 			}
+		}
+		
+		private function onTimerToCheckAvailableAction(e:TimerEvent):void 
+		{
+			if (!stage)
+				return;
+			checkAvailableAction();
+			countTime(Number(mainData.init.playTime.selectActionTime));
 		}
 		
 		public function addChatSentence(sentence:String):void
@@ -1333,7 +1351,6 @@ package view.userInfo.playerInfo
 		{
 			disableAllButton();
 			enableAllButton();
-			trace("aaaaaaaaaaaaaaaaaaaaaaa",unLeaveCards.length);
 			
 			var maxMoneyOfPlayer:Number = 0;
 			for (var i:int = 0; i < playingPlayerArray.length; i++) 
@@ -1407,16 +1424,13 @@ package view.userInfo.playerInfo
 					money = Number(roomBet);
 				break;
 				case RAISE_FOURPLE:
-					//money = (callMoney + mainData.betMoneyOfPreviousUser * 3);
-					money = mainData.maxMoneyOfRound - currentMoneyOfRound + (4 - 1) * mainData.maxMoneyOfRound;
+					money = callMoney + 3 * mainData.maxMoneyOfRound;
 				break;
 				case RAISE_TRIPLE:
-					//money = (callMoney + mainData.betMoneyOfPreviousUser * 2);
-					money = mainData.maxMoneyOfRound - currentMoneyOfRound + (3 - 1) * mainData.maxMoneyOfRound;
+					money = callMoney + 2 * mainData.maxMoneyOfRound;
 				break;
 				case RAISE_DOUBLE:
-					//money = (callMoney + mainData.betMoneyOfPreviousUser * 1);
-					money = mainData.maxMoneyOfRound - currentMoneyOfRound + (2 - 1) * mainData.maxMoneyOfRound;
+					money = callMoney + 1 * mainData.maxMoneyOfRound;
 				break;
 				case ALL_IN:
 					money = (callMoney * 2 + mainData.currentTotalMoney);
@@ -1456,7 +1470,7 @@ package view.userInfo.playerInfo
 		private var myStatus:String; // Lưu lại trạng thái hiện tại của user
 		public var isFold:Boolean;
 		public var currentMoneyOfRound:Number; // Số tiền người chơi đã bỏ ra trong vòng cược hiện tại
-		public var isMyTurn:Boolean;
+		private var _isMyTurn:Boolean;
 		public var numRaise:int;
 		public var maxNumRaise:int;
 		
@@ -1478,6 +1492,31 @@ package view.userInfo.playerInfo
 		public function get roomBet():Number 
 		{
 			return Number(mainData.playingData.gameRoomData.roomBet);
+		}
+		
+		public function get isMyTurn():Boolean 
+		{
+			return _isMyTurn;
+		}
+		
+		public function set isMyTurn(value:Boolean):void 
+		{
+			_isMyTurn = value;
+			if (mainData.isRecentlyDealCard)
+			{
+				var timerToCountTime:Timer = new Timer(1500, 1);
+				timerToCountTime.addEventListener(TimerEvent.TIMER_COMPLETE, onTimerToCountTime);
+				timerToCountTime.start();
+			}
+			else
+			{
+				countTime(Number(mainData.init.playTime.selectActionTime));
+			}
+		}
+		
+		private function onTimerToCountTime(e:TimerEvent):void 
+		{
+			countTime(Number(mainData.init.playTime.selectActionTime));
 		}
 	}
 

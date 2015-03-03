@@ -439,7 +439,13 @@ package control
 						if (EsObject(tempUserList[i]).doesPropertyExist(DataFieldXito.CURRENT_BET))
 							object[DataFieldXito.CURRENT_BET] = EsObject(tempUserList[i]).getString(DataFieldXito.CURRENT_BET);
 						if (EsObject(tempUserList[i]).doesPropertyExist(DataFieldXito.OPEN_CARDS))
+						{
 							object[DataFieldXito.OPEN_CARDS] = EsObject(tempUserList[i]).getIntegerArray(DataFieldXito.OPEN_CARDS);
+							for (j = 0; j < object[DataFieldXito.OPEN_CARDS].length; j++) 
+							{
+								object[DataFieldXito.OPEN_CARDS][j]++;
+							}
+						}
 						if (EsObject(tempUserList[i]).doesPropertyExist(DataFieldXito.IS_VIEWER))
 							object[DataFieldXito.IS_VIEWER] = EsObject(tempUserList[i]).getBoolean(DataFieldXito.IS_VIEWER);
 						

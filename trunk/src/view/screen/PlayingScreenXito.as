@@ -781,7 +781,7 @@ package view.screen
 			chatBox.addChatSentence(data[DataFieldXito.DISPLAY_NAME] + " " + mainData.init.gameDescription.playingScreen.userJoinRoom, "Thông báo", false, true);
 			var indexEmpty:int;
 			indexEmpty = allPlayerArray.length;
-			for (var i:int = 0; i < allPlayerArray.length; i++) 
+			/*for (var i:int = 0; i < allPlayerArray.length; i++) 
 			{
 				if (!allPlayerArray[i])
 				{
@@ -792,6 +792,24 @@ package view.screen
 			if (!data[DataFieldXito.POSITION])
 				data[DataFieldXito.POSITION] = allPlayerArray.length;
 			addOnePlayer(data[DataFieldXito.POSITION]);
+			addPersonalInfo(data);*/
+			
+			for (var i:int = 0; i < allPlayerArray.length; i++) 
+			{
+				if (!allPlayerArray[i])
+				{
+					var tempNumber:int = i + jumpIndex;
+					if (tempNumber > 4)
+						tempNumber -= mainData.maxPlayer;
+					if(indexEmpty > tempNumber)
+					indexEmpty = tempNumber;
+				}
+			}
+			indexEmpty -= jumpIndex;
+			if (indexEmpty < 0)
+				indexEmpty += mainData.maxPlayer;
+			addOnePlayer(indexEmpty);
+			data[DataFieldXito.POSITION] = indexEmpty;
 			addPersonalInfo(data);
 			
 			var countPlayer:int = 0;
@@ -1076,6 +1094,7 @@ package view.screen
 		
 		private function listenDealCard(data:Object):void 
 		{
+			mainData.isRecentlyDealCard = true;
 			betInfo.visible = true;
 			if (timerToKickRoomMaster)
 			{
@@ -1153,6 +1172,7 @@ package view.screen
 		private function onEnableSelectOpenCard(e:TimerEvent):void 
 		{
 			belowUserInfo.setMyTurn(PlayerInfoXito.SELECT_OPEN_CARD);
+			mainData.isRecentlyDealCard = false;
 		}
 		
 		private function listenHaveUserCheck(data:Object):void // có user nhường tố
@@ -1197,7 +1217,12 @@ package view.screen
 					}
 					PlayerInfoXito(playingPlayerArray[i]).numRaise = data[DataFieldXito.NUM_RAISE];
 					PlayerInfoXito(playingPlayerArray[i]).maxNumRaise = data[DataFieldXito.MAX_NUM_RAISE];
-					betMoneyOfPreviousUser = data[DataFieldXito.MONEY]/* - (mainData.maxMoneyOfRound - PlayerInfoXito(playingPlayerArray[i]).currentMoneyOfRound)*/;
+					trace("ccccccccccccccccccc",Number(data[DataFieldXito.MONEY]),PlayerInfoXito(playingPlayerArray[i]).currentMoneyOfRound);
+					if (Number(data[DataFieldXito.MONEY]) + PlayerInfoXito(playingPlayerArray[i]).currentMoneyOfRound > mainData.maxMoneyOfRound)
+					{
+						trace("ddddddddđ");
+						betMoneyOfPreviousUser = Number(data[DataFieldXito.MONEY]) + PlayerInfoXito(playingPlayerArray[i]).currentMoneyOfRound;
+					}
 					PlayerInfoXito(playingPlayerArray[i]).currentMoneyOfRound += Number(data[DataFieldXito.MONEY]);
 					currentTotalMoney += Number(data[DataFieldXito.MONEY]);
 					mainData.actionStatus = 2; // trạng thái đã có ng tố
@@ -1271,6 +1296,9 @@ package view.screen
 		private var dealMoreCardObject:Object;
 		private function listenDealMoreCard(data:Object):void // chia thêm bài
 		{
+			if (isGameOver)
+				return;
+			mainData.isRecentlyDealCard = true;	
 			dealMoreCardObject = data;
 			var timerToDealMoreCard:Timer = new Timer(500, 1);
 			timerToDealMoreCard.addEventListener(TimerEvent.TIMER_COMPLETE, onTimerToDealMoreCard);
@@ -1294,6 +1322,8 @@ package view.screen
 		
 		private function onTimerToDealMoreCard(e:TimerEvent):void 
 		{
+			if (isGameOver)
+				return;
 			var i:int;
 			var tempArray:Array = new Array();
 			if (dealMoreCardObject[DataFieldXito.USER_LIST].length < 2) // Lượt chia bài cuối
@@ -1351,17 +1381,18 @@ package view.screen
 		
 		private function listenUpdateCurrentTurn(data:Object):void // cập nhật turn hiện tại
 		{
-			trace("listenUpdateCurrentTurn",Math.random());
 			for (var i:int = 0; i < playingPlayerArray.length; i++)
 			{
 				if (data[DataFieldXito.CURRENT_TURN] == PlayerInfoXito(playingPlayerArray[i]).userName)
 				{
-					PlayerInfoXito(playingPlayerArray[i]).countTime(Number(mainData.init.playTime.selectActionTime));
+					//PlayerInfoXito(playingPlayerArray[i]).countTime(Number(mainData.init.playTime.selectActionTime));
 					mainData.moneyOfCurrentUser = PlayerInfoXito(playingPlayerArray[i]).moneyNumber;
 					if (playingPlayerArray[i] == belowUserInfo)
 						belowUserInfo.setMyTurn(PlayerInfoXito.SELECT_ACTION);
 					else
 						PlayerInfoXito(playingPlayerArray[i]).isMyTurn = true;
+					mainData.isRecentlyDealCard = false;
+					//betMoneyOfPreviousUser = mainData.maxMoneyOfRound - PlayerInfoXito(playingPlayerArray[i]).currentMoneyOfRound + mainData.maxMoneyOfRound;
 					return;
 				}
 			}
@@ -1554,6 +1585,7 @@ package view.screen
 		
 		private function listenGameOver(data:Object):void // ván bài kết thúc
 		{
+			isGameOver = true;
 			totalMoneyText.text = String(PlayingLogic.format(currentTotalMoney, 1));
 			var playerList:Array = data[DataFieldXito.PLAYER_LIST] as Array;
 			var quiterList:Array = data[DataFieldXito.QUITERS] as Array;
@@ -1591,17 +1623,59 @@ package view.screen
 				
 			belowUserInfo.setMyTurn(PlayerInfoXito.DO_NOTHING);
 			
-			timerToResetMatch = new Timer(mainData.resetMatchTime * 1000, 1);
+			var addTime:Number = 0;
+			if (checkEarlyGameOver())
+				addTime = 1.5;
+			
+			timerToResetMatch = new Timer((addTime + mainData.resetMatchTime) * 1000, 1);
 			timerToResetMatch.addEventListener(TimerEvent.TIMER_COMPLETE, onResetMatch);
 			timerToResetMatch.start();
 			
-			var timerToShowMoneyEffect:Timer = new Timer(1000, 1);
+			var timerToShowMoneyEffect:Timer = new Timer(1000 + addTime * 1000, 1);
 			timerToShowMoneyEffect.addEventListener(TimerEvent.TIMER_COMPLETE, onShowMoneyEffect);
 			timerToShowMoneyEffect.start();
 			
-			var timerToPlayWinSound:Timer = new Timer(3000, 1);
+			var timerToPlayWinSound:Timer = new Timer(3000 + addTime * 1000, 1);
 			timerToPlayWinSound.addEventListener(TimerEvent.TIMER_COMPLETE, onPlayWinSound);
 			timerToPlayWinSound.start();
+		}
+		
+		private function checkEarlyGameOver():Boolean 
+		{
+			var isEarlyGameOver:Boolean;
+			var playerList:Array = gameOverObject[DataFieldXito.PLAYER_LIST] as Array;
+			var quiterList:Array = gameOverObject[DataFieldXito.QUITERS] as Array;
+			playerList = playerList.concat(quiterList);
+			var tempArray:Array = new Array();
+			for (var i:int = 0; i < playerList.length; i++) 
+			{
+				for (var j:int = 0; j < playingPlayerArray.length; j++)
+				{
+					if (PlayerInfoXito(playingPlayerArray[j]).userName == playerList[i][DataFieldXito.USER_NAME])
+					{
+						var isFold:Boolean = playingPlayerArray[j].isFold;
+						if (playerList[i][DataFieldXito.HAND_CARDS] && !isFold)
+						{
+							var tempNumber:int = PlayerInfoXito(playingPlayerArray[j]).unLeaveCards.length;
+							if (tempNumber < 5)
+							{
+								isEarlyGameOver = true;
+								PlayerInfoXito(playingPlayerArray[j]).cardInfoArray = new Array();
+								for (var k:int = 0; k < 5 - tempNumber; k++) 
+								{
+									PlayerInfoXito(playingPlayerArray[j]).cardInfoArray.push(0);
+								}
+								tempArray.push(playingPlayerArray[j]);
+							}
+						}
+					}
+				}
+			}
+			
+			cardManager.playerArray = tempArray;
+			cardManager.divideMoreCard();
+			
+			return isEarlyGameOver;
 		}
 		
 		private function onPlayWinSound(e:TimerEvent):void 
@@ -1719,7 +1793,7 @@ package view.screen
 						}
 					}
 					
-					if (PlayerInfoXito(playingPlayerArray[j]).userName == playerList[i][DataFieldXito.USER_NAME] && playingPlayerArray[j] != belowUserInfo)
+					if (PlayerInfoXito(playingPlayerArray[j]).userName == playerList[i][DataFieldXito.USER_NAME]/* && playingPlayerArray[j] != belowUserInfo*/)
 					{
 						if (playerList[i][DataFieldXito.HAND_CARDS])
 						{

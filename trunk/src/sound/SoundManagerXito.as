@@ -14,7 +14,7 @@ package sound
 		
 		public function playWinPlayerSound(sex:String):void
 		{
-			trace("soundManagerXito playWinPlayerSound");
+			//trace("soundManagerXito playWinPlayerSound");
 			var randomIndex:int = Math.floor(Math.random() * 5);
 			if (sex == 'M')
 			{
@@ -63,7 +63,7 @@ package sound
 		
 		public function playLoseAllPlayerSound(sex:String):void
 		{
-			trace("soundManagerXito playLoseAllPlayerSound");
+			//trace("soundManagerXito playLoseAllPlayerSound");
 			var randomIndex:int = Math.floor(Math.random() * 5);
 				if (sex == 'M')
 				{
@@ -113,7 +113,7 @@ package sound
 		
 		public function playStartGamePlayerSound(sex:String):void
 		{
-			trace("soundManagerXito playStartGamePlayerSound");
+			//trace("soundManagerXito playStartGamePlayerSound");
 			var randomIndex:int = Math.floor(Math.random() * 5);
 			if (sex == 'M')
 			{
@@ -163,7 +163,7 @@ package sound
 		
 		public function playOtherJoinGamePlayerSound(sex:String):void
 		{
-			trace("soundManagerXito playOtherJoinGamePlayerSound");
+			//trace("soundManagerXito playOtherJoinGamePlayerSound");
 			var randomIndex:int = Math.floor(Math.random() * 5);
 			if (sex == 'M')
 			{
@@ -213,7 +213,7 @@ package sound
 		
 		public function playOtherExitGamePlayerSound(sex:String):void
 		{
-			trace("soundManagerXito playOtherExitGamePlayerSound");
+			//trace("soundManagerXito playOtherExitGamePlayerSound");
 			var randomIndex:int = Math.floor(Math.random() * 5);
 			if (sex == 'M')
 			{
@@ -263,7 +263,7 @@ package sound
 		
 		public function playLobbyPlayerSound(sex:String):void
 		{
-			trace("soundManagerXito playLobbyPlayerSound");
+			//trace("soundManagerXito playLobbyPlayerSound");
 			var randomIndex:int = Math.floor(Math.random() * 2);
 			if (sex == 'M')
 			{
@@ -295,7 +295,7 @@ package sound
 		
 		public function playNormalPlayerSound(sex:String, bestResult:String):void
 		{
-			trace("soundManagerXito playNormalPlayerSound");
+			//trace("soundManagerXito playNormalPlayerSound");
 			if (sex == 'M')
 			{
 				switch (bestResult) 
@@ -416,7 +416,7 @@ package sound
 		
 		public function playTimeOutPlayerSound(sex:String):void
 		{
-			trace("soundManagerXito playTimeOutPlayerSound");
+			//trace("soundManagerXito playTimeOutPlayerSound");
 			var randomIndex:int = Math.floor(Math.random() * 5);
 			if (sex == 'M')
 			{
@@ -466,7 +466,7 @@ package sound
 		
 		public function playLosePlayerSound(sex:String):void
 		{
-			trace("soundManagerXito playLosePlayerSound");
+			//trace("soundManagerXito playLosePlayerSound");
 			var randomIndex:int = Math.floor(Math.random() * 5);
 			if (sex == 'M')
 			{
@@ -516,7 +516,7 @@ package sound
 		
 		public function playCheckSound(sex:String):void
 		{
-			trace("soundManagerXito playCheckSound");
+			//trace("soundManagerXito playCheckSound");
 			var randomIndex:int = Math.floor(Math.random() * 5);
 			if (sex == 'M')
 			{
@@ -566,7 +566,7 @@ package sound
 		
 		public function playRaiseSound(sex:String):void
 		{
-			trace("soundManagerXito playRaiseSound");
+			//trace("soundManagerXito playRaiseSound");
 			var randomIndex:int = Math.floor(Math.random() * 5);
 			if (sex == 'M')
 			{
@@ -616,7 +616,7 @@ package sound
 		
 		public function playCallSound(sex:String):void
 		{
-			trace("soundManagerXito playCallSound");
+			//trace("soundManagerXito playCallSound");
 			var randomIndex:int = Math.floor(Math.random() * 5);
 			if (sex == 'M')
 			{
@@ -666,7 +666,7 @@ package sound
 		
 		public function playRaiseDoubleSound(sex:String):void
 		{
-			trace("soundManagerXito playRaiseDoubleSound");
+			//trace("soundManagerXito playRaiseDoubleSound");
 			var randomIndex:int = Math.floor(Math.random() * 5);
 			if (sex == 'M')
 			{
@@ -716,7 +716,7 @@ package sound
 		
 		public function playRaiseTripleSound(sex:String):void
 		{
-			trace("soundManagerXito playRaiseTripleSound");
+			//trace("soundManagerXito playRaiseTripleSound");
 			var randomIndex:int = Math.floor(Math.random() * 5);
 			if (sex == 'M')
 			{
@@ -766,7 +766,7 @@ package sound
 		
 		public function playRaiseFourpleSound(sex:String):void
 		{
-			trace("soundManagerXito playRaiseFourpleSound");
+			//trace("soundManagerXito playRaiseFourpleSound");
 			var randomIndex:int = Math.floor(Math.random() * 5);
 			if (sex == 'M')
 			{
@@ -816,7 +816,7 @@ package sound
 		
 		public function playFoldSound(sex:String):void
 		{
-			trace("soundManagerXito playFoldSound");
+			//trace("soundManagerXito playFoldSound");
 			var randomIndex:int = Math.floor(Math.random() * 5);
 			if (sex == 'M')
 			{
@@ -866,7 +866,7 @@ package sound
 		
 		public function playAllInSound(sex:String):void
 		{
-			trace("soundManagerXito playAllInSound");
+			//trace("soundManagerXito playAllInSound");
 			var randomIndex:int = Math.floor(Math.random() * 5);
 			if (sex == 'M')
 			{
@@ -916,7 +916,7 @@ package sound
 		
 		public function playCallAllSound(sex:String):void
 		{
-			trace("soundManagerXito playCallAllSound");
+			//trace("soundManagerXito playCallAllSound");
 			var randomIndex:int = Math.floor(Math.random() * 5);
 			if (sex == 'M')
 			{
@@ -966,19 +966,19 @@ package sound
 		
 		public function playRaiseChipSound():void
 		{
-			trace("soundManagerXito playRaiseChipSound");
+			//trace("soundManagerXito playRaiseChipSound");
 			SoundManager.getInstance().playSound(SoundLibXito.RAISE_CHIP_SOUND);
 		}
 		
 		public function playAddUpChipSound():void
 		{
-			trace("soundManagerXito playAddUpChipSound");
+			//trace("soundManagerXito playAddUpChipSound");
 			SoundManager.getInstance().playSound(SoundLibXito.ADD_UP_CHIP_SOUND);
 		}
 		
 		public function playReceiveChipSound():void
 		{
-			trace("soundManagerXito playReceiveChipSound");
+			//trace("soundManagerXito playReceiveChipSound");
 			SoundManager.getInstance().playSound(SoundLibXito.RECEIVE_CHIP_SOUND);
 		}
 	}
