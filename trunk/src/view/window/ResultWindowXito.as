@@ -12,6 +12,7 @@ package view.window
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
 	import flash.utils.Timer;
+	import logic.MauBinhLogic;
 	import logic.PlayingLogic;
 	import model.MainData;
 	import sound.SoundManager;
@@ -192,7 +193,7 @@ package view.window
 				//TextField(note[i]).autoSize = TextFieldAutoSize.LEFT;
 				//TextField(note[i]).text = "";
 				var nameString:String;
-				nameString = StringFormatUtils.shortenedString(playerList[i][DataFieldMauBinh.DISPLAY_NAME], 13);
+				nameString = StringFormatUtils.shortenedString(playerList[i][DataFieldMauBinh.DISPLAY_NAME], 26);
 					
 				TextField(index[i]).text = String(i + 1);
 					
@@ -246,43 +247,86 @@ package view.window
 					//TextField(note[i]).appendText(' (' + "Người chơi khác thoát." + ')');
 					
 				if (playerList[i][DataFieldXito.IS_FOLD])
-					TextField(note[i]).appendText(' (' + "Úp bỏ" + ')');
-				else if (playerList[i][DataFieldXito.QUITERS])
-					TextField(note[i]).appendText(' (' + "Bỏ cuộc" + ')');
-					
-				switch (String(playerList[i][DataFieldMauBinh.WIN_TYPE])) 
 				{
-					case '39':
-						TextField(note[i]).appendText(' (' + "Sảnh rồng cuốn." + ')');
-					break;
-					case '38':
-						TextField(note[i]).appendText(' (' + "Sảnh rồng." + ')');
-					break;
-					case '37':
-						TextField(note[i]).appendText(' (' + "Rồng màu." + ')');
-					break;
-					case '36':
-						TextField(note[i]).appendText(' (' + "Rồng màu." + ')');
-					break;
-					case '35':
-						TextField(note[i]).appendText(' (' + "Rồng 1 mắt." + ')');
-					break;
-					case '34':
-						TextField(note[i]).appendText(' (' + "Rồng 1 mắt." + ')');
-					break;
-					case '33':
-						TextField(note[i]).appendText(' (' + "5 đôi 1 sám." + ')');
-					break;
-					case '32':
-						TextField(note[i]).appendText(' (' + "Lục phé bôn." + ')');
-					break;
-					case '31':
-						TextField(note[i]).appendText(' (' + "3 thùng." + ')');
-					break;
-					case '30':
-						TextField(note[i]).appendText(' (' + "3 sảnh." + ')');
-					break;
-					default:
+					TextField(note[i]).appendText(' (' + "Úp bỏ" + ')');
+				}
+				else if (playerList[i][DataFieldXito.QUITERS])
+				{
+					TextField(note[i]).appendText(' (' + "Bỏ cuộc" + ')');
+				}
+				else
+				{
+					if(int(playerList[i][DataFieldXito.GROUP_RANK]) == 1)
+						playerList[i][DataFieldXito.GROUP_RANK] = MauBinhLogic.getInstance().checkMauThau(playerList[i][DataFieldXito.HAND_CARDS]);
+					switch (String(playerList[i][DataFieldXito.GROUP_RANK])) 
+					{
+						case '10':
+							TextField(note[i]).text = "Thùng phá sảnh";
+						break;
+						case '9':
+							TextField(note[i]).text = "Thùng phá sảnh";
+						break;
+						case '8':
+							TextField(note[i]).text = "Tứ quý";
+						break;
+						case '7':
+							TextField(note[i]).text = "Cù lũ";
+						break;
+						case '6':
+							TextField(note[i]).text = "Thùng";
+						break;
+						case '5':
+							TextField(note[i]).text = "Sảnh";
+						break;
+						case '4':
+							TextField(note[i]).text = "Sám cô";
+						break;
+						case '3':
+							TextField(note[i]).text = "Thú";
+						break;
+						case '2':
+							TextField(note[i]).text = "Đôi";
+						break;
+						case '-2':
+							TextField(note[i]).text = "Mậu thầu 2";
+						break;
+						case '-3':
+							TextField(note[i]).text = "Mạu thầu 3";
+						break;
+						case '-4':
+							TextField(note[i]).text = "Mậu thầu 4";
+						break;
+						case '-5':
+							TextField(note[i]).text = "Mậu thầu 5";
+						break;
+						case '-6':
+							TextField(note[i]).text = "Mậu thầu 6";
+						break;
+						case '-7':
+							TextField(note[i]).text = "Mậu thầu 7";
+						break;
+						case '-8':
+							TextField(note[i]).text = "Mậu thầu 8";
+						break;
+						case '-9':
+							TextField(note[i]).text = "Mậu thầu 9";
+						break;
+						case '-10':
+							TextField(note[i]).text = "Mậu thầu 10";
+						break;
+						case '-11':
+							TextField(note[i]).text = "Mậu thầu J";
+						break;
+						case '-12':
+							TextField(note[i]).text = "Mậu thầu Q";
+						break;
+						case '-13':
+							TextField(note[i]).text = "Mậu thầu K";
+						break;
+						case '-14':
+							TextField(note[i]).text = "Mậu thầu A";
+						break;
+					}
 				}
 			}
 		}

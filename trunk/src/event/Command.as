@@ -12,6 +12,7 @@ package event
 		public static var INVITE_PLAY:String = "invitePlay";
 		public static var INVITE_ADD_FRIEND:String = "inviteAddFriend";
 		public static var GET_PLAYING_INFO:String = "getPlayingInfo";
+		public static var GET_USER_IN_LOBBY:String = "getUserInLobby";
 		public static var GET_FRIEND_LIST:String = "getFriendList";
 		public static var GET_ROOM_LIST:String = "getRoomList";
 		public static var READY:String = "ready";
