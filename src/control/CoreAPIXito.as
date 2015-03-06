@@ -598,6 +598,21 @@ package control
 					roomMasterObject[DataFieldMauBinh.ROOM_MASTER] = e.parameters.getString(DataFieldMauBinh.ROOM_MASTER);
 					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.UPDATE_ROOM_MASTER, roomMasterObject));
 				break;
+				case Command.GET_USER_IN_LOBBY: // kết quả trả về của hành động ăn bài
+					tempArray = e.parameters.getEsObjectArray(DataFieldXito.USER_LIST);
+					var userListOfLobby:Object = new Object();
+					for (i = 0; i < tempArray.length; i++)
+					{
+						tempEsObject = tempArray[i];
+						userName = tempEsObject.getString(DataFieldXito.USER_NAME);
+						userListOfLobby[userName] = new Object();
+						userListOfLobby[userName][DataFieldMauBinh.DISPLAY_NAME] = tempEsObject.getString(DataFieldXito.DISPLAY_NAME);
+						userListOfLobby[userName][DataFieldMauBinh.MONEY] = tempEsObject.getString(DataFieldXito.MONEY);
+						userListOfLobby[userName][DataFieldMauBinh.AVATAR] = tempEsObject.getString(DataFieldXito.AVATAR);
+						userListOfLobby[userName][DataFieldMauBinh.LEVEL] = tempEsObject.getString(DataFieldXito.LEVEL);
+					}
+					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.UPDATE_USER_LIST_OF_LOBBY, userListOfLobby));
+				break;
 				case Command.ADD_FRIEND: // Server confirm là lời mời kết bạn đã hợp lệ
 					var isSuccess:Boolean = e.parameters.getBoolean("success");
 					if (isSuccess)
@@ -1114,6 +1129,10 @@ package control
 		{
 			myData.userListOfLobby = new Object();
 			getUserInRoom(myData.lobbyRoomId);
+			
+			//var pluginMessage:EsObject = new EsObject();
+			//pluginMessage.setString("command", Command.GET_USER_IN_LOBBY);
+			//sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, pluginMessage);
 		}
 		
 		public function onFindGameRespond(e:FindGamesResponse):void
@@ -1509,7 +1528,6 @@ package control
 		
 		public function onGetUserInfoResponse(e:GetUserVariablesResponse):void
 		{
-			var varArr: Array = new Array();
 			var i:int;
 			var object:Object = convertEsObject(e.userVariables[DataFieldMauBinh.USER_INFO]);
 			
