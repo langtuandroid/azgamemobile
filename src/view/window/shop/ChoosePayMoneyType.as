@@ -17,6 +17,7 @@ package view.window.shop
 		 * 2:gold, 1:chip
 		 */
 		public var typeOfPay:int = 1;
+		public var nameReceive:String = "";
 		
 		public function ChoosePayMoneyType()
 		{
@@ -86,6 +87,8 @@ package view.window.shop
 			contentMc.goldSTxt.x = contentMc.goldTxt.x + contentMc.goldTxt.width;
 			contentMc.nameTxt.text = MainData.getInstance().chooseChannelData.myInfo.name;
 			
+			
+			
 			contentMc.chooseTypeMoney.choosePay1.gotoAndStop(1);
 			contentMc.chooseTypeMoney.choosePay2.gotoAndStop(2);
 			
@@ -97,6 +100,7 @@ package view.window.shop
 		
 		private function onClickBuyGold(e:MouseEvent):void 
 		{
+			nameReceive = contentMc.nameTxt.text;
 			close();
 			dispatchEvent(new Event("agree"));
 		}

@@ -496,6 +496,9 @@ package
 		
 		private function onCloseConnection(e:Event):void 
 		{
+			mainData.isLoginFacebook = false;
+			////////////////////////////////
+			
 			removePlayingScreen();
 			addLobbyRoomScreen();
 			lobbyRoomScreen.showLoginWindow();

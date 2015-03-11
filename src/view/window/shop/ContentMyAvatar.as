@@ -50,25 +50,25 @@ package view.window.shop
 		}
 		
 		public function addInfo(idAvt:String, idListAvt:String, nameAvt:String, timeUse:String, linkAvt:String, 
-									expire:String, idWeb:String):void 
+									expire:String, idWeb:String, exp:String):void 
 		{
 			_idAvt = idAvt;
 			_idListAvt = idListAvt;
 			
 			content.itemNameTxt.text = nameAvt;
 			
-			content.time.itemTimeUseTxt.text = timeUse + " ngày";
+			content.time.itemTimeUseTxt.text = expire + " ngày";
 			content.expire.itemLimitTxt.text = expire + " ngày";
 			
-			if (timeUse == expire) 
-			{
-				content.time.visible = true;
-				content.expire.visible = false;
-			}
-			else 
+			if (exp == timeUse) 
 			{
 				content.time.visible = false;
 				content.expire.visible = true;
+			}
+			else 
+			{
+				content.time.visible = true;
+				content.expire.visible = false;
 			}
 			
 			var image:ImageItem = new ImageItem();

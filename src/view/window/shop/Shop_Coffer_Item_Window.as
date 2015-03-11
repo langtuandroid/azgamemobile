@@ -1138,7 +1138,7 @@ package view.window.shop
 					}
 					
 					
-					contentAvatar.addInfo(idAvt, idListAvt, nameAvatar, sellRelease, linkAvatar, expireAvatar, idAvtWeb);
+					contentAvatar.addInfo(idAvt, idListAvt, nameAvatar, sellRelease, linkAvatar, expireAvatar, idAvtWeb, "");
 					scrollView.addRow(contentAvatar);
 					//_arrBoard[3].addChild(contentAvatar);
 					
@@ -1324,7 +1324,7 @@ package view.window.shop
 					}
 					
 					
-					contentAvatar.addInfo(idAvt, idListAvt, nameAvatar, sellRelease, linkAvatar, expireAvatar, idAvtWeb);
+					contentAvatar.addInfo(idAvt, idListAvt, nameAvatar, sellRelease, linkAvatar, expireAvatar, idAvtWeb, "");
 					scrollView.addRow(contentAvatar);
 					//_arrBoard[3].addChild(contentAvatar);
 					

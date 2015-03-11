@@ -15,6 +15,7 @@ package view.screen.play
 	import flash.events.TimerEvent;
 	import flash.net.URLRequest;
 	import flash.text.TextField;
+	import flash.text.TextFormat;
 	import flash.utils.Timer;
 	import model.GameDataTLMN;
 	import model.MyDataTLMN;
@@ -69,6 +70,9 @@ package view.screen.play
 		public var _lose:int;
 		
 		public var onSamWarning:Boolean = true;
+		private var isChangeColor:Boolean = false;
+		
+		private var timerWarnig:Timer;
 		
 		public function PlayerInfoTLMN(pos:int) 
 		{
@@ -940,6 +944,22 @@ package view.screen.play
 		public function waitNewGame():void 
 		{
 			content.outRoom.visible = false;
+			if (timerWarnig) 
+			{
+				timerWarnig.stop();
+				timerWarnig.removeEventListener(TimerEvent.TIMER, onChangeColor);
+				timerWarnig.removeEventListener(TimerEvent.TIMER_COMPLETE, onChangeColorComplete);
+				
+				if (content) 
+				{
+					var tf:TextFormat = new TextFormat();
+					tf.color = 0xffffff;
+					
+					TextField(content.numCardRemainTxt).defaultTextFormat = tf;
+					TextField(content.numCardRemainTxt).textColor = 0xffffff;
+				}
+				isChangeColor = false;
+			}
 		}
 		
 		public function outRoom():void 
@@ -1008,6 +1028,23 @@ package view.screen.play
 				}
 				
 				removeAllCards();
+				
+				if (timerWarnig) 
+				{
+					timerWarnig.stop();
+					timerWarnig.removeEventListener(TimerEvent.TIMER, onChangeColor);
+					timerWarnig.removeEventListener(TimerEvent.TIMER_COMPLETE, onChangeColorComplete);
+					
+					if (content) 
+					{
+						var tf:TextFormat = new TextFormat();
+						tf.color = 0xffffff;
+						
+						TextField(content.numCardRemainTxt).defaultTextFormat = tf;
+						TextField(content.numCardRemainTxt).textColor = 0xffffff;
+					}
+					isChangeColor = false;
+				}
 				
 				if (_timerShowChatBubble) 
 				{
@@ -1084,7 +1121,78 @@ package view.screen.play
 			}
 			
 			_remainingCard -= num;
+			
+			
 			content.numCardRemainTxt.text = String(_remainingCard);
+			
+			if (MyDataTLMN.getInstance().isGame == 2) 
+			{
+				if (_remainingCard < 3) 
+				{
+					if (timerWarnig) 
+					{
+						timerWarnig.stop();
+						timerWarnig.removeEventListener(TimerEvent.TIMER, onChangeColor);
+						timerWarnig.removeEventListener(TimerEvent.TIMER_COMPLETE, onChangeColorComplete);
+					}
+					
+					timerWarnig = new Timer(200);
+					timerWarnig.addEventListener(TimerEvent.TIMER, onChangeColor);
+					
+					timerWarnig.start();
+				}
+			}
+			
+		}
+		
+		private function onChangeColorComplete(e:TimerEvent):void 
+		{
+			
+			timerWarnig.stop();
+			timerWarnig.removeEventListener(TimerEvent.TIMER, onChangeColor);
+			timerWarnig.removeEventListener(TimerEvent.TIMER_COMPLETE, onChangeColorComplete);
+			
+			if (content) 
+			{
+				var tf:TextFormat = new TextFormat();
+				tf.color = 0xffffff;
+				
+				TextField(content.numCardRemainTxt).defaultTextFormat = tf;
+				TextField(content.numCardRemainTxt).textColor = 0xffffff;
+			}
+			isChangeColor = false;
+		}
+		
+		private function onChangeColor(e:TimerEvent):void 
+		{
+			if (content) 
+			{
+				var tf:TextFormat;
+				if (isChangeColor) 
+				{
+					tf = new TextFormat();
+					tf.color = 0xffffff;
+					TextField(content.numCardRemainTxt).textColor = 0xffffff;
+					isChangeColor = false;
+				}
+				else 
+				{
+					tf = new TextFormat();
+					tf.color = 0xff0000;
+					TextField(content.numCardRemainTxt).textColor = 0xff0000;
+					isChangeColor = true;
+				}
+				
+				
+				TextField(content.numCardRemainTxt).defaultTextFormat = tf;
+			}
+			else 
+			{
+				
+				timerWarnig.stop();
+				timerWarnig.removeEventListener(TimerEvent.TIMER, onChangeColor);
+				timerWarnig.removeEventListener(TimerEvent.TIMER_COMPLETE, onChangeColorComplete);
+			}
 		}
 		
 		public function resultGame():void 
@@ -1427,7 +1535,22 @@ package view.screen.play
 			_arrCardDeck = [];
 			resultGame();
 			_count = -1;
-			
+			if (timerWarnig) 
+			{
+				timerWarnig.stop();
+				timerWarnig.removeEventListener(TimerEvent.TIMER, onChangeColor);
+				timerWarnig.removeEventListener(TimerEvent.TIMER_COMPLETE, onChangeColorComplete);
+				
+				if (content) 
+				{
+					var tf:TextFormat = new TextFormat();
+					tf.color = 0xffffff;
+					
+					TextField(content.numCardRemainTxt).defaultTextFormat = tf;
+					TextField(content.numCardRemainTxt).textColor = 0xffffff;
+				}
+				isChangeColor = false;
+			}
 		}
 		
 		//dung khi co 1 user thoat ra, van giu lai bai, nhung xoa avatar

@@ -400,7 +400,35 @@ package view.window.loginWindow
 				//WindowLayer.getInstance().openAlertWindow("onLoginFacebookRespond");
 			if (value["status"] == "IO_ERROR")
 			{
+				/*if (mainData.isFacebookVersion) 
+				{
+					zLoginWindow(content).loadingLayer.visible = true;
+					var mainRequest:MainRequest = new MainRequest();
+					var data:Object = new Object();
+					if (!mainData.facebook_access_token)
+						mainData.facebook_access_token = 'CAADlgiW8vk0BAOQZAcSPfgh0Y9lTpZAbTMD6fJ8IFrBgZC19Lii9G1LEflZAkZCeUIGZCQip7MuXqbNGzWkyaZBmHdf5kZCpC69RfOkhwUQk5qb3FxUDReWoUmnSa4HVsWdjzZB4zdj7ALvuXtui13jpjP8lF8ul3MPf1CmaMk396JZCO90VzppbOd3opU79j1kJfMKT9JJGQLuAZDZD&amp';
+					data.access_token = mainData.facebook_access_token;
+					
+					data.GameVersion = mainData.version;
+					if (mainData.isOnAndroid)
+						data.DeviceId = 4;
+					else
+						data.DeviceId = 5;
+					zLoginWindow(content).loadingLayer.visible = true;
+					if (mainData.isTest)
+						mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/Facebook_GetUserInfo", data, onLoginFacebookRespond, true);
+					else
+						mainRequest.sendRequest_Post("http://wss.azgame.us/Service02/OnplayUserExt.asmx/Facebook_GetUserInfo", data, onLoginFacebookRespond, true);
+				}
+				else 
+				{
+					zLoginWindow(content).loadingLayer.visible = false;
+					WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại");
+				}*/
+				
+				/////////////////////////////////////
 				zLoginWindow(content).loadingLayer.visible = false;
+				
 				WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại");
 				return;
 			}

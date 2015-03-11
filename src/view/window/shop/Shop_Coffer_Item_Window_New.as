@@ -21,6 +21,7 @@ package view.window.shop
 	import view.ScrollView.ScrollViewYun;
 	import view.window.AlertWindow;
 	import view.window.BaseWindow;
+	import view.window.BuyItemSuccessWindow;
 	import view.window.ConfirmWindow;
 	import view.window.LoadingWindow;
 	import view.window.windowLayer.WindowLayer;
@@ -32,6 +33,7 @@ package view.window.shop
 	public class Shop_Coffer_Item_Window_New extends Sprite 
 	{
 		public static var CHANGE_TAB:String = "changeTab";
+		public static var CHANGE_SHOP:String = "changeShop";
 		private var myContent:MovieClip;
 		private var choosePay:ChoosePayMoneyType;
 		private var buyTour:BuyTourTicket;
@@ -46,7 +48,7 @@ package view.window.shop
 		/**
 		 * 1:vina, 2:mobi, 3:viettel, 4:Vtc, 5:megacard, 6:fptgate
 		 */
-		private var _typOfNetwork:String = "VTT"; // dang chon nap the bang nha mang nao
+		private var _typOfNetwork:String = ""; // dang chon nap the bang nha mang nao
 		
 		private var scrollView:ScrollViewYun;
 		private var scrollViewForRank:ScrollViewYun;
@@ -272,7 +274,7 @@ package view.window.shop
 		{
 			myContent.rakingBg.choosePayVina.gotoAndStop(1);
 			myContent.rakingBg.choosePayMobi.gotoAndStop(1);
-			myContent.rakingBg.choosePayViettel.gotoAndStop(2);
+			myContent.rakingBg.choosePayViettel.gotoAndStop(1);
 			//myContent.rakingBg.choosePayVtc.gotoAndStop(1);
 			myContent.rakingBg.choosePayMega.gotoAndStop(1);
 			myContent.rakingBg.choosePayFpt.gotoAndStop(1);
@@ -1066,7 +1068,7 @@ package view.window.shop
 				&& (myContent.rakingBg.serinumberTxt.text != "" || myContent.rakingBg.serinumberTxt.text != "nhập seri thẻ")
 				&& (myContent.rakingBg.codenumberTxt.text != "" || myContent.rakingBg.codenumberTxt.text != "nhập mã thẻ")
 				&& (myContent.rakingBg.codecheckTxt.text != "" || myContent.rakingBg.codecheckTxt.text != "Mã xác nhận")
-				&& myContent.rakingBg.codecheckTxt.text == myContent.rakingBg.codeCheck.text
+				&& myContent.rakingBg.codecheckTxt.text == myContent.rakingBg.codeCheck.text && _typOfNetwork != ""
 				) 
 			{
 				
@@ -1112,6 +1114,11 @@ package view.window.shop
 					aleart = new AlertWindow();
 					windowLayer.openAlertWindow("Mã xác nhận không đúng");
 				}
+				else if (_typOfNetwork == "") 
+				{
+					aleart = new AlertWindow();
+					windowLayer.openAlertWindow("Bạn chưa chọn loại thẻ nạp");
+				}
 			}
 			
 			createCodeCheck();
@@ -1154,7 +1161,14 @@ package view.window.shop
 				windowLayer.openWindow(buyAvatarWindow);
 			}
 			
+			myContent.rakingBg.choosePayVina.gotoAndStop(1);
+			myContent.rakingBg.choosePayMobi.gotoAndStop(1);
+			myContent.rakingBg.choosePayViettel.gotoAndStop(1);
+			//myContent.rakingBg.choosePayVtc.gotoAndStop(1);
+			myContent.rakingBg.choosePayMega.gotoAndStop(1);
+			myContent.rakingBg.choosePayFpt.gotoAndStop(1);
 			
+			_typOfNetwork = "";
 		}
 		
 		private function onShowShopGold(e:Event):void 
@@ -1650,14 +1664,16 @@ package view.window.shop
 				scrollView.removeAll();
 				_arrMyItem = [];
 				
-				if (arrData.length < 1) 
+				/*if (arrData.length < 1) 
 				{
 					var buyAvatarWindow:ConfirmWindow;
+					windowLayer.isNoCloseAll = true;
 					buyAvatarWindow = new ConfirmWindow();
 					buyAvatarWindow.setNotice("Bạn chưa có đồ nào trong hòm đồ");
 					buyAvatarWindow.buttonStatus(false, true, false);
 					windowLayer.openWindow(buyAvatarWindow);
-				}
+					
+				}*/
 				
 				for (i = 0; i < arrData.length; i++ ) 
 				{
@@ -1686,7 +1702,7 @@ package view.window.shop
 					}
 					
 					
-					contentAvatar.addInfo(idAvt, idListAvt, nameAvatar, sellRelease, linkAvatar, expireAvatar, idAvtWeb);
+					contentAvatar.addInfo(idAvt, idListAvt, nameAvatar, sellRelease, linkAvatar, expireAvatar, idAvtWeb, "");
 					scrollView.addRow(contentAvatar);
 					//_arrBoard[3].addChild(contentAvatar);
 					
@@ -1739,14 +1755,15 @@ package view.window.shop
 				scrollView.removeAll();
 				_arrMyGold = [];
 				
-				if (arrData.length < 1) 
+				/*if (arrData.length < 1) 
 				{
 					var buyAvatarWindow:ConfirmWindow;
 					buyAvatarWindow = new ConfirmWindow();
+					windowLayer.isNoCloseAll = true;
 					buyAvatarWindow.setNotice("Bạn chưa có đồ nào trong hòm đồ");
 					buyAvatarWindow.buttonStatus(false, true, false);
 					windowLayer.openWindow(buyAvatarWindow);
-				}
+				}*/
 				
 				for (i = 0; i < arrData.length; i++ ) 
 				{
@@ -1836,14 +1853,15 @@ package view.window.shop
 				scrollViewMyAvatar.removeAll();
 				_arrMyAvatar = [];
 				
-				if (arrData.length < 1) 
+				/*if (arrData.length < 1) 
 				{
 					var buyAvatarWindow:ConfirmWindow;
 					buyAvatarWindow = new ConfirmWindow();
+					windowLayer.isNoCloseAll = true;
 					buyAvatarWindow.setNotice("Bạn chưa có đồ nào trong hòm đồ");
 					buyAvatarWindow.buttonStatus(false, true, false);
 					windowLayer.openWindow(buyAvatarWindow);
-				}
+				}*/
 				
 				for (i = 0; i < arrData.length; i++ ) 
 				{
@@ -1851,10 +1869,12 @@ package view.window.shop
 					
 					var linkAvatar:String = arrData[i]['avt_dir_path'];
 					var expireAvatar:String = arrData[i]['count_day_left_expired'];
-					var sellRelease:String = arrData[i]['avt_day_no_exp'];
+					var sellRelease:String = arrData[i]['avt_reserve_dt'];
+					var expireAvt:String = arrData[i]['avt_expire_dt'];
 					var idAvt:String = arrData[i]['avt_id'];
 					var idAvtWeb:String = arrData[i]['avt_cd_wb'];
 					var idListAvt:String = arrData[i]['avt_lst_id'];
+					
 					
 					var contentAvatar:ContentMyAvatar = new ContentMyAvatar();
 					_arrAvatar.push(contentAvatar);
@@ -1872,8 +1892,8 @@ package view.window.shop
 						countX = 0;
 					}
 					
-					
-					contentAvatar.addInfo(idAvt, idListAvt, nameAvatar, sellRelease, linkAvatar, expireAvatar, idAvtWeb);
+					contentAvatar.addInfo(idAvt, idListAvt, nameAvatar, sellRelease, linkAvatar, expireAvatar, 
+											idAvtWeb, expireAvt);
 					scrollViewMyAvatar.addRow(contentAvatar);
 					//_arrBoard[3].addChild(contentAvatar);
 					
@@ -1882,7 +1902,9 @@ package view.window.shop
 				
 				scrollViewMyAvatar.visible = true;
 				
-				closeLoading();
+				windowLayer.closeAllWindow();
+			
+				isLoad = false;
 			}
 		}
 		
@@ -1915,10 +1937,10 @@ package view.window.shop
 			}
 			else if (obj["TypeMsg"] == 1) 
 			{
-				buyAvatarWindow = new ConfirmWindow();
-				buyAvatarWindow.setNotice("Mặc avatar thành công!");
-				buyAvatarWindow.buttonStatus(true, false, false);
-				windowLayer.openWindow(buyAvatarWindow);
+				var buyItemWindow:BuyItemSuccessWindow = new BuyItemSuccessWindow();
+				buyItemWindow.setNotice("Mặc avatar thành công!");
+				buyItemWindow.buttonStatus(true, false, false);
+				windowLayer.openWindow(buyItemWindow);
 				
 				updateUserInfo();
 			}
@@ -2524,7 +2546,7 @@ package view.window.shop
 				obj["access_token"] = mainData.loginData["AccessToken"];
 				obj["game_code"] = goldChoseBuy._goldAvt;
 				obj["payment_type"] = "1";
-				obj["nk_nm_receiver"] = mainData.loginData["Id"];
+				obj["nk_nm_receiver"] = choosePay.nameReceive;
 				obj["item_id"] = goldChoseBuy._idAvt;
 				obj["item_quantity"] = "1";
 				obj["client_hash"] = MD5.hash(obj["access_token"] + mainData.client_secret + obj["game_code"]
@@ -2687,7 +2709,7 @@ package view.window.shop
 			obj["access_token"] = mainData.loginData["AccessToken"];
 			obj["game_code"] = goldChoseBuy._goldAvt;
 			obj["payment_type"] = "1";
-			obj["nk_nm_receiver"] = mainData.loginData["Id"];
+			obj["nk_nm_receiver"] = choosePay.nameReceive;
 			obj["item_id"] = goldChoseBuy._idAvt;
 			obj["item_quantity"] = "1";
 			obj["client_hash"] = MD5.hash(obj["access_token"] + mainData.client_secret + obj["game_code"]
@@ -2797,7 +2819,7 @@ package view.window.shop
 				obj["access_token"] = mainData.loginData["AccessToken"];
 				obj["game_code"] = goldChoseBuy._goldAvt;
 				obj["payment_type"] = String(typeOfPay);
-				obj["nk_nm_receiver"] = mainData.loginData["Id"];
+				obj["nk_nm_receiver"] = choosePay.nameReceive;
 				obj["item_id"] = goldChoseBuy._idAvt;
 				obj["item_quantity"] = "1";
 				obj["client_hash"] = MD5.hash(obj["access_token"] + mainData.client_secret + obj["game_code"]
@@ -2871,10 +2893,10 @@ package view.window.shop
 				}
 				else
 				{
-					buyAvatarWindow = new ConfirmWindow();
-					buyAvatarWindow.setNotice("Giao dịch thành công");
-					buyAvatarWindow.buttonStatus(true, false, false);
-					windowLayer.openWindow(buyAvatarWindow);
+					var buyItemWindow:BuyItemSuccessWindow = new BuyItemSuccessWindow();
+					buyItemWindow.setNotice("Giao dịch thành công");
+					buyItemWindow.buttonStatus(true, false, false);
+					windowLayer.openWindow(buyItemWindow);
 					if (typeOfPay == 1) 
 					{
 						mainData.chooseChannelData.myInfo.cash = mainData.chooseChannelData.myInfo.cash - Number(goldChoseBuy._chipAvt);
@@ -2975,7 +2997,11 @@ package view.window.shop
 		
 		private function closeLoading():void 
 		{
-			windowLayer.closeAllWindow();
+			if (loadAvatarShop < 2) 
+			{
+				windowLayer.closeAllWindow();
+			}
+			
 			isLoad = false;
 			
 			/*var timer:Timer = new Timer(1000, 1);
@@ -2990,6 +3016,7 @@ package view.window.shop
 		
 		private function onBuyAvatar(e:Event):void 
 		{
+			windowLayer.isNoCloseAll = true;
 			choosePay = new ChoosePayMoneyType();
 			windowLayer.openWindow(choosePay);
 			choosePay.showChoose(0);
@@ -3044,7 +3071,7 @@ package view.window.shop
 				obj["access_token"] = mainData.loginData["AccessToken"];
 				obj["game_code"] = avatarChoseBuy._goldAvt;
 				obj["payment_type"] = String(typeOfPay);
-				obj["nk_nm_receiver"] = mainData.loginData["Id"];
+				obj["nk_nm_receiver"] = choosePay.nameReceive;
 				obj["item_id"] = avatarChoseBuy._idAvt;
 				obj["item_quantity"] = "1";
 				obj["client_hash"] = MD5.hash(obj["access_token"] + mainData.client_secret + obj["game_code"]
@@ -3060,10 +3087,9 @@ package view.window.shop
 		
 		private function buyAvatarRespone(obj:Object):void 
 		{
-			trace(obj)
+			
 			var buyAvatarWindow:ConfirmWindow;
-			trace("mua avatar respone: ", obj["Msg"])
-			trace("mua avatar respone: ", obj["TypeMsg"])
+			
 			if (obj["Msg"] == "Access Token Expired") 
 			{
 				buyAvatarWindow = new ConfirmWindow();
@@ -3073,10 +3099,20 @@ package view.window.shop
 			}
 			else if (obj["TypeMsg"] == 1) 
 			{
-				buyAvatarWindow = new ConfirmWindow();
-				buyAvatarWindow.setNotice("Giao dịch thành công");
-				buyAvatarWindow.buttonStatus(true, false, false);
-				windowLayer.openWindow(buyAvatarWindow);
+				var buyAvatarSuccessWindow:BuyItemSuccessWindow = new BuyItemSuccessWindow();
+				if (choosePay.nameReceive == mainData.chooseChannelData.myInfo.name) 
+				{
+					buyAvatarSuccessWindow.setNotice("Giao dịch thành công" + "\n" + "Bạn có muốn mặc luôn không?");
+					buyAvatarSuccessWindow.buttonStatus(true, true, false);
+					buyAvatarSuccessWindow.addEventListener(BuyItemSuccessWindow.CONFIRM, onShowMyAvatar)
+				}
+				else 
+				{
+					buyAvatarSuccessWindow.setNotice("Giao dịch thành công");
+					buyAvatarSuccessWindow.buttonStatus(true, false, false);
+				}
+				
+				windowLayer.openWindow(buyAvatarSuccessWindow);
 				if (typeOfPay == 1) 
 				{
 					mainData.chooseChannelData.myInfo.cash = mainData.chooseChannelData.myInfo.cash - Number(avatarChoseBuy._chipAvt);
@@ -3093,6 +3129,13 @@ package view.window.shop
 				
 				
 			}
+		}
+		
+		private function onShowMyAvatar(e:Event):void 
+		{
+			dispatchEvent(new Event(CHANGE_SHOP));
+			myContent.typeOfAvatar.visible = false;
+			onClickShowMyAvatar(null);
 		}
 		
 		public function chooseAddMoney():void 
