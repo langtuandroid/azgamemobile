@@ -105,6 +105,8 @@ package view
 		
 		private var noticeTimer:Timer;
 		
+		private var isChoseLuckyGame:Boolean = false;
+		
 		public function SelectGameWindowNew() 
 		{
 			addContent("zSelectGameWindow");
@@ -266,8 +268,8 @@ package view
 				samIcon.removeEventListener(MouseEvent.MOUSE_UP, onSelectGame);
 				phomIcon.removeEventListener(MouseEvent.MOUSE_UP, onSelectGame);
 				maubinhIcon.removeEventListener(MouseEvent.MOUSE_UP, onSelectGame);
-				luckyCardIcon.removeEventListener(MouseEvent.MOUSE_UP, onClickLucky);
-				luckyCardIcon.addEventListener(MouseEvent.MOUSE_UP, onClickLucky);
+				luckyCardIcon.removeEventListener(MouseEvent.MOUSE_UP, onSelectGame);
+				luckyCardIcon.addEventListener(MouseEvent.MOUSE_UP, onSelectGame);
 				
 				for (var i:int = 0; i < obj.Data.length; i++) 
 				{
@@ -383,6 +385,8 @@ package view
 			
 			if (_shopWindow) 
 			{
+				_shopWindow.removeEventListener(Shop_Coffer_Item_Window_New.CHANGE_SHOP, onChangeShop);
+				_shopWindow.removeEventListener(Shop_Coffer_Item_Window_New.CHANGE_TAB, onChangeTab);
 				_shopWindow.removeAllEvent();
 				content["containerShopItem"].removeChild(_shopWindow);
 				_shopWindow = null;
@@ -488,6 +492,8 @@ package view
 			
 			if (_shopWindow) 
 			{
+				_shopWindow.removeEventListener(Shop_Coffer_Item_Window_New.CHANGE_SHOP, onChangeShop);
+				_shopWindow.removeEventListener(Shop_Coffer_Item_Window_New.CHANGE_TAB, onChangeTab);
 				_shopWindow.removeAllEvent();
 				content["containerShopItem"].removeChild(_shopWindow);
 				_shopWindow = null;
@@ -524,6 +530,9 @@ package view
 					
 					if (_shopWindow) 
 					{
+						_shopWindow.removeEventListener(Shop_Coffer_Item_Window_New.CHANGE_SHOP, onChangeShop);
+						_shopWindow.removeEventListener(Shop_Coffer_Item_Window_New.CHANGE_TAB, onChangeTab);
+						
 						_shopWindow.removeAllEvent();
 						content["containerShopItem"].removeChild(_shopWindow);
 						_shopWindow = null;
@@ -553,6 +562,8 @@ package view
 					
 					if (_shopWindow) 
 					{
+						_shopWindow.removeEventListener(Shop_Coffer_Item_Window_New.CHANGE_SHOP, onChangeShop);
+						_shopWindow.removeEventListener(Shop_Coffer_Item_Window_New.CHANGE_TAB, onChangeTab);
 						_shopWindow.removeAllEvent();
 						content["containerShopItem"].removeChild(_shopWindow);
 						_shopWindow = null;
@@ -579,6 +590,8 @@ package view
 					
 					if (_shopWindow) 
 					{
+						_shopWindow.removeEventListener(Shop_Coffer_Item_Window_New.CHANGE_SHOP, onChangeShop);
+						_shopWindow.removeEventListener(Shop_Coffer_Item_Window_New.CHANGE_TAB, onChangeTab);
 						_shopWindow.removeAllEvent();
 						content["containerShopItem"].removeChild(_shopWindow);
 						_shopWindow = null;
@@ -604,6 +617,8 @@ package view
 					
 					if (_shopWindow) 
 					{
+						_shopWindow.removeEventListener(Shop_Coffer_Item_Window_New.CHANGE_SHOP, onChangeShop);
+						_shopWindow.removeEventListener(Shop_Coffer_Item_Window_New.CHANGE_TAB, onChangeTab);
 						_shopWindow.removeAllEvent();
 						content["containerShopItem"].removeChild(_shopWindow);
 						_shopWindow = null;
@@ -639,8 +654,10 @@ package view
 					_shopWindow.y = -300;
 				}
 				
-				_shopWindow.removeEventListener(Shop_Coffer_Item_Window.CHANGE_TAB, onChangeTab);
-				_shopWindow.addEventListener(Shop_Coffer_Item_Window.CHANGE_TAB, onChangeTab);
+				_shopWindow.removeEventListener(Shop_Coffer_Item_Window_New.CHANGE_SHOP, onChangeShop);
+				_shopWindow.addEventListener(Shop_Coffer_Item_Window_New.CHANGE_SHOP, onChangeShop);
+				_shopWindow.removeEventListener(Shop_Coffer_Item_Window_New.CHANGE_TAB, onChangeTab);
+				_shopWindow.addEventListener(Shop_Coffer_Item_Window_New.CHANGE_TAB, onChangeTab);
 				
 			}
 			if (_newsWindow) 
@@ -655,6 +672,21 @@ package view
 					_newsWindow.x = -480;
 				}
 			}
+		}
+		
+		private function onChangeShop(e:Event):void 
+		{
+			rankTabEnable.visible = true;
+			addMoneyTabEnable.visible = true;
+			shopTabEnable.visible = true;
+			eventTabEnable.visible = true;
+			//inventoryTabEnable.visible = true;
+			
+			//selectGameTabDisable.visible = false;
+			rankTabDisable.visible = false;
+			addMoneyTabDisable.visible = false;
+			shopTabDisable.visible = false;
+			eventTabDisable.visible = false;
 		}
 		
 		private function onChangeTab(e:Event):void 
@@ -792,6 +824,15 @@ package view
 		{
 			if (Math.abs(gameContainer2.endX - gameContainer2.startX) < 10 && isRecentlySelectGame)
 			{
+				if (isChoseLuckyGame) 
+				{
+					isChoseLuckyGame = false;
+					isRecentlySelectGame = false;
+					
+					onClickLucky(null);
+					
+					return;
+				}
 				MainCommand.getInstance().initVar();
 				mainData.lobbyRoomData.invitePlayData = new Object();
 				dispatchEvent(new Event(SELECT_GAME));
@@ -834,6 +875,10 @@ package view
 			mainData.maxPlayer = 4;
 			switch (e.currentTarget) 
 			{
+				case luckyCardIcon:
+					isChoseLuckyGame = true;
+					return;
+				break;
 				case tlmnIcon:
 					gameId = 3;
 					mainData.minBetRate = 10;

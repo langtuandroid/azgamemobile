@@ -196,6 +196,7 @@ package view.screen
 			windowLayer.openWindow(loginWindow);
 			selectGameWindow.visible = false;
 			selectGameWindow.closeAll();
+			
 		}
 		
 		private function onClickHotline(e:MouseEvent):void 
@@ -237,12 +238,12 @@ package view.screen
 				selectGameWindow.checkGameOnOff();
 				selectGameWindow.onTimerGetNotice(null);
 			}
-			/*tutorialBoard.y = 74;
+			tutorialBoard.y = 74;
 			helpButton.y = 30;
 			musicOnButton.y = 30;
 			soundOnButton.y = 30;
 			musicOffButton.y = 30;
-			soundOffButton.y = 30;*/
+			soundOffButton.y = 30;
 			
 			bgLayer.addChild(_newBg);
 			_newBg.y = -310;
@@ -277,12 +278,12 @@ package view.screen
 		{
 			WindowLayer.getInstance().openLoadingWindow();
 			updateGameType();
-			/*helpButton.y = 6;
+			helpButton.y = 6;
 			tutorialBoard.y = 50;
 			musicOnButton.y = 6;
 			soundOnButton.y = 6;
 			musicOffButton.y = 6;
-			soundOffButton.y = 6;*/
+			soundOffButton.y = 6;
 			/*if (selectGameWindow)
 			{
 				if (selectGameWindow.parent)
@@ -437,12 +438,12 @@ package view.screen
 			}
 			
 			
-			/*helpButton.y = 30;
+			helpButton.y = 30;
 			tutorialBoard.y = 74;
 			musicOnButton.y = 30;
 			soundOnButton.y = 30;
 			musicOffButton.y = 30;
-			soundOffButton.y = 30;*/
+			soundOffButton.y = 30;
 			
 			chatButton.addEventListener(MouseEvent.CLICK, onChatButtonClick);
 			messageButton.addEventListener(MouseEvent.CLICK, onMessageButtonClick);
@@ -816,6 +817,8 @@ package view.screen
 				firstLayer.addChild(systemNoticeBar);
 				systemNoticeBar.mouseChildren = systemNoticeBar.mouseEnabled = false;
 			}
+			
+			
 		}
 		
 		private function onMoveToShop(e:Event):void 
@@ -1591,6 +1594,7 @@ package view.screen
 				{
 					if (RoomDataRLC(roomList[i]).userNumbers >= RoomDataRLC(roomList[i]).maxPlayer)
 					{
+						
 						windowLayer.closeAllWindow();
 						var fullPlayerWindow:AlertWindow = new AlertWindow();
 						fullPlayerWindow.setNotice(mainData.init.gameDescription.lobbyRoomScreen.fullPlayer);
