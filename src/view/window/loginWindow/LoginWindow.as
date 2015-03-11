@@ -316,6 +316,21 @@ package view.window.loginWindow
 					mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/Facebook_GetUserInfo", data, onLoginFacebookRespond, true);
 				else
 					mainRequest.sendRequest_Post("http://wss.azgame.us/Service02/OnplayUserExt.asmx/Facebook_GetUserInfo", data, onLoginFacebookRespond, true);
+					
+				/*var mainRequest:MainRequest = new MainRequest();
+				var data:Object = new Object();
+				data.user_name = 'dung2906@gmail.com';
+				data.password = 'liverpool';
+				data.client_id = mainData.client_id;
+				data.GameVersion = mainData.version;
+				if (mainData.isOnAndroid)
+					data.DeviceId = 4;
+				else
+					data.DeviceId = 5;
+				if (mainData.isTest)
+					mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileLogin", data, onLoginValidateRespond, true);
+				else
+					mainRequest.sendRequest_Post("http://wss.azgame.us/Service02/OnplayGamePartnerExt.asmx/Azgamebai_AppMobileLogin", data, onLoginValidateRespond, true);*/
 			}
 			
 			/*loader = new BulkLoader("main-site");
@@ -456,7 +471,10 @@ package view.window.loginWindow
 				}
 				else
 				{
-					WindowLayer.getInstance().openAlertWindow(value.Msg);
+					alertWindow = new AlertWindow();
+					alertWindow.setNotice(value.Msg);
+					alertWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onCloseAlertWindow);
+					WindowLayer.getInstance().openWindow(alertWindow);
 				}
 				return;
 			}
@@ -468,6 +486,12 @@ package view.window.loginWindow
 				close(BaseWindow.MIDDLE_EFFECT);
 				return;
 			}
+		}
+		
+		private function onCloseAlertWindow(e:Event):void 
+		{
+			if (mainData.isFacebookVersion)
+				close();
 		}
 		
 		private function onForgetPassClick(e:MouseEvent):void 
