@@ -618,7 +618,7 @@ package model
 		public var version:String = "v1.7.6";
 		public var isTest:Boolean = true; // biến để check xem đang chạy trên server test hay server thật
 
-		public var isFacebookVersion:Boolean = true; // biến để check xem có phải là bản nhúng vào facebook không
+		public var isFacebookVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào facebook không
 		public var isShowScroll:Boolean;
 		public var country:String = "";
 		public var joinedGame:Boolean = false;
@@ -629,6 +629,8 @@ package model
 		public var loginType:String;
 		public var isNotLobby:Boolean = false;
 		public var isRecentlyDealCard:Boolean;
+		
+		public var isUsePluginMessage:Boolean = true;
 	}
 
 }

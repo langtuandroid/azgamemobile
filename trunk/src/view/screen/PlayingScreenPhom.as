@@ -2485,6 +2485,12 @@ package view.screen
 				timerToShowResultWindow = null;
 			}
 			
+			if (resultWindow)
+			{
+				if (resultWindow.parent)
+					resultWindow.close();
+			}
+			
 			if (parent)
 				parent.removeChild(this);
 		}

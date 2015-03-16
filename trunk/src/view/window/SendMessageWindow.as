@@ -3,6 +3,7 @@ package view.window
 	import com.gsolo.encryption.MD5;
 	import control.MainCommand;
 	import event.DataFieldMauBinh;
+	import flash.display.MovieClip;
 	import flash.display.SimpleButton;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -18,6 +19,7 @@ package view.window
 	public class SendMessageWindow extends BaseWindow 
 	{
 		private var displayNameTxt:TextField;
+		private var levelIcon:MovieClip;
 		private var levelTxt:TextField;
 		private var messageTxt:TextField;
 		
@@ -42,7 +44,8 @@ package view.window
 			addContent("zSendMessageWindow");
 			
 			displayNameTxt = content["displayNameTxt"];
-			levelTxt = content["levelTxt"];
+			levelIcon = content["levelIcon"];
+			levelTxt = levelIcon["levelTxt"];
 			messageTxt = content["messageTxt"];
 			closeButton = content["closeButton"];
 			cancelButton = content["cancelButton"];
@@ -60,8 +63,7 @@ package view.window
 			content["avatarPosition"].visible = false;
 			addChild(avatar);
 			
-			addChild(content["levelIcon"]);
-			addChild(levelTxt);
+			addChild(levelIcon);
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
@@ -176,6 +178,7 @@ package view.window
 		public function set level(value:int):void 
 		{
 			_level = value;
+			levelIcon.gotoAndStop(Math.ceil(level/ 10));
 			levelTxt.text = String(value);
 		}
 		

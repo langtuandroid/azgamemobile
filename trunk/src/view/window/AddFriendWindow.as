@@ -1,6 +1,7 @@
 package view.window 
 {
 	import control.MainCommand;
+	import flash.display.MovieClip;
 	import flash.display.SimpleButton;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -18,6 +19,7 @@ package view.window
 	{
 		private var displayNameTxt:TextField;
 		private var goldTxt:TextField;
+		private var levelIcon:MovieClip;
 		private var levelTxt:TextField;
 		private var winTxt:TextField;
 		private var loseTxt:TextField;
@@ -52,7 +54,8 @@ package view.window
 			
 			displayNameTxt = content["displayNameTxt"];
 			goldTxt = content["goldTxt"];
-			levelTxt = content["levelTxt"];
+			levelIcon = content["levelIcon"];
+			levelTxt = levelIcon["levelTxt"];
 			winTxt = content["winTxt"];
 			loseTxt = content["loseTxt"];
 			gameTxt = content["gameTxt"];
@@ -81,7 +84,6 @@ package view.window
 			addChild(avatar);
 			
 			addChild(content["levelIcon"]);
-			addChild(levelTxt);
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
@@ -193,6 +195,7 @@ package view.window
 		public function set level(value:int):void 
 		{
 			_level = value;
+			levelIcon.gotoAndStop(Math.ceil(level/ 10));
 			levelTxt.text = String(value);
 		}
 		

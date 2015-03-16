@@ -1006,7 +1006,7 @@ package view.screen
 						}
 					}
 					hideStartButton();
-					if(countPlayer > 1)
+					if(countPlayer > 1 && isResetDone)
 						waitToPlay.visible = true;
 				}
 			}
@@ -1081,6 +1081,7 @@ package view.screen
 				waitToPlay.visible = false;
 				waitToStart.visible = false;
 				addCardManager();
+				cardManager.getCardPoint.gotoAndStop("hide");
 				// bổ sung thông tin cá nhân
 				for (i = 0; i < userList.length; i++) 
 				{
@@ -2852,6 +2853,12 @@ package view.screen
 				timerToResetMatch.removeEventListener(TimerEvent.TIMER_COMPLETE, onResetMatch);
 				timerToResetMatch.stop();
 				timerToResetMatch = null;
+			}
+			
+			if (resultWindow)
+			{
+				if (resultWindow.parent)
+					resultWindow.close();
 			}
 			
 			if (parent)
