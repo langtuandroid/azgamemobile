@@ -120,6 +120,7 @@ package view.userInfo.playerInfo
 		private var playerName:TextField;
 		private var money:TextField;
 		private var level:TextField;
+		private var levelIcon:MovieClip;
 		private var deviceIcon:MovieClip;
 		private var homeIcon:Sprite;
 		private var readyIcon:Sprite;
@@ -354,7 +355,8 @@ package view.userInfo.playerInfo
 		private function setupPersonalInfo():void 
 		{
 			playerName = content["playerName"];
-			level = content["level"];
+			levelIcon = content["levelIcon"];
+			level = levelIcon["levelTxt"];
 			deviceIcon = content["deviceIcon"];
 			deviceIcon.gotoAndStop("none");
 			money = content["money"];
@@ -426,6 +428,7 @@ package view.userInfo.playerInfo
 			
 			levelNumber = infoObject[ModelField.LEVEL];
 			level.text = infoObject[ModelField.LEVEL];
+			levelIcon.gotoAndStop(Math.ceil(levelNumber/ 10));
 			
 			moneyNumber = infoObject[ModelField.MONEY];
 			money.text = PlayingLogic.format(moneyNumber,1);
@@ -711,8 +714,7 @@ package view.userInfo.playerInfo
 			content["effectMoneyPosition"].visible = false;
 			
 			addAvatar();
-			addChild(content["levelIcon"]);
-			addChild(level);
+			addChild(levelIcon);
 			if (isRoomMaster)
 				addChild(homeIcon);
 			winLoseIcon = content["winLoseIcon"];
@@ -1088,8 +1090,7 @@ package view.userInfo.playerInfo
 		{
 			avatar.visible = false;
 			homeIcon.visible = false;
-			level.visible = false;
-			content["levelIcon"].visible = false;
+			levelIcon.visible = false;
 			playerName.visible = false;
 			money.visible = false;
 		}

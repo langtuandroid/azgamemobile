@@ -131,6 +131,7 @@ package view.userInfo.playerInfo
 		
 		private var playerName:TextField;
 		private var level:TextField;
+		private var levelIcon:MovieClip;
 		private var deviceIcon:MovieClip;
 		private var money:TextField;
 		private var homeIcon:Sprite;
@@ -262,7 +263,8 @@ package view.userInfo.playerInfo
 		private function setupPersonalInfo():void 
 		{
 			playerName = content["playerName"];
-			level = content["level"];
+			levelIcon = content["levelIcon"];
+			level = levelIcon["levelTxt"];
 			deviceIcon = content["deviceIcon"];
 			deviceIcon.gotoAndStop("none");
 			money = content["money"];
@@ -326,6 +328,7 @@ package view.userInfo.playerInfo
 			
 			levelNumber = infoObject[ModelField.LEVEL];
 			level.text = infoObject[ModelField.LEVEL];
+			levelIcon.gotoAndStop(Math.ceil(levelNumber/ 10));
 			
 			moneyNumber = infoObject[ModelField.MONEY];
 			money.text = PlayingLogic.format(moneyNumber,1);
@@ -1059,7 +1062,7 @@ package view.userInfo.playerInfo
 			if (checkArray.length == 1)
 			{
 				currentSelectedCard = checkArray[0];
-				playCardButton.enable = true;
+				//playCardButton.enable = true;
 			}
 				
 			if (myStatus == DOWN_CARD) // trường hợp đang hạ bài
@@ -1237,7 +1240,7 @@ package view.userInfo.playerInfo
 			if (checkArray.length == 1)
 			{
 				currentSelectedCard = checkArray[0];
-				playCardButton.enable = true;
+				//playCardButton.enable = true;
 			}
 			
 			if (myStatus == SEND_CARD)
@@ -1465,8 +1468,7 @@ package view.userInfo.playerInfo
 			content["effectMoneyPosition"].visible = false;
 			
 			addAvatar();
-			addChild(content["levelIcon"]);
-			addChild(level);
+			addChild(levelIcon);
 			if (isRoomMaster)
 				addChild(homeIcon);
 			winLoseIcon = content["winLoseIcon"];

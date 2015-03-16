@@ -1074,7 +1074,8 @@ package view.screen
 							onlinePlayer += channelObject[DataFieldMauBinh.USERS_ONLINE];
 							minLevel = channelObject[DataFieldMauBinh.LEVEL_MIN];
 							channelButtonArray[i]["playerNumberTxt"].text = PlayingLogic.format(onlinePlayer, 1);
-							channelButtonArray[i]["levelTxt"].text = String(minLevel);
+							channelButtonArray[i]["levelIcon"]["levelTxt"].text = String(minLevel);
+							channelButtonArray[i]["levelIcon"].gotoAndStop(Math.ceil(minLevel/ 10));
 							
 							if (int(mainData.chooseChannelData.myInfo.level) < minLevel)
 								MovieClip(channelButtonArray[i]).gotoAndStop("disable");

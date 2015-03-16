@@ -2491,6 +2491,12 @@ package view.screen
 				timerToResetMatch = null;
 			}
 			
+			if (resultWindow)
+			{
+				if (resultWindow.parent)
+					resultWindow.close();
+			}
+			
 			if (parent)
 				parent.removeChild(this);
 		}

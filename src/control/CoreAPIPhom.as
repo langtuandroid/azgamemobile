@@ -250,7 +250,7 @@ package control
 					sendEmoObject[DataFieldMauBinh.EMO_TYPE] = e.esObject.getInteger(DataFieldMauBinh.EMO_TYPE);
 					mainData.emoChatData = sendEmoObject;
 				break;
-				case Command.READY:
+				/*case Command.READY:
 					var readyObject:Object = new Object();
 					readyObject[DataFieldPhom.USER_NAME] = e.userName;
 					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.READY_SUCCESS,readyObject));
@@ -305,7 +305,7 @@ package control
 					var sendCardFinishObject:Object = new Object();
 					sendCardFinishObject[DataFieldPhom.USER_NAME] = e.esObject.getString(DataFieldPhom.USER_NAME);
 					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.HAVE_USER_SEND_CARD_FINISH, sendCardFinishObject));
-				break;
+				break;*/
 			}
 		}
 		
@@ -543,7 +543,7 @@ package control
 					if (e.parameters.doesPropertyExist(DataFieldPhom.PLAYER_CARDS))
 					{
 						dealCardObject[DataFieldPhom.PLAYER_CARDS] = e.parameters.getIntegerArray(DataFieldPhom.PLAYER_CARDS);
-						var cardArray:Array = dealCardObject[DataFieldPhom.PLAYER_CARDS];
+						cardArray = dealCardObject[DataFieldPhom.PLAYER_CARDS];
 						for (i = 0; i < cardArray.length; i++) 
 						{
 							cardArray[i]++;
@@ -566,6 +566,58 @@ package control
 					stealCardObject[DataFieldPhom.MONEY_BEFORE_REBET] = Number(e.parameters.getString(DataFieldPhom.MONEY_BEFORE_REBET));
 					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.STEAL_CARD,stealCardObject));
 				break;
+				
+				case Command.START_GAME:
+					var startGameObject:Object = new Object();
+					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.START_GAME_SUCCESS,startGameObject));
+				break;
+				case Command.DISCARD:
+					var disCardObject:Object = new Object();
+					disCardObject[DataFieldPhom.USER_NAME] = e.parameters.getString(DataFieldPhom.USER_NAME);
+					disCardObject[DataFieldPhom.NEXT_TURN] =e.parameters.getString(DataFieldPhom.NEXT_TURN);
+					disCardObject[DataFieldPhom.CARD] = e.parameters.getInteger(DataFieldPhom.CARD) + 1;
+					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.HAVE_USER_DISCARD,disCardObject));
+				break;
+				case Command.LAYING_CARD:
+					var downCardObject:Object = new Object();
+					downCardObject[DataFieldPhom.CARDS] = e.parameters.getIntegerArray(DataFieldPhom.CARDS);
+					downCardObject[DataFieldPhom.USER_NAME] = e.parameters.getString(DataFieldPhom.USER_NAME);
+					downCardObject[DataFieldPhom.INDEX] = e.parameters.getInteger(DataFieldPhom.INDEX);
+					var cardArray:Array = downCardObject[DataFieldPhom.CARDS];
+					for (i = 0; i < cardArray.length; i++) 
+					{
+						cardArray[i]++;
+					}
+					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.HAVE_USER_DOWN_CARD, downCardObject));
+				break;
+				case Command.DRAW_CARD:
+					var userGetCardObject:Object = new Object();
+					userGetCardObject[DataFieldPhom.USER_NAME] = e.parameters.getString(DataFieldPhom.USER_NAME);
+					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.HAVE_USER_GET_CARD, userGetCardObject));
+				break;
+				case Command.SEND_CARD:
+					var sendCardObject:Object = new Object();
+					sendCardObject[DataFieldPhom.USER_NAME] = e.parameters.getString(DataFieldPhom.USER_NAME);
+					sendCardObject[DataFieldPhom.DESTINATION_USER] = e.parameters.getString(DataFieldPhom.PLAYER_DESTINATION);
+					sendCardObject[DataFieldPhom.INDEX] = e.parameters.getInteger(DataFieldPhom.INDEX);
+					sendCardObject[DataFieldPhom.CARD] = e.parameters.getIntegerArray(DataFieldPhom.CARD);
+					for (i = 0; i < sendCardObject[DataFieldPhom.CARD].length; i++) 
+					{
+						sendCardObject[DataFieldPhom.CARD][i]++;
+					}
+					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.HAVE_USER_SEND_CARD, sendCardObject));
+				break;
+				case Command.LAYING_DONE: // Hạ bài xong
+					var downCardFinishObject:Object = new Object();
+					downCardFinishObject[DataFieldPhom.USER_NAME] = e.parameters.getString(DataFieldPhom.USER_NAME);
+					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.HAVE_USER_DOWN_CARD_FINISH, downCardFinishObject));
+				break;
+				case Command.SEND_CARD_FINISH: // Gửi bài xong
+					var sendCardFinishObject:Object = new Object();
+					sendCardFinishObject[DataFieldPhom.USER_NAME] = e.parameters.getString(DataFieldPhom.USER_NAME);
+					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.HAVE_USER_SEND_CARD_FINISH, sendCardFinishObject));
+				break;
+				
 				case Command.GAME_OVER: // Ván chơi kết thúc
 					var gameOverObject:Object = new Object();
 					var esObjec_PlayerList:Array = e.parameters.getEsObjectArray(DataFieldPhom.PLAYER_LIST);
@@ -1171,7 +1223,13 @@ package control
 		public function readyPlay():void
 		{
 			var esObject:EsObject = new EsObject();
-			sendPublicMessage(Command.READY, esObject);
+			esObject.setString(DataFieldPhom.COMMAND, Command.READY);
+			esObject.setString(DataFieldPhom.USER_NAME, mainData.chooseChannelData.myInfo.uId);
+			
+			if (mainData.isUsePluginMessage)
+				sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, esObject);
+			else
+				sendPublicMessage(Command.READY, esObject);
 		}
 		
 		// Gửi publicMessage lên thông báo người chơi đã xếp bài xong
@@ -1192,7 +1250,12 @@ package control
 		public function startGame():void
 		{
 			var esObject:EsObject = new EsObject();
-			sendPublicMessage(Command.START_GAME, esObject);
+			esObject.setString(DataFieldPhom.COMMAND, Command.START_GAME);
+			esObject.setString(DataFieldPhom.USER_NAME, mainData.chooseChannelData.myInfo.uId);
+			if (mainData.isUsePluginMessage)
+				sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, esObject);
+			else
+				sendPublicMessage(Command.START_GAME, esObject);
 		}
 		
 		// Gửi pluginRequest lên thông báo người chơi đã sẵn sàng chơi
@@ -1200,8 +1263,14 @@ package control
 		{
 			var esObject:EsObject = new EsObject();
 			esObject.setInteger(DataFieldPhom.CARD, cardId - 1);
+			esObject.setString(DataFieldPhom.USER_NAME, mainData.chooseChannelData.myInfo.uId);
 			esObject.setString(DataFieldPhom.NEXT_TURN, nextTurn);
-			sendPublicMessage(Command.DISCARD, esObject);
+			esObject.setString(DataFieldPhom.COMMAND, Command.DISCARD);
+			
+			if (mainData.isUsePluginMessage)
+				sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, esObject);
+			else
+				sendPublicMessage(Command.DISCARD, esObject);
 		}
 		
 		private function sendPublicMessage(command:String, esObject:EsObject):void
@@ -1224,7 +1293,12 @@ package control
 		{
 			var esObject:EsObject = new EsObject();
 			esObject.setString(DataFieldPhom.USER_NAME, userName);
-			sendPublicMessage(Command.DRAW_CARD, esObject);
+			esObject.setString(DataFieldPhom.COMMAND, Command.DRAW_CARD);
+			
+			if (mainData.isUsePluginMessage)
+				sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, esObject);
+			else
+				sendPublicMessage(Command.DRAW_CARD, esObject);
 		}
 		
 		// Gửi pluginRequest lên thông báo người chơi vừa ăn một con bài
@@ -1233,7 +1307,12 @@ package control
 			var esObject:EsObject = new EsObject();
 			esObject.setInteger(DataFieldPhom.CARD, cardId - 1);
 			esObject.setString(DataFieldPhom.USER_NAME, userName);
-			sendPublicMessage(Command.STEAL_CARD, esObject);
+			esObject.setString(DataFieldPhom.COMMAND, Command.STEAL_CARD);
+			
+			if (mainData.isUsePluginMessage)
+				sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, esObject);
+			else
+				sendPublicMessage(Command.STEAL_CARD, esObject);
 		}
 		
 		// Gửi pluginRequest lên thông báo người chơi vừa ăn một con bài
@@ -1247,7 +1326,12 @@ package control
 			var esObject:EsObject = new EsObject();
 			esObject.setIntegerArray(DataFieldPhom.CARDS, cardArray);
 			esObject.setString(DataFieldPhom.USER_NAME, userName);
-			sendPublicMessage(Command.LAYING_CARD, esObject);
+			esObject.setString(DataFieldPhom.COMMAND, Command.LAYING_CARD);
+			
+			if (mainData.isUsePluginMessage)
+				sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, esObject);
+			else
+				sendPublicMessage(Command.LAYING_CARD, esObject);
 		}
 		
 		// thông báo hạ xong
@@ -1255,7 +1339,12 @@ package control
 		{
 			var esObject:EsObject = new EsObject();
 			esObject.setString(DataFieldPhom.USER_NAME, userName);
-			sendPublicMessage(Command.LAYING_DONE, esObject);
+			esObject.setString(DataFieldPhom.COMMAND, Command.LAYING_DONE);
+			
+			if (mainData.isUsePluginMessage)
+				sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, esObject);
+			else
+				sendPublicMessage(Command.LAYING_DONE, esObject);
 		}
 		
 		// thông báo gửi xong
@@ -1263,7 +1352,12 @@ package control
 		{
 			var esObject:EsObject = new EsObject();
 			esObject.setString(DataFieldPhom.USER_NAME, userName);
-			sendPublicMessage(Command.SEND_CARD_FINISH, esObject);
+			esObject.setString(DataFieldPhom.COMMAND, Command.SEND_CARD_FINISH);
+			
+			if (mainData.isUsePluginMessage)
+				sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, esObject);
+			else
+				sendPublicMessage(Command.SEND_CARD_FINISH, esObject);
 		}
 		
 		// Gửi pluginRequest lên thông báo người chơi gửi bài
@@ -1278,14 +1372,24 @@ package control
 				cardId[i]--;
 			}
 			esObject.setIntegerArray(DataFieldPhom.CARD, cardId);
-			sendPublicMessage(Command.SEND_CARD, esObject);
+			esObject.setString(DataFieldPhom.COMMAND, Command.SEND_CARD);
+			
+			if (mainData.isUsePluginMessage)
+				sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, esObject);
+			else
+				sendPublicMessage(Command.SEND_CARD, esObject);
 		}
 		
 		// Gửi thông báo ù lên server
 		public function noticeFullDeck():void
 		{
 			var esObject:EsObject = new EsObject();
-			sendPublicMessage(Command.FULL_LAYING_CARDS, esObject);
+			esObject.setString(DataFieldPhom.COMMAND, Command.FULL_LAYING_CARDS);
+			
+			if (mainData.isUsePluginMessage)
+				sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, esObject);
+			else
+				sendPublicMessage(Command.FULL_LAYING_CARDS, esObject);
 		}
 		
 		private function sendPluginRequest(_zoneId:int, _roomId:int, pluginName:String, esObject:EsObject = null):void
