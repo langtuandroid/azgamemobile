@@ -88,6 +88,9 @@ package
 		[Embed(source = '../init_test.xml', mimeType = "application/octet-stream")]
 		private static const InitData_Test:Class;
 		
+		[Embed(source = '../config.xml', mimeType = "application/octet-stream")]
+		private static const MainAppData:Class;
+		
 		private var urlRequest:URLRequest; // urlRequest chứa đường dẫn đễn file init.xml
 		private var contentLoader:URLLoader; // urlLoader để load fie init.xml
 		private var countLoadSwfFinish:int = 0;
@@ -148,6 +151,21 @@ package
 			if (mainData.isTest)
 				byteArray = new InitData_Test() as ByteArray;
 			mainData.init = new XML(byteArray.readUTFBytes(byteArray.length));
+			
+			byteArray = new MainAppData() as ByteArray;
+			var mainApp:XML = new XML(byteArray.readUTFBytes(byteArray.length));
+			
+			var tempString:String = mainApp.type;
+			switch (tempString) 
+			{
+				case "ios":
+					mainData.isOnIos = true;
+				break;
+				case "android":
+					mainData.isOnAndroid = true;
+				break;
+				default:
+			}
 			
 			addEventListener(Event.ADDED_TO_STAGE, init);
 			scrollRect = new Rectangle(0, 0, mainData.stageWidth, mainData.stageHeight);
