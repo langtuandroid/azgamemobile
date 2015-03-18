@@ -3686,8 +3686,16 @@ package view.screen
 				//GameDataTLMN.getInstance().removeEventListener(ConstTlmn.ADD_FRIEND, onUpdateAddFriend);
 				GameDataTLMN.getInstance().playingData.removeEventListener(PlayingData.UPDATE_PLAYING_SCREEN, onUpdatePlayingScreen);
 				
-				_resultWindow.removeEventListener("close", onCloseResultWindow);
-				_resultWindow.removeEventListener("out game", onOutGame);
+				if (_resultWindow) 
+				{
+					_resultWindow.removeEventListener("close", onCloseResultWindow);
+					_resultWindow.removeEventListener("out game", onOutGame);
+					
+					content.removeChild(_resultWindow);
+					_resultWindow = null;
+				}
+				
+				
 				
 				GameDataTLMN.getInstance().autoReady = false;
 				

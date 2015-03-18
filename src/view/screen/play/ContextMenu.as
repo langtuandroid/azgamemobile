@@ -95,7 +95,7 @@ package view.screen.play
 			content.winTxt.text = format(win);
 			content.loseTxt.text = format(lose);
 			content.level.txt.text = level;
-			
+			content.level.gotoAndStop(Math.ceil(int(level) / 10));
 			
 			
 			if (isMaster) 

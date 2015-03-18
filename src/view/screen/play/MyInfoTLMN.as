@@ -1221,6 +1221,7 @@ package view.screen.play
 			}
 			
 			content.level.txt.text = level;
+			content.level.gotoAndStop(Math.ceil(int(level) / 10));
 			
 			content.setChildIndex(content.iconMaster, content.numChildren - 1);
 		}

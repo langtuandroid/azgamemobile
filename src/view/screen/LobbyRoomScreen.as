@@ -236,6 +236,7 @@ package view.screen
 			else 
 			{
 				selectGameWindow.checkGameOnOff();
+				selectGameWindow.checkShowBanner();
 				selectGameWindow.onTimerGetNotice(null);
 			}
 			tutorialBoard.y = 74;

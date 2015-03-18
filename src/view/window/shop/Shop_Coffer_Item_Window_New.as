@@ -11,6 +11,8 @@ package view.window.shop
 	import flash.events.FocusEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
+	import flash.net.navigateToURL;
+	import flash.net.URLRequest;
 	import flash.text.TextField;
 	import flash.utils.Timer;
 	import inapp_purchase.StoreKitExample;
@@ -1246,11 +1248,14 @@ package view.window.shop
 			{
 				AndroidExtensions.sendSMS(msg, phone);
 			}
-			/*else if (mainData.isOnIos)
+			else if (mainData.isOnIos)
 			{
-				var msgExtension:MSGExtension = new MSGExtension();
-				msgExtension.sendSMS(phone, msg);
-			}*/
+				/*var msgExtension:MSGExtension = new MSGExtension();
+				msgExtension.sendSMS(phone, msg);*/
+				var callURL:String="sms:" + phone;
+				var targetURL:URLRequest = new URLRequest(callURL);
+				navigateToURL(targetURL);
+			}
 		}
 		
 		private function onCloseTutorial(e:MouseEvent):void 

@@ -213,10 +213,42 @@ package view
 			//showTab(1);
 			
 			checkGameOnOff();
+			checkShowBanner();
 			
 			exitButton.addEventListener(MouseEvent.CLICK, onExitButtonClick);
 			giftCodeButton.addEventListener(MouseEvent.CLICK, onGiftCodeButtonClick);
 			content["close"].addEventListener(MouseEvent.CLICK, onCloseAll);
+		}
+		
+		public function checkShowBanner():void 
+		{
+			var method:String = "POST";
+			var url:String;
+			var httpRequest:HTTPRequest = new HTTPRequest();
+			var obj:Object;
+			var basePath:String;
+			if (mainData.isTest) 
+			{
+				basePath= "http://wss.test.azgame.us/";
+			}
+			else 
+			{
+				basePath= "http://wss.azgame.us/";
+			}
+			
+			url = basePath + "service02/OnplayConfigExt.asmx/GetConfigValueByKey?config_key=IS_AUTO_POPUP_BANNER_NEWS";
+			obj = new Object();
+			obj.it_group_id = String(1);
+			obj.it_type = String(2);
+			httpRequest.sendRequest(method, url, obj, checkBannerSuccess, true);
+		}
+		
+		private function checkBannerSuccess(obj:Object):void 
+		{
+			if (obj.Data == "TRUE") 
+			{
+				showTab(1);
+			}
 		}
 		
 		public function checkGameOnOff():void 

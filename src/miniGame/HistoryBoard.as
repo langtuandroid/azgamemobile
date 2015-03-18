@@ -3,6 +3,8 @@ package miniGame
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
 	import miniGame.request.HTTPRequestMiniGame;
 	
 	/**
@@ -164,6 +166,8 @@ package miniGame
 			
 			arrButton = [];
 			
+			var tformat:TextFormat;
+			
 			for (var i:int = 0; i < arr.length; i++) 
 			{
 				var childBoard:MovieClip = new ContentHistoryMc();
@@ -182,16 +186,68 @@ package miniGame
 				childBoard.codeTxt.text = arr[i].code;
 				childBoard.typeReceiveTxt.text = arr[i].type_id_string;
 				//arr[i].status_string = "Chưa chọn";
-				childBoard.statusBtn.statusTxt.text = arr[i].status_string;
 				
-				if (arr[i].status_string == "Chưa chọn") 
+				if (arr[i].status == 0) 
 				{
+					tformat = new TextFormat();
+					tformat.underline = true;
+					tformat.bold = true;
+					
+					TextField(childBoard.statusBtn.statusTxt).defaultTextFormat = tformat;
+					
+					childBoard.statusBtn.statusTxt.text = "Chưa chọn";
 					childBoard.statusBtn.buttonMode = true;
 					childBoard.statusBtn.addEventListener(MouseEvent.CLICK, onShowChoseGift);
+				}
+				else if (arr[i].status == 1) 
+				{
+					childBoard.statusBtn.statusTxt.text = "Đang xử lý";
+					
+				}
+				else if (arr[i].status == 3) 
+				{
+					tformat = new TextFormat();
+					tformat.underline = true;
+					tformat.bold = true;
+					tformat.color = 0xFF0000;
+					TextField(childBoard.statusBtn.statusTxt).defaultTextFormat = tformat;
+					TextField(childBoard.statusBtn.statusTxt).textColor = 0xFF0000;
+					childBoard.statusBtn.statusTxt.text = "Chưa nhận";
+					childBoard.statusBtn.buttonMode = true;
+					childBoard.statusBtn.addEventListener(MouseEvent.CLICK, onShowCodeGift);
+				}
+				else if (arr[i].status == 2) 
+				{
+					
+					if (arr[i].gold > 0) 
+					{
+						childBoard.statusBtn.statusTxt.text = "Đã nhận";
+						
+					}
+					else 
+					{
+						tformat = new TextFormat();
+						tformat.underline = true;
+						TextField(childBoard.statusBtn.statusTxt).defaultTextFormat = tformat;
+						childBoard.statusBtn.statusTxt.text = "Đã nhận";
+						childBoard.statusBtn.buttonMode = true;
+						childBoard.statusBtn.addEventListener(MouseEvent.CLICK, onShowCodeGift);
+					}
+					
 				}
 				
 				childBoard.y = 28 * i;
 			}
+		}
+		
+		private function onShowCodeGift(e:MouseEvent):void 
+		{
+			var mc:MovieClip = e.currentTarget as MovieClip;
+			var pos:int = arrButton.indexOf(mc);
+			objGift = new Object();
+			objGift.name = arrChildBoard[pos].typeGiftTxt.text;
+			objGift.code = arrChildBoard[pos].codeTxt.text;
+			dispatchEvent(new Event(ConstMiniGame.GET_GIFT_CODE));
 		}
 		
 		private function onShowChoseGift(e:MouseEvent):void 

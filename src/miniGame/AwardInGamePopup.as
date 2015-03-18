@@ -136,12 +136,25 @@ package miniGame
 			content.chooseCard.chooseCardBtn.addEventListener(MouseEvent.CLICK, onChoseTypeOfCard);
 			content.chooseCard.receiveGiftBtn.addEventListener(MouseEvent.CLICK, onAgreeReceiveGift);
 			
+			//đã chọn loại thẻ nhận
+			content.showTime.closeBtn.addEventListener(MouseEvent.CLICK, onGettedGift);
 			
+			content.receiveSeri.closeBtn.addEventListener(MouseEvent.CLICK, onClose);
 			
 			//mua them luot
 			
 			content.buyMoney.agreeBtn.addEventListener(MouseEvent.CLICK, onAgreeBuyTurn);
 			content.buyMoney.closeBtn.addEventListener(MouseEvent.CLICK, onCloseBuyTurn);
+		}
+		
+		private function onGettedGift(e:MouseEvent):void 
+		{
+			dispatchEvent(new Event(ConstMiniGame.GET_GIFT_SUCCESS));
+		}
+		
+		private function onClose(e:MouseEvent):void 
+		{
+			dispatchEvent(new Event(ConstMiniGame.CLOSE_POPUP));
 		}
 		
 		public function removeAllEvent():void 
@@ -162,7 +175,8 @@ package miniGame
 			content.chooseCard.chooseCardBtn.removeEventListener(MouseEvent.CLICK, onChoseTypeOfCard);
 			content.chooseCard.receiveGiftBtn.removeEventListener(MouseEvent.CLICK, onAgreeReceiveGift);
 			
-			
+			//đã chọn loại thẻ nhận
+			content.showTime.closeBtn.removeEventListener(MouseEvent.CLICK, onClose);
 			
 			//mua them luot
 			
@@ -280,9 +294,29 @@ package miniGame
 		private function onAgreeReceiveGift(e:MouseEvent):void 
 		{
 			setupContent();
-			showBoard(0);
+			
+			//lay thong tin the cao
+			var httpReq:HTTPRequestMiniGame = new HTTPRequestMiniGame();
+			var method:String = "POST";
+			var str:String = GameDataMiniGame.getInstance().linkReq + "Service02/OnplayGameEvent.asmx/Azgamebai_Take_Award";
+			var obj:Object = new Object();
+			
+			obj["access_token"] = GameDataMiniGame.getInstance().token;
+			obj["code"] = GameDataMiniGame.getInstance().cardGift[1];
+			
+			httpReq.sendRequest(method, str, obj, getGiftSuccess, true);
 			
 			
+			
+			
+		}
+		
+		private function getGiftSuccess(obj:Object):void 
+		{
+			if (obj.TypeMsg == 1) 
+			{
+				showBoard(6);
+			}
 		}
 		
 		private function sendLinkReceive():void 
@@ -341,13 +375,15 @@ package miniGame
 		 * 0:chon loai, 1:chon phone, 2:chon mail, 3:chon loai card, 4:mua them luot
 		 * @param	type
 		 */
-		public function showBoard(type:int):void 
+		public function showBoard(type:int, showText:String = ""):void 
 		{
 			content.chooseTakeGift.visible = false;
 			content.chosePhone.visible = false;
 			content.choseMail.visible = false;
 			content.chooseCard.visible = false;
 			content.buyMoney.visible = false;
+			content.receiveSeri.visible = false;
+			content.showTime.visible = false;
 			
 			switch (type) 
 			{
@@ -365,6 +401,13 @@ package miniGame
 				break;
 				case 4:
 					content.buyMoney.visible = true;
+				break;
+				case 5:
+					content.receiveSeri.visible = true;
+					content.receiveSeri.codeText.htmlText = showText;
+				break;
+				case 6:
+					content.showTime.visible = true;
 				break;
 				default:
 			}

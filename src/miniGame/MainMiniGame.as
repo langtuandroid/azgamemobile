@@ -323,6 +323,10 @@ package miniGame
 			
 			if (!_playGame) 
 			{
+				if (noticePopup) 
+				{
+					noticePopup.visible = false;
+				}
 				_playGame = new PlayGameScreenMiniGame(this);
 				playGameLayer.addChild(_playGame);
 				_playGame.y = 155;

@@ -126,7 +126,9 @@ package miniGame
 				if (GameDataMiniGame.getInstance().cardGift.length > 0) 
 				{
 					noticePopup.receiveGiftBtn.visible = true;
-					noticePopup.closeBtn..visible = false;
+					//noticePopup.receiveGiftBtn.visible = false;
+					//noticePopup.closeBtn.visible = true;
+					noticePopup.closeBtn.visible = false;
 				}
 				else 
 				{

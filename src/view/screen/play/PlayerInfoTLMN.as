@@ -727,6 +727,7 @@ package view.screen.play
 			
 			content.level.visible = true;
 			content.level.txt.text = level;
+			content.level.gotoAndStop(Math.ceil(int(level) / 10));
 			_level = level;
 			
 			_money = Number(money);
