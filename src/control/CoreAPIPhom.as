@@ -250,7 +250,7 @@ package control
 					sendEmoObject[DataFieldMauBinh.EMO_TYPE] = e.esObject.getInteger(DataFieldMauBinh.EMO_TYPE);
 					mainData.emoChatData = sendEmoObject;
 				break;
-				/*case Command.READY:
+				case Command.READY:
 					var readyObject:Object = new Object();
 					readyObject[DataFieldPhom.USER_NAME] = e.userName;
 					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.READY_SUCCESS,readyObject));
@@ -305,7 +305,7 @@ package control
 					var sendCardFinishObject:Object = new Object();
 					sendCardFinishObject[DataFieldPhom.USER_NAME] = e.esObject.getString(DataFieldPhom.USER_NAME);
 					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.HAVE_USER_SEND_CARD_FINISH, sendCardFinishObject));
-				break;*/
+				break;
 			}
 		}
 		
