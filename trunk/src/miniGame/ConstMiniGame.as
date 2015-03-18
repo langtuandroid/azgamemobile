@@ -14,6 +14,7 @@ package miniGame
 		public static const BUY_TURN_SUCCESS_TEXT:String = "Mua thêm lượt rút thành công, chúc bạn may mắn!";
 		public static const PLAY_GAME_ERROR_TEXT:String = "Không rút được quà, bạn vui lòng rút lại!";
 		
+		public static const GET_GIFT_SUCCESS:String = "getGiftSuccess";
 		public static const CLOSE_POPUP:String = "closePopup";
 		public static const BUY_TURN_ERROR:String = "buyTurnError";
 		public static const BUY_TURN_SUCCESS:String = "buyTurnSuccess";
@@ -26,6 +27,7 @@ package miniGame
 		public static const RECEIVE_GIFT:String = "receiveGift";
 		public static const BUY_TURN_NOW:String = "buyTurnNow";
 		public static const SHOW_AWARD_AGAIN:String = "showAwardAgain";
+		public static const GET_GIFT_CODE:String = "getGiftCode";
 		
 		public static const FE_WIN_:String = "feWin";
 		public static const FE_WIN_1:String = "feWin1";

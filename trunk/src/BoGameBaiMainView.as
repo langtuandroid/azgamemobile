@@ -156,6 +156,11 @@ package
 			{
 				NativeApplication.nativeApplication.addEventListener(Event.ACTIVATE, handleActivate, false, 0, true);
 				NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, handleDeactivate, false, 0, true);
+				NativeApplication.nativeApplication.systemIdleMode = SystemIdleMode.KEEP_AWAKE;
+				if (mainData.isOnIos) 
+				{
+					AddEventIos.getInstance().addAllEvent();
+				}
 			}
 			
 			scrollRect = new Rectangle(0, 0, mainData.stageWidth, mainData.stageHeight);

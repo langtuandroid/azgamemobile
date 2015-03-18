@@ -18,6 +18,8 @@ package miniGame
 		public var cardGift:Array = [];
 		public var arrGift:Array = [];
 		
+		public var arrCardCharge:Array = [];
+		
 		public var client_secret:String = "c3190273c0b4dd630c886bd8f61b7f5a";
 		public var client_id:String = "100000000000002";
 		public var token:String = "";

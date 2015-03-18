@@ -41,7 +41,9 @@ package miniGame
 		private var timerShowAwardPopup:Timer;
 		private var timerShowNoticePopup:Timer;
 		
-		private var startX:Number = 480;
+		//private var startX:Number = 480;
+		//private var startY:Number = 70;
+		private var startX:Number = 515;
 		private var startY:Number = 70;
 		
 		private var awardPopup:AwardInGamePopup;
@@ -117,6 +119,18 @@ package miniGame
 		
 		private function addPopup():void 
 		{
+			if (!historyBoard) 
+			{
+				historyBoard = new HistoryBoard();
+				popupLayer.addChild(historyBoard);
+				historyBoard.visible = false;
+				historyBoard.x = 515;
+				historyBoard.y = 261.5;
+				historyBoard.addEventListener(ConstMiniGame.CLOSE_POPUP, onCloseHistory);
+				historyBoard.addEventListener(ConstMiniGame.SHOW_AWARD_AGAIN, onShowWard);
+				historyBoard.addEventListener(ConstMiniGame.GET_GIFT_CODE, onGetGiftCode);
+			}
+			
 			if (!awardPopup) 
 			{
 				awardPopup = new AwardInGamePopup();
@@ -125,23 +139,25 @@ package miniGame
 				awardPopup.addEventListener(ConstMiniGame.BUY_TURN_ERROR, onBuyError);
 				awardPopup.addEventListener(ConstMiniGame.BUY_TURN_SUCCESS, onBuySuccess);
 				awardPopup.addEventListener(ConstMiniGame.ENOUGH_MONEY, onNotEnoughMoney);
-				awardPopup.addEventListener(ConstMiniGame.BUY_TURN, onNotBuyTurn);
+				//awardPopup.addEventListener(ConstMiniGame.BUY_TURN, onNotBuyTurn);
 				awardPopup.addEventListener(ConstMiniGame.RECEIVE_GIFT_ERROR, onReceiveGiftError);
 				awardPopup.addEventListener(ConstMiniGame.RECEIVE_GIFT_SUCCESS, onReceiveGiftSuccess);
 				awardPopup.addEventListener(ConstMiniGame.CLOSE_POPUP, onCloseBuyTurn);
+				awardPopup.addEventListener(ConstMiniGame.GET_GIFT_SUCCESS, onGetGiftSuccess);
 				
 				//awardPopup.showBoard(3);
 			}
-			if (!historyBoard) 
+			
+		}
+		
+		private function onGetGiftSuccess(e:Event):void 
+		{
+			if (awardPopup) 
 			{
-				historyBoard = new HistoryBoard();
-				popupLayer.addChild(historyBoard);
-				historyBoard.visible = false;
-				historyBoard.x = 515;
-				historyBoard.y = 271.5;
-				historyBoard.addEventListener(ConstMiniGame.CLOSE_POPUP, onCloseHistory);
-				historyBoard.addEventListener(ConstMiniGame.SHOW_AWARD_AGAIN, onShowWard);
+				awardPopup.visible = false;
+				
 			}
+			setupContent();
 		}
 		
 		private function onNotBuyTurn(e:Event):void 
@@ -159,6 +175,42 @@ package miniGame
 			{
 				awardPopup.visible = false;
 				
+			}
+		}
+		
+		private function onGetGiftCode(e:Event):void 
+		{
+			GameDataMiniGame.getInstance().goldGift = [];
+			GameDataMiniGame.getInstance().cardGift = [historyBoard.objGift.name, historyBoard.objGift.code];
+			
+			if (timerShowAwardPopup) 
+			{
+				timerShowAwardPopup.removeEventListener(TimerEvent.TIMER_COMPLETE, onShowAwardPopup);
+				timerShowAwardPopup.stop();
+			}
+			
+			var httpReq:HTTPRequestMiniGame = new HTTPRequestMiniGame();
+			var method:String = "POST";
+			var str:String = GameDataMiniGame.getInstance().linkReq + "Service02/OnplayGameEvent.asmx/Azgamebai_Set_Award_Status";
+			var obj:Object = new Object();
+			
+			obj["access_token"] = GameDataMiniGame.getInstance().token;
+			obj["code"] = GameDataMiniGame.getInstance().cardGift[1];
+			
+			httpReq.sendRequest(method, str, obj, getGiftSuccess, true);
+			
+		}
+		
+		private function getGiftSuccess(obj:Object):void 
+		{
+			if (obj.TypeMsg == 1) 
+			{
+				onShowHistoryGame(null);
+				if (awardPopup) 
+				{
+					awardPopup.visible = true;
+					awardPopup.showBoard(5, obj.Data.card_data);
+				}
 			}
 		}
 		
@@ -574,12 +626,20 @@ package miniGame
 				awardPopup.removeEventListener(ConstMiniGame.BUY_TURN, onNotBuyTurn);
 				awardPopup.removeEventListener(ConstMiniGame.RECEIVE_GIFT_ERROR, onReceiveGiftError);
 				awardPopup.removeEventListener(ConstMiniGame.RECEIVE_GIFT_SUCCESS, onReceiveGiftSuccess);
+				awardPopup.removeEventListener(ConstMiniGame.CLOSE_POPUP, onCloseBuyTurn);
+				awardPopup.removeEventListener(ConstMiniGame.GET_GIFT_SUCCESS, onGetGiftSuccess);
+				awardPopup.removeAllEvent();
+				popupLayer.removeChild(awardPopup);
+				awardPopup = null;
 			}
 			if (historyBoard) 
 			{
 				
 				historyBoard.removeEventListener(ConstMiniGame.CLOSE_POPUP, onCloseHistory);
 				historyBoard.removeEventListener(ConstMiniGame.SHOW_AWARD_AGAIN, onShowWard);
+				historyBoard.removeEventListener(ConstMiniGame.GET_GIFT_CODE, onGetGiftCode);
+				popupLayer.removeChild(historyBoard);
+				historyBoard = null;
 			}
 			
 			
