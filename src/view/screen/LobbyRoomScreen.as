@@ -1450,11 +1450,17 @@ package view.screen
 			if(!roomList)
 				roomList = new RoomListComponent(!mainData.isShowScroll);
 			roomList.isInvite = false;
+			roomList.addEventListener(RoomListComponent.AVATAR_CLICK, onAvatarClick);
 			roomList.addEventListener(MouseEvent.MOUSE_DOWN, onCompMouseDown);
 			roomList.addEventListener(MouseEvent.MOUSE_UP, onCompMouseUp);
 			roomList.addEventListener(RoomListRLCEvent.ENTER_ROOM, onRoomListSelect);
 			roomList.addEventListener(RoomListComponent.QUICK_PLAY, onQuickPlay);
 			firstLayer.addChild(roomList);
+		}
+		
+		private function onAvatarClick(e:Event):void 
+		{
+			
 		}
 		
 		private function onCompMouseDown(e:MouseEvent):void 
