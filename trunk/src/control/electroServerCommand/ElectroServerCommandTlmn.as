@@ -241,7 +241,7 @@ package control.electroServerCommand
 			var roomList:Array = mainData.lobbyRoomData.roomList;
 			for (var i:int = 0; i < roomList.length; i++) 
 			{
-				if (RoomDataRLC(roomList[i]).userNumbers < mainData.maxPlayer && !RoomDataRLC(roomList[i]).hasPassword)
+				if (RoomDataRLC(roomList[i]).userNumbers < RoomDataRLC(roomList[i]).maxPlayer && !RoomDataRLC(roomList[i]).hasPassword)
 				{
 					if (Number(RoomDataRLC(roomList[i]).betting) * mainData.minBetRate <= mainData.chooseChannelData.myInfo.money)
 					{
