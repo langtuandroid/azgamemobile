@@ -41,9 +41,9 @@ package miniGame
 		private var timerShowAwardPopup:Timer;
 		private var timerShowNoticePopup:Timer;
 		
-		//private var startX:Number = 480;
+		private var startX:Number = 480;
 		//private var startY:Number = 70;
-		private var startX:Number = 515;
+		//private var startX:Number = 515;
 		private var startY:Number = 70;
 		
 		private var awardPopup:AwardInGamePopup;

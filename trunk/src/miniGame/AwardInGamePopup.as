@@ -303,6 +303,8 @@ package miniGame
 			
 			obj["access_token"] = GameDataMiniGame.getInstance().token;
 			obj["code"] = GameDataMiniGame.getInstance().cardGift[1];
+			obj["telco"] = _typOfNetwork;
+			obj["type_id"] = typeOfReceive;
 			
 			httpReq.sendRequest(method, str, obj, getGiftSuccess, true);
 			
