@@ -23,6 +23,7 @@ package view.screen
 	import view.SelectGameWindowNew;
 	import view.SystemNoticeBar;
 	import view.window.AddFriendWindow;
+	import view.window.shop.Shop_Coffer_Item_Window_New;
 	//import view.window.AddMoneyWindow;
 	import view.window.AddMoneyWindow2;
 	import view.window.BaseWindow;
@@ -128,6 +129,9 @@ package view.screen
 		private var _newBg:MovieClip;
 		private var isClickHelp:Boolean = false;
 		
+		private var _shopWindow:Shop_Coffer_Item_Window_New;
+		private var containerShop:Sprite;
+		
 		public function LobbyRoomScreen() 
 		{
 			super();
@@ -197,6 +201,21 @@ package view.screen
 			selectGameWindow.visible = false;
 			selectGameWindow.closeAll();
 			
+			containerShop = new Sprite();
+			addChild(containerShop);
+			var containerChild:Sprite = new Sprite();
+			containerShop.addChild(containerChild);
+			containerChild.graphics.beginFill(0x000000, .3);
+			containerChild.graphics.drawRect(0, 0, 960, 640);
+			containerChild.graphics.endFill();
+			containerChild.addEventListener(MouseEvent.CLICK, onHideInfo);
+			containerShop.visible = false;
+		}
+		
+		private function onHideInfo(e:MouseEvent):void 
+		{
+			
+			containerShop.visible = false;
 		}
 		
 		private function onClickHotline(e:MouseEvent):void 
@@ -1450,7 +1469,7 @@ package view.screen
 			if(!roomList)
 				roomList = new RoomListComponent(!mainData.isShowScroll);
 			roomList.isInvite = false;
-			roomList.addEventListener(RoomListComponent.AVATAR_CLICK, onAvatarClick);
+			//roomList.addEventListener(RoomListComponent.AVATAR_CLICK, onAvatarClick);
 			roomList.addEventListener(MouseEvent.MOUSE_DOWN, onCompMouseDown);
 			roomList.addEventListener(MouseEvent.MOUSE_UP, onCompMouseUp);
 			roomList.addEventListener(RoomListRLCEvent.ENTER_ROOM, onRoomListSelect);
@@ -1460,7 +1479,22 @@ package view.screen
 		
 		private function onAvatarClick(e:Event):void 
 		{
+			if (_shopWindow) 
+			{
+				
+				_shopWindow.removeAllEvent();
+				containerShop.removeChild(_shopWindow);
+				_shopWindow = null;
+			}
 			
+			_shopWindow = new Shop_Coffer_Item_Window_New();
+			
+			containerShop.addChild(_shopWindow);
+			_shopWindow.x = (960 - 817) / 2;
+			_shopWindow.y = 50;
+			_shopWindow.onClickShowMyInfo(null);
+			
+			containerShop.visible = true;
 		}
 		
 		private function onCompMouseDown(e:MouseEvent):void 
