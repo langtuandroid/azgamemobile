@@ -122,7 +122,7 @@ package view.screen
 		public var autoReady:MovieClip;
 		private var playingLayer:Sprite;
 		private var chatboxLayer:Sprite;
-		private var chatButton:SimpleButton;
+		private var chatButton:MovieClip;
 		private var emoticonButton:SimpleButton;
 		private var isResetDone:Boolean = true;
 		
@@ -380,6 +380,7 @@ package view.screen
 		{
 			emoticonButton = content["emoticonButton"];
 			chatButton = content["chatButton"];
+			chatButton.gotoAndStop(1);
 			settingBoard = content["settingBoard"];
 			settingBoard.visible = false;
 			settingButton = content["settingButton"];
@@ -431,6 +432,7 @@ package view.screen
 		
 		private function onChatButtonClick(e:MouseEvent):void 
 		{
+			chatButton.gotoAndStop(1);
 			chatBox.visible = true;
 			chatButton.visible = false;
 		}
@@ -694,6 +696,8 @@ package view.screen
 				textField.htmlText = mainData.systemNoticeList[j][DataFieldPhom.MESSAGE];
 				chatBox.addChatSentence(textField.text, "Thông báo");
 			}
+			if (mainData.systemNoticeList.length != 0)
+				chatButton.play();
 		}
 		
 		private function closeComplete(e:Event):void 

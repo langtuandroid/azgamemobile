@@ -631,6 +631,9 @@ package model
 		public var isRecentlyDealCard:Boolean;
 		
 		public var isUsePluginMessage:Boolean = false;
+		public var isCompareGroupTime:Boolean;
+		
+		public var chl_Allow:Array
 	}
 
 }
