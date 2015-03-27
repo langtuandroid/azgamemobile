@@ -445,6 +445,13 @@ package control.electroServerCommand
 			coreAPI.sendPrivateMessage(invitedNameArray, Command.CONFIRM_FRIEND_REQUEST, esObject);
 		}
 		
+		public function sendCompareGroupStatus(stt:String, invitedNameArray:Array):void
+		{
+			var esObject:EsObject = new EsObject();
+			esObject.setString(DataFieldMauBinh.STATUS, stt);
+			coreAPI.sendPrivateMessage(invitedNameArray, Command.UPDATE_COMPARE_GROUP_STATUS, esObject);
+		}
+		
 		private function onAddMoney(e:ElectroServerEvent):void 
 		{
 			mainData.lobbyRoomData.addMoneyData = e.data;

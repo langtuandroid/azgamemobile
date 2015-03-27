@@ -63,6 +63,7 @@ package control
 	import model.EsConfiguration;
 	import model.MainData;
 	import model.MyData;
+	import model.playingData.PlayingScreenAction;
 	
 	/**
 	 * ...
@@ -154,6 +155,15 @@ package control
 			this.dispatchEvent(new ElectroServerEvent(ElectroServerEvent.CLOSE_CONNECTION));
 		}
 		
+		// Hàm để gọi một hành động xẩy ra trong playingScreen
+		private function callPlayingScreenAction(actionName:String, data:Object):void
+		{
+			var playingScreenAction:PlayingScreenAction = new PlayingScreenAction();
+			playingScreenAction.actionName = actionName;
+			playingScreenAction.data = data;
+			mainData.playingData.playingScreenAction = playingScreenAction;
+		}
+		
 		public function onPrivateMessageEvent(e:PrivateMessageEvent):void
 		{
 			switch(e.message)
@@ -163,6 +173,12 @@ package control
 				break;
 				case DataFieldMauBinh.SEND_MESSAGE: // có user gửi message bằng web service cho mình
 					MainCommand.getInstance().getInfoCommand.getMessageInfo();
+				break;
+				case Command.UPDATE_COMPARE_GROUP_STATUS: // có user gửi message bằng web service cho mình
+					var compareGroupStatusObject:Object = new Object();
+					mainData.isCompareGroupTime = true;
+					compareGroupStatusObject[DataFieldMauBinh.STATUS] = e.esObject.getString(DataFieldMauBinh.STATUS);
+					callPlayingScreenAction(Command.UPDATE_COMPARE_GROUP_STATUS, compareGroupStatusObject);
 				break;
 				case Command.INVITE_PLAY:
 					var invitePlayObject:Object = new Object();
@@ -1266,6 +1282,7 @@ package control
 		public function joinGameRoom(gameId:int, password:String):void
 		{
 			leaveRoom();
+			mainData.isCompareGroupTime = false;
 			var joinGameRequest:JoinGameRequest = new JoinGameRequest();
 			joinGameRequest.gameId = gameId;
 			joinGameRequest.password = password;

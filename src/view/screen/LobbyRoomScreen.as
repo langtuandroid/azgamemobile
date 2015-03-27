@@ -87,6 +87,7 @@ package view.screen
 		private var friendBtn:MovieClip;
 		
 		private var channelButtonArray:Array;
+		private var channelSmallButtonArray:Array;
 		private var channelButtonStartYArray:Array;
 		private var addMoneyButton:SimpleButton;
 		private var shopButton:SimpleButton;
@@ -158,7 +159,7 @@ package view.screen
 			channelInfoTxt.selectable = false;
 			channelInfoTxt.mouseEnabled = false;
 			channelInfoTxt.text = '';
-			channelInfoTxt.visible = false;
+			//channelInfoTxt.visible = false;
 			
 			lobbyBtn = content["lobbyBtn"];
 			friendBtn = content["friendBtn"];
@@ -385,10 +386,12 @@ package view.screen
 			buttonMenu = content["buttonMenu"];
 			buttonMenu.visible = false;
 			
+			channelSmallButtonArray = new Array();
 			channelButtonArray = new Array();
 			channelButtonStartYArray = new Array();
 			for (var i:int = 0; i < 4; i++) 
 			{
+				channelSmallButtonArray.push(smallButtonMenu["channelButton" + String(i + 1)]);
 				channelButtonArray.push(buttonMenu["channelButton" + String(i + 1)]);
 				channelButtonStartYArray.push(buttonMenu["channelButton" + String(i + 1)].y);
 				buttonMenu["channelButton" + String(i + 1)].addEventListener(MouseEvent.CLICK, onChannelButtonClick);
@@ -708,7 +711,7 @@ package view.screen
 			//mainCommand.electroServerCommand.joinLobbyRoom();
 			//mainCommand.electroServerCommand.startConnect("", channelList.currentChannelData.channelId);
 			mainData.fee = channelList.currentChannelData.fee;
-			channelInfoTxt.text = mainData.gameName + " - " + channelList.currentChannelData.channelName;
+			channelInfoTxt.text = /*mainData.gameName + " - " + */channelList.currentChannelData.channelName;
 			mainData.playingData.gameRoomData.channelName = channelList.currentChannelData.channelName;
 			mainData.channelNum = String(channelList.currentChannelData.channelId).charAt(0);
 			mainData.playingData.gameRoomData.betting = channelList.currentChannelData.betting;
@@ -733,11 +736,11 @@ package view.screen
 					channelButtonArray[i].y = channelButtonStartYArray[i];
 				}
 				
-				addMoneyButton.y = 246;
+				addMoneyButton.y = 243;
 				shopButton.y = 296;
-				inventoryButton.y = 299;
+				inventoryButton.y = 296;
 				eventButton.y = 349;
-				fanPageButton.y = 352;
+				fanPageButton.y = 349;
 				luckyCardButton.y = 202;
 				
 				return;
@@ -1003,7 +1006,7 @@ package view.screen
 				
 				mainCommand.electroServerCommand.startConnect("", mainData.currentChannelId);
 				mainData.fee = channelObject[DataFieldMauBinh.DEALER_FEE];
-				channelInfoTxt.text = mainData.gameName + " - " + channelObject[DataFieldMauBinh.CHANNEL_NAME];
+				channelInfoTxt.text = /*mainData.gameName + " - " + */channelObject[DataFieldMauBinh.CHANNEL_NAME];
 				mainData.playingData.gameRoomData.channelName = channelObject[DataFieldMauBinh.CHANNEL_NAME];
 				mainData.channelNum = String(channelObject[DataFieldMauBinh.CHANNEL_NUM]).charAt(0);
 				
@@ -1093,12 +1096,31 @@ package view.screen
 						{
 							onlinePlayer += channelObject[DataFieldMauBinh.USERS_ONLINE];
 							minLevel = channelObject[DataFieldMauBinh.LEVEL_MIN];
+							channelSmallButtonArray[i]["playerNumberTxt"].text = PlayingLogic.format(onlinePlayer, 1);
 							channelButtonArray[i]["playerNumberTxt"].text = PlayingLogic.format(onlinePlayer, 1);
 							channelButtonArray[i]["levelIcon"]["levelTxt"].text = String(minLevel);
 							channelButtonArray[i]["levelIcon"].gotoAndStop(Math.ceil(minLevel/ 10));
 							
-							if (int(mainData.chooseChannelData.myInfo.level) < minLevel)
+							var isConditionEnough:Boolean = false;
+							if (int(mainData.chooseChannelData.myInfo.level) >= minLevel)
+								isConditionEnough = true;
+							
+							for (var k:int = 0; k < mainData.chl_Allow.length; k++) 
+							{
+								if (i + 1 == mainData.chl_Allow[k])
+									isConditionEnough = true;
+							}
+							
+							if (isConditionEnough)
+							{
+								MovieClip(channelButtonArray[i]).gotoAndStop("enable");
+								MovieClip(channelSmallButtonArray[i]).gotoAndStop("enable");
+							}
+							else
+							{
 								MovieClip(channelButtonArray[i]).gotoAndStop("disable");
+								MovieClip(channelSmallButtonArray[i]).gotoAndStop("disable");
+							}
 						}
 					}
 					if (i == 0)
@@ -1109,11 +1131,13 @@ package view.screen
 							virtualPlayer += mainData.virtualRooms[j].player_male_number + mainData.virtualRooms[j].player_female_number;
 						}
 						channelButtonArray[i]["playerNumberTxt"].text = PlayingLogic.format(onlinePlayer + virtualPlayer, 1);
+						channelSmallButtonArray[i]["playerNumberTxt"].text = PlayingLogic.format(onlinePlayer + virtualPlayer, 1);
 					}
 				}
 				else
 				{
 					MovieClip(channelButtonArray[i]).gotoAndStop("disable");
+					MovieClip(channelSmallButtonArray[i]).gotoAndStop("disable");
 					onlinePlayer = 0;
 					for (j = 0; j < mainData.chooseChannelData.channelInfoArray.length; j++) 
 					{
@@ -1124,6 +1148,7 @@ package view.screen
 							onlinePlayer += channelObject[DataFieldMauBinh.USERS_ONLINE];
 							minLevel = channelObject[DataFieldMauBinh.LEVEL_MIN];
 							channelButtonArray[i]["playerNumberTxt"].text = PlayingLogic.format(onlinePlayer, 1);
+							channelSmallButtonArray[i]["playerNumberTxt"].text = PlayingLogic.format(onlinePlayer, 1);
 						}
 					}
 				}

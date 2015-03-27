@@ -628,6 +628,7 @@ package view.window.loginWindow
 			var myInfo:MyInfo = new MyInfo();
 			
 			mainData.minMoney = value.Data["MinMoneyToFreeGold"];
+			mainData.chl_Allow = value.Data.Chl_Allow;
 			myInfo.avatar = value.Data["Avatar"];
 			myInfo.money = value.Data["Money"];
 			myInfo.cash = value.Data["Cash"];

@@ -23,6 +23,7 @@ package event
 		public static var REMOVE_FRIEND:String = "removeFriend";
 		public static var ADD_MONEY:String = "addCiao";
 		public static var CONFIRM_FRIEND_REQUEST:String = "confirmFriendRequest";
+		public static var UPDATE_COMPARE_GROUP_STATUS:String = "updateCompareGroupStatus";
 		public static var CONFIRM_ADD_FRIEND_INVITE:String = "confirmAddFriendInvite";
 		public static var GAME_OVER:String = "gameOver";
 		public static var GAME_OVER_SPECIAL:String = "gameOverSpecial";

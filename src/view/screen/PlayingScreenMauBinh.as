@@ -88,6 +88,7 @@ package view.screen
 		private var ruleDescription:TextField;
 		private var waitToPlay:Sprite;
 		private var waitToStart:Sprite;
+		private var waitPlaying:Sprite;
 		private var compareGroup1:Sprite;
 		private var compareGroup2:Sprite;
 		private var compareGroup3:Sprite;
@@ -140,7 +141,7 @@ package view.screen
 		private var playingLayer:Sprite;
 		private var chatboxLayer:Sprite;
 		private var emoticonButton:SimpleButton;
-		private var chatButton:SimpleButton;
+		private var chatButton:MovieClip;
 		
 		private var _giveUpPlayerArray:Array;
 		private var isGameOver:Boolean = true;
@@ -180,7 +181,8 @@ package view.screen
 			//chatBox.y = Math.round(content["chatBoxPosition"].y);
 			waitToPlay = content["waitToPlay"];
 			waitToStart = content["waitToStart"];
-			waitToPlay.visible = waitToStart.visible = false;
+			waitPlaying = content["waitPlaying"];
+			waitToPlay.visible = waitToStart.visible = waitPlaying.visible = false;
 			
 			setupCompareGroupStatus();
 			
@@ -392,10 +394,14 @@ package view.screen
 		private var timerToKickRoomMaster:Timer;
 		private var emoArray:Array;
 		private var background:zGameBackground;
+		private var isShowResultWindow:Boolean;
+		private var userListJoinWhenCompareGroup:Array;
+		private var timerToShowResultWindow:Timer;
 		private function setupButton():void 
 		{
 			emoticonButton = content["emoticonButton"];
 			chatButton = content["chatButton"];
+			chatButton.gotoAndStop(1);
 			settingBoard = content["settingBoard"];
 			chatboxLayer.addChild(settingBoard);
 			settingBoard.visible = false;
@@ -452,6 +458,7 @@ package view.screen
 		
 		private function onChatButtonClick(e:MouseEvent):void 
 		{
+			chatButton.gotoAndStop(1);
 			chatBox.visible = true;
 			chatButton.visible = false;
 		}
@@ -750,6 +757,8 @@ package view.screen
 				textField.htmlText = mainData.systemNoticeList[j][DataFieldMauBinh.MESSAGE];
 				chatBox.addChatSentence(textField.text, "Thông báo");
 			}
+			if (mainData.systemNoticeList.length != 0)
+				chatButton.play();
 		}
 		
 		private function closeComplete(e:Event):void 
@@ -820,6 +829,9 @@ package view.screen
 				case PlayingScreenAction.HAVE_USER_REQUEST_TIME_CLOCK: // có người khác request time clock khi đang chơi
 					listenHaveUserRequestTimeClock(e.data[ModelField.DATA]);
 				break;
+				case Command.UPDATE_COMPARE_GROUP_STATUS: // update thong bao la dang do chi hoac vua do chi xong
+					listenUpdateCompareGroupStatus(e.data[ModelField.DATA]);
+				break;
 				case PlayingScreenAction.HAVE_USER_RESPOND_TIME_CLOCK: // có người khác respond time clock khi đang chơi
 					listenHaveUserRespondTimeClock(e.data[ModelField.DATA]);
 				break;
@@ -834,6 +846,11 @@ package view.screen
 		
 		private function listenHaveUserJoinRoom(data:Object):void 
 		{
+			if (!isResetDone && isGameOver && !isShowResultWindow && belowUserInfo.isRoomMaster)
+			{
+				userListJoinWhenCompareGroup.push(data[DataFieldMauBinh.USER_NAME]);
+				electroServerCommand.sendCompareGroupStatus('', [data[DataFieldMauBinh.USER_NAME]]);
+			}
 			SoundManager.getInstance().soundManagerMauBinh.playOtherJoinGamePlayerSound(data[DataFieldMauBinh.SEX]);
 			
 			chatBox.addChatSentence(data[DataFieldMauBinh.DISPLAY_NAME] + " " + mainData.init.gameDescription.playingScreen.userJoinRoom, "Thông báo", false, true);
@@ -882,6 +899,20 @@ package view.screen
 			var esObject:EsObject = new EsObject();
 			esObject.setString(DataFieldMauBinh.TIME_CLOCK, String(belowUserInfo.clock.timeNumber));
 			electroServerCommand.sendPrivateMessage([data[DataFieldMauBinh.USER_NAME]], Command.RESPOND_TIME_CLOCK, esObject);
+		}
+		
+		private function listenUpdateCompareGroupStatus(data:Object):void
+		{
+			if(waitPlaying.visible && !isPlaying)
+			{
+				showReadyButton();
+				waitPlaying.visible = false;
+			}
+			else if (readyButton.parent)
+			{
+				hideReadyButton();
+				waitPlaying.visible = true;
+			}
 		}
 		
 		private function listenHaveUserRequestIsCompareGroup(data:Object):void
@@ -1060,18 +1091,13 @@ package view.screen
 			{
 				if (allPlayerArray.length > 1)
 				{
-					showReadyButton();
+					if (!mainData.isCompareGroupTime)
+						showReadyButton();
+					else
+						waitPlaying.visible = true;
 					var esObject:EsObject = new EsObject();
 					esObject.setString(DataFieldMauBinh.USER_NAME, mainData.chooseChannelData.myInfo.uId);
 					var isCompareGroup:Boolean;
-					/*for (var j:int = 0; j < allPlayerArray.length; j++) 
-					{
-						if (allPlayerArray[j])
-						{
-							if (PlayerInfoMauBinh(allPlayerArray[j]).unLeaveCards && PlayerInfoMauBinh(allPlayerArray[j]).userName != mainData.chooseChannelData.myInfo.uId)
-								electroServerCommand.sendPrivateMessage([PlayerInfoMauBinh(allPlayerArray[j]).userName], Command.REQUEST_IS_COMPARE_GROUP, esObject);
-						}
-					}*/
 				}
 			}
 			else // Nếu phòng chơi đang chơi
@@ -1163,6 +1189,7 @@ package view.screen
 		
 		private function listenDealCard(data:Object):void 
 		{
+			userListJoinWhenCompareGroup = new Array();
 			if (timerToKickRoomMaster)
 			{
 				timerToKickRoomMaster.removeEventListener(TimerEvent.TIMER, onTimerToKickRoomMaster)
@@ -1185,6 +1212,7 @@ package view.screen
 			var i:int;
 			isPlaying = true;
 			isResetDone = false;
+			isShowResultWindow = false;
 			
 			destroyPlayerArray = new Array();
 			playingPlayerArray = new Array();
@@ -2071,7 +2099,7 @@ package view.screen
 				}
 			}
 			
-			var timerToShowResultWindow:Timer = new Timer(3000, 1);
+			timerToShowResultWindow = new Timer(3000, 1);
 			timerToShowResultWindow.addEventListener(TimerEvent.TIMER_COMPLETE, onShowResultWindow);
 			timerToShowResultWindow.start();
 			
@@ -2085,6 +2113,7 @@ package view.screen
 		
 		private function onShowResultWindow(e:TimerEvent):void 
 		{
+			isShowResultWindow = true;
 			var playerList:Array = compareGroupData[DataFieldMauBinh.PLAYER_LIST] as Array;
 			var quiterList:Array = compareGroupData[DataFieldMauBinh.QUITERS] as Array;
 			
@@ -2092,11 +2121,6 @@ package view.screen
 			{
 				if (!playerList[i][DataFieldMauBinh.TOTAL])
 					playerList[i][DataFieldMauBinh.TOTAL] = 0;
-				/*if (addMoneyObject)
-				{
-					playerList[i][DataFieldMauBinh.MONEY] += addMoneyObject[DataFieldMauBinh.MONEY];
-					playerList[i][DataFieldMauBinh.TOTAL] += addMoneyObject[DataFieldMauBinh.TOTAL];
-				}*/
 			}
 			
 			playerList = playerList.concat(quiterList);
@@ -2107,6 +2131,14 @@ package view.screen
 			windowLayer.openWindow(resultWindow);
 			
 			var resultArray:Array = compareGroupData[DataFieldMauBinh.PLAYER_LIST];
+			
+			if (belowUserInfo.isRoomMaster)
+			{
+				for (i = 0; i < userListJoinWhenCompareGroup.length; i++)
+				{
+					electroServerCommand.sendCompareGroupStatus('', [userListJoinWhenCompareGroup[i]]);
+				}
+			}
 			
 			for (i = 0; i < resultArray.length; i++) 
 			{
@@ -2249,6 +2281,15 @@ package view.screen
 			removeCardManager();
 			destroyPlayerArray = new Array();
 			playingPlayerArray = new Array();
+			
+			if (giveUpPlayerArray)
+			{
+				for (i = 0; i < giveUpPlayerArray.length ; i++) 
+				{
+					var giveUpObject:Dictionary = giveUpPlayerArray[i];
+					PlayerInfoMauBinh(giveUpObject[DataFieldMauBinh.PLAYER]).destroy();
+				}
+			}
 		}
 		
 		public function addPlayer():void // add người chơi - tùy thuộc số lượng
@@ -2815,6 +2856,13 @@ package view.screen
 		
 		public function destroy():void
 		{
+			if (timerToShowResultWindow)
+			{
+				timerToShowResultWindow.removeEventListener(TimerEvent.TIMER_COMPLETE, onShowResultWindow);
+				timerToShowResultWindow.stop();
+				timerToShowResultWindow = null;
+			}
+			
 			if (allPlayerArray)
 			{
 				for (var i:int = 0; i < allPlayerArray.length; i++) 
