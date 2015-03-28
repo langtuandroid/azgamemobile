@@ -341,6 +341,7 @@ package view.screen
 				timerToGetSystemNoticeInfo.stop();
 			}
 			timerToGetSystemNoticeInfo = new Timer(300000);
+			//timerToGetSystemNoticeInfo = new Timer(10000);
 			timerToGetSystemNoticeInfo.addEventListener(TimerEvent.TIMER, onGetSystemNoticeInfo);
 			timerToGetSystemNoticeInfo.start();
 		}
