@@ -299,7 +299,33 @@ package
 			
 			addMinigame();
 			
+			checkCountry();
+		}
+		
+		private function checkCountry():void 
+		{
+			var basePath:String = "";
+			if (mainData.isTest) 
+			{
+				basePath = "http://wss.test.azgame.us/";
+			}
+			else 
+			{
+				basePath = "http://wss.azgame.us/";
+			}
 			
+			var httpReq:HTTPRequest = new HTTPRequest();
+			var method:String = "POST";
+			var str:String = basePath + "Service02/OnplayIO.asmx/GetCountryCodeFromIp";
+			var obj:Object = new Object();
+			
+			
+			httpReq.sendRequest(method, str, obj, getCountrySuccess, true);
+		}
+		
+		private function getCountrySuccess(obj:Object):void 
+		{
+			mainData.country = obj.Data;
 		}
 		
 		private function onUpdateMiniGame(e:Event):void 

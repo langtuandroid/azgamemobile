@@ -1,5 +1,6 @@
 package view.screen 
 {
+	import com.greensock.TweenMax;
 	import control.ConstTlmn;
 	import event.DataField;
 	import flash.desktop.NativeApplication;
@@ -215,7 +216,13 @@ package view.screen
 		
 		private function onHideInfo(e:MouseEvent):void 
 		{
-			
+			if (_shopWindow) 
+			{
+				
+				_shopWindow.removeAllEvent();
+				containerShop.removeChild(_shopWindow);
+				_shopWindow = null;
+			}
 			containerShop.visible = false;
 		}
 		
@@ -1495,7 +1502,7 @@ package view.screen
 			if(!roomList)
 				roomList = new RoomListComponent(!mainData.isShowScroll);
 			roomList.isInvite = false;
-			//roomList.addEventListener(RoomListComponent.AVATAR_CLICK, onAvatarClick);
+			roomList.addEventListener(RoomListComponent.AVATAR_CLICK, onAvatarClick);
 			roomList.addEventListener(MouseEvent.MOUSE_DOWN, onCompMouseDown);
 			roomList.addEventListener(MouseEvent.MOUSE_UP, onCompMouseUp);
 			roomList.addEventListener(RoomListRLCEvent.ENTER_ROOM, onRoomListSelect);
@@ -1516,11 +1523,13 @@ package view.screen
 			_shopWindow = new Shop_Coffer_Item_Window_New();
 			
 			containerShop.addChild(_shopWindow);
-			_shopWindow.x = (960 - 817) / 2;
-			_shopWindow.y = 50;
+			_shopWindow.x = 860;
+			_shopWindow.y = 0;
 			_shopWindow.onClickShowMyInfo(null);
 			
 			containerShop.visible = true;
+			
+			TweenMax.to(_shopWindow, .5, { x:(960 - 817) / 2, y:50 } );
 		}
 		
 		private function onCompMouseDown(e:MouseEvent):void 

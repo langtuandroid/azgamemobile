@@ -4,6 +4,7 @@ package view.window.news
 	import flash.events.Event;
 	import flash.events.FocusEvent;
 	import flash.events.MouseEvent;
+	import model.applicationDomainData.ApplicationDomainData;
 	import model.MainData;
 	import request.HTTPRequest;
 	import view.ScrollView.ScrollViewYun;
@@ -229,7 +230,15 @@ package view.window.news
 					content.normalNew.gotoAndStop(1);
 				break;
 				case 2:
-					content.giftCode.gotoAndStop(1);
+					if (mainData.country == "VN") 
+					{
+						content.giftCode.gotoAndStop(1);
+					}
+					else 
+					{
+						content.giftCode.gotoAndStop(2);
+					}
+					
 				break;
 				case 3:
 					content.giftDay.gotoAndStop(1);
@@ -247,7 +256,16 @@ package view.window.news
 			
 			content.hotNew.addEventListener(MouseEvent.MOUSE_UP, onClickHotNew);
 			content.normalNew.addEventListener(MouseEvent.MOUSE_UP, onClickNormalNew);
-			content.giftCode.addEventListener(MouseEvent.MOUSE_UP, onClickGiftCode);
+			
+			if (mainData.country == "VN") 
+			{
+				content.giftCode.addEventListener(MouseEvent.MOUSE_UP, onClickGiftCode);
+			}
+			else 
+			{
+				content.giftCode.gotoAndStop(2);
+			}
+			
 			content.giftDay.addEventListener(MouseEvent.MOUSE_UP, onClickGiftDay);
 			
 			content.contentGiftCode.agreeBtn.addEventListener(MouseEvent.MOUSE_UP, onReceiveGiftCode);
@@ -358,21 +376,26 @@ package view.window.news
 		
 		public function onClickGiftCode(e:MouseEvent):void 
 		{
-			scrollViewForNews.visible = false;
-			if (newsDetail) 
+			
+			if (mainData.country == "VN") 
 			{
-				newsDetail.removeEventListener("close", onCloseNewDetail);
-				content.removeChild(newsDetail);
-				newsDetail = null;
+				scrollViewForNews.visible = false;
+				if (newsDetail) 
+				{
+					newsDetail.removeEventListener("close", onCloseNewDetail);
+					content.removeChild(newsDetail);
+					newsDetail = null;
+				}
+				//content.bgNews.height = 304;
+				content.bgNews.alpha = 1;
+				hidePageView();
+				currentPage = 0;
+				allVisible();
+				showBtt(2);
+				content.contentGiftCode.visible = true;
+				scrollViewForNews.visible = false;
 			}
-			//content.bgNews.height = 304;
-			content.bgNews.alpha = 1;
-			hidePageView();
-			currentPage = 0;
-			allVisible();
-			showBtt(2);
-			content.contentGiftCode.visible = true;
-			scrollViewForNews.visible = false;
+			
 			
 			//getInfo(2);
 		}

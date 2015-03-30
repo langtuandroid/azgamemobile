@@ -490,7 +490,7 @@ package view.window.shop
 		
 		private function sendNotActiveHandler(e:MouseEvent):void 
 		{
-			windowLayer.openLoadingWindow();
+			
 			var method:String = "POST";
 			var url:String;
 			var httpRequest:HTTPRequest = new HTTPRequest();
@@ -498,13 +498,23 @@ package view.window.shop
 			
 			if (myContent.acticedAcc.notActiveMail.chooseCode.currentFrame == 2 ) 
 			{
-				url = basePath + "service02/OnplayUserExt.asmx/ActiveEmail?active_code=" + myContent.acticedAcc.notActiveMail.codeCheckTxt.text;
-				obj = new Object();
-				
-				httpRequest.sendRequest(method, url, obj, sendActiveSuccess, true);
+				if (myContent.acticedAcc.notActiveMail.codeCheckTxt.text == "Nhập mã kích hoạt" ||
+					myContent.acticedAcc.notActiveMail.codeCheckTxt.text == "") 
+				{
+					windowLayer.openAlertWindow("Bạn chưa nhập mã kích hoạt!");
+				}
+				else 
+				{
+					windowLayer.openLoadingWindow();
+					url = basePath + "service02/OnplayUserExt.asmx/ActiveEmail?active_code=" + myContent.acticedAcc.allNotActice.codeCheckTxt.text;
+					obj = new Object();
+					
+					httpRequest.sendRequest(method, url, obj, sendActiveSuccess, true);
+				}
 			}
 			else if (myContent.acticedAcc.notActiveMail.chooseCode.currentFrame == 1 )
 			{
+				windowLayer.openLoadingWindow();
 				url = basePath + "service02/OnplayUserExt.asmx/SendCodeActiveEmail?email=" + mainData.chooseChannelData.myInfo.email;
 				obj = new Object();
 				
@@ -514,7 +524,7 @@ package view.window.shop
 		
 		private function sendAllNotActiveHandler(e:MouseEvent):void 
 		{
-			windowLayer.openLoadingWindow();
+			
 			var method:String = "POST";
 			var url:String;
 			var httpRequest:HTTPRequest = new HTTPRequest();
@@ -522,13 +532,24 @@ package view.window.shop
 			
 			if (myContent.acticedAcc.allNotActice.chooseCode.currentFrame == 2 ) 
 			{
-				url = basePath + "service02/OnplayUserExt.asmx/ActiveEmail?active_code=" + myContent.acticedAcc.allNotActice.codeCheckTxt.text;
-				obj = new Object();
+				if (myContent.acticedAcc.allNotActice.codeCheckTxt.text == "Nhập mã kích hoạt" ||
+					myContent.acticedAcc.allNotActice.codeCheckTxt.text == "") 
+				{
+					windowLayer.openAlertWindow("Bạn chưa nhập mã kích hoạt!");
+				}
+				else 
+				{
+					windowLayer.openLoadingWindow();
+					url = basePath + "service02/OnplayUserExt.asmx/ActiveEmail?active_code=" + myContent.acticedAcc.allNotActice.codeCheckTxt.text;
+					obj = new Object();
+					
+					httpRequest.sendRequest(method, url, obj, sendActiveSuccess, true);
+				}
 				
-				httpRequest.sendRequest(method, url, obj, sendActiveSuccess, true);
 			}
 			else if (myContent.acticedAcc.allNotActice.chooseCode.currentFrame == 1 )
 			{
+				windowLayer.openLoadingWindow();
 				url = basePath + "service02/OnplayUserExt.asmx/SendCodeActiveEmail?email=" + mainData.chooseChannelData.myInfo.email;
 				obj = new Object();
 				
@@ -543,6 +564,10 @@ package view.window.shop
 			{
 				windowLayer.openAlertWindow("Chúng tôi đã gửi mã kích hoạt vào mail của bạn, xin vui lòng kiểm tra.");
 			}
+			else 
+			{
+				windowLayer.openAlertWindow(obj.Msg);
+			}
 		}
 		
 		private function sendActiveSuccess(obj:Object):void 
@@ -551,6 +576,10 @@ package view.window.shop
 			if (obj.TypeMsg == 1) 
 			{
 				windowLayer.openAlertWindow("Chúc mừng bạn đã kích hoạt mail thành công");
+			}
+			else 
+			{
+				windowLayer.openAlertWindow(obj.Msg);
 			}
 		}
 		
@@ -1067,8 +1096,8 @@ package view.window.shop
 		{
 			var aleart:AlertWindow;
 			if ((myContent.rakingBg.userNameTxt.text != "" || myContent.rakingBg.userNameTxt.text != "nhập tên")
-				&& (myContent.rakingBg.serinumberTxt.text != "" || myContent.rakingBg.serinumberTxt.text != "nhập seri thẻ")
-				&& (myContent.rakingBg.codenumberTxt.text != "" || myContent.rakingBg.codenumberTxt.text != "nhập mã thẻ")
+				&& (myContent.rakingBg.serinumberTxt.text != "" || myContent.rakingBg.serinumberTxt.text != "Nhập seri thẻ")
+				&& (myContent.rakingBg.codenumberTxt.text != "" || myContent.rakingBg.codenumberTxt.text != "Nhập mã thẻ")
 				&& (myContent.rakingBg.codecheckTxt.text != "" || myContent.rakingBg.codecheckTxt.text != "Mã xác nhận")
 				&& myContent.rakingBg.codecheckTxt.text == myContent.rakingBg.codeCheck.text && _typOfNetwork != ""
 				) 
@@ -1091,36 +1120,41 @@ package view.window.shop
 			}
 			else 
 			{
-				if (myContent.rakingBg.userNameTxt.text == "" || myContent.rakingBg.userNameTxt.text == " ") 
+				if (myContent.rakingBg.userNameTxt.text == "" || myContent.rakingBg.userNameTxt.text == " "
+					|| myContent.rakingBg.userNameTxt.text == "nhập tên") 
 				{
 					aleart = new AlertWindow();
 					windowLayer.openAlertWindow("Chưa nhập tên");
 				}
-				else if (myContent.rakingBg.serinumberTxt.text == "" || myContent.rakingBg.serinumberTxt.text == " ") 
+				else if (myContent.rakingBg.serinumberTxt.text == "" || myContent.rakingBg.serinumberTxt.text == " "
+						|| myContent.rakingBg.serinumberTxt.text == "Nhập seri thẻ") 
 				{
 					aleart = new AlertWindow();
-					windowLayer.openAlertWindow("Chưa nhập số seri");
+					windowLayer.openAlertWindow("Bạn chưa nhập số seri");
 				}
-				else if (myContent.rakingBg.codenumberTxt.text == "" || myContent.rakingBg.codenumberTxt.text == " ") 
+				else if (myContent.rakingBg.codenumberTxt.text == "" || myContent.rakingBg.codenumberTxt.text == " "
+						|| myContent.rakingBg.codenumberTxt.text == "Nhập mã thẻ") 
 				{
 					aleart = new AlertWindow();
-					windowLayer.openAlertWindow("Chưa nhập mã thẻ");
-				}
-				else if (myContent.rakingBg.codecheckTxt.text == "" || myContent.rakingBg.codecheckTxt.text == " ") 
-				{
-					aleart = new AlertWindow();
-					windowLayer.openAlertWindow("Chưa nhập mã xác nhận");
-				}
-				else if (myContent.rakingBg.codecheckTxt.text != myContent.rakingBg.codeCheck.text) 
-				{
-					aleart = new AlertWindow();
-					windowLayer.openAlertWindow("Mã xác nhận không đúng");
+					windowLayer.openAlertWindow("Bạn chưa nhập mã thẻ	");
 				}
 				else if (_typOfNetwork == "") 
 				{
 					aleart = new AlertWindow();
 					windowLayer.openAlertWindow("Bạn chưa chọn loại thẻ nạp");
 				}
+				else if (myContent.rakingBg.codecheckTxt.text == "" || myContent.rakingBg.codecheckTxt.text == " "
+						|| myContent.rakingBg.codecheckTxt.text == "Mã xác nhận") 
+				{
+					aleart = new AlertWindow();
+					windowLayer.openAlertWindow("Bạn chưa nhập mã xác nhận");
+				}
+				else if (myContent.rakingBg.codecheckTxt.text != myContent.rakingBg.codeCheck.text) 
+				{
+					aleart = new AlertWindow();
+					windowLayer.openAlertWindow("Mã xác nhận không chính xác, vui lòng nhập lại");
+				}
+				
 			}
 			
 			createCodeCheck();
@@ -2951,7 +2985,8 @@ package view.window.shop
 				var chipAvatar:String = arrData[i]['avt_buy_chip'];
 				var goldAvatar:String = arrData[i]['avt_buy_gold'];
 				var linkAvatar:String = arrData[i]['avt_dir_path'];
-				var expireAvatar:String = arrData[i]['avt_day_no_exp'];
+				//var expireAvatar:String = arrData[i]['avt_day_no_exp'];
+				var expireAvatar:String = arrData[i]['avt_day_exp'];
 				
 				var gender:String = arrData[i]['avt_gender_code'];
 				var idAvt:String = arrData[i]['avt_id'];
@@ -3147,23 +3182,23 @@ package view.window.shop
 		{
 			myContent.typeOfAvatar.visible = false;
 			
-			var httpReq:HTTPRequest = new HTTPRequest();
+			/*var httpReq:HTTPRequest = new HTTPRequest();
 			var method:String = "POST";
 			var str:String = basePath + "Service02/OnplayIO.asmx/GetCountryCodeFromIp";
 			var obj:Object = new Object();
 			
 			
-			httpReq.sendRequest(method, str, obj, getCountrySuccess, true);
+			httpReq.sendRequest(method, str, obj, getCountrySuccess, true);*/
 			
-			
+			getCountrySuccess();
 			
 			
 		}
 		
-		private function getCountrySuccess(obj:Object):void 
+		private function getCountrySuccess():void 
 		{
-			mainData.country = obj.Data;
-			if (obj.Data == "VN") 
+			
+			if (mainData.country == "VN") 
 			{
 				
 				scrollView.visible = true;
