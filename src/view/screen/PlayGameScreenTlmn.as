@@ -10,6 +10,7 @@ package view.screen
 	import event.DataFieldMauBinh;
 	import event.DataFieldPhom;
 	import flash.net.SharedObject;
+	import flash.text.AntiAliasType;
 	import flash.utils.getDefinitionByName;
 	import inapp_purchase.IAPManager;
 	import request.HTTPRequest;
@@ -308,14 +309,15 @@ package view.screen
 			GameDataTLMN.getInstance().playingData.addEventListener(PlayingData.UPDATE_PLAYING_SCREEN, onUpdatePlayingScreen);
 			
 			var textfieldVer:TextField = new TextField();
-			var txtFormat:TextFormat = new TextFormat();
+			var txtFormat:TextFormat = new TextFormat("Tahoma");
 			txtFormat.color = 0xffffff;
-			txtFormat.size = 11;
+			txtFormat.size = 15;
 			textfieldVer.defaultTextFormat = txtFormat;
+			textfieldVer.antiAliasType = AntiAliasType.ADVANCED;
 			textfieldVer.text = mainData.version;
 			textfieldVer.x = 840;
-			textfieldVer.y = 5;
-			textfieldVer.width = 40;
+			textfieldVer.y = 22;
+			textfieldVer.width = 100;
 			textfieldVer.mouseEnabled = false;
 			content.addChild(textfieldVer);
 			
@@ -3756,7 +3758,7 @@ package view.screen
 				content.addChild(_textfield);
 				_textfield.x = 600;
 				_textfield.y = 350;
-				_textfield.defaultTextFormat = new TextFormat("arial", 24, 0x000000);
+				_textfield.defaultTextFormat = new TextFormat("Tahoma", 24, 0x000000);
 				
 				_textfield.mouseEnabled = false;
 			}
@@ -3884,6 +3886,7 @@ package view.screen
 			
 			checkShowTextNotice();
 			
+			content.chatBtn.stop();
 			content.chatBtn.addEventListener(MouseEvent.CLICK, onChatButtonClick);
 			
 			
@@ -3903,6 +3906,8 @@ package view.screen
 				textField.htmlText = mainData.systemNoticeList[j][DataFieldPhom.MESSAGE];
 				_chatBox.addChatSentence(textField.text, "Thông báo");
 			}
+			
+			content.chatBtn.play();
 		}
 		
 		private function onShowSettingBoard(e:MouseEvent):void 
@@ -3927,6 +3932,7 @@ package view.screen
 		
 		private function onChatButtonClick(e:MouseEvent):void 
 		{
+			content.chatBtn.gotoAndStop(1);
 			_chatBox.visible = true;
 		}
 		

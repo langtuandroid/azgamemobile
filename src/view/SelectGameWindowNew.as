@@ -1,5 +1,6 @@
 package view 
 {
+	import flash.net.NetworkInfo
 	import com.greensock.TweenMax;
 	import control.MainCommand;
 	import flash.display.Loader;
@@ -114,6 +115,8 @@ package view
 			content["levelIcon"].gotoAndStop(1);
 			noticeText = content["showNotice"];
 			
+			content["activeMc"].visible = false;
+			
 			tlmnIcon = content["tlmnIcon"];
 			phomIcon = content["phomIcon"];
 			maubinhIcon = content["maubinhIcon"];
@@ -133,10 +136,12 @@ package view
 			pokerIcon.gotoAndStop(2);
 			
 			gameList = new Array();
+			
+			gameList.push(xitoIcon);
 			gameList.push(maubinhIcon);
 			gameList.push(tlmnIcon);
 			gameList.push(phomIcon);
-			gameList.push(xitoIcon);
+			
 			gameList.push(samIcon);
 			gameList.push(luckyCardIcon);
 			gameList.push(pokerIcon);
@@ -385,12 +390,42 @@ package view
 						xitoIcon.buttonMode = false;
 						xitoIcon.removeEventListener(MouseEvent.MOUSE_UP, onSelectGame);
 					}
+					
+				break;
+				case "AZGB_POKER":
+					if (isShow == "TRUE") 
+					{
+						pokerIcon.gotoAndStop(1);
+						pokerIcon.buttonMode = true;
+						pokerIcon.addEventListener(MouseEvent.MOUSE_UP, onSelectGame);
+					}
+					else 
+					{
+						pokerIcon.gotoAndStop(2);
+						pokerIcon.buttonMode = false;
+						pokerIcon.removeEventListener(MouseEvent.MOUSE_UP, onSelectGame);
+					}
 					if (mainData.isTest)
 					{
-						xitoIcon.gotoAndStop(1);
-						xitoIcon.buttonMode = true;
-						xitoIcon.addEventListener(MouseEvent.MOUSE_UP, onSelectGame);
+						pokerIcon.gotoAndStop(1);
+						pokerIcon.buttonMode = true;
+						pokerIcon.addEventListener(MouseEvent.MOUSE_UP, onSelectGame);
 					}
+				break;
+				case "AZGB_LBMM":
+					if (isShow == "TRUE") 
+					{
+						luckyCardIcon.gotoAndStop(1);
+						luckyCardIcon.buttonMode = true;
+						luckyCardIcon.addEventListener(MouseEvent.MOUSE_UP, onSelectGame);
+					}
+					else 
+					{
+						luckyCardIcon.gotoAndStop(2);
+						luckyCardIcon.buttonMode = false;
+						luckyCardIcon.removeEventListener(MouseEvent.MOUSE_UP, onSelectGame);
+					}
+					
 				break;
 				default:
 			}
