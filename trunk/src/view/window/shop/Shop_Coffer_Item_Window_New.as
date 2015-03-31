@@ -3217,7 +3217,7 @@ package view.window.shop
 			}
 			else
 			{
-				if (mainData.isOnAndroid) 
+				if (!mainData.isOnAndroid && !mainData.isOnIos) 
 				{
 					scrollView.visible = true;
 					scrollViewForRank.visible = false;
@@ -3231,7 +3231,7 @@ package view.window.shop
 					allHeaderVisible();
 					showHeaderChose(1, 0);
 				}
-				else 
+				else if (mainData.isOnAndroid || mainData.isOnIos) 
 				{
 					scrollView.visible = true;
 					scrollViewForRank.visible = false;
