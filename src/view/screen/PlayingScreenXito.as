@@ -683,6 +683,7 @@ package view.screen
 		
 		private function onUpdateSystemNotice(e:Event):void 
 		{
+			trace("onUpdateSystemNotice",mainData.systemNoticeList.length);
 			for (var j:int = 0; j < mainData.systemNoticeList.length; j++) 
 			{
 				var textField:TextField = new TextField();

@@ -131,9 +131,6 @@ package
 			//if (mainData.isOnAndroid || mainData.isOnIos)
 				//NativeApplication.nativeApplication.systemIdleMode = SystemIdleMode.KEEP_AWAKE;
 			
-			if (!mainData.isOnAndroid && !mainData.isOnIos)
-				mainData.isShowScroll = true;
-			
 			sharedObject = SharedObject.getLocal("soundConfig");
 			
 			if (sharedObject.data.isSoundOff)
@@ -166,6 +163,9 @@ package
 				break;
 				default:
 			}
+			
+			if (!mainData.isOnAndroid && !mainData.isOnIos)
+				mainData.isShowScroll = true;
 			
 			addEventListener(Event.ADDED_TO_STAGE, init);
 			scrollRect = new Rectangle(0, 0, mainData.stageWidth, mainData.stageHeight);
