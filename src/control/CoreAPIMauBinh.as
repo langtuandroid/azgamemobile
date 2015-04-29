@@ -325,7 +325,10 @@ package control
 			loginRequest.password = password;
 			var tempEsObject:EsObject = new EsObject();
 			tempEsObject.setString(DataFieldMauBinh.CHANNEL_ID, String(mainData.currentChannelId));
-			if (mainData.isFacebookVersion)
+			
+			if (mainData.isWebVersion)
+				tempEsObject.setString(DataFieldMauBinh.DEVICE_ID, "web");
+			else if (mainData.isFacebookVersion)
 				tempEsObject.setString(DataFieldMauBinh.DEVICE_ID, "fb");
 			else if (mainData.isOnAndroid)
 				tempEsObject.setString(DataFieldMauBinh.DEVICE_ID, "android");
