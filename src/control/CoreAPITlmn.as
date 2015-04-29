@@ -119,9 +119,25 @@ package control
 			
 			//electroServer.setProtocol(configuration.protocol);
 			var server:Server = new Server("server1");
-			var availConn:AvailableConnection = new AvailableConnection(configuration.ip, configuration.port, configuration.protocol.name);
-			//var availConn:AvailableConnection = new AvailableConnection(configuration.ip, 3101, configuration.protocol.name);
-			//var availConn:AvailableConnection = new AvailableConnection(configuration.ip, 3401, configuration.protocol.name);
+			var availConn:AvailableConnection;
+			if (mainData.isTest) 
+			{
+				if (MyDataTLMN.getInstance().isGame == 1) 
+				{
+					availConn = new AvailableConnection(configuration.ip, 3101, configuration.protocol.name);
+				}
+				else if (MyDataTLMN.getInstance().isGame == 1) 
+				{
+					availConn = new AvailableConnection(configuration.ip, 3401, configuration.protocol.name);
+				}
+				
+				
+			}
+			else 
+			{
+				availConn = new AvailableConnection(configuration.ip, configuration.port, configuration.protocol.name);
+			}
+			
 			server.addAvailableConnection(availConn);
 			
 			electroServer.engine.addServer(server);

@@ -527,7 +527,11 @@ package view
 					showTab(2);
 				break;
 				case addMoneyTabEnable:
-					showTab(3);
+					if (mainData.country == "VN") 
+					{
+						showTab(3);
+					}
+					
 				break;
 				case shopTabEnable:
 					showTab(4);

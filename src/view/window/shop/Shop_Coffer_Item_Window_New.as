@@ -124,6 +124,7 @@ package view.window.shop
 							myContent.allInfoTransaction, myContent.myAllInfo, myContent.acticedAcc, myContent.containerMyavatar];
 						//xep hang, nap sms, nap the, chua item, giao dich, thong tin, kich hoat, chua kich hoat
 			//myContent.containerItemMc.y = 116;
+			myContent.chooseInAddMoneyMc.creditCard.visible = false;
 			scrollView = new ScrollViewYun();
 			scrollView.isForMobile = !mainData.isShowScroll;
 			scrollView.setData(myContent.containerItemMc, 5);

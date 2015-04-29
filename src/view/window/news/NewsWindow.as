@@ -6,6 +6,7 @@ package view.window.news
 	import flash.events.MouseEvent;
 	import model.applicationDomainData.ApplicationDomainData;
 	import model.MainData;
+	import model.MyDataTLMN;
 	import request.HTTPRequest;
 	import view.ScrollView.ScrollViewYun;
 	import view.window.windowLayer.WindowLayer;
@@ -56,6 +57,8 @@ package view.window.news
 			scrollViewForNews.isScrollVertical = true;
 			content.addChild(scrollViewForNews);
 			
+			closeLoading();
+			
 			allVisible();
 			
 			content.pageView.visible = false;
@@ -79,6 +82,16 @@ package view.window.news
 			
 			content.contentGiftCode.emailTxt.addEventListener(FocusEvent.FOCUS_IN, emailTxtFocusHandler);
 			content.contentGiftCode.emailTxt.addEventListener(FocusEvent.FOCUS_OUT, emailTxtFocusOutHandler);
+		}
+		
+		private function closeLoading():void 
+		{
+			content.loadingMc.visible = false;
+		}
+		
+		private function openLoading():void 
+		{
+			content.loadingMc.visible = true;
 		}
 		
 		private function giftCodeFocusOutHandler(e:FocusEvent):void 
@@ -130,7 +143,7 @@ package view.window.news
 		{
 			if (!isLoad) 
 			{
-				windowLayer.openLoadingWindow();
+				openLoading();
 				isLoad = true;
 				var method:String = "POST";
 				var url:String;
@@ -167,9 +180,9 @@ package view.window.news
 		
 		private function charge60Success(obj:Object):void 
 		{
-			trace(obj);
+			
 			isLoad = false;
-			windowLayer.closeAllWindow();
+			closeLoading();
 			if (obj["TypeMsg"] == 1) 
 			{
 				
@@ -190,9 +203,9 @@ package view.window.news
 		
 		private function charge10Success(obj:Object):void 
 		{
-			trace(obj);
+			
 			isLoad = false;
-			windowLayer.closeAllWindow();
+			closeLoading();
 			if (obj["TypeMsg"] == 1) 
 			{
 				
@@ -279,7 +292,7 @@ package view.window.news
 			{
 				if (!isLoad) 
 				{
-					windowLayer.openLoadingWindow();
+					openLoading();
 					isLoad = true;
 					var method:String = "POST";
 					var url:String ;
@@ -298,7 +311,7 @@ package view.window.news
 		private function sendGiftCodeSuccess(obj:Object):void 
 		{
 			isLoad = false;
-			windowLayer.closeAllWindow();
+			closeLoading();
 			if (obj.TypeMsg == 1) 
 			{
 				windowLayer.openAlertWindow("Chúc mừng bạn đã tặng giftcode thành công");
@@ -317,14 +330,14 @@ package view.window.news
 			{
 				if (!isLoad) 
 				{
-					windowLayer.openLoadingWindow();
+					openLoading();
 					isLoad = true;
 					var method:String = "POST";
 					var url:String ;
 					var httpRequest:HTTPRequest = new HTTPRequest();
 					var obj:Object;
 					
-					url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_SendGiftcode";
+					url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_ActiveGiftcode";
 					obj = new Object();
 					obj.access_token = mainData.token;
 					obj.giftcode = content.contentGiftCode.giftCodeTxt.text;
@@ -336,17 +349,50 @@ package view.window.news
 		private function activeGiftCodeSuccess(obj:Object):void 
 		{
 			isLoad = false;
-			windowLayer.closeAllWindow();
+			closeLoading();
 			if (obj.TypeMsg == 1) 
 			{
 				windowLayer.openAlertWindow("Chúc mừng bạn đã dùng giftcode thành công");
-				
+				content.contentGiftCode.giftCodeTxt.text = "Nhập mã quà tặng";
+				updateUserInfo();
 			}
 			else 
 			{
 				windowLayer.openAlertWindow(obj.Msg);
 			}
 		}
+		
+		
+		private function updateUserInfo():void 
+		{
+			var method:String = "POST";
+			var url:String;
+			var httpRequest:HTTPRequest = new HTTPRequest();
+			var obj:Object;
+			
+			url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetUserInfo";
+			
+			obj = new Object();
+			obj.nick_name = mainData.chooseChannelData.myInfo.name;
+			
+			httpRequest.sendRequest(method, url, obj, onUpdateUserInfo, true);
+		}
+		
+		private function onUpdateUserInfo(obj:Object):void 
+		{
+			trace(obj)
+			mainData.chooseChannelData.myInfo.avatar = obj.Data["Avatar"];
+			mainData.chooseChannelData.myInfo.money = obj.Data["Money"];
+			mainData.chooseChannelData.myInfo.cash = obj.Data["Cash"];
+			mainData.chooseChannelData.myInfo.level = obj.Data["Level"];
+			
+			mainData.chooseChannelData.myInfo = mainData.chooseChannelData.myInfo;
+			MyDataTLMN.getInstance().myMoney[0] = obj.Data["Money"];
+			MyDataTLMN.getInstance().myMoney[1] = obj.Data["Cash"];
+			MyDataTLMN.getInstance().myAvatar = obj.Data["Avatar"];
+			
+		}
+		
 		
 		
 		public function onClickHotNew(e:MouseEvent):void 
@@ -449,7 +495,7 @@ package view.window.news
 			{
 				if (type != 5) 
 				{
-					windowLayer.openLoadingWindow();
+					openLoading();
 					isLoad = true;
 				}
 				
@@ -501,7 +547,7 @@ package view.window.news
 			{
 				
 				isLoad = false;
-				windowLayer.closeAllWindow();
+				closeLoading();
 				
 				countGiftCode = obj.Data.GiftcodeLeftNumber;
 				content.contentGiftCode.countGiftCodeTxt.text = String(countGiftCode) + " lần";
@@ -514,7 +560,7 @@ package view.window.news
 			{
 				
 				isLoad = false;
-				windowLayer.closeAllWindow();
+				closeLoading();
 				
 				_arrGiftDay[1].content1Txt.text = "Số thời gian đã chơi hôm nay: " + String(obj.Data.TimeMinuteToday) + "/60";
 				_arrGiftDay[1].content2Txt.text = "Số quà đã nhận: " + format(obj.Data.GoldReceived) + " Gold";
@@ -541,7 +587,7 @@ package view.window.news
 			if (obj["TypeMsg"] == 1) 
 			{
 				isLoad = false;
-				windowLayer.closeAllWindow();
+				closeLoading();
 				//
 				if (obj.Data > 0) 
 				{
@@ -558,7 +604,7 @@ package view.window.news
 			else if (obj["TypeMsg"] == -102) 
 			{
 				isLoad = false;
-				windowLayer.closeAllWindow();
+				closeLoading();
 				scrollViewForNews.removeAll();
 				
 				_arrGiftDay[0].contentTxt.htmlText = obj["Msg"];
@@ -576,7 +622,7 @@ package view.window.news
 			{
 				
 				isLoad = false;
-				windowLayer.closeAllWindow();
+				closeLoading();
 				
 				_arrGiftDay[2].content1Txt.text = "Số ván chơi hôm nay: " + String(obj.Data.GameCountToday) + "/10";
 				_arrGiftDay[2].content2Txt.text = "Số quà đã nhận: " + format(obj.Data.GoldReceived) + " Gold";
@@ -613,7 +659,7 @@ package view.window.news
 					content.removeChild(newsDetail);
 					newsDetail = null;
 				}
-				windowLayer.openLoadingWindow();
+				openLoading();
 				isLoad = true;
 				var method:String = "POST";
 				var url:String;
@@ -645,7 +691,7 @@ package view.window.news
 			{
 				
 				isLoad = false;
-				windowLayer.closeAllWindow();
+				closeLoading();
 				scrollViewForNews.removeAll();
 				scrollViewForNews.visible = true;
 				var arr:Array = obj.Data;
@@ -673,7 +719,7 @@ package view.window.news
 			if (!isLoad) 
 			{
 				
-				windowLayer.openLoadingWindow();
+				openLoading();
 				isLoad = true;
 				var method:String = "POST";
 				var url:String;
@@ -692,7 +738,7 @@ package view.window.news
 			if (obj["TypeMsg"] == 1) 
 			{
 				isLoad = false;
-				windowLayer.closeAllWindow();
+				closeLoading();
 				
 				if (newsDetail) 
 				{
@@ -792,7 +838,7 @@ package view.window.news
 			if (obj["TypeMsg"] == 1) 
 			{
 				isLoad = false;
-				windowLayer.closeAllWindow();
+				closeLoading();
 				scrollViewForNews.removeAll();
 				
 				var arr:Array = obj.Data;
