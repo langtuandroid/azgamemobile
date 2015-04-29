@@ -592,6 +592,7 @@ package model
 		public static const XITO_ID:int = 5;
 		
 		public var facebook_access_token:String = 'facebook_access_token=CAADlgiW8vk0BAOQZAcSPfgh0Y9lTpZAbTMD6fJ8IFrBgZC19Lii9G1LEflZAkZCeUIGZCQip7MuXqbNGzWkyaZBmHdf5kZCpC69RfOkhwUQk5qb3FxUDReWoUmnSa4HVsWdjzZB4zdj7ALvuXtui13jpjP8lF8ul3MPf1CmaMk396JZCO90VzppbOd3opU79j1kJfMKT9JJGQLuAZDZD&amp';
+		
 		public var isLoginFacebook:Boolean;
 		public var isAutoReady:Boolean;
 		public var roomListState:int = 1; // Biến để check roomList ở lobby đang ở tab nào
@@ -615,10 +616,11 @@ package model
 		public var token:String;
 		//public var version:String = "v1.4.1";
 
-		public var version:String = "v1.9.0";
-		public var isTest:Boolean = true; // biến để check xem đang chạy trên server test hay server thật
+		public var version:String = "v1.9.3";
+		public var isTest:Boolean = false; // biến để check xem đang chạy trên server test hay server thật
 
 		public var isFacebookVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào facebook không
+		public var isWebVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào web không
 		public var isShowScroll:Boolean;
 		public var country:String = "";
 		public var joinedGame:Boolean = false;

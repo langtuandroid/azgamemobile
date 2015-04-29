@@ -58,6 +58,10 @@ package view.window.loginWindow
 		{
 			addContent("zLoginWindow");
 			//mainData.loginType = '1';
+			if (mainData.isFacebookVersion) 
+			{
+				content.visible = false;
+			}
 			
 			loginFacebookBtn = zLoginWindow(content).fastLogin["loginFacebookBtn"];
 			loginMobileBtn = zLoginWindow(content).fastLogin["loginMobileBtn"];
@@ -292,13 +296,14 @@ package view.window.loginWindow
 			VirtualKeyBoard.getInstance().init(this);
 			//zLoginWindow(content).userName.textField.addEventListener(MouseEvent.CLICK, onShowVirtualKeyBoard);
 			//zLoginWindow(content).pass.textField.addEventListener(MouseEvent.CLICK, onShowVirtualKeyBoard);
-			
+			var mainRequest:MainRequest;
+			var data:Object;
 			////
 			mainData.addEventListener(MainData.LOGIN_FACEBOOK_FAIL, onLoginFacebookFail);
 			mainData.chooseChannelData.addEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
 			mainData.isOnLoginWindow = true;
 			
-			if (mainData.isFacebookVersion)
+			if (mainData.isWebVersion)
 			{
 				if (mainData.isLoginFacebook)
 				{
@@ -306,10 +311,31 @@ package view.window.loginWindow
 					return;
 				}
 				mainData.isLoginFacebook = true;
-				var mainRequest:MainRequest = new MainRequest();
-				var data:Object = new Object();
+				mainRequest = new MainRequest();
+				data = new Object();
 				if (!mainData.facebook_access_token)
-					mainData.facebook_access_token = 'CAADlgiW8vk0BAOQZAcSPfgh0Y9lTpZAbTMD6fJ8IFrBgZC19Lii9G1LEflZAkZCeUIGZCQip7MuXqbNGzWkyaZBmHdf5kZCpC69RfOkhwUQk5qb3FxUDReWoUmnSa4HVsWdjzZB4zdj7ALvuXtui13jpjP8lF8ul3MPf1CmaMk396JZCO90VzppbOd3opU79j1kJfMKT9JJGQLuAZDZD&amp';
+					mainData.facebook_access_token = 'de0995f3a469a456a074442bb77b3359EDEjhezggar6zmr5Zh6Wyp6CzE4yu2dRsvrwvVGDXX0b5rcPTu';
+				data.access_token = mainData.facebook_access_token;
+				zLoginWindow(content).loadingLayer.visible = true;
+				if (mainData.isTest)
+					mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/Sanhbai_GetUserInfo", data, onLoginFacebookRespond, true);
+				else
+					mainRequest.sendRequest_Post("http://wss.azgame.us/Service02/OnplayUserExt.asmx/Sanhbai_GetUserInfo", data, onLoginFacebookRespond, true);
+					
+				
+			}
+			else if (mainData.isFacebookVersion)
+			{
+				if (mainData.isLoginFacebook)
+				{
+					close(BaseWindow.MIDDLE_EFFECT);
+					return;
+				}
+				mainData.isLoginFacebook = true;
+				mainRequest = new MainRequest();
+				data = new Object();
+				if (!mainData.facebook_access_token)
+					mainData.facebook_access_token = 'de0995f3a469a456a074442bb77b3359EDEjhezggar6zmr5Zh6Wyp6CzE4yu2dRsvrwvVGDXX0b5rcPTu';
 				data.access_token = mainData.facebook_access_token;
 				zLoginWindow(content).loadingLayer.visible = true;
 				if (mainData.isTest)
@@ -415,31 +441,7 @@ package view.window.loginWindow
 				//WindowLayer.getInstance().openAlertWindow("onLoginFacebookRespond");
 			if (value["status"] == "IO_ERROR")
 			{
-				/*if (mainData.isFacebookVersion) 
-				{
-					zLoginWindow(content).loadingLayer.visible = true;
-					var mainRequest:MainRequest = new MainRequest();
-					var data:Object = new Object();
-					if (!mainData.facebook_access_token)
-						mainData.facebook_access_token = 'CAADlgiW8vk0BAOQZAcSPfgh0Y9lTpZAbTMD6fJ8IFrBgZC19Lii9G1LEflZAkZCeUIGZCQip7MuXqbNGzWkyaZBmHdf5kZCpC69RfOkhwUQk5qb3FxUDReWoUmnSa4HVsWdjzZB4zdj7ALvuXtui13jpjP8lF8ul3MPf1CmaMk396JZCO90VzppbOd3opU79j1kJfMKT9JJGQLuAZDZD&amp';
-					data.access_token = mainData.facebook_access_token;
-					
-					data.GameVersion = mainData.version;
-					if (mainData.isOnAndroid)
-						data.DeviceId = 4;
-					else
-						data.DeviceId = 5;
-					zLoginWindow(content).loadingLayer.visible = true;
-					if (mainData.isTest)
-						mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayUserExt.asmx/Facebook_GetUserInfo", data, onLoginFacebookRespond, true);
-					else
-						mainRequest.sendRequest_Post("http://wss.azgame.us/Service02/OnplayUserExt.asmx/Facebook_GetUserInfo", data, onLoginFacebookRespond, true);
-				}
-				else 
-				{
-					zLoginWindow(content).loadingLayer.visible = false;
-					WindowLayer.getInstance().openAlertWindow("Đăng nhập thất bại");
-				}*/
+				
 				
 				/////////////////////////////////////
 				zLoginWindow(content).loadingLayer.visible = false;
