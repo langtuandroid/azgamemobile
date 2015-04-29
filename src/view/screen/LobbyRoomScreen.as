@@ -378,7 +378,7 @@ package view.screen
 		{
 			addSelectGameWindow();
 			
-			windowLayer.isNoCloseAll = true;
+			
 			var loginWindow:LoginWindow = new LoginWindow();
 			windowLayer.openWindow(loginWindow);
 			
