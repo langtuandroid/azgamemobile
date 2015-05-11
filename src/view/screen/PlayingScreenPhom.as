@@ -392,8 +392,15 @@ package view.screen
 			musicOffButton = settingBoard["musicOffButton"];
 			orderCardButton = content["orderCardButton"];
 			orderCardButton.visible = false;
-			if (mainData.chooseChannelData.myInfo.name == "truongvu")
-				orderCardButton.visible = true;
+			if (mainData.isTest)
+			{
+				if (mainData.chooseChannelData.myInfo.name == "zhaolong296")
+					orderCardButton.visible = true;
+				if (mainData.chooseChannelData.myInfo.name == "dung2963")
+					orderCardButton.visible = true;
+				if (mainData.chooseChannelData.myInfo.name == "truongvu")
+					orderCardButton.visible = true;
+			}
 			
 			sharedObject = SharedObject.getLocal("soundConfig");
 			
