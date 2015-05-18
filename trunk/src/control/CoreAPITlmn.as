@@ -126,7 +126,7 @@ package control
 				{
 					availConn = new AvailableConnection(configuration.ip, 3101, configuration.protocol.name);
 				}
-				else if (MyDataTLMN.getInstance().isGame == 1) 
+				else if (MyDataTLMN.getInstance().isGame == 2) 
 				{
 					availConn = new AvailableConnection(configuration.ip, 3401, configuration.protocol.name);
 				}
@@ -135,6 +135,7 @@ package control
 			}
 			else 
 			{
+				trace('cnt ở tlmn, sam: ', configuration.ip, configuration.port)
 				availConn = new AvailableConnection(configuration.ip, configuration.port, configuration.protocol.name);
 			}
 			
@@ -149,6 +150,7 @@ package control
 		
 		public function onConnectionEvent(e:ConnectionResponse):void
 		{
+			trace("connect tới server tlmn, sam: ", e.successful)
 			electroServer.engine.removeEventListener(MessageType.ConnectionResponse.name, onConnectionEvent);
 			if (e.successful)
 				this.dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.CONNECT_SUCCESS));

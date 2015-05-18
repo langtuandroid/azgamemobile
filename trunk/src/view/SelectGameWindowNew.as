@@ -250,9 +250,28 @@ package view
 		
 		private function checkBannerSuccess(obj:Object):void 
 		{
-			if (obj.Data == "TRUE") 
+			if (obj.Data == "TRUE" && mainData.isFirstJoinLobby) 
 			{
 				showTab(1);
+			}
+			else 
+			{
+				if (_shopWindow) 
+				{
+					_shopWindow.removeEventListener(Shop_Coffer_Item_Window_New.CHANGE_SHOP, onChangeShop);
+					_shopWindow.removeEventListener(Shop_Coffer_Item_Window_New.CHANGE_TAB, onChangeTab);
+					_shopWindow.removeAllEvent();
+					content["containerShopItem"].removeChild(_shopWindow);
+					_shopWindow = null;
+				}
+				
+				
+				if (_newsWindow) 
+				{
+					_newsWindow.removeAllEvent();
+					content["containerShopItem"].removeChild(_newsWindow);
+					_newsWindow = null;
+				}
 			}
 		}
 		
@@ -590,7 +609,11 @@ package view
 					content["containerShopItem"].addChild(_newsWindow);
 					_newsWindow.x = 350;
 					_newsWindow.y = -300;
-					_newsWindow.onClickHotNew(null);
+					if (mainData.isFirstJoinLobby) 
+					{
+						_newsWindow.onClickHotNew(null);
+					}
+					
 					
 				break;
 				case 2:

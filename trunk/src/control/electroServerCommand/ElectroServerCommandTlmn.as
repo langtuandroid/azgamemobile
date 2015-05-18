@@ -63,8 +63,10 @@ package control.electroServerCommand
 			if (!coreAPI)
 			{
 				coreAPI = new CoreAPITlmn(configuration);
-				createAddEventForCoreAPI();
+				
 			}
+			removeEventForCoreAPI();
+			createAddEventForCoreAPI();
 			coreAPI.createConnection();
 		}
 		
@@ -594,6 +596,7 @@ package control.electroServerCommand
 		
 		public function closeConnection():void
 		{
+			removeEventForCoreAPI();
 			coreAPI.closeConnection();
 		}
 		

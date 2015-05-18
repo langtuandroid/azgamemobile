@@ -4,6 +4,7 @@ package view.window.registerWindow
 	import fl.controls.TextInput;
 	import flash.desktop.NativeApplication;
 	import flash.events.Event;
+	import flash.events.FocusEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.events.SoftKeyboardEvent;
@@ -63,6 +64,8 @@ package view.window.registerWindow
 			zRegisterWindow(content).maleSelectBox.addEventListener(MouseEvent.CLICK, onSelectBoxClick);
 			zRegisterWindow(content).femaleSelectBox.addEventListener(MouseEvent.CLICK, onSelectBoxClick);
 			
+			zRegisterWindow(content).guideReg.visible = false;
+			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		}
@@ -89,10 +92,12 @@ package view.window.registerWindow
 			if (stage.softKeyboardRect.height != 0)
 			{
 				var currentInputText:TextInput;
+				zRegisterWindow(content).guideReg.visible = false;
 				switch (stage.focus) 
 				{
 					case zRegisterWindow(content).userName.textField:
 						currentInputText = zRegisterWindow(content).userName;
+						zRegisterWindow(content).guideReg.visible = true;
 					break;
 					case zRegisterWindow(content).password.textField:
 						currentInputText = zRegisterWindow(content).password;
@@ -121,6 +126,8 @@ package view.window.registerWindow
 		private function onAddedToStage(e:Event):void 
 		{
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			zRegisterWindow(content).userName.addEventListener(FocusEvent.FOCUS_IN, onShowGuide);
+			zRegisterWindow(content).userName.addEventListener(FocusEvent.FOCUS_OUT, onHideGuide);
 			
 			if (mainData.isOnAndroid)
 			{
@@ -130,9 +137,21 @@ package view.window.registerWindow
 			}
 		}
 		
+		private function onShowGuide(e:FocusEvent):void 
+		{
+			zRegisterWindow(content).guideReg.visible = true;
+		}
+		
+		private function onHideGuide(e:FocusEvent):void 
+		{
+			zRegisterWindow(content).guideReg.visible = false;
+		}
+		
 		private function onRemovedFromStage(e:Event):void 
 		{
 			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			zRegisterWindow(content).userName.removeEventListener(FocusEvent.FOCUS_IN, onShowGuide);
+			zRegisterWindow(content).userName.removeEventListener(FocusEvent.FOCUS_OUT, onHideGuide);
 			
 			if (mainData.isOnAndroid)
 			{

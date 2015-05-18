@@ -3013,7 +3013,8 @@ package view.window.shop
 				scrollView.addRow(contentAvatar);
 				//_arrBoard[3].addChild(contentAvatar);
 				
-				contentAvatar.addEventListener(ConstTlmn.BUY_AVATAR, onBuyAvatar);
+				//contentAvatar.addEventListener(ConstTlmn.BUY_AVATAR, onBuyAvatar);
+				contentAvatar.addEventListener(MouseEvent.CLICK, onBuyAvatar);
 			}
 			
 			var method:String = "POST";
@@ -3038,7 +3039,7 @@ package view.window.shop
 		
 		private function closeLoading():void 
 		{
-			if (loadAvatarShop < 2) 
+			if (loadAvatarShop < 2 && !mainData.isAtLogin) 
 			{
 				windowLayer.closeAllWindow();
 			}

@@ -3881,7 +3881,7 @@ package view.screen
 			
 			if (mainData.chooseChannelData.myInfo.name == "bim15" || mainData.chooseChannelData.myInfo.name == "haonam01")
 			{
-				content.orderCard.visible = true;
+				//content.orderCard.visible = true;
 			}
 			
 			checkShowTextNotice();

@@ -37,6 +37,7 @@ package view.window
 		
 		private function onCompleteTimerCloseWindow(e:TimerEvent):void 
 		{
+			trace("doi ket noi qua lau")
 			close(BaseWindow.MIDDLE_EFFECT);
 			WindowLayer.getInstance().openAlertWindow("Kết nối bị gián đoạn, vui lòng kiểm tra lại đường truyền internet!");
 		}
