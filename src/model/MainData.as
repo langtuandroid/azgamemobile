@@ -602,7 +602,7 @@ package model
 		public var client_id:String = "100000000000021";
 		public var client_secret:String = "71fbf6e77e1ccb779c5f51c38a4e795c";
 		public var portNumber:int = 9899;
-		public var isFirstJoinLobby:Boolean;
+		public var isFirstJoinLobby:Boolean = true;
 		public var electroServer:ElectroServer;
 		public var lobbyRoomId:int = -1;
 		public var currentChannelId:int = 0;
@@ -616,7 +616,7 @@ package model
 		public var token:String;
 		//public var version:String = "v1.4.1";
 
-		public var version:String = "v1.9.3";
+		public var version:String = "v1.9.4";
 		public var isTest:Boolean = false; // biến để check xem đang chạy trên server test hay server thật
 
 		public var isFacebookVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào facebook không
@@ -634,7 +634,7 @@ package model
 		
 		public var isUsePluginMessage:Boolean = false;
 		public var isCompareGroupTime:Boolean;
-		
+		public var isAtLogin:Boolean = true;//dang o login window
 		public var chl_Allow:Array
 	}
 

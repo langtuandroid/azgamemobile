@@ -8,6 +8,7 @@ package view.window.loginWindow
 	import flash.display.SimpleButton;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.FocusEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.media.Sound;
@@ -54,6 +55,8 @@ package view.window.loginWindow
 		private var versionTxt:TextField;
 		private var loader:BulkLoader;
 		
+		private var tFSuggest:TextFormat;
+		private var tFNormal:TextFormat;
 		public function LoginWindow() 
 		{
 			addContent("zLoginWindow");
@@ -61,7 +64,11 @@ package view.window.loginWindow
 			if (mainData.isFacebookVersion) 
 			{
 				content.visible = false;
+				WindowLayer.getInstance().openLoadingWindow();
 			}
+			
+			tFSuggest = new TextFormat("Tahoma", 20, 0x595959)
+			tFNormal = new TextFormat("Arial", 20, 0x000000);
 			
 			loginFacebookBtn = zLoginWindow(content).fastLogin["loginFacebookBtn"];
 			loginMobileBtn = zLoginWindow(content).fastLogin["loginMobileBtn"];
@@ -74,7 +81,8 @@ package view.window.loginWindow
 			loginGmailBtn.visible = false;
 			loginYahooBtn.visible = false;
 			//loginMobileBtn.visible = false;
-			
+			mainData.isFirstJoinLobby = true;
+			mainData.isAtLogin = true;
 			///////////////////////////
 			zLoginWindow(content).loginButton.addEventListener(MouseEvent.CLICK, onLoginButtonClick);
 			zLoginWindow(content).registerButton.addEventListener(MouseEvent.CLICK, onRegisterButtonClick);
@@ -84,6 +92,23 @@ package view.window.loginWindow
 			zLoginWindow(content).savePassword.visible = false;
 			
 			sharedObject = SharedObject.getLocal("userInfo");
+			
+			zLoginWindow(content).pass.setStyle("textFormat", tFNormal);
+			zLoginWindow(content).userName.setStyle("textFormat", tFNormal);
+			/*if (sharedObject.data.hasOwnProperty("userName")) 
+			{
+				zLoginWindow(content).pass.setStyle("textFormat", tFNormal);
+				zLoginWindow(content).userName.setStyle("textFormat", tFNormal);
+			}
+			else 
+			{
+				zLoginWindow(content).pass.setStyle("textFormat", tFSuggest);
+				zLoginWindow(content).userName.setStyle("textFormat", tFSuggest);
+				zLoginWindow(content).userName.text = "ai_do@vidu.com";
+				zLoginWindow(content).userName.addEventListener(FocusEvent.FOCUS_IN, onFocusUserName);
+				zLoginWindow(content).userName.addEventListener(FocusEvent.FOCUS_OUT, onFocusOutUserName);
+			}*/
+			
 			
 			if (sharedObject.data.hasOwnProperty("loginType"))
 				mainData.loginType = sharedObject.data.loginType;
@@ -117,9 +142,6 @@ package view.window.loginWindow
 			zLoginWindow(content).userName.height = 29;
 			zLoginWindow(content).userName.maxChars = 50;
 			
-			var textFormat:TextFormat = new TextFormat("Arial", 20, 0x000000);
-			zLoginWindow(content).pass.setStyle("textFormat", textFormat);
-			zLoginWindow(content).userName.setStyle("textFormat", textFormat);
 			
 			zLoginWindow(content).versionTxt.text = mainData.version;
 			
@@ -170,6 +192,26 @@ package view.window.loginWindow
 					loginEmail();
 					mainData.isFirstLogin = false;
 				}
+			}
+		}
+		
+		private function onFocusUserName(e:FocusEvent):void 
+		{
+			if (zLoginWindow(content).userName.text == "ai_do@vidu.com" || zLoginWindow(content).userName.text == "") 
+			{
+				zLoginWindow(content).pass.setStyle("textFormat", tFNormal);
+				zLoginWindow(content).userName.setStyle("textFormat", tFNormal);
+				zLoginWindow(content).userName.text = "";
+			}
+		}
+		
+		private function onFocusOutUserName(e:FocusEvent):void 
+		{
+			if (zLoginWindow(content).userName.text == "ai_do@vidu.com" || zLoginWindow(content).userName.text == "") 
+			{
+				zLoginWindow(content).pass.setStyle("textFormat", tFSuggest);
+				zLoginWindow(content).userName.setStyle("textFormat", tFSuggest);
+				zLoginWindow(content).userName.text = "ai_do@vidu.com";
 			}
 		}
 		
@@ -314,7 +356,8 @@ package view.window.loginWindow
 				mainRequest = new MainRequest();
 				data = new Object();
 				if (!mainData.facebook_access_token)
-					mainData.facebook_access_token = 'de0995f3a469a456a074442bb77b3359EDEjhezggar6zmr5Zh6Wyp6CzE4yu2dRsvrwvVGDXX0b5rcPTu';
+					mainData.facebook_access_token = 'b1085578f1d7741dbd239278f799b32cPDZu0UMzc2fDgkZyranTJzejwUyx1GCQUYd6YrsCyeL50fLIcL';
+					
 				data.access_token = mainData.facebook_access_token;
 				zLoginWindow(content).loadingLayer.visible = true;
 				if (mainData.isTest)
@@ -335,7 +378,7 @@ package view.window.loginWindow
 				mainRequest = new MainRequest();
 				data = new Object();
 				if (!mainData.facebook_access_token)
-					mainData.facebook_access_token = 'de0995f3a469a456a074442bb77b3359EDEjhezggar6zmr5Zh6Wyp6CzE4yu2dRsvrwvVGDXX0b5rcPTu';
+					mainData.facebook_access_token = 'ea3f4715f7d0b87ef46318f56cfa75f3yMkpXlsNon83Q8oRrcH63HSdvilvKGBe79h38cay0Gy5yS4gjQ';
 				data.access_token = mainData.facebook_access_token;
 				zLoginWindow(content).loadingLayer.visible = true;
 				if (mainData.isTest)
@@ -439,6 +482,7 @@ package view.window.loginWindow
 		{
 			//if (!mainData.isFacebookVersion)
 				//WindowLayer.getInstance().openAlertWindow("onLoginFacebookRespond");
+			WindowLayer.getInstance().closeAllWindow();
 			if (value["status"] == "IO_ERROR")
 			{
 				
@@ -486,14 +530,24 @@ package view.window.loginWindow
 				zLoginWindow(content).loadingLayer.visible = false;
 				excuteUserInfo(value);
 				close(BaseWindow.MIDDLE_EFFECT);
+				
 				return;
 			}
 		}
 		
 		private function onCloseAlertWindow(e:Event):void 
 		{
-			if (mainData.isFacebookVersion)
+			if (mainData.isWebVersion) 
+			{
+				//reload lai web
+			}
+			
+			if (mainData.isFacebookVersion) 
+			{
 				close();
+			}
+			
+			
 		}
 		
 		private function onForgetPassClick(e:MouseEvent):void 
@@ -659,7 +713,7 @@ package view.window.loginWindow
 				MyDataTLMN.getInstance().sex = true;
 			}
 			
-			
+			mainData.isAtLogin = false;
 			mainData.chooseChannelData.myInfo = myInfo;
 			
 			if (mainData.isLoadSound)

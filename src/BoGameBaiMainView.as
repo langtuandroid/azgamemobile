@@ -122,6 +122,7 @@ package
 		private var sharedObject:SharedObject;
 		private var minigameLayer:Sprite;
 		private var minigame:MainMiniGame;
+		private var showloading:Boolean = true;
 		
 		public function BoGameBaiMainView():void 
 		{
@@ -204,6 +205,7 @@ package
 		
 		private function init(e:Event = null):void 
 		{
+			
 			stage.scaleMode = StageScaleMode.EXACT_FIT;
 			mainData.path = gamepath;
 			try 
@@ -354,6 +356,14 @@ package
 		
 		private function onUpdateMyInfo(e:Event):void 
 		{
+			if (showloading) 
+			{
+				showloading = false;
+				if (mainData.isWebVersion || mainData.isFacebookVersion) 
+				{
+					CallJs.getInstance().hideLoading();
+				}
+			}
 			if (minigame) 
 			{
 				if (mainData.isTest) 
@@ -557,7 +567,11 @@ package
 		
 		private function onCloseConnection(e:Event):void 
 		{
-			mainData.isLoginFacebook = false;
+			if (!mainData.isFacebookVersion && !mainData.isWebVersion) 
+			{
+				mainData.isLoginFacebook = false;
+			}
+			
 			////////////////////////////////
 			
 			removePlayingScreen();

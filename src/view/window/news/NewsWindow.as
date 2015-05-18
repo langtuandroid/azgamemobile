@@ -33,6 +33,7 @@ package view.window.news
 		private var totalPage:int;
 		private var onFocusCurP:Boolean = false;
 		private var countGiftCode:int;
+		
 		public function NewsWindow() 
 		{
 			super();
@@ -63,13 +64,17 @@ package view.window.news
 			
 			content.pageView.visible = false;
 			content.contentGiftCode.visible = false;
-			_arrGiftDay = [new MoneyFreeDayMc(), new Play60Mc(), new PlayMoreGameMc()];
+			_arrGiftDay = [new MoneyFreeDayMc(), new Play60Mc(), new PlayMoreGameMc(), new InviteFriendMc(), new ShareFbMc()];
 			
 			_arrGiftDay[1].receiveBtn.addEventListener(MouseEvent.MOUSE_UP, onClickReceive60);
 			_arrGiftDay[2].receiveBtn.addEventListener(MouseEvent.MOUSE_UP, onClickReceive10);
+			_arrGiftDay[3].receiveBtn.addEventListener(MouseEvent.MOUSE_UP, onClickReceiveInvite);
+			_arrGiftDay[4].receiveBtn.addEventListener(MouseEvent.MOUSE_UP, onClickReceiveShare);
 			_arrGiftDay[0].containerImg.gotoAndStop(1);
 			_arrGiftDay[1].containerImg.gotoAndStop(3);
 			_arrGiftDay[2].containerImg.gotoAndStop(2);
+			_arrGiftDay[3].containerImg.gotoAndStop(4);
+			_arrGiftDay[4].containerImg.gotoAndStop(5);
 			addEvent();
 			
 			getInfoGiftDay(5);
@@ -82,6 +87,16 @@ package view.window.news
 			
 			content.contentGiftCode.emailTxt.addEventListener(FocusEvent.FOCUS_IN, emailTxtFocusHandler);
 			content.contentGiftCode.emailTxt.addEventListener(FocusEvent.FOCUS_OUT, emailTxtFocusOutHandler);
+		}
+		
+		private function onClickReceiveInvite(e:MouseEvent):void 
+		{
+			chargeGold(3);
+		}
+		
+		private function onClickReceiveShare(e:MouseEvent):void 
+		{
+			chargeGold(4);
 		}
 		
 		private function closeLoading():void 
@@ -173,8 +188,68 @@ package view.window.news
 						obj.type_crg_id = 3;
 						httpRequest.sendRequest(method, url, obj, charge60Success, true);
 					break;
+					case 3:
+						url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_ChargeGold";
+						obj = new Object();
+						obj.access_token = mainData.token;
+						obj.type_crg_id = 4;
+						httpRequest.sendRequest(method, url, obj, chargeInviteSuccess, true);
+					break;
+					case 4:
+						url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_ChargeGold";
+						obj = new Object();
+						obj.access_token = mainData.token;
+						obj.type_crg_id = 5;
+						httpRequest.sendRequest(method, url, obj, chargeShareSuccess, true);
+					break;
 					default:
 				}
+			}
+		}
+		
+		private function chargeInviteSuccess(obj:Object):void 
+		{
+			isLoad = false;
+			closeLoading();
+			if (obj["TypeMsg"] == 1) 
+			{
+				
+				
+				_arrGiftDay[3].content2Txt.text = "Số quà đã nhận: " + format(obj.Data.MinMoneyToFreeGold);
+				_arrGiftDay[3].content3Txt.text = "Số quà chưa nhận: " + "0 Gold";
+				_arrGiftDay[3].content4Txt.text = "";
+				
+				_arrGiftDay[3].receiveBtn.visible = false;
+				
+				mainData.chooseChannelData.myInfo.money += obj.Data.MinMoneyToFreeGold;
+				mainData.chooseChannelData.myInfo = mainData.chooseChannelData.myInfo;
+			}
+			else if (obj["TypeMsg"] == -300) 
+			{
+				
+			}
+		}
+		
+		private function chargeShareSuccess(obj:Object):void 
+		{
+			isLoad = false;
+			closeLoading();
+			if (obj["TypeMsg"] == 1) 
+			{
+				
+				
+				_arrGiftDay[4].content2Txt.text = "Số quà đã nhận: " + format(obj.Data.MinMoneyToFreeGold);
+				_arrGiftDay[4].content3Txt.text = "Số quà chưa nhận: " + "0 Gold";
+				_arrGiftDay[4].content4Txt.text = "";
+				
+				_arrGiftDay[4].receiveBtn.visible = false;
+				
+				mainData.chooseChannelData.myInfo.money += obj.Data.MinMoneyToFreeGold;
+				mainData.chooseChannelData.myInfo = mainData.chooseChannelData.myInfo;
+			}
+			else if (obj["TypeMsg"] == -300) 
+			{
+				
 			}
 		}
 		
@@ -314,7 +389,8 @@ package view.window.news
 			closeLoading();
 			if (obj.TypeMsg == 1) 
 			{
-				windowLayer.openAlertWindow("Chúc mừng bạn đã tặng giftcode thành công");
+				//windowLayer.openAlertWindow("Chúc mừng bạn đã tặng giftcode thành công");
+				windowLayer.openAlertWindow(obj.Msg);
 				countGiftCode--;
 				content.contentGiftCode.countGiftCodeTxt.text = String(countGiftCode) + " lần";
 			}
@@ -352,7 +428,8 @@ package view.window.news
 			closeLoading();
 			if (obj.TypeMsg == 1) 
 			{
-				windowLayer.openAlertWindow("Chúc mừng bạn đã dùng giftcode thành công");
+				//windowLayer.openAlertWindow("Chúc mừng bạn đã dùng giftcode thành công");
+				windowLayer.openAlertWindow(obj.Msg);
 				content.contentGiftCode.giftCodeTxt.text = "Nhập mã quà tặng";
 				updateUserInfo();
 			}
@@ -528,6 +605,20 @@ package view.window.news
 						obj.type_crg_id = 3;
 						httpRequest.sendRequest(method, url, obj, loadInfo60Success, true);
 					break;
+					case 3:
+						url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_ViewGiftBySomeReason";
+						obj = new Object();
+						obj.access_token = mainData.token;
+						obj.type_crg_id = 4;
+						httpRequest.sendRequest(method, url, obj, loadInfoInviteSuccess, true);
+					break;
+					case 4:
+						url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_ViewGiftBySomeReason";
+						obj = new Object();
+						obj.access_token = mainData.token;
+						obj.type_crg_id = 5;
+						httpRequest.sendRequest(method, url, obj, loadInfoShareSuccess, true);
+					break;
 					case 5:
 						url = basePath + "Service02/OnplayGamePartnerExt.asmx/Azgamebai_GetGiftcodeLeftNumber";
 						obj = new Object();
@@ -539,6 +630,63 @@ package view.window.news
 				}
 			}
 			
+		}
+		
+		private function loadInfoInviteSuccess(obj:Object):void 
+		{
+			if (obj["TypeMsg"] == 1) 
+			{
+				
+				isLoad = false;
+				closeLoading();
+				
+				_arrGiftDay[3].content1Txt.text = "Số bạn đã mời chơi hôm nay: " + String(obj.Data.FacebookInviteFriends) + "/5";
+				_arrGiftDay[3].content2Txt.text = "Số quà đã nhận: " + format(obj.Data.GoldReceived) + " Gold";
+				_arrGiftDay[3].content3Txt.text = "Số quà chưa nhận: " + format(obj.Data.GoldReceive) + " Gold";
+				
+				
+				if (obj.Data.FacebookInviteFriends > 0) 
+				{
+					_arrGiftDay[3].receiveBtn.visible = true;
+					_arrGiftDay[3].content4Txt.text = "";
+				}
+				else 
+				{
+					_arrGiftDay[3].receiveBtn.visible = false;
+					_arrGiftDay[3].content4Txt.text = "Rất tiếc, bạn chưa thể nhận quà tặng!";
+				}
+				
+				
+			}
+			getInfoGiftDay(4);
+		}
+		
+		private function loadInfoShareSuccess(obj:Object):void 
+		{
+			if (obj["TypeMsg"] == 1) 
+			{
+				
+				isLoad = false;
+				closeLoading();
+				
+				_arrGiftDay[4].content1Txt.text = "Số lần share hôm nay: " + String(obj.Data.FacebookShares);
+				_arrGiftDay[4].content2Txt.text = "Số quà đã nhận: " + format(obj.Data.GoldReceived) + " Gold";
+				_arrGiftDay[4].content3Txt.text = "Số quà chưa nhận: " + format(obj.Data.GoldReceive) + " Gold";
+				
+				
+				if (obj.Data.FacebookShares > 0) 
+				{
+					_arrGiftDay[4].receiveBtn.visible = true;
+					_arrGiftDay[4].content4Txt.text = "";
+				}
+				else 
+				{
+					_arrGiftDay[4].receiveBtn.visible = false;
+					_arrGiftDay[4].content4Txt.text = "Rất tiếc, bạn chưa thể nhận quà tặng!";
+				}
+				
+				
+			}
 		}
 		
 		private function loadInfoSendGiftCodeSuccess(obj:Object):void 
@@ -580,6 +728,8 @@ package view.window.news
 				
 				
 			}
+			
+			getInfoGiftDay(3);
 		}
 		
 		private function loadInfoFreeGoldSuccess(obj:Object):void 

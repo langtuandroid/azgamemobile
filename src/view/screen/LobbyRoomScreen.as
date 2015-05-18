@@ -241,7 +241,7 @@ package view.screen
 			navigateToURL(new URLRequest("http://sanhbai.com/sanhbai-huong-dan.html"));
 		}
 		
-		public function addSelectGameWindow():void
+		public function addSelectGameWindow(addMoney:Boolean=false):void
 		{
 			if (!selectGameWindow)
 			{	
@@ -262,9 +262,13 @@ package view.screen
 			}
 			else 
 			{
-				selectGameWindow.checkGameOnOff();
-				selectGameWindow.checkShowBanner();
-				selectGameWindow.onTimerGetNotice(null);
+				if (!addMoney) 
+				{
+					selectGameWindow.checkGameOnOff();
+					selectGameWindow.checkShowBanner();
+					selectGameWindow.onTimerGetNotice(null);
+				}
+				
 			}
 			tutorialBoard.y = 74;
 			helpButton.y = 30;
@@ -377,15 +381,32 @@ package view.screen
 		public function showLoginWindow():void
 		{
 			addSelectGameWindow();
+			var loginWindow:LoginWindow;
+			if (mainData.isFacebookVersion) 
+			{
+				if (!mainData.isLoginFacebook) 
+				{
+					loginWindow = new LoginWindow();
+					windowLayer.openWindow(loginWindow);
+					
+					selectGameWindow.visible = false;
+					selectGameWindow.closeAll();
+					selectGameWindow.checkGameOnOff();
+				}
+			}
+			else 
+			{
+				loginWindow = new LoginWindow();
+				windowLayer.openWindow(loginWindow);
+				
+				selectGameWindow.visible = false;
+				selectGameWindow.closeAll();
+				selectGameWindow.checkGameOnOff();
+			}
 			
-			
-			var loginWindow:LoginWindow = new LoginWindow();
-			windowLayer.openWindow(loginWindow);
 			
 			mainData.isNotLobby = true;
-			selectGameWindow.visible = false;
-			selectGameWindow.closeAll();
-			selectGameWindow.checkGameOnOff();
+			
 		}
 		
 		private function addChannelButton():void 
@@ -507,8 +528,9 @@ package view.screen
 		
 		private function onExitButtonClick(e:MouseEvent):void 
 		{
-			addSelectGameWindow();
 			mainCommand.electroServerCommand.closeConnection();
+			addSelectGameWindow();
+			
 		}
 		
 		private function onMenuButtonClick(e:MouseEvent):void 
@@ -549,9 +571,17 @@ package view.screen
 		
 		public function showAddMoney():void 
 		{
-			addSelectGameWindow();
-			mainCommand.electroServerCommand.closeConnection();
-			selectGameWindow.showTab(3);
+			addSelectGameWindow(true);
+			if (mainCommand.electroServerCommand != undefined) 
+			{
+				mainCommand.electroServerCommand.closeConnection();
+			}
+			
+			if (mainData.country == "VN") 
+			{
+				selectGameWindow.showTab(3);
+			}
+			
 		}
 		
 		private function onOtherButtonClick(e:MouseEvent):void 
@@ -559,9 +589,13 @@ package view.screen
 			switch (e.currentTarget) 
 			{
 				case addMoneyButton:
-					addSelectGameWindow();
+					addSelectGameWindow(true);
 					mainCommand.electroServerCommand.closeConnection();
-					selectGameWindow.showTab(3);
+					if (mainData.country == "VN") 
+					{
+						selectGameWindow.showTab(3);
+					}
+					
 				break;
 				case shopButton:
 					addSelectGameWindow();
