@@ -34,6 +34,7 @@ package event
 		public static var USER_JOINED:String = "userjoined";
 		public static var USER_LEFT:String = "userleft";
 		public static var USER_INFO:String = "userInfo";
+		public static var USER_EXIT:String = "userExit";
 		public static var ROOM_UPDATED:String = "roomupdated";
 		public static var ROOM_CREATED:String = "roomcreated";
 		public static var ROOM_DELETED:String = "roomdeleted";

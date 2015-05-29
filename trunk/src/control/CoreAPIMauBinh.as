@@ -93,7 +93,8 @@ package control
 			myData.gameType = "MauBinhPlugin";
 			myData.lobbyName = "MauBinh";
 			myData.lobbyPluginName = "LobbyMauBinhPlugin";
-		
+			
+			//electroServer = null;
 			if (!electroServer)
 				electroServer = new ElectroServer();
 			

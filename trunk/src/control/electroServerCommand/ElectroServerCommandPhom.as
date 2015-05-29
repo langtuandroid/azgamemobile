@@ -524,6 +524,8 @@ package control.electroServerCommand
 		
 		private function onLoginSuccess(e:ElectroServerEvent):void 
 		{
+			if (mainData.isReconnectVersion)
+				return;
 			joinLobbyRoom();
 		}
 		

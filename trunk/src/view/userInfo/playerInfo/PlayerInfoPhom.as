@@ -2234,6 +2234,8 @@ package view.userInfo.playerInfo
 					{
 						exitButton.removeEventListener(MouseEvent.CLICK, onOtherButtonClick);
 						dispatchEvent(new Event(EXIT, true));
+						if (mainData.isReconnectVersion)
+							mainData.isNoCallLeaveRoom = true;
 						electroServerCommand.joinLobbyRoom();
 						EffectLayer.getInstance().removeAllEffect();
 					}

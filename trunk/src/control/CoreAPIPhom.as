@@ -1408,8 +1408,16 @@ package control
 		
 		private function joinRoom(roomName: String, roomPassword: String = "", roomDescription: String = "", plugins: Array = null, roomCapacity: int = -1): void
 		{
-			if (myData.channelId != -1)
+			if (myData.channelId != -1 && !mainData.isNoCallLeaveRoom)
 				leaveRoom();
+				
+			if (mainData.isNoCallLeaveRoom)
+			{
+				var pluginMessage:EsObject = new EsObject();
+				pluginMessage.setString("command", Command.USER_EXIT);
+				sendPluginRequest(myData.zoneId, myData.roomId, myData.lobbyPluginName, pluginMessage);
+				mainData.isNoCallLeaveRoom = false;
+			}
 				
 			trace("CreateRoomRequest CreateRoomRequest CreateRoomRequest CreateRoomRequest ",Math.random());
 			var createRoomRequest:CreateRoomRequest = new CreateRoomRequest();
