@@ -71,7 +71,7 @@ public class StoreKitExample extends Sprite
 
 		log("initializing StoreKit..");	
 
-		StoreKit.create();
+		StoreKit.create(true);
 
 		log("StoreKit Initialized.");
 		
@@ -257,6 +257,7 @@ public class StoreKitExample extends Sprite
 		var mainRequest:MainRequest = new MainRequest();
 		var data:Object = new Object();
 		data.receipt_data = e.receipt;
+		WindowLayer.getInstance().openAlertWindow("PurchaseSuccess: " + e.);
 		data.access_token = mainData.token;
 		if (mainData.isTest)
 			mainRequest.sendRequest_Post("http://wss.test.azgame.us/Service02/OnplayShopExt.asmx/AppleStoreVerifyReceipt", data, onServerCallBack, true);
