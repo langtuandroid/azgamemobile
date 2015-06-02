@@ -1036,7 +1036,7 @@ package view.screen
 				{
 					if (mainData.chl_Auto_Allow[i] == 3)
 						isJoinVip = true;
-					if (mainData.chl_Auto_Allow[i] == 3)
+					if (mainData.chl_Auto_Allow[i] == 2)
 						isJoinCaoThu = true;
 				}
 				
