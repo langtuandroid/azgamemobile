@@ -1029,6 +1029,44 @@ package view.screen
 				mainData.currentChannelId = channelObject[DataFieldMauBinh.CHANNEL_NUM];
 				mainData.currentPort = channelObject[DataFieldMauBinh.CHANNEL_PORT];
 				
+				
+				var isJoinVip:Boolean;
+				var isJoinCaoThu:Boolean;
+				for (i = 0; i < mainData.chl_Auto_Allow.length; i++) 
+				{
+					if (mainData.chl_Auto_Allow[i] == 3)
+						isJoinVip = true;
+					if (mainData.chl_Auto_Allow[i] == 3)
+						isJoinCaoThu = true;
+				}
+				
+				if (isJoinVip)
+				{
+					for (i = 0; i < mainData.chooseChannelData.channelInfoArray.length; i++)
+					{
+						channelObject = mainData.chooseChannelData.channelInfoArray[i];
+						if (channelObject[DataFieldMauBinh.CHANNEL_NUM] >= 30)
+						{
+							mainData.currentChannelId = channelObject[DataFieldMauBinh.CHANNEL_NUM];
+							mainData.currentPort = channelObject[DataFieldMauBinh.CHANNEL_PORT];
+							break;
+						}
+					}
+				}
+				else if (isJoinCaoThu)
+				{
+					for (i = 0; i < mainData.chooseChannelData.channelInfoArray.length; i++)
+					{
+						channelObject = mainData.chooseChannelData.channelInfoArray[i];
+						if (channelObject[DataFieldMauBinh.CHANNEL_NUM] >= 20)
+						{
+							mainData.currentChannelId = channelObject[DataFieldMauBinh.CHANNEL_NUM];
+							mainData.currentPort = channelObject[DataFieldMauBinh.CHANNEL_PORT];
+							break;
+						}
+					}
+				}
+				
 				//mainData.currentChannelId = 11;
 				//mainData.currentPort = 5101;
 				
