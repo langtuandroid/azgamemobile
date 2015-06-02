@@ -685,6 +685,7 @@ package view.window.loginWindow
 			
 			mainData.minMoney = value.Data["MinMoneyToFreeGold"];
 			mainData.chl_Allow = value.Data.Chl_Allow;
+			mainData.chl_Auto_Allow = value.Data.Chl_Auto_Allow;
 			myInfo.avatar = value.Data["Avatar"];
 			myInfo.money = value.Data["Money"];
 			myInfo.cash = value.Data["Cash"];

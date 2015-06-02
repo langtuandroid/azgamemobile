@@ -21,6 +21,7 @@ package model.chooseChannelData
 		public var sex:String;
 		public var tokenTime:Number = 0;
 		public var email:String = "";
+		public var Chl_Auto_Allow:Array;
 		
 		public function MyInfo() 
 		{

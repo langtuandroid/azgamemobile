@@ -636,6 +636,7 @@ package model
 		public var isCompareGroupTime:Boolean;
 		public var isAtLogin:Boolean = true;//dang o login window
 		public var chl_Allow:Array
+		public var chl_Auto_Allow:Array
 		public var isNoCallLeaveRoom:Boolean;
 		public var isReconnectVersion:Boolean = true;
 	}
