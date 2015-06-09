@@ -1,5 +1,6 @@
 package 
 {
+	
 	import control.ConstTlmn;
 	import flash.desktop.SystemIdleMode;
 	import model.GameDataTLMN;
@@ -13,7 +14,7 @@ package
 	import flash.events.IOErrorEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.TimerEvent;
-	import flash.external.ExternalInterface;
+	
 	import flash.geom.Rectangle;
 	import flash.media.Sound;
 	import flash.net.SharedObject;
@@ -73,6 +74,8 @@ package
     import flash.display.StageScaleMode; 
     import flash.display.StageAlign; 
 	
+	//
+	import flash.notifications.*;
 	
 	/**
 	 * ...
@@ -123,6 +126,8 @@ package
 		private var minigameLayer:Sprite;
 		private var minigame:MainMiniGame;
 		private var showloading:Boolean = true;
+		
+		
 		
 		public function BoGameBaiMainView():void 
 		{
@@ -176,13 +181,21 @@ package
 				NativeApplication.nativeApplication.addEventListener(Event.ACTIVATE, handleActivate, false, 0, true);
 				NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, handleDeactivate, false, 0, true);
 				NativeApplication.nativeApplication.systemIdleMode = SystemIdleMode.KEEP_AWAKE;
+				
+				if (mainData.isOnAndroid) 
+				{
+					
+					
+					PushMessageNotification.getInstance().init();
+				}
+				
 				if (mainData.isOnIos) 
 				{
 					AddEventIos.getInstance().addAllEvent();
 				}
 			}
 			
-			scrollRect = new Rectangle(0, 0, mainData.stageWidth, mainData.stageHeight);
+			
 			
 			
 		}

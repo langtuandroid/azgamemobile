@@ -66,27 +66,20 @@ package view.window.news
 			content.contentGiftCode.visible = false;
 			_arrGiftDay = [new MoneyFreeDayMc(), new Play60Mc(), new PlayMoreGameMc(), new InviteFriendMc(), new ShareFbMc()];
 			
-			_arrGiftDay[1].receiveBtn.addEventListener(MouseEvent.MOUSE_UP, onClickReceive60);
-			_arrGiftDay[2].receiveBtn.addEventListener(MouseEvent.MOUSE_UP, onClickReceive10);
-			_arrGiftDay[3].receiveBtn.addEventListener(MouseEvent.MOUSE_UP, onClickReceiveInvite);
-			_arrGiftDay[4].receiveBtn.addEventListener(MouseEvent.MOUSE_UP, onClickReceiveShare);
+			
 			_arrGiftDay[0].containerImg.gotoAndStop(1);
 			_arrGiftDay[1].containerImg.gotoAndStop(3);
 			_arrGiftDay[2].containerImg.gotoAndStop(2);
 			_arrGiftDay[3].containerImg.gotoAndStop(4);
 			_arrGiftDay[4].containerImg.gotoAndStop(5);
-			addEvent();
+			
 			
 			getInfoGiftDay(5);
 			
 			content.contentGiftCode.emailTxt.text = "Nhập email tặng quà";
 			content.contentGiftCode.giftCodeTxt.text = "Nhập mã quà tặng";
 			
-			content.contentGiftCode.giftCodeTxt.addEventListener(FocusEvent.FOCUS_IN, giftCodeFocusHandler);
-			content.contentGiftCode.giftCodeTxt.addEventListener(FocusEvent.FOCUS_OUT, giftCodeFocusOutHandler);
-			
-			content.contentGiftCode.emailTxt.addEventListener(FocusEvent.FOCUS_IN, emailTxtFocusHandler);
-			content.contentGiftCode.emailTxt.addEventListener(FocusEvent.FOCUS_OUT, emailTxtFocusOutHandler);
+			addEvent();
 		}
 		
 		private function onClickReceiveInvite(e:MouseEvent):void 
@@ -215,13 +208,13 @@ package view.window.news
 			{
 				
 				
-				_arrGiftDay[3].content2Txt.text = "Số quà đã nhận: " + format(obj.Data.MinMoneyToFreeGold);
+				_arrGiftDay[3].content2Txt.text = "Số quà đã nhận: " + format(obj.Data.Gold_Value);
 				_arrGiftDay[3].content3Txt.text = "Số quà chưa nhận: " + "0 Gold";
 				_arrGiftDay[3].content4Txt.text = "";
 				
 				_arrGiftDay[3].receiveBtn.visible = false;
 				
-				mainData.chooseChannelData.myInfo.money += obj.Data.MinMoneyToFreeGold;
+				mainData.chooseChannelData.myInfo.money += obj.Data.Gold_Value;
 				mainData.chooseChannelData.myInfo = mainData.chooseChannelData.myInfo;
 			}
 			else if (obj["TypeMsg"] == -300) 
@@ -238,13 +231,13 @@ package view.window.news
 			{
 				
 				
-				_arrGiftDay[4].content2Txt.text = "Số quà đã nhận: " + format(obj.Data.MinMoneyToFreeGold);
+				_arrGiftDay[4].content2Txt.text = "Số quà đã nhận: " + format(obj.Data.Gold_Value);
 				_arrGiftDay[4].content3Txt.text = "Số quà chưa nhận: " + "0 Gold";
 				_arrGiftDay[4].content4Txt.text = "";
 				
 				_arrGiftDay[4].receiveBtn.visible = false;
 				
-				mainData.chooseChannelData.myInfo.money += obj.Data.MinMoneyToFreeGold;
+				mainData.chooseChannelData.myInfo.money += obj.Data.Gold_Value;
 				mainData.chooseChannelData.myInfo = mainData.chooseChannelData.myInfo;
 			}
 			else if (obj["TypeMsg"] == -300) 
@@ -262,12 +255,12 @@ package view.window.news
 			{
 				
 				_arrGiftDay[1].content1Txt.text = "Số thời gian đã chơi hôm nay: " + "0/60";
-				_arrGiftDay[1].content2Txt.text = "Số quà đã nhận: " + format(obj.Data.MinMoneyToFreeGold);
+				_arrGiftDay[1].content2Txt.text = "Số quà đã nhận: " + format(obj.Data.Gold_Value);
 				_arrGiftDay[1].content4Txt.text = "";
 				
 				_arrGiftDay[1].receiveBtn.visible = false;
 				
-				mainData.chooseChannelData.myInfo.money += obj.Data.MinMoneyToFreeGold;
+				mainData.chooseChannelData.myInfo.money += obj.Data.Gold_Value;
 				mainData.chooseChannelData.myInfo = mainData.chooseChannelData.myInfo;
 			}
 			else if (obj["TypeMsg"] == -300) 
@@ -285,12 +278,12 @@ package view.window.news
 			{
 				
 				_arrGiftDay[2].content1Txt.text = "Số ván chơi hôm nay: " + "0/10";
-				_arrGiftDay[2].content2Txt.text = "Số quà đã nhận: " + format(obj.Data.MinMoneyToFreeGold);
+				_arrGiftDay[2].content2Txt.text = "Số quà đã nhận: " + format(obj.Data.Gold_Value);
 				_arrGiftDay[2].content4Txt.text = "";
 				
 				_arrGiftDay[2].receiveBtn.visible = false;
 				
-				mainData.chooseChannelData.myInfo.money += obj.Data.MinMoneyToFreeGold;
+				mainData.chooseChannelData.myInfo.money += obj.Data.Gold_Value;
 				mainData.chooseChannelData.myInfo = mainData.chooseChannelData.myInfo;
 			}
 			else if (obj["TypeMsg"] == -200) 
@@ -358,6 +351,17 @@ package view.window.news
 			
 			content.contentGiftCode.agreeBtn.addEventListener(MouseEvent.MOUSE_UP, onReceiveGiftCode);
 			content.contentGiftCode.sendBtn.addEventListener(MouseEvent.MOUSE_UP, onSendGiftCode);
+			
+			_arrGiftDay[1].receiveBtn.addEventListener(MouseEvent.MOUSE_UP, onClickReceive60);
+			_arrGiftDay[2].receiveBtn.addEventListener(MouseEvent.MOUSE_UP, onClickReceive10);
+			_arrGiftDay[3].receiveBtn.addEventListener(MouseEvent.MOUSE_UP, onClickReceiveInvite);
+			_arrGiftDay[4].receiveBtn.addEventListener(MouseEvent.MOUSE_UP, onClickReceiveShare);
+			
+			content.contentGiftCode.giftCodeTxt.addEventListener(FocusEvent.FOCUS_IN, giftCodeFocusHandler);
+			content.contentGiftCode.giftCodeTxt.addEventListener(FocusEvent.FOCUS_OUT, giftCodeFocusOutHandler);
+			
+			content.contentGiftCode.emailTxt.addEventListener(FocusEvent.FOCUS_IN, emailTxtFocusHandler);
+			content.contentGiftCode.emailTxt.addEventListener(FocusEvent.FOCUS_OUT, emailTxtFocusOutHandler);
 		}
 		
 		private function onSendGiftCode(e:MouseEvent):void 
@@ -645,7 +649,7 @@ package view.window.news
 				_arrGiftDay[3].content3Txt.text = "Số quà chưa nhận: " + format(obj.Data.GoldReceive) + " Gold";
 				
 				
-				if (obj.Data.FacebookInviteFriends > 0) 
+				if (obj.Data.FacebookInviteFriends >= 5 && obj.Data.GoldReceived == 0) 
 				{
 					_arrGiftDay[3].receiveBtn.visible = true;
 					_arrGiftDay[3].content4Txt.text = "";
@@ -674,7 +678,7 @@ package view.window.news
 				_arrGiftDay[4].content3Txt.text = "Số quà chưa nhận: " + format(obj.Data.GoldReceive) + " Gold";
 				
 				
-				if (obj.Data.FacebookShares > 0) 
+				if (obj.Data.FacebookShares >= 1 && obj.Data.GoldReceived == 0) 
 				{
 					_arrGiftDay[4].receiveBtn.visible = true;
 					_arrGiftDay[4].content4Txt.text = "";
@@ -715,7 +719,7 @@ package view.window.news
 				_arrGiftDay[1].content3Txt.text = "Số quà chưa nhận: " + format(obj.Data.GoldReceive) + " Gold";
 				
 				
-				if (obj.Data.GameCountToday == 60) 
+				if (obj.Data.GameCountToday >= 60 && obj.Data.GoldReceived == 0) 
 				{
 					_arrGiftDay[1].receiveBtn.visible = true;
 					_arrGiftDay[1].content4Txt.text = "";
@@ -779,7 +783,7 @@ package view.window.news
 				_arrGiftDay[2].content3Txt.text = "Số quà chưa nhận: " + format(obj.Data.GoldReceive) + " Gold";
 				
 				
-				if (obj.Data.GameCountToday == 10) 
+				if (obj.Data.GameCountToday >= 10 && obj.Data.GoldReceived == 0) 
 				{
 					_arrGiftDay[2].receiveBtn.visible = true;
 					_arrGiftDay[2].content4Txt.text = "";

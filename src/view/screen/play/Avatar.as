@@ -105,11 +105,11 @@ package view.screen.play
 			
 			//context.securityDomain = SecurityDomain.currentDomain;
 			
-			Security.loadPolicyFile("http://graph.facebook.com/crossdomain.xml");
+			/*Security.loadPolicyFile("http://graph.facebook.com/crossdomain.xml");
 			Security.loadPolicyFile("http://azgamebai.com/crossdomain.xml");
 			
 			
-			Security.loadPolicyFile("http://profile.ak.fbcdn.net/crossdomain.xml");
+			Security.loadPolicyFile("http://profile.ak.fbcdn.net/crossdomain.xml");*/
 			//Security.loadPolicyFile('http://api.facebook.com/crossdomain.xml');
 			
 			/*Security.allowDomain('http://profile.ak.fbcdn.net');

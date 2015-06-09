@@ -83,7 +83,6 @@ package view.userInfo.avatar
 			
 			Security.loadPolicyFile("http://graph.facebook.com/crossdomain.xml");
 			Security.loadPolicyFile("http://profile.ak.fbcdn.net/crossdomain.xml");
-			Security.loadPolicyFile("http://azgamebai.com/crossdomain.xml");
 			
 			{
 				if (_bitmapData) 

@@ -124,6 +124,7 @@ package control
 		
 		public function onConnectionEvent(e:ConnectionResponse):void
 		{
+			trace("connect tới server xi to: ", e.successful)
 			electroServer.engine.removeEventListener(MessageType.ConnectionResponse.name, onConnectionEvent);
 			if (e.successful)
 				this.dispatchEvent(new ElectroServerEvent(ElectroServerEvent.CONNECT_SUCCESS));

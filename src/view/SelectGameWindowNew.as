@@ -170,6 +170,10 @@ package view
 			addMoneyTabDisable = content["addMoneyTabDisable"];
 			shopTabDisable = content["shopTabDisable"];
 			eventTabDisable = content["eventTabDisable"];
+			rankTabDisable.mouseEnabled = false;
+			addMoneyTabDisable.mouseEnabled = false;
+			shopTabDisable.mouseEnabled = false;
+			eventTabDisable.mouseEnabled = false;
 			
 			//inventoryTabDisable = content["inventoryTabDisable"];
 			
@@ -546,7 +550,11 @@ package view
 					showTab(2);
 				break;
 				case addMoneyTabEnable:
-					if (mainData.country == "VN") 
+					if (mainData.isFacebookVersion || mainData.isWebVersion) 
+					{
+						showTab(3);
+					}
+					else if (mainData.country == "VN") 
 					{
 						showTab(3);
 					}

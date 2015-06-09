@@ -9,6 +9,7 @@ package view.window.loginWindow
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.media.Sound;
@@ -91,6 +92,8 @@ package view.window.loginWindow
 			//zLoginWindow(content).forgetPass.visible = false;
 			zLoginWindow(content).savePassword.visible = false;
 			
+			
+			
 			sharedObject = SharedObject.getLocal("userInfo");
 			
 			zLoginWindow(content).pass.setStyle("textFormat", tFNormal);
@@ -142,7 +145,8 @@ package view.window.loginWindow
 			zLoginWindow(content).userName.height = 29;
 			zLoginWindow(content).userName.maxChars = 50;
 			
-			
+			zLoginWindow(content).userName.tabIndex = 0;
+			zLoginWindow(content).pass.tabIndex = 1;
 			zLoginWindow(content).versionTxt.text = mainData.version;
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
@@ -664,6 +668,22 @@ package view.window.loginWindow
 				zLoginWindow(content).loadingLayer.visible = false;
 				WindowLayer.getInstance().openAlertWindow(value.Msg);
 				return;
+			}
+			
+			if (value.Data.UserStatus) 
+			{
+				if (value.Data.UserStatus == 2) 
+				{
+					zLoginWindow(content).loadingLayer.visible = false;
+					WindowLayer.getInstance().openAlertWindow(value.UserMessage);
+				}
+				else if (value.Data.UserStatus == 3 || value.Data.UserStatus == 4) 
+				{
+					zLoginWindow(content).loadingLayer.visible = false;
+					WindowLayer.getInstance().openAlertWindow(value.UserMessage);
+					return;
+				}
+				
 			}
 			
 			mainData.loginData = value.Data;
