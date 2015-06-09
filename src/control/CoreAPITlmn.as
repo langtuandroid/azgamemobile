@@ -1406,11 +1406,13 @@ package control
 			createGameRequest.gameType = GameDataTLMN.getInstance().gameType;
 			if (MyDataTLMN.getInstance().isGame == 1) 
 			{
-				createGameRequest.zoneName = mainData.game_id + "_" + String(myData.channelId);
+				//createGameRequest.zoneName = mainData.game_id + "_" + String(myData.channelId);
+				createGameRequest.zoneName = mainData.game_id + "_" + String(mainData.currentChannelId);
 			}
 			else if (MyDataTLMN.getInstance().isGame == 2) 
 			{
-				createGameRequest.zoneName = mainData.game_id + "_" + String(myData.channelId);
+				//createGameRequest.zoneName = mainData.game_id + "_" + String(myData.channelId);
+				createGameRequest.zoneName = mainData.game_id + "_" + String(mainData.currentChannelId);
 				//createGameRequest.zoneName = "AZGB_SAM_1";
 			}
 			
