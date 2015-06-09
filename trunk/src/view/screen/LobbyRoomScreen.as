@@ -20,7 +20,7 @@ package view.screen
 	import sound.SoundLibMauBinh;
 	import sound.SoundManager;
 	import view.channelList.ChannelList;
-	import view.SelectGameWindow;
+	
 	import view.SelectGameWindowNew;
 	import view.SystemNoticeBar;
 	import view.window.AddFriendWindow;
@@ -115,7 +115,7 @@ package view.screen
 		private var currentChannelButton:*;
 		
 		private var isTestNewDesign:Boolean = true;
-		private var selectGameWindow:*;
+		private var selectGameWindow:SelectGameWindowNew;
 		private var timerToGetChannelInfo:Timer;
 		private var smallButtonMenu:Sprite;
 		private var buttonMenu:Sprite;
@@ -257,11 +257,11 @@ package view.screen
 				}
 				else 
 				{
-					selectGameWindow = new SelectGameWindow();
+					selectGameWindow = new SelectGameWindowNew();
 				}
 				
-				selectGameWindow.addEventListener(SelectGameWindow.SELECT_GAME, onSelectGame);
-				selectGameWindow.addEventListener(SelectGameWindow.RE_LOGIN_CLICK, onReLoginClick);
+				selectGameWindow.addEventListener(SelectGameWindowNew.SELECT_GAME, onSelectGame);
+				selectGameWindow.addEventListener(SelectGameWindowNew.RE_LOGIN_CLICK, onReLoginClick);
 				selectGameWindow.x = mainData.stageWidth / 2;
 				selectGameWindow.y = mainData.stageHeight / 2;
 				selectGameWindow.visible = true;

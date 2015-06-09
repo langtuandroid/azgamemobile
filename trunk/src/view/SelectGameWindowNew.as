@@ -31,7 +31,7 @@ package view
 	import view.window.BaseWindow;
 	import view.window.GiftCodeWindow;
 	import view.window.news.NewsWindow;
-	import view.window.shop.Shop_Coffer_Item_Window;
+	
 	import view.window.shop.Shop_Coffer_Item_Window_New;
 	import view.window.windowLayer.WindowLayer;
 	
@@ -78,7 +78,7 @@ package view
 		private var shopLayer:Sprite;
 		//private var _shopWindow:Shop_Coffer_Item_Window;
 		//private var _shopWindow:Shop_Coffer_Item_Window_New;
-		private var _shopWindow:*;
+		private var _shopWindow:Shop_Coffer_Item_Window_New;
 		private var _newsWindow:NewsWindow;
 		private var testNew:Boolean = true;//true la test voi design moi
 		private var windowLayer:WindowLayer = WindowLayer.getInstance();
@@ -639,17 +639,7 @@ package view
 						content["containerShopItem"].removeChild(_shopWindow);
 						_shopWindow = null;
 					}
-					
-					if (testNew) 
-					{
-						_shopWindow = new Shop_Coffer_Item_Window_New();
-					}
-					else 
-					{
-						_shopWindow = new Shop_Coffer_Item_Window();
-					}
-					
-					
+					_shopWindow = new Shop_Coffer_Item_Window_New();
 					content["containerShopItem"].addChild(_shopWindow);
 					_shopWindow.x = 350;
 					_shopWindow.y = -300;
@@ -670,14 +660,7 @@ package view
 						content["containerShopItem"].removeChild(_shopWindow);
 						_shopWindow = null;
 					}
-					if (testNew) 
-					{
-						_shopWindow = new Shop_Coffer_Item_Window_New();
-					}
-					else 
-					{
-						_shopWindow = new Shop_Coffer_Item_Window();
-					}
+					_shopWindow = new Shop_Coffer_Item_Window_New();
 					content["containerShopItem"].addChild(_shopWindow);
 					_shopWindow.x = 350;
 					_shopWindow.y = -300;
@@ -698,14 +681,7 @@ package view
 						content["containerShopItem"].removeChild(_shopWindow);
 						_shopWindow = null;
 					}
-					if (testNew) 
-					{
-						_shopWindow = new Shop_Coffer_Item_Window_New();
-					}
-					else 
-					{
-						_shopWindow = new Shop_Coffer_Item_Window();
-					}
+					_shopWindow = new Shop_Coffer_Item_Window_New();
 					content["containerShopItem"].addChild(_shopWindow);
 					_shopWindow.x = 350;
 					_shopWindow.y = -300;
@@ -725,14 +701,7 @@ package view
 						content["containerShopItem"].removeChild(_shopWindow);
 						_shopWindow = null;
 					}
-					if (testNew) 
-					{
-						_shopWindow = new Shop_Coffer_Item_Window_New();
-					}
-					else 
-					{
-						_shopWindow = new Shop_Coffer_Item_Window();
-					}
+					_shopWindow = new Shop_Coffer_Item_Window_New();
 					content["containerShopItem"].addChild(_shopWindow);
 					_shopWindow.x = 300;
 					_shopWindow.y = 50;

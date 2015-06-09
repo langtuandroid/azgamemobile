@@ -451,6 +451,7 @@ package model
 		public var phone3:String = "8569";
 		public var phone4:String = "8669";
 		public var phone5:String = "8769";
+		public var phone6:String = "8069";
 		
 		public var description1:String = "Phí dịch vụ 15k/tin";
 		public var description2:String = "Phí dịch vụ 5k/tin";
@@ -583,8 +584,7 @@ package model
 		{
 			_storeKitExample = value;
 		}
-		
-<<<<<<< .mine
+
 		public static const LOAD_ITEM_SUCCESS:String = 'loadItemSuccess';
 		private var _itemArr:Array;
 		public function get itemArr():Array 
@@ -611,9 +611,7 @@ package model
 			if (value)
 				dispatchEvent(new Event(CONNECT_FAIL));
 		}
-		
-=======
->>>>>>> .r270
+
 
 		public static const MAUBINH_ID:int = 1;
 		public static const PHOM_ID:int = 2;
