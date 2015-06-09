@@ -1,5 +1,6 @@
 package view.channelList 
 {
+	import flash.display.MovieClip;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import model.ChannelData;
@@ -42,6 +43,7 @@ package view.channelList
 				buttonMode = false;
 				mouseChildren = false;
 				addEventListener(MouseEvent.CLICK, onClick);
+				MovieClip(content["background"]).gotoAndStop("disable");
 			}
 			else
 			{

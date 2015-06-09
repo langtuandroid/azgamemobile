@@ -350,7 +350,11 @@ package view.screen
 						if (allPlayerArray[i] && allPlayerArray[j])
 						{
 							if (PlayerInfoPhom(allPlayerArray[i]).ip == PlayerInfoPhom(allPlayerArray[j]).ip)
+							{
+								PlayerInfoPhom(allPlayerArray[i]).updateConflictIpIcon(true);
+								PlayerInfoPhom(allPlayerArray[j]).updateConflictIpIcon(true);
 								isConflictIp = true;
+							}
 						}
 					}
 				}
@@ -385,6 +389,7 @@ package view.screen
 			settingBoard.visible = false;
 			settingButton = content["settingButton"];
 			snapShotButton = settingBoard["snapShotButton"];
+			snapShotButton.visible = false;
 			showIpButton = settingBoard["showIpButton"];
 			soundOnButton = settingBoard["soundOnButton"];
 			soundOffButton = settingBoard["soundOffButton"];
@@ -964,6 +969,26 @@ package view.screen
 			}
 			
 			SoundManager.getInstance().soundManagerPhom.playOtherExitGamePlayerSound(outPlayer.sex);
+			
+			for (i = 0; i < allPlayerArray.length; i++) 
+			{
+				if (allPlayerArray[i])
+					PlayerInfoPhom(allPlayerArray[i]).updateConflictIpIcon(false);
+				for (j = 0; j < allPlayerArray.length; j++) 
+				{
+					if (allPlayerArray[i] != allPlayerArray[j])
+					{
+						if (allPlayerArray[i] && allPlayerArray[j])
+						{
+							if (PlayerInfoPhom(allPlayerArray[i]).ip == PlayerInfoPhom(allPlayerArray[j]).ip)
+							{
+								PlayerInfoPhom(allPlayerArray[i]).updateConflictIpIcon(true);
+								PlayerInfoPhom(allPlayerArray[j]).updateConflictIpIcon(true);
+							}
+						}
+					}
+				}
+			}
 		}
 		
 		private function listenJoinRoom(data:Object):void 

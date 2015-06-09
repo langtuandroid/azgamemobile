@@ -3,6 +3,7 @@ package
 	
 	import control.ConstTlmn;
 	import flash.desktop.SystemIdleMode;
+	import getFacebookInfo.GetFacebookInfo;
 	import model.GameDataTLMN;
 	import model.MyDataTLMN;
 	import view.screen.PlayGameScreenSam;
@@ -180,6 +181,7 @@ package
 			{
 				NativeApplication.nativeApplication.addEventListener(Event.ACTIVATE, handleActivate, false, 0, true);
 				NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, handleDeactivate, false, 0, true);
+				NativeApplication.nativeApplication.addEventListener(Event.CLOSE, handleClose, false, 0, true);
 				NativeApplication.nativeApplication.systemIdleMode = SystemIdleMode.KEEP_AWAKE;
 				
 				if (mainData.isOnAndroid) 
@@ -198,6 +200,11 @@ package
 			
 			
 			
+		}
+		
+		private function handleClose(e:Event):void 
+		{
+			//GetFacebookInfo.getInstance().logOut();
 		}
 		
 		

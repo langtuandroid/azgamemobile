@@ -278,7 +278,7 @@
 		
 		private function onLoadSoundXitoComplete(e:Event):void 
 		{
-			//trace("onLoadSoundXitoComplete",e.currentTarget.url);
+			trace("onLoadSoundXitoComplete",e.currentTarget.url);
 		}
 		
 		public function loadSoundChung():void 

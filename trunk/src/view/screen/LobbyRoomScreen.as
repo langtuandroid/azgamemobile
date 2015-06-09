@@ -86,6 +86,7 @@ package view.screen
 		private var isHideFullRoom:Boolean;
 		private var lobbyBtn:MovieClip;
 		private var friendBtn:MovieClip;
+		private var unRegisterIcon:MovieClip;
 		
 		private var channelButtonArray:Array;
 		private var channelSmallButtonArray:Array;
@@ -133,6 +134,8 @@ package view.screen
 		
 		private var _shopWindow:Shop_Coffer_Item_Window_New;
 		private var containerShop:Sprite;
+		private var otherMenu:Sprite;
+		private var menuChildButton:Sprite;
 		
 		public function LobbyRoomScreen() 
 		{
@@ -143,6 +146,9 @@ package view.screen
 			
 			gameLogo = content["gameLogo"];
 			gameLogo.gotoAndStop("empty");
+			unRegisterIcon = content["unRegisterIcon"];
+			unRegisterIcon.stop();
+			unRegisterIcon.visible = false;
 			
 			tutorialBoard = content["tutorialBoard"];
 			tutorialBoard.visible = false;
@@ -412,7 +418,25 @@ package view.screen
 		private function addChannelButton():void 
 		{
 			smallButtonMenu = content["smallButtonMenu"];
-			smallButtonMenu.addEventListener(MouseEvent.CLICK, onSmallButtonMenuClick);
+			menuChildButton = smallButtonMenu["menuChildButton"];
+			menuChildButton.addEventListener(MouseEvent.CLICK, onMenuChildButtonClick);
+			otherMenu = smallButtonMenu["otherMenu"];
+			otherMenu.visible = false;
+			
+			addMoneyButton = otherMenu["addMoneyButton"];
+			shopButton = otherMenu["shopButton"];
+			inventoryButton = otherMenu["inventoryButton"];
+			eventButton = otherMenu["eventButton"];
+			fanPageButton = otherMenu["fanPageButton"];
+			luckyCardButton = otherMenu["luckyCardButton"];
+			
+			addMoneyButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
+			shopButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
+			inventoryButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
+			fanPageButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
+			luckyCardButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
+			
+			//smallButtonMenu.addEventListener(MouseEvent.CLICK, onSmallButtonMenuClick);
 			buttonMenu = content["buttonMenu"];
 			buttonMenu.visible = false;
 			
@@ -424,8 +448,15 @@ package view.screen
 				channelSmallButtonArray.push(smallButtonMenu["channelButton" + String(i + 1)]);
 				channelButtonArray.push(buttonMenu["channelButton" + String(i + 1)]);
 				channelButtonStartYArray.push(buttonMenu["channelButton" + String(i + 1)].y);
-				buttonMenu["channelButton" + String(i + 1)].addEventListener(MouseEvent.CLICK, onChannelButtonClick);
+				smallButtonMenu["channelButton" + String(i + 1)].addEventListener(MouseEvent.CLICK, onChannelButtonClick);
 			}
+		}
+		
+		private function onMenuChildButtonClick(e:MouseEvent):void 
+		{
+			firstLayer.addChild(smallButtonMenu);
+			otherMenu.visible = true;
+			e.stopPropagation();
 		}
 		
 		private function onSmallButtonMenuClick(e:MouseEvent):void 
@@ -438,21 +469,6 @@ package view.screen
 		
 		private function addOtherButton():void 
 		{
-			addMoneyButton = buttonMenu["addMoneyButton"];
-			shopButton = buttonMenu["shopButton"];
-			inventoryButton = buttonMenu["inventoryButton"];
-			eventButton = buttonMenu["eventButton"];
-			fanPageButton = buttonMenu["fanPageButton"];
-			luckyCardButton = buttonMenu["luckyCardButton"];
-			
-			addMoneyButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
-			shopButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
-			inventoryButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
-			eventButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
-			fanPageButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
-			luckyCardButton.addEventListener(MouseEvent.CLICK, onOtherButtonClick);
-			
-			
 			chatButton = content["chatButton"];
 			messageButton = content["messageButton"];
 			messageButton["messNumberTxt"].text = '';
@@ -680,6 +696,7 @@ package view.screen
 		
 		private function onChannelButtonClick(e:MouseEvent):void 
 		{
+			firstLayer.addChild(smallButtonMenu);
 			SoundManager.getInstance().playSound(SoundLibChung.CLICK_SOUND);
 			if (currentChannelButton == e.currentTarget)
 			{
@@ -693,9 +710,9 @@ package view.screen
 				if (MovieClip(e.currentTarget).currentLabel == "disable")
 					return;
 			}
-			for (var i:int = 0; i < channelButtonArray.length; i++) 
+			for (var i:int = 0; i < channelSmallButtonArray.length; i++) 
 			{
-				if (e.currentTarget == channelButtonArray[i])
+				if (e.currentTarget == channelSmallButtonArray[i])
 				{
 					if (i == 3) // Giải đấu
 						SoundManager.getInstance().playSound(SoundLibChung.SELECT_TOURNAMENT_SOUND);
@@ -736,13 +753,13 @@ package view.screen
 						channelList = new ChannelList();
 						channelList.addEventListener(ChannelList.CHANNEL_CLICK, onChannelClick);
 					}
-					buttonMenu.addChild(channelList);
+					smallButtonMenu.addChild(channelList);
 					channelList.list = dataList;
 					reArrageChannelButton( -1, true);
 					reArrageChannelButton(i, false);
 					currentChannelButton = e.currentTarget;
-					channelList.x = channelButtonArray[i].x + 1;
-					channelList.y = channelButtonArray[i].y + channelButtonArray[i].height;
+					channelList.x = channelSmallButtonArray[i].x + channelSmallButtonArray[i].width;
+					channelList.y = channelSmallButtonArray[i].y;
 					
 					e.stopImmediatePropagation();
 					return;
@@ -782,7 +799,7 @@ package view.screen
 			if (isRollBack)
 			{
 				currentChannelButton = null;
-				for (var i:int = 0; i < channelButtonArray.length; i++) 
+				/*for (var i:int = 0; i < channelButtonArray.length; i++) 
 				{
 					channelButtonArray[i].y = channelButtonStartYArray[i];
 				}
@@ -792,12 +809,12 @@ package view.screen
 				inventoryButton.y = 296;
 				eventButton.y = 349;
 				fanPageButton.y = 349;
-				luckyCardButton.y = 202;
+				luckyCardButton.y = 202;*/
 				
 				return;
 			}
 			
-			for (i = 0; i < channelButtonArray.length; i++) 
+			/*for (i = 0; i < channelButtonArray.length; i++) 
 			{
 				if (i > index)
 				{
@@ -810,7 +827,7 @@ package view.screen
 			inventoryButton.y += channelList.height;
 			eventButton.y += channelList.height;
 			fanPageButton.y += channelList.height;
-			luckyCardButton.y += channelList.height;
+			luckyCardButton.y += channelList.height;*/
 		}
 		
 		private function onButtonMouseDown(e:MouseEvent):void 
@@ -929,6 +946,7 @@ package view.screen
 			
 			buttonMenu.visible = false;
 			smallButtonMenu.visible = true;
+			otherMenu.visible = false;
 			if (!channelList)
 				return;
 			reArrageChannelButton( -1, true);
@@ -1269,6 +1287,17 @@ package view.screen
 		
 		private function onUpdateMyInfo(e:Event):void 
 		{
+			if (mainData.chooseChannelData.myInfo.is_email_active == 0 || mainData.chooseChannelData.myInfo.is_phone_number_active == 0)
+			{
+				unRegisterIcon.visible = true;
+				unRegisterIcon.play();
+			}
+			else
+			{
+				unRegisterIcon.visible = false;
+				unRegisterIcon.stop();
+			}
+			
 			if (mainCommand.electroServerCommand) 
 			{
 				mainCommand.electroServerCommand.updateMoney();

@@ -313,12 +313,15 @@ package control
 		// sau khi kết nối thành công với server thì login
 		public function login(userName:String, password:String = ""): void
 		{
-			trace("login",(new Date().getTime()));
+			if (mainData.isReconnectVersion)
+				electroServer.engine.addEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
+				
 			electroServer.engine.addEventListener(MessageType.LoginResponse.name, onLoginResponse);
 			var loginRequest:LoginRequest = new LoginRequest();
 			loginRequest.userName = userName;
 			loginRequest.password = password;
 			var tempEsObject:EsObject = new EsObject();
+			mainData.currentChannelId = 11;
 			tempEsObject.setString(DataFieldMauBinh.CHANNEL_ID, String(mainData.currentChannelId));
 			if (mainData.isWebVersion)
 				tempEsObject.setString(DataFieldMauBinh.DEVICE_ID, "web");
@@ -337,8 +340,16 @@ package control
 			electroServer.engine.removeEventListener(MessageType.LoginResponse.name, onLoginResponse);
 			if (e.successful)
 			{
-				trace("onLoginResponse",(new Date().getTime()));
-				this.dispatchEvent(new ElectroServerEvent(ElectroServerEvent.LOGIN_SUCCESS));
+				trace("onLoginResponse", (new Date().getTime()));
+				if (!mainData.isReconnectVersion)
+				{
+					this.dispatchEvent(new ElectroServerEvent(ElectroServerEvent.LOGIN_SUCCESS));
+				}
+				else
+				{
+					electroServer.engine.addEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
+					electroServer.engine.addEventListener(MessageType.JoinRoomEvent.name, onJoinLobbyRoomEvent);
+				}
 				
 				var uuvr:UpdateUserVariableRequest = new UpdateUserVariableRequest();
 				uuvr.name = DataFieldPhom.OTHER_INFO;
@@ -448,6 +459,15 @@ package control
 							object[DataFieldPhom.STOLE_CARDS] = EsObject(tempUserList[i]).getIntegerArray(DataFieldPhom.STOLE_CARDS);
 							var tempArray:Array = object[DataFieldPhom.STOLE_CARDS];
 							for (var k:int = 0; k < tempArray.length; k++) 
+							{
+								tempArray[k]++;
+							}
+						}
+						if (EsObject(tempUserList[i]).doesPropertyExist(DataFieldPhom.CARDS))
+						{
+							object[DataFieldPhom.CARDS] = EsObject(tempUserList[i]).getIntegerArray(DataFieldPhom.CARDS);
+							tempArray = object[DataFieldPhom.CARDS];
+							for (k = 0; k < tempArray.length; k++) 
 							{
 								tempArray[k]++;
 							}
@@ -996,7 +1016,8 @@ package control
 				{
 					var object:Object = new Object();
 					object[DataFieldPhom.USER_NAME] = e.userName;
-					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.HAVE_USER_OUT_ROOM, object));
+					if (!mainData.isReconnectVersion)
+						dispatchEvent(new ElectroServerEvent(ElectroServerEvent.HAVE_USER_OUT_ROOM, object));
 				}
 			}
 		}
@@ -1159,7 +1180,8 @@ package control
 			//var createGameRequest:CreateGameRequest = new CreateGameRequest();
 			var createGameRequest:QuickJoinGameRequest = new QuickJoinGameRequest();
 			createGameRequest.gameType = myData.gameType;
-			createGameRequest.zoneName = mainData.game_id + "_" + String(myData.channelId);
+			//createGameRequest.zoneName = mainData.game_id + "_" + String(myData.channelId);
+			createGameRequest.zoneName = mainData.game_id + "_" + String(mainData.currentChannelId);
 			createGameRequest.gameDetails = gameDetails;
 			createGameRequest.createOnly = true;
 			createGameRequest.password = password;
@@ -1408,10 +1430,7 @@ package control
 		}
 		
 		private function joinRoom(roomName: String, roomPassword: String = "", roomDescription: String = "", plugins: Array = null, roomCapacity: int = -1): void
-		{
-			if (myData.channelId != -1 && !mainData.isNoCallLeaveRoom)
-				leaveRoom();
-				
+		{	
 			if (mainData.isNoCallLeaveRoom)
 			{
 				var pluginMessage:EsObject = new EsObject();
@@ -1419,6 +1438,9 @@ package control
 				sendPluginRequest(myData.zoneId, myData.roomId, myData.lobbyPluginName, pluginMessage);
 				mainData.isNoCallLeaveRoom = false;
 			}
+			
+			if (myData.channelId != -1)
+				leaveRoom();
 				
 			trace("CreateRoomRequest CreateRoomRequest CreateRoomRequest CreateRoomRequest ",Math.random());
 			var createRoomRequest:CreateRoomRequest = new CreateRoomRequest();
