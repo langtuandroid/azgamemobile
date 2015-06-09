@@ -27,6 +27,7 @@ package view.channelList
 			addContent("zChannelList");
 			background = content["background"];
 			bottomLine = content["bottomLine"];
+			background.visible = bottomLine.visible = false;
 		}
 		
 		public function set list(value:Array):void 

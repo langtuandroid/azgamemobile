@@ -17,6 +17,8 @@ package model.chooseChannelData
 		public var id:String;
 		public var logo:String;
 		public var siteId:int;
+		public var is_email_active:int;
+		public var is_phone_number_active:int;
 		public var vipPoint:int;
 		public var sex:String;
 		public var tokenTime:Number = 0;

@@ -256,17 +256,36 @@ package view.card
 				totalCard -= numCard;
 				var card:CardPhom;
 				player.removeAllCards();
-				for (var i:int = 0; i < numCard; i++) 
+				if (cardInfo[DataFieldPhom.CARDS])
 				{
-					card = new CardPhom(player.unLeaveCardSize);
-					card.id = 0;
-					card.rotation = player.unLeaveCardRotation;
-					var point:Point = getPointByCardType(player, CardPhom.UN_LEAVE_CARD);
-					point = globalToLocal(point);
-					card.x = point.x;
-					card.y = point.y;
-					addChild(card);
-					player.pushNewUnLeaveCard(card);
+					for (var i:int = 0; i < cardInfo[DataFieldPhom.CARDS].length; i++) 
+					{
+						card = new CardPhom(player.unLeaveCardSize);
+						card.id = cardInfo[DataFieldPhom.CARDS][i];
+						card.rotation = player.unLeaveCardRotation;
+						var point:Point = getPointByCardType(player, CardPhom.UN_LEAVE_CARD);
+						point = globalToLocal(point);
+						card.x = point.x;
+						card.y = point.y;
+						addChild(card);
+						card.simpleOpen();
+						player.pushNewUnLeaveCard(card);
+					}
+				}
+				else
+				{
+					for (i = 0; i < numCard; i++) 
+					{
+						card = new CardPhom(player.unLeaveCardSize);
+						card.id = 0;
+						card.rotation = player.unLeaveCardRotation;
+						point = getPointByCardType(player, CardPhom.UN_LEAVE_CARD);
+						point = globalToLocal(point);
+						card.x = point.x;
+						card.y = point.y;
+						addChild(card);
+						player.pushNewUnLeaveCard(card);
+					}
 				}
 				
 				var stoleCards:Array = cardInfo[DataFieldPhom.STOLE_CARDS];

@@ -339,6 +339,7 @@ package view.screen
 			chatboxLayer.addChild(settingBoard);
 			settingButton = content["settingButton"];
 			snapShotButton = settingBoard["snapShotButton"];
+			snapShotButton.visible = false;
 			showIpButton = settingBoard["showIpButton"];
 			soundOnButton = settingBoard["soundOnButton"];
 			soundOffButton = settingBoard["soundOffButton"];
@@ -955,6 +956,26 @@ package view.screen
 			}
 			
 			SoundManager.getInstance().soundManagerXito.playOtherExitGamePlayerSound(outPlayer.sex);
+			
+			for (i = 0; i < allPlayerArray.length; i++) 
+			{
+				if (allPlayerArray[i])
+					PlayerInfoXito(allPlayerArray[i]).updateConflictIpIcon(false);
+				for (j = 0; j < allPlayerArray.length; j++) 
+				{
+					if (allPlayerArray[i] != allPlayerArray[j])
+					{
+						if (allPlayerArray[i] && allPlayerArray[j])
+						{
+							if (PlayerInfoXito(allPlayerArray[i]).ip == PlayerInfoXito(allPlayerArray[j]).ip)
+							{
+								PlayerInfoXito(allPlayerArray[i]).updateConflictIpIcon(true);
+								PlayerInfoXito(allPlayerArray[j]).updateConflictIpIcon(true);
+							}
+						}
+					}
+				}
+			}
 		}
 		
 		private function listenJoinRoom(data:Object):void 
@@ -1046,6 +1067,7 @@ package view.screen
 					}
 					isPlaying = true;
 					isResetDone = false;
+					isGameOver = false;
 					cardManager.playerArray = playingPlayerArray;
 				}
 			}
@@ -1081,7 +1103,11 @@ package view.screen
 						if (allPlayerArray[i] && allPlayerArray[j])
 						{
 							if (PlayerInfoXito(allPlayerArray[i]).ip == PlayerInfoXito(allPlayerArray[j]).ip)
+							{
+								PlayerInfoXito(allPlayerArray[i]).updateConflictIpIcon(true);
+								PlayerInfoXito(allPlayerArray[j]).updateConflictIpIcon(true);
 								isConflictIp = true;
+							}
 						}
 					}
 				}

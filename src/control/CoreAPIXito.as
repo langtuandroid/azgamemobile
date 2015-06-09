@@ -1170,7 +1170,8 @@ package control
 			//var createGameRequest:CreateGameRequest = new CreateGameRequest();
 			var createGameRequest:QuickJoinGameRequest = new QuickJoinGameRequest();
 			createGameRequest.gameType = myData.gameType;
-			createGameRequest.zoneName = mainData.game_id + "_" + String(myData.channelId);
+			//createGameRequest.zoneName = mainData.game_id + "_" + String(myData.channelId);
+			createGameRequest.zoneName = mainData.game_id + "_" + String(mainData.currentChannelId);
 			createGameRequest.gameDetails = gameDetails;
 			createGameRequest.createOnly = true;
 			createGameRequest.password = password;

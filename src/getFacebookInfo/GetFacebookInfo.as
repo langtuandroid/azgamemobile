@@ -50,6 +50,12 @@ package getFacebookInfo
 			//GoViral.goViral.logoutFacebook();
 			login();
 		}
+		
+		public function logOut():void
+		{
+			GoViral.goViral.logoutFacebook();
+		}
+		
 		private function login():void{
 			if (GoViral.goViral.isFacebookAuthenticated())
 			{
@@ -117,7 +123,6 @@ package getFacebookInfo
 					break;
 				case GVFacebookEvent.FB_LOGGED_IN:
 //					login();
-					
 					if (!checkLoggedInFacebook())
 					{
 						login();
@@ -129,7 +134,7 @@ package getFacebookInfo
 					}
 					break;
 				case GVFacebookEvent.FB_LOGGED_OUT:
-					
+					getMeFacebook();
 					break;
 				case GVFacebookEvent.FB_LOGIN_CANCELED:
 					
@@ -142,7 +147,13 @@ package getFacebookInfo
 					break;
 				case GVFacebookEvent.FB_REQUEST_RESPONSE:
 					// handle a friend list- there will be only 1 item in it if 
-					// this was a 'my profile' request.				
+					// this was a 'my profile' request.	
+					if(mainData.isFirstLoginFacebook)
+					{
+						mainData.isFirstLoginFacebook = false;
+						GoViral.goViral.logoutFacebook();
+						return;
+					}
 					if (e.friends!=null)
 					{					
 						// 'me' was a request for own profile.

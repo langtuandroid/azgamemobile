@@ -701,6 +701,7 @@ package view.window.loginWindow
 		
 		private function excuteUserInfo(value:Object):void
 		{
+			mainData.isFirstLogin = false;
 			var myInfo:MyInfo = new MyInfo();
 			
 			mainData.minMoney = value.Data["MinMoneyToFreeGold"];
@@ -719,6 +720,8 @@ package view.window.loginWindow
 			myInfo.id = value.Data["Id"];
 			myInfo.logo = '';
 			myInfo.sex = value.Data["GenderCode"];
+			myInfo.is_email_active = value.Data["is_email_active"];
+			myInfo.is_phone_number_active = value.Data["is_phone_number_active"];
 			
 			MyDataTLMN.getInstance().myId = value.Data["Id"];
 			MyDataTLMN.getInstance().myDisplayName = value.Data["Displayname"];

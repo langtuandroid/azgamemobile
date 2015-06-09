@@ -103,6 +103,7 @@ package view.userInfo.playerInfo
 		private var level:TextField;
 		private var levelIcon:MovieClip;
 		private var deviceIcon:MovieClip;
+		private var conflictIpIcon:MovieClip;
 		private var homeIcon:Sprite;
 		private var readyIcon:Sprite;
 		private var arrangeFinishIcon:Sprite;
@@ -301,6 +302,9 @@ package view.userInfo.playerInfo
 			level = levelIcon["levelTxt"];
 			deviceIcon = content["deviceIcon"];
 			deviceIcon.gotoAndStop("none");
+			conflictIpIcon = content["conflictIpIcon"];
+			conflictIpIcon.stop();
+			conflictIpIcon.visible = false;
 			money = content["money"];
 			money.autoSize = TextFieldAutoSize.CENTER;
 			playerName.text = '';
@@ -317,6 +321,15 @@ package view.userInfo.playerInfo
 			binhlungIcon.visible = false;
 			
 			content.removeChild(readyIcon);
+		}
+		
+		public function updateConflictIpIcon(isShow:Boolean):void
+		{
+			conflictIpIcon.visible = isShow;
+			if (isShow)
+				conflictIpIcon.play();
+			else
+				conflictIpIcon.stop();
 		}
 		
 		public function setForm(_formName:String):void

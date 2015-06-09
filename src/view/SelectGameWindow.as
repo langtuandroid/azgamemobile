@@ -421,7 +421,7 @@ package view
 			
 			mainData.chooseChannelData.addEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
 			
-			if (!gameContainer)
+			if (!gameContainer2)
 			{
 				/*gameContainer = new ItemContainerYun();
 				gameContainer.x = content["container"].x;

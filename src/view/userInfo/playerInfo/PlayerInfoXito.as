@@ -122,6 +122,7 @@ package view.userInfo.playerInfo
 		private var level:TextField;
 		private var levelIcon:MovieClip;
 		private var deviceIcon:MovieClip;
+		private var conflictIpIcon:MovieClip;
 		private var homeIcon:Sprite;
 		private var readyIcon:Sprite;
 		public var moneyNumber:Number;
@@ -359,6 +360,9 @@ package view.userInfo.playerInfo
 			level = levelIcon["levelTxt"];
 			deviceIcon = content["deviceIcon"];
 			deviceIcon.gotoAndStop("none");
+			conflictIpIcon = content["conflictIpIcon"];
+			conflictIpIcon.stop();
+			conflictIpIcon.visible = false;
 			money = content["money"];
 			money.autoSize = TextFieldAutoSize.CENTER;
 			actionIcon = content["actionIcon"];
@@ -372,6 +376,15 @@ package view.userInfo.playerInfo
 			readyIcon = content["readyIcon"];
 			
 			content.removeChild(readyIcon);
+		}
+		
+		public function updateConflictIpIcon(isShow:Boolean):void
+		{
+			conflictIpIcon.visible = isShow;
+			if (isShow)
+				conflictIpIcon.play();
+			else
+				conflictIpIcon.stop();
 		}
 		
 		public function setForm(_formName:String):void

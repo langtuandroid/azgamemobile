@@ -451,7 +451,6 @@ package model
 		public var phone3:String = "8569";
 		public var phone4:String = "8669";
 		public var phone5:String = "8769";
-		public var phone6:String = "8069";
 		
 		public var description1:String = "Phí dịch vụ 15k/tin";
 		public var description2:String = "Phí dịch vụ 5k/tin";
@@ -585,34 +584,6 @@ package model
 			_storeKitExample = value;
 		}
 		
-		public static const LOAD_ITEM_SUCCESS:String = 'loadItemSuccess';
-		private var _itemArr:Array;
-		public function get itemArr():Array 
-		{
-			return _itemArr;
-		}
-		
-		public function set itemArr(value:Array):void 
-		{
-			_itemArr = value;
-			dispatchEvent(new Event(LOAD_ITEM_SUCCESS));
-		}
-		
-		public static const CONNECT_FAIL:String = "connectFail";
-		private var _connectFail:Boolean;
-		public function get connectFail():Boolean 
-		{
-			
-			return _connectFail;
-		}
-		
-		public function set connectFail(value:Boolean):void 
-		{
-			_connectFail = value;
-			if (value)
-				dispatchEvent(new Event(CONNECT_FAIL));
-		}
-		
 
 		public static const MAUBINH_ID:int = 1;
 		public static const PHOM_ID:int = 2;
@@ -645,10 +616,10 @@ package model
 		public var token:String;
 		//public var version:String = "v1.4.1";
 
-		public var version:String = "v1.9.62";
-		public var isTest:Boolean = true; // biến để check xem đang chạy trên server test hay server thật
+		public var version:String = "v1.9.4";
+		public var isTest:Boolean = false; // biến để check xem đang chạy trên server test hay server thật
 
-		public var isFacebookVersion:Boolean = false	; // biến để check xem có phải là bản nhúng vào facebook không
+		public var isFacebookVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào facebook không
 		public var isWebVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào web không
 		public var isShowScroll:Boolean;
 		public var country:String = "";
@@ -668,6 +639,7 @@ package model
 		public var chl_Auto_Allow:Array
 		public var isNoCallLeaveRoom:Boolean;
 		public var isReconnectVersion:Boolean = false;
+		public var isFirstLoginFacebook:Boolean = true;
 	}
 
 }

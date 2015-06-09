@@ -407,6 +407,7 @@ package view.screen
 			settingBoard.visible = false;
 			settingButton = content["settingButton"];
 			snapShotButton = settingBoard["snapShotButton"];
+			snapShotButton.visible = false;
 			showIpButton = settingBoard["showIpButton"];
 			soundOnButton = settingBoard["soundOnButton"];
 			soundOffButton = settingBoard["soundOffButton"];
@@ -1046,6 +1047,26 @@ package view.screen
 			}
 			
 			SoundManager.getInstance().soundManagerMauBinh.playOtherExitGamePlayerSound(outPlayer.sex);
+			
+			for (i = 0; i < allPlayerArray.length; i++) 
+			{
+				if (allPlayerArray[i])
+					PlayerInfoMauBinh(allPlayerArray[i]).updateConflictIpIcon(false);
+				for (j = 0; j < allPlayerArray.length; j++) 
+				{
+					if (allPlayerArray[i] != allPlayerArray[j])
+					{
+						if (allPlayerArray[i] && allPlayerArray[j])
+						{
+							if (PlayerInfoMauBinh(allPlayerArray[i]).ip == PlayerInfoMauBinh(allPlayerArray[j]).ip)
+							{
+								PlayerInfoMauBinh(allPlayerArray[i]).updateConflictIpIcon(true);
+								PlayerInfoMauBinh(allPlayerArray[j]).updateConflictIpIcon(true);
+							}
+						}
+					}
+				}
+			}
 		}
 		
 		private function listenJoinRoom(data:Object):void 
@@ -1171,7 +1192,11 @@ package view.screen
 						if (allPlayerArray[i] && allPlayerArray[j])
 						{
 							if (PlayerInfoMauBinh(allPlayerArray[i]).ip == PlayerInfoMauBinh(allPlayerArray[j]).ip)
+							{
+								PlayerInfoMauBinh(allPlayerArray[i]).updateConflictIpIcon(true);
+								PlayerInfoMauBinh(allPlayerArray[j]).updateConflictIpIcon(true);
 								isConflictIp = true;
+							}
 						}
 					}
 				}
