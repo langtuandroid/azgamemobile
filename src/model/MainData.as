@@ -584,6 +584,36 @@ package model
 			_storeKitExample = value;
 		}
 		
+<<<<<<< .mine
+		public static const LOAD_ITEM_SUCCESS:String = 'loadItemSuccess';
+		private var _itemArr:Array;
+		public function get itemArr():Array 
+		{
+			return _itemArr;
+		}
+		
+		public function set itemArr(value:Array):void 
+		{
+			_itemArr = value;
+			dispatchEvent(new Event(LOAD_ITEM_SUCCESS));
+		}
+		
+		public static const CONNECT_FAIL:String = "connectFail";
+		private var _connectFail:Boolean;
+		public function get connectFail():Boolean 
+		{
+			return _connectFail;
+		}
+		
+		public function set connectFail(value:Boolean):void 
+		{
+			_connectFail = value;
+			if (value)
+				dispatchEvent(new Event(CONNECT_FAIL));
+		}
+		
+=======
+>>>>>>> .r270
 
 		public static const MAUBINH_ID:int = 1;
 		public static const PHOM_ID:int = 2;
