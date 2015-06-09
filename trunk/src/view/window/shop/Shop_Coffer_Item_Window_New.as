@@ -9,12 +9,15 @@ package view.window.shop
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.net.navigateToURL;
 	import flash.net.URLRequest;
 	import flash.text.TextField;
+	import flash.ui.Keyboard;
 	import flash.utils.Timer;
+	import inapp_purchase.GoogleInapp;
 	import inapp_purchase.StoreKitExample;
 	import model.chooseChannelData.MyInfo;
 	import model.MainData;
@@ -111,6 +114,16 @@ package view.window.shop
 			{
 				basePath = "http://wss.azgame.us/";
 			}
+			addEventListener(Event.ADDED_TO_STAGE, onAddToStage);
+			
+			
+		}
+		
+		private function onAddToStage(e:Event):void 
+		{
+			removeEventListener(Event.ADDED_TO_STAGE, onAddToStage);
+			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			
 			myContent = new Shop_Coffer_Item_Mc();
 			addChild(myContent);
 			myContent.mask = myContent.boardMask;
@@ -204,7 +217,15 @@ package view.window.shop
 			tabOn(3);
 			headerOn(2);
 			boardOn(3);
-			
+		}
+		
+		private function onKeyDown(e:KeyboardEvent):void 
+		{
+			if (e.keyCode == Keyboard.ENTER) 
+			{
+				windowLayer.closeAllWindow();
+				onClickChoseRaking(null);
+			}
 		}
 		
 		public function removeAllEvent():void 
@@ -217,7 +238,7 @@ package view.window.shop
 			myContent.chooseInShopMc.chooseTour.removeEventListener(MouseEvent.MOUSE_UP, onClickShowTour);
 			myContent.chooseInShopMc.chooseGift.removeEventListener(MouseEvent.MOUSE_UP, onClickShowGift);
 			
-			
+			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			
 			myContent.chooseInCofferMc.chooseMyInfo.removeEventListener(MouseEvent.MOUSE_UP, onClickShowMyInfo);
 			myContent.chooseInCofferMc.chooseAvatar.removeEventListener(MouseEvent.MOUSE_UP, onClickShowMyAvatar);
@@ -422,7 +443,33 @@ package view.window.shop
 			myContent.acticedAcc.notActiveMail.agreeBtn.addEventListener(MouseEvent.MOUSE_UP, sendNotActiveHandler);
 			myContent.acticedAcc.allNotActice.agreeBtn.addEventListener(MouseEvent.MOUSE_UP, sendAllNotActiveHandler);
 			
+			myContent.acticedAcc.allNotActice.sendSms.addEventListener(MouseEvent.MOUSE_UP, sendSmsHandler);
+			myContent.acticedAcc.notActivePhone.sendSms.addEventListener(MouseEvent.MOUSE_UP, sendSmsHandler);
 			
+			myContent.acticedAcc.notActivePhone.contentTxt.htmlText = 'Soạn: SB ' + "<font color='#A1B077'>" + mainData.chooseChannelData.myInfo.name + "</font> gửi " + "<font color='#A1B077'>8069</font> (phí 500đ) ";
+			myContent.acticedAcc.allNotActice.contentTxt.htmlText = 'Soạn: SB ' + "<font color='#A1B077'>" + mainData.chooseChannelData.myInfo.name + "</font> gửi " + "<font color='#A1B077'>8069</font> (phí 500đ) ";
+		}
+		
+		private function sendSmsHandler(e:MouseEvent):void 
+		{
+			
+			if (mainData.isFacebookVersion || mainData.isOnIos) 
+			{
+				tutorialAddMoney = new TutorialAddMoneyPopup();
+				myContent.addChild(tutorialAddMoney);
+				tutorialAddMoney.x = 47 + (865 - tutorialAddMoney.width) / 2;
+				tutorialAddMoney.y = 86 + (363 - tutorialAddMoney.height) / 2;
+				
+				tutorialAddMoney.contentMess.text = "SB " + mainData.chooseChannelData.myInfo.name;
+				tutorialAddMoney.numberTxt.text = mainData.phone6;
+				
+				tutorialAddMoney.closeBtn.addEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);
+			}
+			else 
+			{
+				turnOnSendSMS("SB " + mainData.chooseChannelData.myInfo.name, mainData.phone6);
+				
+			}
 		}
 		
 		private function onClickShowAllAvatar(e:MouseEvent):void 
@@ -1381,7 +1428,7 @@ package view.window.shop
 		
 		private function onClickShowAddMoneyPurchase(e:MouseEvent):void 
 		{
-			
+			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			getNewAccessToken();
 			scrollView.visible = true;
 			scrollViewForRank.visible = false;
@@ -1403,6 +1450,7 @@ package view.window.shop
 		
 		private function onClickShowAddMoneySms(e:MouseEvent):void 
 		{
+			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			allHeaderVisible();
 			showHeaderChose(1, 1);
 			headerOn(1);
@@ -1411,6 +1459,7 @@ package view.window.shop
 		
 		private function onClickShowAddMoneyRaking(e:MouseEvent):void 
 		{
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			allHeaderVisible();
 			showHeaderChose(1, 0);
 			
@@ -2474,8 +2523,15 @@ package view.window.shop
 			windowLayer.openLoadingWindow();
 			
 			goldChoseBuy = e.currentTarget as ContentItemPurchase;
+			if (mainData.isOnIos) 
+			{
+				mainData.storeKitExample.purchaseProduct(ContentItemPurchase(goldChoseBuy)._idAvt);
+			}
+			else if (mainData.isOnAndroid) 
+			{
+				GoogleInapp.getInstance().purchaseLevelPack(goldChoseBuy._idAvt);
+			}
 			
-			mainData.storeKitExample.purchaseProduct(ContentItemPurchase(goldChoseBuy)._idAvt);
 		}
 		
 		private function loadItemGiftSuccess(obj:Object):void 
@@ -3191,10 +3247,66 @@ package view.window.shop
 			
 			
 			httpReq.sendRequest(method, str, obj, getCountrySuccess, true);*/
+			mainData.removeEventListener(MainData.LOAD_ITEM_SUCCESS, onLoadItemSuccess);
+			mainData.addEventListener(MainData.LOAD_ITEM_SUCCESS, onLoadItemSuccess);
+			
+			GoogleInapp.getInstance().init();
+			
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			
 			getCountrySuccess();
 			
 			
+		}
+		
+		private function onLoadItemSuccess(e:Event):void 
+		{
+			removeAllArray();
+			
+			
+			var arrData:Array = mainData.itemArr;
+			var countX:int;
+			var countY:int;
+			var i:int;
+			closeLoading();
+			
+			
+			for (i = arrData.length - 1; i > -1; i-- ) 
+			{
+				var nameAvatar:String = 'it_name';
+				var chipAvatar:String = arrData[i][2];
+				var payGold:String = 'it_pay_gold';
+				var linkAvatar:String = 'http://files.azgame.us/item_ios/WAZ/WAZ000048.gif';
+				var expireAvatar:String = 'it_sell_expire_dt';
+				var idAvtWeb:String = 'it_cd_wb';
+				//var idAvt:String = arrData[i]['it_id'];
+				var idAvt:String = arrData[i][0];
+				var tail:String = arrData[i][3];
+				
+				var contentAvatar:ContentItemPurchase = new ContentItemPurchase();
+				_arrPurchase.push(contentAvatar);
+				//contentAvatar.x = 10 + countX * 440;
+				//contentAvatar.y = 5 + countY * 135;
+				
+				if (countX < 2) 
+				{
+					countX++;
+				}
+				else 
+				{
+					countY++;
+					countX = 0;
+				}
+				
+				
+				contentAvatar.addInfo(idAvt, nameAvatar, chipAvatar, payGold, linkAvatar, expireAvatar, idAvtWeb, tail);
+				scrollView.addRow(contentAvatar);
+				//_arrBoard[3].addChild(contentAvatar);
+				
+				contentAvatar.addEventListener(ConstTlmn.BUY_ITEM, onBuyItemPurchase);
+			}
+			
+			closeLoading();
 		}
 		
 		private function getCountrySuccess():void 
@@ -3202,18 +3314,35 @@ package view.window.shop
 			
 			if (mainData.country == "VN") 
 			{
+				if (mainData.isOnAndroid) 
+				{
+					scrollView.visible = true;
+					scrollViewForRank.visible = false;
+					
+					allHeaderVisible();
+					showHeaderChose(1, 4);
+					
+					headerOn(1);
+					boardOn(3);
+					tabOn(2);
+					
+					
+				}
+				else 
+				{
+					scrollView.visible = true;
+					scrollViewForRank.visible = false;
+					
+					headerOn(1);
+					boardOn(2);
+					tabOn(2);
+					
+					createCodeCheck();
+					
+					allHeaderVisible();
+					showHeaderChose(1, 0);
+				}
 				
-				scrollView.visible = true;
-				scrollViewForRank.visible = false;
-				
-				headerOn(1);
-				boardOn(2);
-				tabOn(2);
-				
-				createCodeCheck();
-				
-				allHeaderVisible();
-				showHeaderChose(1, 0);
 				
 				//dispatchEvent(new Event(CHANGE_TAB));
 			}
@@ -3246,7 +3375,11 @@ package view.window.shop
 					tabOn(2);
 					
 					//loadItem(5);
-					loadItemPurchase();
+					if (mainData.isOnIos) 
+					{
+						loadItemPurchase();
+					}
+					
 				}
 				
 				

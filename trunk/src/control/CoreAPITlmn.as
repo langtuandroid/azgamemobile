@@ -1017,7 +1017,11 @@ package control
 		
 		public function onUserEvictedFromRoomEvent(e:UserEvictedFromRoomEvent):void
 		{
-			var isMe:Boolean = electroServer.managerHelper.userManager.userByName(e.userName).isMe;
+			if (electroServer.managerHelper.userManager.userByName(e.userName)) 
+			{
+				var isMe:Boolean = electroServer.managerHelper.userManager.userByName(e.userName).isMe;
+			}
+			
 			switch (e.reason) 
 			{
 				case CommandTlmn.ROOM_MASTER_KICK:

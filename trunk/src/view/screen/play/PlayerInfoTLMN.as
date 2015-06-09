@@ -111,6 +111,7 @@ package view.screen.play
 				content.chatde.y = 50;
 				content.effectMoney.y = 70;
 				content.level.x = 107;
+				content.sameIp.x = 110;
 				content.iconMobile.x = 110;
 				content.iconMaster.x = 0;
 				
@@ -132,6 +133,7 @@ package view.screen.play
 				content.effectMoney.y = 70;
 				content.level.x = -11;
 				content.iconMobile.x = -8;
+				content.sameIp.x = -8;
 				
 				content.iconMaster.x = 100;
 				
@@ -153,6 +155,7 @@ package view.screen.play
 				content.effectMoney.y = 70;
 				content.level.x = -11;
 				content.iconMobile.x = -8;
+				content.sameIp.x=-8
 				
 				content.iconMaster.x = 100;
 				
@@ -189,6 +192,18 @@ package view.screen.play
 			//ready = true;
 			//dealCard([]);
 			//addCardDeck(13);
+			hideSameIp();
+		}
+		
+		public function showSameIp():void 
+		{
+			//content.sameIp.visible = true;
+			content.sameIp.visible = false;
+		}
+		
+		public function hideSameIp():void 
+		{
+			content.sameIp.visible = false;
 		}
 		
 		private function onLoadAvatarError(e:Event):void 

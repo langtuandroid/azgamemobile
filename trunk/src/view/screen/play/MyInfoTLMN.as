@@ -206,6 +206,19 @@ package view.screen.play
 			//addMoneyEffect();
 			
 			//dealCard([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+			
+			hideSameIp();
+		}
+		
+		public function showSameIp():void 
+		{
+			content.sameIp.visible = false;
+			//content.sameIp.visible = true;
+		}
+		
+		public function hideSameIp():void 
+		{
+			content.sameIp.visible = false;
 		}
 		
 		private function onClickShowContex(e:MouseEvent):void 

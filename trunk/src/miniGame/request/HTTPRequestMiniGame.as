@@ -38,7 +38,7 @@ package miniGame.request
 		 * @param	timeOut - quá thời gian này thì sẽ ko đợi nữa
 		 * @param	dataFormat - dạng dữ liệu của URLLoader
 		 */
-		public function sendRequest(method:String, url:String, _value:Object, _completeFunction:Function, _isDecode:Boolean = false, timeOut:int = 60, dataFormat:String = "text"):void
+		public function sendRequest(method:String, url:String, _value:Object, _completeFunction:Function, _isDecode:Boolean = false, timeOut:int = 5, dataFormat:String = "text"):void
 		{
 			isDecode = _isDecode;
 			

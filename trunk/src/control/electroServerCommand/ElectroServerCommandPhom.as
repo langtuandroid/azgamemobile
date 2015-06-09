@@ -474,6 +474,7 @@ package control.electroServerCommand
 			windowLayer.closeAllWindow();
 			mainData.isCloseConnection = true;
 			removeEventForCoreAPI();
+			coreAPI = null;
 			
 			var closeConnectionWindow:AlertWindow = new AlertWindow();
 			//closeConnectionWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onCloseConnectionWindowClose);
@@ -489,6 +490,7 @@ package control.electroServerCommand
 		
 		private function onConnectFail(e:ElectroServerEvent):void 
 		{
+			mainData.connectFail = true;
 			windowLayer.closeAllWindow();
 			windowLayer.openAlertWindow(mainData.init.gameDescription.alertSentence.connectFail);
 		}

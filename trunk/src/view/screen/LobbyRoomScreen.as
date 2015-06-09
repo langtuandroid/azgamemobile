@@ -341,7 +341,7 @@ package view.screen
 				timerToGetChannelInfo.removeEventListener(TimerEvent.TIMER, onTimerToGetChannelInfo);
 				timerToGetChannelInfo.start();
 			}
-			timerToGetChannelInfo = new Timer(30000)
+			timerToGetChannelInfo = new Timer(600000)
 			timerToGetChannelInfo.addEventListener(TimerEvent.TIMER, onTimerToGetChannelInfo);
 			timerToGetChannelInfo.start();
 			
@@ -382,7 +382,7 @@ package view.screen
 		{
 			addSelectGameWindow();
 			var loginWindow:LoginWindow;
-			if (mainData.isFacebookVersion) 
+			if (mainData.isFacebookVersion || mainData.isWebVersion) 
 			{
 				if (!mainData.isLoginFacebook) 
 				{
@@ -577,7 +577,11 @@ package view.screen
 				mainCommand.electroServerCommand.closeConnection();
 			}
 			
-			if (mainData.country == "VN") 
+			if (mainData.isFacebookVersion || mainData.isWebVersion) 
+			{
+				selectGameWindow.showTab(3);
+			}
+			else if (mainData.country == "VN") 
 			{
 				selectGameWindow.showTab(3);
 			}
@@ -591,19 +595,23 @@ package view.screen
 				case addMoneyButton:
 					addSelectGameWindow(true);
 					mainCommand.electroServerCommand.closeConnection();
-					if (mainData.country == "VN") 
+					if (mainData.isFacebookVersion || mainData.isWebVersion) 
+					{
+						selectGameWindow.showTab(3);
+					}
+					else if (mainData.country == "VN") 
 					{
 						selectGameWindow.showTab(3);
 					}
 					
 				break;
 				case shopButton:
-					addSelectGameWindow();
+					addSelectGameWindow(true);
 					mainCommand.electroServerCommand.closeConnection();
 					selectGameWindow.showTab(4);
 				break;
 				case inventoryButton:
-					addSelectGameWindow();
+					addSelectGameWindow(true);
 					mainCommand.electroServerCommand.closeConnection();
 					selectGameWindow.showTab(5);
 				break;
@@ -868,6 +876,7 @@ package view.screen
 		{
 			mainData.chooseChannelData.addEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
 			mainData.chooseChannelData.addEventListener(ChooseChannelData.UPDATE_CHANNEL_INFO, onUpdateChannelInfo);
+			mainData.addEventListener(MainData.CONNECT_FAIL, onConnectFail);
 			mainData.addEventListener(MainData.UPDATE_PUBLIC_CHAT, onUpdatePublicChat);
 			mainData.addEventListener(MainData.UPDATE_MESSAGE_LIST, onUpdateMessageList);
 			mainData.addEventListener(MainData.MOVE_TO_SHOP, onMoveToShop);
@@ -885,6 +894,11 @@ package view.screen
 			}
 			
 			
+		}
+		
+		private function onConnectFail(e:Event):void 
+		{
+			onExitButtonClick(null);
 		}
 		
 		private function onMoveToShop(e:Event):void 
@@ -928,6 +942,7 @@ package view.screen
 			renderInviteList();
 			showTabSelectgame = false;
 			
+			mainData.removeEventListener(MainData.CONNECT_FAIL, onConnectFail);
 			stage.removeEventListener(MouseEvent.CLICK, onStageClick);
 			mainData.chooseChannelData.removeEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
 			mainData.chooseChannelData.removeEventListener(ChooseChannelData.UPDATE_CHANNEL_INFO, onUpdateChannelInfo);

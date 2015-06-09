@@ -125,6 +125,7 @@ package control
 		
 		public function onConnectionEvent(e:ConnectionResponse):void
 		{
+			trace("connect tới server phom: ", e.successful)
 			trace("onConnectionEvent",(new Date().getTime()));
 			electroServer.engine.removeEventListener(MessageType.ConnectionResponse.name, onConnectionEvent);
 			if (e.successful)

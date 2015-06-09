@@ -4111,6 +4111,12 @@ package view.screen
 				content.addChild(_contanierCardOutUser);
 			}
 			
+			_myInfo.hideSameIp();
+			for (i = 0; i < _arrUserInfo.length; i++) 
+			{
+				_arrUserInfo[i].hideSameIp();
+			}
+			
 			for (i = 0; i < _arrUserList.length; i++) 
 			{
 				if (_arrUserList[i])
@@ -4165,6 +4171,8 @@ package view.screen
 							var str:String = (_arrUserInfo[i])._displayName + " vừa thoát bàn chơi!";
 							_chatBox.addChatSentence(str, "Thông báo", false, false);
 						}
+						
+						_arrUserInfo[i].hideSameIp();
 						_arrUserInfo[i].outRoom();
 						if (!_isPlaying) 
 						{
@@ -4215,6 +4223,29 @@ package view.screen
 				count++;
 			}
 			
+			
+			var conflickIp:Boolean = false;
+			
+			for (i = 0; i < _arrUserInfo.length; i++) 
+			{
+				if (_arrUserInfo[i].userIp == _myInfo.myIp) 
+				{
+					conflickIp = true;
+					_myInfo.showSameIp();
+					_arrUserInfo[i].showSameIp();
+				}
+				for (j = 0; j < _arrUserInfo.length; j++) 
+				{
+					if (_arrUserInfo[i].userIp == _arrUserInfo[j].userIp && 
+						_arrUserInfo[i]._userName != _arrUserInfo[j]._userName) 
+					{
+						conflickIp = true;
+						_arrUserInfo[i].showSameIp();
+						_arrUserInfo[j].showSameIp();
+					}
+				}
+			}
+			
 			if (count == 0 || _numUser == 1) 
 			{
 				if (_timerKickMaster) 
@@ -4250,7 +4281,7 @@ package view.screen
 				content.signOutBtn.removeEventListener(MouseEvent.CLICK, onClickSignOutGame);
 				content.settingBoard.fullBtn.removeEventListener(MouseEvent.CLICK, onClickFullGame);
 				content.settingBoard.ipBtn.removeEventListener(MouseEvent.CLICK, onClickIPGame);
-				content.settingBoard.guideBtn.removeEventListener(MouseEvent.CLICK, onClickGuidGame);
+				//content.settingBoard.guideBtn.removeEventListener(MouseEvent.CLICK, onClickGuidGame);
 				
 				content.startGame.removeEventListener(MouseEvent.CLICK, onClickStartGame);
 				
@@ -4524,7 +4555,7 @@ package view.screen
 			content.signOutBtn.addEventListener(MouseEvent.CLICK, onClickSignOutGame);
 			content.settingBoard.fullBtn.addEventListener(MouseEvent.CLICK, onClickFullGame);
 			content.settingBoard.ipBtn.addEventListener(MouseEvent.CLICK, onClickIPGame);
-			content.settingBoard.guideBtn.addEventListener(MouseEvent.CLICK, onClickGuidGame);
+			//content.settingBoard.guideBtn.addEventListener(MouseEvent.CLICK, onClickGuidGame);
 			
 			content.startGame.addEventListener(MouseEvent.CLICK, onClickStartGame);
 			content.orderCard.addEventListener(MouseEvent.CLICK, onOrderCard);
@@ -5307,6 +5338,7 @@ package view.screen
 				_chatBox.addChatSentence(str, "Thông báo", false, false);
 			}
 			
+			
 			var conflickIp:Boolean = false;
 			
 			for (i = 0; i < _arrUserInfo.length; i++) 
@@ -5314,6 +5346,8 @@ package view.screen
 				if (_arrUserInfo[i].userIp == _myInfo.myIp) 
 				{
 					conflickIp = true;
+					_myInfo.showSameIp();
+					_arrUserInfo[i].showSameIp();
 				}
 				for (j = 0; j < _arrUserInfo.length; j++) 
 				{
@@ -5321,9 +5355,12 @@ package view.screen
 						_arrUserInfo[i]._userName != _arrUserInfo[j]._userName) 
 					{
 						conflickIp = true;
+						_arrUserInfo[i].showSameIp();
+						_arrUserInfo[j].showSameIp();
 					}
 				}
 			}
+			
 			
 			if (timerHideIpBoard) 
 			{
@@ -5426,6 +5463,8 @@ package view.screen
 				if (_arrUserList[0].ip == _arrUserList[i].ip) 
 				{
 					conflickIp = true;
+					_myInfo.showSameIp();
+					_arrUserInfo[i - 1].showSameIp();
 				}
 				
 				for (j = 0; j < _arrUserList.length; j++) 
@@ -5433,6 +5472,7 @@ package view.screen
 					if (_arrUserList[i].ip == _arrUserList[j].ip && _arrUserList[i].userName != _arrUserList[j].userName) 
 					{
 						conflickIp = true;
+						_arrUserInfo[i - 1].showSameIp();
 					}
 				}
 			}
