@@ -720,8 +720,8 @@ package view.window.loginWindow
 			myInfo.id = value.Data["Id"];
 			myInfo.logo = '';
 			myInfo.sex = value.Data["GenderCode"];
-			myInfo.is_email_active = value.Data["is_email_active"];
-			myInfo.is_phone_number_active = value.Data["is_phone_number_active"];
+			myInfo.is_email_active = value.Data["Is_Eml_Active"];
+			myInfo.is_phone_number_active = value.Data["Is_Phone_Number_Active"];
 			
 			MyDataTLMN.getInstance().myId = value.Data["Id"];
 			MyDataTLMN.getInstance().myDisplayName = value.Data["Displayname"];

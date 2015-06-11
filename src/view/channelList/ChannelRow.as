@@ -37,6 +37,28 @@ package view.channelList
 			playerNumberTxt.text = String(data.playerNumber) + "/" + String(data.maxPlayer) + " người";
 			
 			if (data.playerNumber >= data.maxPlayer)
+				enable = false;
+			else
+				enable = true;
+				
+			if (data.channelId == mainData.currentChannelId)
+				enable = false;
+		}
+		
+		public function get enable():Boolean 
+		{
+			return _enable;
+		}
+		
+		public function set enable(value:Boolean):void 
+		{
+			_enable = value;
+			if (enable)
+			{
+				buttonMode = true;
+				mouseChildren = false;
+			}
+			else
 			{
 				channelNameTxt.alpha = 0.5;
 				playerNumberTxt.alpha = 0.5;
@@ -45,12 +67,9 @@ package view.channelList
 				addEventListener(MouseEvent.CLICK, onClick);
 				MovieClip(content["background"]).gotoAndStop("disable");
 			}
-			else
-			{
-				buttonMode = true;
-				mouseChildren = false;
-			}
 		}
+		
+		private var _enable:Boolean;
 		
 		private function onClick(e:MouseEvent):void 
 		{

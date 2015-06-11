@@ -57,7 +57,7 @@ package view
 		private function onEnterFrame(e:Event):void 
 		{
 			if (infoTxt.x > - infoTxt.width)
-				infoTxt.x -= 1;
+				infoTxt.x -= 2.5;
 			else
 				infoTxt.x = background.width;
 		}
