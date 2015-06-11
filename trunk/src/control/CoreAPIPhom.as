@@ -321,7 +321,7 @@ package control
 			loginRequest.userName = userName;
 			loginRequest.password = password;
 			var tempEsObject:EsObject = new EsObject();
-			mainData.currentChannelId = 11;
+			//mainData.currentChannelId = 11;
 			tempEsObject.setString(DataFieldMauBinh.CHANNEL_ID, String(mainData.currentChannelId));
 			if (mainData.isWebVersion)
 				tempEsObject.setString(DataFieldMauBinh.DEVICE_ID, "web");
