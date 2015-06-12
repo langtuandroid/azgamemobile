@@ -147,6 +147,8 @@ package view.screen
 			gameLogo = content["gameLogo"];
 			gameLogo.gotoAndStop("empty");
 			unRegisterIcon = content["unRegisterIcon"];
+			unRegisterIcon.addEventListener(MouseEvent.CLICK, onUnRegisterClick);
+			unRegisterIcon.buttonMode = true;
 			unRegisterIcon.stop();
 			unRegisterIcon.visible = false;
 			
@@ -167,6 +169,7 @@ package view.screen
 			channelInfoTxt.mouseEnabled = false;
 			channelInfoTxt.text = '';
 			//channelInfoTxt.visible = false;
+			firstLayer.addChild(unRegisterIcon);
 			
 			lobbyBtn = content["lobbyBtn"];
 			friendBtn = content["friendBtn"];
@@ -218,6 +221,27 @@ package view.screen
 			containerChild.graphics.endFill();
 			containerChild.addEventListener(MouseEvent.CLICK, onHideInfo);
 			containerShop.visible = false;
+		}
+		
+		private function onUnRegisterClick(e:MouseEvent):void 
+		{
+			if (_shopWindow) 
+			{
+				_shopWindow.removeAllEvent();
+				containerShop.removeChild(_shopWindow);
+				_shopWindow = null;
+			}
+			
+			_shopWindow = new Shop_Coffer_Item_Window_New();
+			
+			containerShop.addChild(_shopWindow);
+			_shopWindow.x = 860;
+			_shopWindow.y = 0;
+			_shopWindow.onClickShowMyInfo(null);
+			
+			containerShop.visible = true;
+			
+			TweenMax.to(_shopWindow, .5, { x:(960 - 817) / 2, y:50 } );
 		}
 		
 		private function onHideInfo(e:MouseEvent):void 
