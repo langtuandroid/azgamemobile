@@ -4,6 +4,8 @@ package view.window.news
 	import flash.events.Event;
 	import flash.events.FocusEvent;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	import model.applicationDomainData.ApplicationDomainData;
 	import model.MainData;
 	import model.MyDataTLMN;
@@ -33,6 +35,7 @@ package view.window.news
 		private var totalPage:int;
 		private var onFocusCurP:Boolean = false;
 		private var countGiftCode:int;
+		private var timeout:Timer;
 		
 		public function NewsWindow() 
 		{
@@ -94,11 +97,30 @@ package view.window.news
 		
 		private function closeLoading():void 
 		{
+			if (timeout) 
+			{
+				timeout.stop();
+				timeout.removeEventListener(TimerEvent.TIMER_COMPLETE, onTimeOut);
+			}
 			content.loadingMc.visible = false;
+		}
+		
+		private function onTimeOut(e:TimerEvent):void 
+		{
+			closeLoading();
 		}
 		
 		private function openLoading():void 
 		{
+			if (timeout) 
+			{
+				timeout.stop();
+				timeout.removeEventListener(TimerEvent.TIMER_COMPLETE, onTimeOut);
+			}
+			timeout = new Timer(1000, 5);
+			timeout.addEventListener(TimerEvent.TIMER_COMPLETE, onTimeOut);
+			timeout.start();
+			
 			content.loadingMc.visible = true;
 		}
 		
@@ -1011,6 +1033,11 @@ package view.window.news
 		
 		public function removeAllEvent():void 
 		{
+			if (timeout) 
+			{
+				timeout.stop();
+				timeout.removeEventListener(TimerEvent.TIMER_COMPLETE, onTimeOut);
+			}
 			scrollViewForNews.removeAll();
 		}
 		

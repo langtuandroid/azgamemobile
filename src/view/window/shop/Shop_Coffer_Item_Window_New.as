@@ -59,6 +59,7 @@ package view.window.shop
 		private var scrollViewForRank:ScrollViewYun;
 		private var scrollViewForInfo:ScrollViewYun;
 		private var scrollViewForTran:ScrollViewYun;
+		private var scrollViewForSms:ScrollViewYun;
 		private var windowLayer:WindowLayer = WindowLayer.getInstance();
 		
 		private var _arrAvatar:Array = [];
@@ -101,6 +102,20 @@ package view.window.shop
 		 * 0:tất cả, 2:baby, 3:phong cách, 4:siêu anh hùng
 		 */
 		private var typeOfAvatar:String = "0";
+		private var activing:Array = [];
+		private var arrInfoSms:Array = [['5,000 đ', '2,000,000 G', '3,000,000 G', '4,000,000 G', 'gold', 'nap5', ''],
+									['10,000 đ', '5,000,000 G', '6,000,000 G', '7,000,000 G', 'gold', 'nap10', ''],
+									['20,000 đ', '11,000,000 G', '13,000,000 G', '15,000,000 G', 'gold', 'nap20', ''],
+									['30,000 đ', '18,000,000 G', '21,000,000 G', '24,000,000 G', 'gold', 'nap30', ''],
+									['50,000 đ', '35,000,000 G', '40,000,000 G', '45,000,000 G', 'gold', 'nap50', ''],
+									['100,000 đ', '75,000,000 G', '85,000,000 G', '95,000,000 G', 'gold', 'nap100', 'vina'],
+									['10,000 đ', '60 C', '60 C', '60 C', 'chip', 'nap10', ''],
+									['20,000 đ', '120 C', '120 C', '120 C', 'chip', 'nap20', ''],
+									['30,000 đ', '180 C', '180 C', '180 C', 'chip', 'nap30', ''],
+									['50,000 đ', '300 C', '300 C', '300 C', 'chip', 'nap50', ''],
+									['100,000 đ', '600 C', '600 C', '600 C', 'chip', 'nap100', 'vina']
+									];
+		private var arrSms:Array = [];
 		
 		public function Shop_Coffer_Item_Window_New() 
 		{
@@ -190,6 +205,21 @@ package view.window.shop
 			scrollViewForInfo.visible = false;
 			scrollViewForRank.visible = false;
 			
+			
+			scrollViewForSms = new ScrollViewYun();
+			scrollViewForSms.isForMobile = !mainData.isShowScroll;
+			scrollViewForSms.setData(myContent.smsBg.containerSms, -10);
+			
+			scrollViewForSms.columnNumber = 1;
+			scrollViewForSms.isScrollVertical = true;
+			myContent.smsBg.addChild(scrollViewForSms);
+			myContent.smsBg.setChildIndex(myContent.smsBg.chonMangMc, myContent.smsBg.numChildren - 1);
+			
+			//scrollViewForInfo.x = -315;
+			//scrollViewForInfo.y = 50;
+			//scrollViewForSms.visible = false;
+			
+			myContent.smsBg.chonMangMc.visible = false;
 			/*var textfield:TextField = new TextField();
 			textfield.text = "31/07 - v1";
 			textfield.x = 50;
@@ -212,11 +242,42 @@ package view.window.shop
 				}
 			}
 			
-			
-			
 			tabOn(3);
 			headerOn(2);
 			boardOn(3);
+			
+			for (i = 0; i < arrInfoSms.length; i++) 
+			{
+				var mc:MovieClip = new ContentSmsMc();
+				mc.moneyTxt.text = arrInfoSms[i][0];
+				mc.receiveMoney1Txt.text = arrInfoSms[i][1];
+				mc.receiveMoney2Txt.text = arrInfoSms[i][2];
+				mc.receiveMoney3Txt.text = arrInfoSms[i][3];
+				mc.addSmsBtn1.buttonMode = true;
+				mc.addSmsBtn1.addEventListener(MouseEvent.CLICK, onChooSms);
+				scrollViewForSms.addRow(mc);
+				arrSms.push([mc, arrInfoSms[i][4], arrInfoSms[i][5], arrInfoSms[i][6]]);
+			}
+			
+		}
+		
+		private function onChooSms(e:MouseEvent):void 
+		{
+			activing = [];
+			var mc:MovieClip = e.currentTarget as MovieClip;
+			var pos:int;
+			for (var i:int = 0; i < arrSms.length; i++) 
+			{
+				if (mc.parent == arrSms[i][0]) 
+				{
+					pos = i;
+					break;
+				}
+			}
+			activing = [arrSms[pos][1], arrSms[pos][2], false, arrSms[pos][3]];
+			
+			showChonMang();
+			
 		}
 		
 		private function onKeyDown(e:KeyboardEvent):void 
@@ -380,9 +441,6 @@ package view.window.shop
 			myContent.rakingBg.codecheckTxt.addEventListener(FocusEvent.FOCUS_IN, codeCheckFocusHandler);
 			myContent.rakingBg.codecheckTxt.addEventListener(FocusEvent.FOCUS_OUT, codeCheckFocusOutHandler);
 			
-			myContent.smsBg.addSmsBtn1.addEventListener(MouseEvent.MOUSE_UP, onClickChoseSms1);
-			myContent.smsBg.addSmsBtn2.addEventListener(MouseEvent.MOUSE_UP, onClickChoseSms2);
-			myContent.smsBg.addSmsBtn3.addEventListener(MouseEvent.MOUSE_UP, onClickChoseSms3);
 			
 			myContent.rakingBg.accessBtn.addEventListener(MouseEvent.MOUSE_UP, onClickChoseRaking);
 			myContent.rakingBg.choosePayVina.addEventListener(MouseEvent.MOUSE_UP, onClickChosePayVina);
@@ -419,11 +477,23 @@ package view.window.shop
 			myContent.myAllInfo.notActiveMail.addEventListener(MouseEvent.MOUSE_UP, onClickShowMyActive);
 			myContent.myAllInfo.notActivePhone.addEventListener(MouseEvent.MOUSE_UP, onClickShowMyActive);
 			
+			myContent.acticedAcc.notActiveMail.codeCheckTxt.text = 'Nhập mã kích hoạt';
+			myContent.acticedAcc.notActivePhone.codeSmsTxt.text = 'Nhập mã kích hoạt';
+			
+			myContent.acticedAcc.allNotActice.codeCheckTxt.text = 'Nhập mã kích hoạt';
+			myContent.acticedAcc.allNotActice.codeSmsTxt.text = 'Nhập mã kích hoạt';
+			
+			myContent.acticedAcc.notActivePhone.codeSmsTxt.addEventListener(FocusEvent.FOCUS_IN, activeSmsFocusHandler);
+			myContent.acticedAcc.notActivePhone.codeSmsTxt.addEventListener(FocusEvent.FOCUS_OUT, activeSmsFocusOutHandler);
+			
 			myContent.acticedAcc.notActiveMail.codeCheckTxt.addEventListener(FocusEvent.FOCUS_IN, activeMailFocusHandler);
 			myContent.acticedAcc.notActiveMail.codeCheckTxt.addEventListener(FocusEvent.FOCUS_OUT, activeMailFocusOutHandler);
 			
 			myContent.acticedAcc.allNotActice.codeCheckTxt.addEventListener(FocusEvent.FOCUS_IN, activeMailFocusHandler);
 			myContent.acticedAcc.allNotActice.codeCheckTxt.addEventListener(FocusEvent.FOCUS_OUT, activeMailFocusOutHandler);
+			
+			myContent.acticedAcc.allNotActice.codeSmsTxt.addEventListener(FocusEvent.FOCUS_IN, activeSmsFocusHandler);
+			myContent.acticedAcc.allNotActice.codeSmsTxt.addEventListener(FocusEvent.FOCUS_OUT, activeSmsFocusOutHandler);
 			
 			myContent.acticedAcc.notActiveMail.agreeBtn.buttonMode = true;
 			myContent.acticedAcc.notActiveMail.chooseCode.buttonMode = true;
@@ -446,30 +516,12 @@ package view.window.shop
 			myContent.acticedAcc.allNotActice.sendSms.addEventListener(MouseEvent.MOUSE_UP, sendSmsHandler);
 			myContent.acticedAcc.notActivePhone.sendSms.addEventListener(MouseEvent.MOUSE_UP, sendSmsHandler);
 			
-			myContent.acticedAcc.notActivePhone.contentTxt.htmlText = 'Soạn: SB ' + "<font color='#A1B077'>" + mainData.chooseChannelData.myInfo.name + "</font> gửi " + "<font color='#A1B077'>8069</font> (phí 500đ) ";
-			myContent.acticedAcc.allNotActice.contentTxt.htmlText = 'Soạn: SB ' + "<font color='#A1B077'>" + mainData.chooseChannelData.myInfo.name + "</font> gửi " + "<font color='#A1B077'>8069</font> (phí 500đ) ";
+			
 		}
 		
 		private function sendSmsHandler(e:MouseEvent):void 
 		{
 			
-			if (mainData.isFacebookVersion || mainData.isOnIos) 
-			{
-				tutorialAddMoney = new TutorialAddMoneyPopup();
-				myContent.addChild(tutorialAddMoney);
-				tutorialAddMoney.x = 47 + (865 - tutorialAddMoney.width) / 2;
-				tutorialAddMoney.y = 86 + (363 - tutorialAddMoney.height) / 2;
-				
-				tutorialAddMoney.contentMess.text = "SB " + mainData.chooseChannelData.myInfo.name;
-				tutorialAddMoney.numberTxt.text = mainData.phone6;
-				
-				tutorialAddMoney.closeBtn.addEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);
-			}
-			else 
-			{
-				turnOnSendSMS("SB " + mainData.chooseChannelData.myInfo.name, mainData.phone6);
-				
-			}
 		}
 		
 		private function onClickShowAllAvatar(e:MouseEvent):void 
@@ -560,7 +612,7 @@ package view.window.shop
 					httpRequest.sendRequest(method, url, obj, sendActiveSuccess, true);
 				}
 			}
-			else if (myContent.acticedAcc.notActiveMail.chooseCode.currentFrame == 1 )
+			else if (myContent.acticedAcc.notActiveMail.chooseSendMail.currentFrame == 2 )
 			{
 				windowLayer.openLoadingWindow();
 				url = basePath + "service02/OnplayUserExt.asmx/SendCodeActiveEmail?email=" + mainData.chooseChannelData.myInfo.email;
@@ -634,7 +686,9 @@ package view.window.shop
 		private function choseTypeSendActiveHandler(e:MouseEvent):void 
 		{
 			myContent.acticedAcc.allNotActice.chooseCode.gotoAndStop(1);
+			
 			myContent.acticedAcc.allNotActice.chooseSendMail.gotoAndStop(2);
+			myContent.acticedAcc.notActiveMail.chooseChangeMail.gotoAndStop(1);
 			myContent.acticedAcc.notActiveMail.chooseCode.gotoAndStop(1);
 			myContent.acticedAcc.notActiveMail.chooseSendMail.gotoAndStop(2);
 		}
@@ -643,8 +697,34 @@ package view.window.shop
 		{
 			myContent.acticedAcc.allNotActice.chooseCode.gotoAndStop(2);
 			myContent.acticedAcc.allNotActice.chooseSendMail.gotoAndStop(1);
+			
 			myContent.acticedAcc.notActiveMail.chooseCode.gotoAndStop(2);
 			myContent.acticedAcc.notActiveMail.chooseSendMail.gotoAndStop(1);
+			myContent.acticedAcc.notActiveMail.chooseChangeMail.gotoAndStop(1);
+		}
+		
+		private function activeSmsFocusHandler(e:FocusEvent):void 
+		{
+			if (myContent.acticedAcc.notActivePhone.codeSmsTxt.text == "Nhập mã kích hoạt") 
+			{
+				myContent.acticedAcc.notActivePhone.codeSmsTxt.text = "";
+			}
+			if (myContent.acticedAcc.allNotActice.codemailTxt.text == "Nhập mã kích hoạt") 
+			{
+				myContent.acticedAcc.allNotActice.codemailTxt.text = "";
+			}
+		}
+		
+		private function activeSmsFocusOutHandler(e:FocusEvent):void 
+		{
+			if (myContent.acticedAcc.notActivePhone.codeSmsTxt.text == "") 
+			{
+				myContent.acticedAcc.notActivePhone.codeSmsTxt.text = "Nhập mã kích hoạt";
+			}
+			if (myContent.acticedAcc.allNotActice.codeSmsTxt.text == "") 
+			{
+				myContent.acticedAcc.allNotActice.codeSmsTxt.text = "Nhập mã kích hoạt";
+			}
 		}
 		
 		private function activeMailFocusHandler(e:FocusEvent):void 
@@ -653,9 +733,9 @@ package view.window.shop
 			{
 				myContent.acticedAcc.notActiveMail.codeCheckTxt.text = "";
 			}
-			if (myContent.acticedAcc.allNotActice.codeCheckTxt.text == "Nhập mã kích hoạt") 
+			if (myContent.acticedAcc.allNotActice.codeSmsTxt.text == "Nhập mã kích hoạt") 
 			{
-				myContent.acticedAcc.allNotActice.codeCheckTxt.text = "";
+				myContent.acticedAcc.allNotActice.codeSmsTxt.text = "";
 			}
 		}
 		
@@ -1293,39 +1373,151 @@ package view.window.shop
 			
 		}
 		
-		private function onClickChoseSms1(e:MouseEvent):void 
+		private function showChonMang():void 
 		{
-			/*tutorialAddMoney = new TutorialAddMoneyPopup();
-				myContent.addChild(tutorialAddMoney);
-				tutorialAddMoney.x = 47 + (865 - tutorialAddMoney.width) / 2;
-				tutorialAddMoney.y = 136 + (363 - tutorialAddMoney.height) / 2;
-				
-				tutorialAddMoney.contentMess.text = "SB G " + mainData.chooseChannelData.myInfo.name;
-				tutorialAddMoney.numberTxt.text = mainData.phone3;
-				
-				tutorialAddMoney.closeBtn.addEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);*/
-			if (mainData.isFacebookVersion || mainData.isOnIos) 
+			
+			myContent.smsBg.chonMangMc.viettelBtn.gotoAndStop(1);
+			myContent.smsBg.chonMangMc.vinaBtn.gotoAndStop(1);
+			myContent.smsBg.chonMangMc.mobiBtn.gotoAndStop(1);
+			
+			myContent.smsBg.chonMangMc.viettelBtn.buttonMode = true;
+			myContent.smsBg.chonMangMc.vinaBtn.buttonMode = true;
+			myContent.smsBg.chonMangMc.mobiBtn.buttonMode = true;
+			myContent.smsBg.chonMangMc.closeBtn.buttonMode = true;
+			
+			myContent.smsBg.chonMangMc.visible = true;
+			
+			myContent.smsBg.chonMangMc.closeBtn.addEventListener(MouseEvent.CLICK, onCloseChonMang);
+			myContent.smsBg.chonMangMc.viettelBtn.addEventListener(MouseEvent.CLICK, onChonVit);
+			myContent.smsBg.chonMangMc.vinaBtn.addEventListener(MouseEvent.CLICK, onChonVina);
+			myContent.smsBg.chonMangMc.mobiBtn.addEventListener(MouseEvent.CLICK, onChonMobi);
+			
+			if (activing[3] == 'viettel') 
 			{
-				tutorialAddMoney = new TutorialAddMoneyPopup();
-				myContent.addChild(tutorialAddMoney);
-				tutorialAddMoney.x = 47 + (865 - tutorialAddMoney.width) / 2;
-				tutorialAddMoney.y = 136 + (363 - tutorialAddMoney.height) / 2;
-				
-				tutorialAddMoney.contentMess.text = "SB G " + mainData.chooseChannelData.myInfo.name;
-				tutorialAddMoney.numberTxt.text = mainData.phone3;
-				
-				tutorialAddMoney.closeBtn.addEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);
+				myContent.smsBg.chonMangMc.viettelBtn.buttonMode = false;
+				myContent.smsBg.chonMangMc.viettelBtn.gotoAndStop(2);
+				myContent.smsBg.chonMangMc.viettelBtn.removeEventListener(MouseEvent.CLICK, onChonVit);
+			}
+			else if (activing[3] == 'vina') 
+			{
+				myContent.smsBg.chonMangMc.vinaBtn.buttonMode = false;
+				myContent.smsBg.chonMangMc.vinaBtn.gotoAndStop(2);
+				myContent.smsBg.chonMangMc.vinaBtn.removeEventListener(MouseEvent.CLICK, onChonVina);
+			}
+			else if (activing[3] == 'mobi') 
+			{
+				myContent.smsBg.chonMangMc.mobiBtn.buttonMode = false;
+				myContent.smsBg.chonMangMc.mobiBtn.gotoAndStop(3);
+				myContent.smsBg.chonMangMc.mobiBtn.removeEventListener(MouseEvent.CLICK, onChonMobi);
+			}
+		}
+		
+		private function onChonVit(e:MouseEvent):void 
+		{
+			onCloseChonMang(null);
+			
+			if (mainData.isFacebookVersion) 
+			{
+				showTut('viettel');
 			}
 			else 
 			{
-				turnOnSendSMS("SB G " + mainData.chooseChannelData.myInfo.name, mainData.phone3);
 				
+				if (activing[2]) 
+				{
+					turnOnSendSMS("vmg nap1 sb " + mainData.chooseChannelData.myInfo.name, mainData.phone3);
+				}
+				else 
+				{
+					turnOnSendSMS("vmg " + activing[1] + " " + activing[0] + " " + mainData.chooseChannelData.myInfo.name, mainData.phone3);
+				}
+			}
+			
+			
+			
+		}
+		
+		private function onChonVina(e:MouseEvent):void 
+		{
+			onCloseChonMang(null);
+			
+			if (mainData.isFacebookVersion) 
+			{
+				showTut('vina');
+			}
+			else 
+			{
+				//turnOnSendSMS("SB " + mainData.chooseChannelData.myInfo.name, mainData.phone6);
+				if (activing[2]) 
+				{
+					turnOnSendSMS("vmg sb nap1 " + mainData.chooseChannelData.myInfo.name, mainData.phone3);
+				}
+				else 
+				{
+					turnOnSendSMS("vmg " + activing[0] + " " + activing[1] + " " + mainData.chooseChannelData.myInfo.name, mainData.phone3);
+				}
 			}
 			
 		}
 		
+		private function onChonMobi(e:MouseEvent):void 
+		{
+			onCloseChonMang(null);
+			
+			if (mainData.isFacebookVersion) 
+			{
+				showTut('mobi');
+			}
+			else 
+			{
+				//turnOnSendSMS("SB " + mainData.chooseChannelData.myInfo.name, mainData.phone6);
+				if (activing[2]) 
+				{
+					turnOnSendSMS("vmg sb nap1 " + mainData.chooseChannelData.myInfo.name, mainData.phone3);
+				}
+				else 
+				{
+					turnOnSendSMS("vmg " + activing[0] + " " + activing[1] + " " + mainData.chooseChannelData.myInfo.name, mainData.phone3);
+				}
+			}
+		}
+		
+		private function showTut(str:String):void 
+		{
+			tutorialAddMoney = new TutorialAddMoneyPopup();
+			myContent.addChild(tutorialAddMoney);
+			tutorialAddMoney.x = 47 + (865 - tutorialAddMoney.width) / 2;
+			tutorialAddMoney.y = 86 + (363 - tutorialAddMoney.height) / 2;
+			tutorialAddMoney.closeBtn.addEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);
+			
+			if (str == 'viettel') 
+			{
+				
+				tutorialAddMoney.contentMess.text = "vmg " + activing[1] + " " + activing[0] + " " + mainData.chooseChannelData.myInfo.name, mainData.phone3
+				tutorialAddMoney.numberTxt.text = mainData.phone6;
+				
+			}
+			else 
+			{
+				
+				tutorialAddMoney.contentMess.text = "vmg " + activing[0] + " " + activing[1] + " " + mainData.chooseChannelData.myInfo.name, mainData.phone3
+				tutorialAddMoney.numberTxt.text = mainData.phone6;
+				
+			}
+		}
+		
+		private function onCloseChonMang(e:MouseEvent):void 
+		{
+			myContent.smsBg.chonMangMc.visible = false;
+			myContent.smsBg.chonMangMc.closeBtn.removeEventListener(MouseEvent.CLICK, onCloseChonMang);
+			myContent.smsBg.chonMangMc.viettelBtn.removeEventListener(MouseEvent.CLICK, onChonVit);
+			myContent.smsBg.chonMangMc.vinaBtn.removeEventListener(MouseEvent.CLICK, onChonVina);
+			myContent.smsBg.chonMangMc.mobiBtn.removeEventListener(MouseEvent.CLICK, onChonMobi);
+		}
+		
 		private function turnOnSendSMS(msg:String, phone:String):void
 		{
+			
 			if (mainData.isOnAndroid)
 			{
 				AndroidExtensions.sendSMS(msg, phone);
@@ -1334,9 +1526,18 @@ package view.window.shop
 			{
 				/*var msgExtension:MSGExtension = new MSGExtension();
 				msgExtension.sendSMS(phone, msg);*/
-				var callURL:String="sms:" + phone;
+				var callURL:String="sms:" + phone + '?body=' + msg;
 				var targetURL:URLRequest = new URLRequest(callURL);
 				navigateToURL(targetURL);
+				
+				//If you want it to work on Android you need to use this format:
+				//<a href="sms:/* phone number here */?body=/* body text here */">Link</a>
+				//If you want it to work on iOS, you need this:
+				//<a href="sms:/* phone number here */;body=/* body text here */">Link</a>
+				//Live demo here: http://bradorego.com/test/sms.html (note the "Phone and ?body" and "Phone and ;body" should autofill both the to: field and the body text. View the source for more info)
+				//UPDATE:
+				//Apparently iOS8 had to go and change things on us, so thanks to some of the other commenters/responders, there's a new style for iOS:
+				//<a href="sms:/* phone number here */&body=/* body text here */">Link</a>
 			}
 		}
 		
@@ -1348,86 +1549,10 @@ package view.window.shop
 			tutorialAddMoney = null;
 			
 		}
-		private function onClickChoseSms2(e:MouseEvent):void 
-		{
-			/*if (!mainData.isFacebookVersion) 
-			{
-				turnOnSendSMS("SB G " + mainData.chooseChannelData.myInfo.name, mainData.phone4);
-			}
-			else 
-			{
-				tutorialAddMoney = new TutorialAddMoneyPopup();
-				myContent.addChild(tutorialAddMoney);
-				tutorialAddMoney.x = 47 + (865 - tutorialAddMoney.width) / 2;
-				tutorialAddMoney.y = 136 + (363 - tutorialAddMoney.height) / 2;
-				
-				tutorialAddMoney.contentMess.text = "SB G " + mainData.chooseChannelData.myInfo.name;
-				tutorialAddMoney.numberTxt.text = mainData.phone4;
-				
-				tutorialAddMoney.closeBtn.addEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);
-				
-			}*/
-			
-			if (mainData.isFacebookVersion || mainData.isOnIos) 
-			{
-				tutorialAddMoney = new TutorialAddMoneyPopup();
-				myContent.addChild(tutorialAddMoney);
-				tutorialAddMoney.x = 47 + (865 - tutorialAddMoney.width) / 2;
-				tutorialAddMoney.y = 136 + (363 - tutorialAddMoney.height) / 2;
-				
-				tutorialAddMoney.contentMess.text = "SB G " + mainData.chooseChannelData.myInfo.name;
-				tutorialAddMoney.numberTxt.text = mainData.phone4;
-				
-				tutorialAddMoney.closeBtn.addEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);
-			}
-			else 
-			{
-				turnOnSendSMS("SB G " + mainData.chooseChannelData.myInfo.name, mainData.phone4);
-				
-			}
-			
-		}
-		private function onClickChoseSms3(e:MouseEvent):void 
-		{
-			/*if (!mainData.isFacebookVersion) 
-			{
-				turnOnSendSMS("SB G " + mainData.chooseChannelData.myInfo.name, mainData.phone5);
-			}
-			else 
-			{
-				tutorialAddMoney = new TutorialAddMoneyPopup();
-				myContent.addChild(tutorialAddMoney);
-				tutorialAddMoney.x = 47 + (865 - tutorialAddMoney.width) / 2;
-				tutorialAddMoney.y = 136 + (363 - tutorialAddMoney.height) / 2;
-				
-				tutorialAddMoney.contentMess.text = "SB G " + mainData.chooseChannelData.myInfo.name;
-				tutorialAddMoney.numberTxt.text = mainData.phone5;
-				
-				tutorialAddMoney.closeBtn.addEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);
-				
-			}*/
-			
-			if (mainData.isFacebookVersion || mainData.isOnIos) 
-			{
-				tutorialAddMoney = new TutorialAddMoneyPopup();
-				myContent.addChild(tutorialAddMoney);
-				tutorialAddMoney.x = 47 + (865 - tutorialAddMoney.width) / 2;
-				tutorialAddMoney.y = 136 + (363 - tutorialAddMoney.height) / 2;
-				
-				tutorialAddMoney.contentMess.text = "SB G " + mainData.chooseChannelData.myInfo.name;
-				tutorialAddMoney.numberTxt.text = mainData.phone5;
-				
-				tutorialAddMoney.closeBtn.addEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);
-			}
-			else 
-			{
-				turnOnSendSMS("SB G " + mainData.chooseChannelData.myInfo.name, mainData.phone5);
-				
-			}
-		}
 		
 		private function onClickShowAddMoneyPurchase(e:MouseEvent):void 
 		{
+			//scrollViewForSms.visible = false;
 			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			getNewAccessToken();
 			scrollView.visible = true;
@@ -1450,6 +1575,7 @@ package view.window.shop
 		
 		private function onClickShowAddMoneySms(e:MouseEvent):void 
 		{
+			//scrollViewForSms.visible = true;
 			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			allHeaderVisible();
 			showHeaderChose(1, 1);
@@ -1459,6 +1585,7 @@ package view.window.shop
 		
 		private function onClickShowAddMoneyRaking(e:MouseEvent):void 
 		{
+			//scrollViewForSms.visible = false;
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			allHeaderVisible();
 			showHeaderChose(1, 0);
@@ -3250,7 +3377,11 @@ package view.window.shop
 			mainData.removeEventListener(MainData.LOAD_ITEM_SUCCESS, onLoadItemSuccess);
 			mainData.addEventListener(MainData.LOAD_ITEM_SUCCESS, onLoadItemSuccess);
 			
-			GoogleInapp.getInstance().init();
+			if (mainData.isOnAndroid) 
+			{
+				GoogleInapp.getInstance().init();
+			}
+			
 			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			

@@ -197,8 +197,8 @@ package view.screen.play
 		
 		public function showSameIp():void 
 		{
-			//content.sameIp.visible = true;
-			content.sameIp.visible = false;
+			content.sameIp.visible = true;
+			//content.sameIp.visible = false;
 		}
 		
 		public function hideSameIp():void 
