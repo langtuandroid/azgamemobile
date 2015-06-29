@@ -39,7 +39,7 @@ package view.window
 		{
 			trace("doi ket noi qua lau")
 			close(BaseWindow.MIDDLE_EFFECT);
-			WindowLayer.getInstance().openAlertWindow("Kết nối bị gián đoạn, vui lòng kiểm tra lại đường truyền internet!");
+			WindowLayer.getInstance().openAlertWindow("Kết nối bị gián đoạn. \n Vui lòng thử lại...");
 		}
 		
 		override public function close(closeType:String=BaseWindow.MIDDLE_EFFECT):void

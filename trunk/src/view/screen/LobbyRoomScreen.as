@@ -1,5 +1,6 @@
 package view.screen 
 {
+	import com.adobe.serialization.json.JSON;
 	import com.greensock.TweenMax;
 	import control.ConstTlmn;
 	import event.DataField;
@@ -8,8 +9,15 @@ package view.screen
 	import flash.display.SimpleButton;
 	import flash.display.StageDisplayState;
 	import flash.display.StageScaleMode;
+	import flash.events.HTTPStatusEvent;
+	import flash.events.IOErrorEvent;
 	import flash.events.KeyboardEvent;
+	import flash.events.SecurityErrorEvent;
 	import flash.net.SharedObject;
+	import flash.net.URLLoader;
+	import flash.net.URLLoaderDataFormat;
+	import flash.net.URLRequestMethod;
+	import flash.net.URLVariables;
 	import flash.text.TextField;
 	import model.ChannelData;
 	import model.chooseChannelData.ChooseChannelData;
@@ -137,6 +145,8 @@ package view.screen
 		private var otherMenu:Sprite;
 		private var menuChildButton:Sprite;
 		
+		private var max_sq_id:String = '0';
+		
 		public function LobbyRoomScreen() 
 		{
 			super();
@@ -221,6 +231,8 @@ package view.screen
 			containerChild.graphics.endFill();
 			containerChild.addEventListener(MouseEvent.CLICK, onHideInfo);
 			containerShop.visible = false;
+			
+			
 		}
 		
 		private function onUnRegisterClick(e:MouseEvent):void 
@@ -944,7 +956,7 @@ package view.screen
 		
 		private function onMoveToShop(e:Event):void 
 		{
-			addSelectGameWindow();
+			addSelectGameWindow(true);
 			mainCommand.electroServerCommand.closeConnection();
 			selectGameWindow.showTab(4);
 		}
@@ -1303,10 +1315,120 @@ package view.screen
 		
 		private function onHaveChat(e:Event):void 
 		{
-			if (mainData.gameType == MainData.TLMN)
+			var basePath:String = '';
+			if (mainData.isTest) 
+			{
+				basePath = "http://wss.test.azgame.us/Service03/";
+			}
+			else 
+			{
+				basePath = "http://wss.azgame.us/Service03/";
+			}
+			
+			var url:String = basePath + "/OnplayServerChat.asmx/NewMessage";
+			var urlReq:URLRequest = new URLRequest(url);
+			var requestVars:URLVariables = new URLVariables();
+			
+			requestVars.Nk_Nm = mainData.chooseChannelData.myInfo.name;
+			requestVars.game_id = mainData.game_id;
+			requestVars.message = chatBox.currentText;
+			requestVars.source_id = 'WEB';
+			
+			urlReq.data = requestVars;
+			urlReq.method = URLRequestMethod.POST;
+			
+			var urlLoader:URLLoader = new URLLoader();
+			urlLoader = new URLLoader();
+			urlLoader.dataFormat = URLLoaderDataFormat.TEXT;
+			urlLoader.addEventListener(Event.COMPLETE, loaderCompleteHandler, false, 0, true);
+			urlLoader.addEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler, false, 0, true);
+			urlLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler, false, 0, true);
+			urlLoader.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler, false, 0, true);
+			urlLoader.load(urlReq);
+			
+			/*if (mainData.gameType == MainData.TLMN)
 				mainCommand.electroServerCommand.sendPublicChat(mainData.chooseChannelData.myInfo.uId, mainData.chooseChannelData.myInfo.name, chatBox.currentText, false);
 			else
 				mainCommand.electroServerCommand.sendPublicChat(mainData.chooseChannelData.myInfo.name, chatBox.currentText);
+			*/
+		}
+		
+		private function ioErrorHandler(e:IOErrorEvent):void 
+		{
+			trace('ko gui len dc')
+		}
+		
+		private function securityErrorHandler(e:SecurityErrorEvent):void 
+		{
+			trace('co loi security')
+		}
+		
+		private function httpStatusHandler(e:HTTPStatusEvent):void 
+		{
+			trace('co loi status')
+		}
+		
+		private function loaderCompleteHandler(e:Event):void 
+		{
+			
+		}
+		
+		private function getListChat():void 
+		{
+			var basePath:String = '';
+			if (mainData.isTest) 
+			{
+				basePath = "http://wss.test.azgame.us/Service03/";
+			}
+			else 
+			{
+				basePath = "http://wss.azgame.us/Service03/";
+			}
+			
+			var url:String = basePath + "/OnplayServerChat.asmx/GetListMessages";
+			var urlReq:URLRequest = new URLRequest(url);
+			var requestVars:URLVariables = new URLVariables();
+			
+			requestVars.Nk_Nm = mainData.chooseChannelData.myInfo.name;
+			requestVars.max_sq_id = max_sq_id;
+			requestVars.source_id = 'WEB';
+			requestVars.game_id = mainData.game_id;
+			
+			urlReq.data = requestVars;
+			urlReq.method = URLRequestMethod.POST;
+			
+			
+			var urlLoader:URLLoader = new URLLoader();
+			urlLoader = new URLLoader();
+			urlLoader.dataFormat = URLLoaderDataFormat.TEXT;
+			urlLoader.addEventListener(Event.COMPLETE, getListChatComplete, false, 0, true);
+			urlLoader.addEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler, false, 0, true);
+			urlLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler, false, 0, true);
+			urlLoader.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler, false, 0, true);
+			urlLoader.load(urlReq);
+		}
+		
+		private function getListChatComplete(e:Event):void 
+		{
+			var obj:Object = com.adobe.serialization.json.JSON.decode(e.currentTarget.data);
+			
+			if (obj.TypeMsg == 1) 
+			{
+				
+				max_sq_id = obj.Data[obj.Data.length - 1 ].Sq_Id;
+				for (var i:int = 0; i < obj.Data.length; i++) 
+				{
+					var isMe:Boolean = false;
+					if (mainData.chooseChannelData.myInfo.name == obj.Data[i].Nk_Nm) 
+					{
+						isMe = true;
+					}
+					chatBox.addChatSentence(obj.Data[i].Content, obj.Data[i].Nk_Nm, isMe);
+				}
+			}
+			
+			getListChat();
+			
 		}
 		
 		private function onUpdateMyInfo(e:Event):void 
@@ -1335,6 +1457,11 @@ package view.screen
 			{
 				//selectGameWindow.showTab(1);
 				//showTabSelectgame = true;
+			}
+			
+			if (max_sq_id == '0') 
+			{
+				getListChat();
 			}
 			
 			

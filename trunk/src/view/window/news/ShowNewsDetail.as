@@ -93,6 +93,161 @@ package view.window.news
 		
 		public function addInfo(title:String, timeNews:String, contentNews:String):void 
 		{
+			var regExp:RegExp;
+			
+			//dau sac
+			regExp = /&aacute;/g;
+			contentNews = contentNews.replace(regExp, "á");
+			
+			regExp = /&iacute;/g;
+			contentNews = contentNews.replace(regExp, "í");
+			regExp = /&oacute;/g;
+			contentNews = contentNews.replace(regExp, "ó");
+			
+			regExp = /&eacute;/g;
+			contentNews = contentNews.replace(regExp, "é");
+			regExp = /&uacute;/g;
+			contentNews = contentNews.replace(regExp, "ú");
+			regExp = /&yacute;/g;
+			contentNews = contentNews.replace(regExp, "ý");
+			//dau sac
+			regExp = /&Aacute;/g;
+			contentNews = contentNews.replace(regExp, "Á");
+			
+			regExp = /&Iacute;/g;
+			contentNews = contentNews.replace(regExp, "Í");
+			regExp = /&Oacute;/g;
+			contentNews = contentNews.replace(regExp, "Ó");
+			
+			regExp = /&Eacute;/g;
+			contentNews = contentNews.replace(regExp, "É");
+			regExp = /&Uacute;/g;
+			contentNews = contentNews.replace(regExp, "Ú");
+			regExp = /&Yacute;/g;
+			contentNews = contentNews.replace(regExp, "Ý");
+			
+			//dau huyen
+			regExp = /&agrave;/g;
+			contentNews = contentNews.replace(regExp, "à");
+			
+			regExp = /&igrave;/g;
+			contentNews = contentNews.replace(regExp, "ì");
+			regExp = /&ograve;/g;
+			contentNews = contentNews.replace(regExp, "ò");
+			
+			regExp = /&egrave;/g;
+			contentNews = contentNews.replace(regExp, "è");
+			regExp = /&ugrave;/g;
+			contentNews = contentNews.replace(regExp, "ù");
+			//dau huyen
+			regExp = /&Agrave;/g;
+			contentNews = contentNews.replace(regExp, "À");
+			
+			regExp = /&Igrave;/g;
+			contentNews = contentNews.replace(regExp, "Ì");
+			regExp = /&Ograve;/g;
+			contentNews = contentNews.replace(regExp, "Ò");
+			
+			regExp = /&Egrave;/g;
+			contentNews = contentNews.replace(regExp, "È");
+			regExp = /&Ugrave;/g;
+			contentNews = contentNews.replace(regExp, "Ù");
+			
+			
+			/*//dau hoi
+			regExp = /&agrave;/g;
+			contentNews = contentNews.replace(regExp, "á");
+			
+			regExp = /&igrave;/g;
+			contentNews = contentNews.replace(regExp, "í");
+			regExp = /&ograve;/g;
+			contentNews = contentNews.replace(regExp, "ó");
+			
+			regExp = /&egrave;/g;
+			contentNews = contentNews.replace(regExp, "é");
+			regExp = /&ugrave;/g;
+			contentNews = contentNews.replace(regExp, "ú");
+			
+			
+			
+			//dau nang
+			regExp = /&agrave;/g;
+			contentNews = contentNews.replace(regExp, "á");
+			
+			regExp = /&igrave;/g;
+			contentNews = contentNews.replace(regExp, "í");
+			regExp = /&ograve;/g;
+			contentNews = contentNews.replace(regExp, "ó");
+			
+			regExp = /&egrave;/g;
+			contentNews = contentNews.replace(regExp, "é");
+			regExp = /&ugrave;/g;
+			contentNews = contentNews.replace(regExp, "ú");*/
+			
+			//dau nga
+			regExp = /&atilde;/g;
+			contentNews = contentNews.replace(regExp, "ã");
+			
+			regExp = /&itilde;/g;
+			contentNews = contentNews.replace(regExp, "ĩ");
+			regExp = /&otilde;/g;
+			contentNews = contentNews.replace(regExp, "õ");
+			
+			regExp = /&etilde;/g;
+			contentNews = contentNews.replace(regExp, "ẽ");
+			regExp = /&utilde;/g;
+			contentNews = contentNews.replace(regExp, "ũ");
+			//dau nga
+			regExp = /&Atilde;/g;
+			contentNews = contentNews.replace(regExp, "Á");
+			
+			regExp = /&Itilde;/g;
+			contentNews = contentNews.replace(regExp, "Ĩ");
+			regExp = /&Otilde;/g;
+			contentNews = contentNews.replace(regExp, "Õ");
+			
+			regExp = /&Etilde;/g;
+			contentNews = contentNews.replace(regExp, "Ẽ");
+			regExp = /&Utilde;/g;
+			contentNews = contentNews.replace(regExp, "Ũ");
+			
+			//dau mu
+			regExp = /&acirc;/g;
+			contentNews = contentNews.replace(regExp, "â");
+			
+			regExp = /&icirc;/g;
+			contentNews = contentNews.replace(regExp, "í");
+			regExp = /&ocirc;/g;
+			contentNews = contentNews.replace(regExp, "ô");
+			
+			regExp = /&ecirc;/g;
+			contentNews = contentNews.replace(regExp, "ê");
+			regExp = /&ucirc;/g;
+			contentNews = contentNews.replace(regExp, "ú");
+			//dau mu
+			regExp = /&Acirc;/g;
+			contentNews = contentNews.replace(regExp, "Â");
+			
+			regExp = /&Ocirc;/g;
+			contentNews = contentNews.replace(regExp, "Ô");
+			
+			regExp = /&Ecirc;/g;
+			contentNews = contentNews.replace(regExp, "Ê");
+			
+			
+			//dau 
+			regExp = /&rsquo;/g;
+			contentNews = contentNews.replace(regExp, "'");
+			
+			regExp = /&ndash;/g;
+			contentNews = contentNews.replace(regExp, "-");
+			regExp = /&permil;/g;
+			contentNews = contentNews.replace(regExp, '%');
+			
+			regExp = /&ldquo;/g;
+			contentNews = contentNews.replace(regExp, '"');
+ 
+			
 			
 			newsTitle.text = title;
 			newsTime.text = formatDate(timeNews);
@@ -106,7 +261,8 @@ package view.window.news
 			tf.multiline = tf.wordWrap = true;
 			tf.selectable = false;
 			tf.autoSize = TextFieldAutoSize.LEFT;
-			tf.htmlText = contentNews;
+			tf.htmlText = unescape(contentNews);
+			
 			
 			tf.width = 580;
 			tf.height = tf.textHeight;

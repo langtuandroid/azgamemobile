@@ -116,6 +116,7 @@ package view
 			noticeText = content["showNotice"];
 			
 			content["activeMc"].visible = false;
+			content["activeMc"].gotoAndStop(1);
 			
 			tlmnIcon = content["tlmnIcon"];
 			phomIcon = content["phomIcon"];
@@ -145,9 +146,6 @@ package view
 			gameList.push(samIcon);
 			gameList.push(luckyCardIcon);
 			gameList.push(pokerIcon);
-			
-			
-			
 			
 			
 			///////tam bo select game, inventory, tien chip levelIcon, level
@@ -227,6 +225,10 @@ package view
 			exitButton.addEventListener(MouseEvent.CLICK, onExitButtonClick);
 			giftCodeButton.addEventListener(MouseEvent.CLICK, onGiftCodeButtonClick);
 			content["close"].addEventListener(MouseEvent.CLICK, onCloseAll);
+			
+			content["activeMc"].buttonMode = true;
+			content["activeMc"].addEventListener(MouseEvent.CLICK, onShowMyItem);
+			
 		}
 		
 		public function checkShowBanner():void 
@@ -617,11 +619,8 @@ package view
 					content["containerShopItem"].addChild(_newsWindow);
 					_newsWindow.x = 350;
 					_newsWindow.y = -300;
-					if (mainData.isFirstJoinLobby) 
-					{
-						_newsWindow.onClickHotNew(null);
-					}
 					
+					_newsWindow.onClickHotNew(null);
 					
 				break;
 				case 2:
@@ -906,6 +905,7 @@ package view
 				}
 				MainCommand.getInstance().initVar();
 				mainData.lobbyRoomData.invitePlayData = new Object();
+				closeAll();
 				dispatchEvent(new Event(SELECT_GAME));
 				
 				SoundManager.getInstance().playBackgroundMusicMauBinh();
@@ -937,6 +937,16 @@ package view
 			money1Txt.text = PlayingLogic.format(mainData.chooseChannelData.myInfo.money, 1);
 			//money2Txt.text = PlayingLogic.format(mainData.chooseChannelData.myInfo.cash, 1);
 			avatar.addImg(mainData.chooseChannelData.myInfo.avatar);
+			if (mainData.chooseChannelData.myInfo.is_email_active == 0 || mainData.chooseChannelData.myInfo.is_phone_number_active == 0)
+			{
+				content["activeMc"].visible = true;
+				content["activeMc"].play();
+			}
+			else
+			{
+				content["activeMc"].visible = false;
+				content["activeMc"].gotoAndStop(1);
+			}
 		}
 		
 		private function onSelectGame(e:MouseEvent):void 

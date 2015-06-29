@@ -446,12 +446,19 @@ package model
 		public var electroInfo:Object;
 		public var game_id:String = '';
 		
-		public var phone1:String = "7739";
+		/*public var phone1:String = "7739";
 		public var phone2:String = "5678";
 		public var phone3:String = "8569";
 		public var phone4:String = "8669";
 		public var phone5:String = "8769";
-		public var phone6:String = "8069";
+		public var phone6:String = "8069";*/
+		
+		public var phone1:String = "9029";
+		public var phone2:String = "9029";
+		public var phone3:String = "9029";
+		public var phone4:String = "9029";
+		public var phone5:String = "9029";
+		public var phone6:String = "9029";
 		
 		public var description1:String = "Phí dịch vụ 15k/tin";
 		public var description2:String = "Phí dịch vụ 5k/tin";
@@ -644,8 +651,8 @@ package model
 		public var token:String;
 		//public var version:String = "v1.4.1";
 
-		public var version:String = "v1.9.4";
-		public var isTest:Boolean = false; // biến để check xem đang chạy trên server test hay server thật
+		public var version:String = "v1.9.6";
+		public var isTest:Boolean = true; // biến để check xem đang chạy trên server test hay server thật
 
 		public var isFacebookVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào facebook không
 		public var isWebVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào web không
