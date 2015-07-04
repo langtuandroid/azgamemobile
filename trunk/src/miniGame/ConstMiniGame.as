@@ -12,7 +12,7 @@ package miniGame
 		public static const BUY_TURN_TEXT:String = "Bạn hãy nhập số lượt cần thêm!";
 		public static const BUY_TURN_ERROR_TEXT:String = "Không thể mua thêm lượt rút, xin bạn vui lòng mua lại!";
 		public static const BUY_TURN_SUCCESS_TEXT:String = "Mua thêm lượt rút thành công, chúc bạn may mắn!";
-		public static const PLAY_GAME_ERROR_TEXT:String = "Không rút được quà, bạn vui lòng rút lại!";
+		public static const PLAY_GAME_ERROR_TEXT:String = "Kết nối internet gặp vấn đề, bạn vui lòng thử lại!";
 		
 		public static const GET_GIFT_SUCCESS:String = "getGiftSuccess";
 		public static const CLOSE_POPUP:String = "closePopup";

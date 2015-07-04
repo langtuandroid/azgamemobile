@@ -244,7 +244,7 @@ package inapp_purchase
 			this.myPurchases = e.purchases;
 			var allItemIds:Vector.<String>=new <String>["my_spell", "my_subscription", "my_levelpack"];
 			
-			updateInventoryMessage();
+			//updateInventoryMessage();
 		}
 		
 		/** Getting the inventory failed */

@@ -155,8 +155,10 @@ package miniGame
 			if (_playGame && noticePopup.error) 
 			{
 				_playGame.on = false;
-				_playGame.setupContent();
+				//_playGame.setupContent();
 				noticePopup.error = false;
+				
+				removeMiniGame();
 			}
 			noticePopup.visible = false;
 		}

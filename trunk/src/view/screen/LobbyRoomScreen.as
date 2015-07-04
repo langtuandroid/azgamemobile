@@ -66,6 +66,7 @@ package view.screen
 	import view.window.JoinRoomWindow;
 	import view.window.SearchRoomWindow;
 	import view.window.windowLayer.WindowLayer;	
+	import chat.ChatAll;
 	/**
 	 * ...
 	 * @author Yun
@@ -77,7 +78,8 @@ package view.screen
 		
 		private var roomList:RoomListComponent;
 		private var userList:UserListComponent;
-		private var chatBox:ChatBoxLobby;
+		//private var chatBox:ChatBoxLobby;
+		private var chatBox:ChatAll;
 		private var messageBox:ChatBoxLobby;
 		
 		private var background:Sprite;
@@ -191,9 +193,16 @@ package view.screen
 			tutorialBoard.mailTutBtn.addEventListener(MouseEvent.CLICK, onClickHotmail );
 			tutorialBoard.otherTutBtn.addEventListener(MouseEvent.CLICK, onClickOtherTut );
 			
-			chatBox = new ChatBoxLobby();
-			chatBox.addEventListener(ChatBox.HAVE_CHAT, onHaveChat);
-			chatBox.addEventListener(ChatBox.BACK_BUTTON_CLICK, onCloseChatBox);
+			chatBox = new ChatAll();
+			firstLayer.addChild(chatBox);
+			var sp:Sprite = new Sprite();
+			sp.graphics.beginFill(0x123456);
+			sp.graphics.drawRect(0, 0, 311, 280);
+			sp.graphics.endFill();
+			addChild(sp);
+			sp.x = 642.5;
+			sp.y = 305;
+			chatBox.mask = sp;
 			
 			messageBox = new ChatBoxLobby();
 			messageBox.addEventListener(ChatBox.BACK_BUTTON_CLICK, onCloseMessageBox);
@@ -550,8 +559,11 @@ package view.screen
 			musicOffButton.y = 30;
 			soundOffButton.y = 30;
 			
-			chatButton.addEventListener(MouseEvent.CLICK, onChatButtonClick);
-			messageButton.addEventListener(MouseEvent.CLICK, onMessageButtonClick);
+			chatButton.visible = false;
+			//chatButton.addEventListener(MouseEvent.CLICK, onChatButtonClick);
+			//messageButton.addEventListener(MouseEvent.CLICK, onMessageButtonClick);
+			messageButton.visible = false;
+			
 			exitButton.addEventListener(MouseEvent.CLICK, onExitButtonClick);
 			helpButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
 			soundOnButton.addEventListener(MouseEvent.CLICK, onMenuButtonClick);
@@ -1307,127 +1319,11 @@ package view.screen
 		
 		private function onUpdatePublicChat(e:Event):void 
 		{
-			var isMe:Boolean;
-			if (mainData.chooseChannelData.myInfo.uId == mainData.publicChatData.userName)
-				isMe = true;
-			chatBox.addChatSentence(mainData.publicChatData.chatContent, mainData.publicChatData.displayName, isMe);
+			
 		}
 		
 		private function onHaveChat(e:Event):void 
 		{
-			var basePath:String = '';
-			if (mainData.isTest) 
-			{
-				basePath = "http://wss.test.azgame.us/Service03/";
-			}
-			else 
-			{
-				basePath = "http://wss.azgame.us/Service03/";
-			}
-			
-			var url:String = basePath + "/OnplayServerChat.asmx/NewMessage";
-			var urlReq:URLRequest = new URLRequest(url);
-			var requestVars:URLVariables = new URLVariables();
-			
-			requestVars.Nk_Nm = mainData.chooseChannelData.myInfo.name;
-			requestVars.game_id = mainData.game_id;
-			requestVars.message = chatBox.currentText;
-			requestVars.source_id = 'WEB';
-			
-			urlReq.data = requestVars;
-			urlReq.method = URLRequestMethod.POST;
-			
-			var urlLoader:URLLoader = new URLLoader();
-			urlLoader = new URLLoader();
-			urlLoader.dataFormat = URLLoaderDataFormat.TEXT;
-			urlLoader.addEventListener(Event.COMPLETE, loaderCompleteHandler, false, 0, true);
-			urlLoader.addEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler, false, 0, true);
-			urlLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler, false, 0, true);
-			urlLoader.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler, false, 0, true);
-			urlLoader.load(urlReq);
-			
-			/*if (mainData.gameType == MainData.TLMN)
-				mainCommand.electroServerCommand.sendPublicChat(mainData.chooseChannelData.myInfo.uId, mainData.chooseChannelData.myInfo.name, chatBox.currentText, false);
-			else
-				mainCommand.electroServerCommand.sendPublicChat(mainData.chooseChannelData.myInfo.name, chatBox.currentText);
-			*/
-		}
-		
-		private function ioErrorHandler(e:IOErrorEvent):void 
-		{
-			trace('ko gui len dc')
-		}
-		
-		private function securityErrorHandler(e:SecurityErrorEvent):void 
-		{
-			trace('co loi security')
-		}
-		
-		private function httpStatusHandler(e:HTTPStatusEvent):void 
-		{
-			trace('co loi status')
-		}
-		
-		private function loaderCompleteHandler(e:Event):void 
-		{
-			
-		}
-		
-		private function getListChat():void 
-		{
-			var basePath:String = '';
-			if (mainData.isTest) 
-			{
-				basePath = "http://wss.test.azgame.us/Service03/";
-			}
-			else 
-			{
-				basePath = "http://wss.azgame.us/Service03/";
-			}
-			
-			var url:String = basePath + "/OnplayServerChat.asmx/GetListMessages";
-			var urlReq:URLRequest = new URLRequest(url);
-			var requestVars:URLVariables = new URLVariables();
-			
-			requestVars.Nk_Nm = mainData.chooseChannelData.myInfo.name;
-			requestVars.max_sq_id = max_sq_id;
-			requestVars.source_id = 'WEB';
-			requestVars.game_id = mainData.game_id;
-			
-			urlReq.data = requestVars;
-			urlReq.method = URLRequestMethod.POST;
-			
-			
-			var urlLoader:URLLoader = new URLLoader();
-			urlLoader = new URLLoader();
-			urlLoader.dataFormat = URLLoaderDataFormat.TEXT;
-			urlLoader.addEventListener(Event.COMPLETE, getListChatComplete, false, 0, true);
-			urlLoader.addEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler, false, 0, true);
-			urlLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler, false, 0, true);
-			urlLoader.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler, false, 0, true);
-			urlLoader.load(urlReq);
-		}
-		
-		private function getListChatComplete(e:Event):void 
-		{
-			var obj:Object = com.adobe.serialization.json.JSON.decode(e.currentTarget.data);
-			
-			if (obj.TypeMsg == 1) 
-			{
-				
-				max_sq_id = obj.Data[obj.Data.length - 1 ].Sq_Id;
-				for (var i:int = 0; i < obj.Data.length; i++) 
-				{
-					var isMe:Boolean = false;
-					if (mainData.chooseChannelData.myInfo.name == obj.Data[i].Nk_Nm) 
-					{
-						isMe = true;
-					}
-					chatBox.addChatSentence(obj.Data[i].Content, obj.Data[i].Nk_Nm, isMe);
-				}
-			}
-			
-			getListChat();
 			
 		}
 		
@@ -1461,7 +1357,7 @@ package view.screen
 			
 			if (max_sq_id == '0') 
 			{
-				getListChat();
+				chatBox.getListChat();
 			}
 			
 			
