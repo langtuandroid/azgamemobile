@@ -683,12 +683,14 @@ package
 		
 		private function onJoinLobbyRoomSuccess(e:Event):void 
 		{
+			mainData.isReconnectPhom = false;
 			if (windowLayerChild.isNoCloseAll)
 				windowLayerChild.isNoCloseAll = false;
 			else
 				windowLayerChild.closeAllWindow();
 				
 			//lobbyRoomScreen.updateGameType();
+			lobbyRoomScreen.updateChannelName();
 			//trace("joinlobby mainview: ", mainData.joinedGame)
 			if (!mainData.joinedGame) 
 			{

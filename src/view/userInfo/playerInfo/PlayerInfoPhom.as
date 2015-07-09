@@ -800,6 +800,10 @@ package view.userInfo.playerInfo
 				{
 					if (!leavedCards)
 						leavedCards = new Array();
+					for (var j:int = 0; j < leavedCards.length; j++) 
+					{
+						CardPhom(leavedCards[j]).hideTwinkle();
+					}
 					leavedCards.push(unLeaveCards[i]);
 					CardPhom(unLeaveCards[i]).isMouseInteractive = false;
 					unLeaveCards.splice(i, 1);
@@ -1500,6 +1504,9 @@ package view.userInfo.playerInfo
 			}
 			
 			content["bubbleChatPosition"].visible = false;
+			reconnectIcon = content["reconnectIcon"];
+			if (reconnectIcon)
+				reconnectIcon.visible = false;
 		}
 		
 		public function setStatus(type:String):void
@@ -2189,6 +2196,8 @@ package view.userInfo.playerInfo
 				{*/
 					exitButton.removeEventListener(MouseEvent.CLICK, onOtherButtonClick);
 					dispatchEvent(new Event(EXIT, true));
+					if (mainData.isReconnectVersion)
+						mainData.isNoCallLeaveRoom = true;
 					electroServerCommand.joinLobbyRoom();
 				/*}*/
 				EffectLayer.getInstance().removeAllEffect();
@@ -2413,6 +2422,7 @@ package view.userInfo.playerInfo
 		private var _isGiveUp:Boolean;
 		private var emo:Sprite;
 		private var timerToHideEmo:Timer;
+		private var reconnectIcon:MovieClip;
 		public var win:int;
 		public var lose:int;
 		
@@ -2429,6 +2439,17 @@ package view.userInfo.playerInfo
 				giveUpIcon.visible = true;
 				addChild(giveUpIcon);
 			}
+		}
+		
+		public function showReconnectIcon():void
+		{
+			addChild(reconnectIcon);
+			reconnectIcon.visible = true;
+		}
+		
+		public function hideReconnectIcon():void
+		{
+			reconnectIcon.visible = false;
 		}
 	}
 

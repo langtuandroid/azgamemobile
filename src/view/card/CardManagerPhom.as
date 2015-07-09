@@ -270,6 +270,7 @@ package view.card
 						addChild(card);
 						card.simpleOpen();
 						player.pushNewUnLeaveCard(card);
+						card.addStartPoint();
 					}
 				}
 				else

@@ -361,8 +361,6 @@ package control
 		// sau khi login thì join lobby
 		public function joinLobbyRoom(gameName:String, channelId:int, capacity:int = 200): void
 		{
-			myData.channelId = channelId;
-			
 			var description:String = "Phòng lobby của game: " + gameName + " tại kênh có id là: " + channelId;
 			joinRoom(myData.lobbyName, "", description, null, capacity);
 		}
@@ -719,67 +717,74 @@ package control
 					}
 				break;
 				case Command.GET_FRIEND_LIST: // Get danh sách bạn bè
-					myData.friendList = new Object();
-					var friendList:Array = e.parameters.getEsObjectArray(DataFieldMauBinh.FRIEND_LIST);
-					var friendObject:Object;
-					var userData:UserDataULC;
-					tempUserList = new Array();
-					for (i = 0; i < friendList.length; i++) 
+					try 
 					{
-						userData = new UserDataULC();
-						userData.isJoinRoom = true;
-						userData.isViewPersonalInfo = true;
-						userData.isMakeFriend = true;
-						userData.moneyLogoUrl = '';
-						userData.displayName = EsObject(friendList[i]).getString(DataFieldMauBinh.DISPLAY_NAME);
-						userData.levelName = EsObject(friendList[i]).getString(DataFieldMauBinh.LEVEL);
-						userData.userID = EsObject(friendList[i]).getString(DataFieldMauBinh.USER_NAME);
-						userData.userName = EsObject(friendList[i]).getString(DataFieldMauBinh.USER_NAME);
-						userData.isOnline = EsObject(friendList[i]).getBoolean(DataFieldMauBinh.ONLINE);
-						if (userData.isOnline)
+						myData.friendList = new Object();
+						var friendList:Array = e.parameters.getEsObjectArray(DataFieldMauBinh.FRIEND_LIST);
+						var friendObject:Object;
+						var userData:UserDataULC;
+						tempUserList = new Array();
+						for (i = 0; i < friendList.length; i++) 
 						{
-							userData.roomID = int(EsObject(friendList[i]).getString("room_id"));
-							
-							switch (EsObject(friendList[i]).getString("game_id")) 
+							userData = new UserDataULC();
+							userData.isJoinRoom = true;
+							userData.isViewPersonalInfo = true;
+							userData.isMakeFriend = true;
+							userData.moneyLogoUrl = '';
+							userData.displayName = EsObject(friendList[i]).getString(DataFieldMauBinh.DISPLAY_NAME);
+							userData.levelName = EsObject(friendList[i]).getString(DataFieldMauBinh.LEVEL);
+							userData.userID = EsObject(friendList[i]).getString(DataFieldMauBinh.USER_NAME);
+							userData.userName = EsObject(friendList[i]).getString(DataFieldMauBinh.USER_NAME);
+							userData.isOnline = EsObject(friendList[i]).getBoolean(DataFieldMauBinh.ONLINE);
+							if (userData.isOnline)
 							{
-								case "AZGB_BINH":
-									userData.gameId = MainData.MAUBINH_ID;
-								break;
-								case "AZGB_PHOM":
-									userData.gameId = MainData.PHOM_ID;
-								break;
-								case "AZGB_TLMN":
-									userData.gameId = MainData.TLMN_ID;
-								break;
-								case "AZGB_SAM":
-									userData.gameId = MainData.SAM_ID;
-								break;
-								case "AZGB_XITO":
-									userData.gameId = MainData.XITO_ID;
-								break;
-								default:
+								userData.roomID = int(EsObject(friendList[i]).getString("room_id"));
+								
+								switch (EsObject(friendList[i]).getString("game_id")) 
+								{
+									case "AZGB_BINH":
+										userData.gameId = MainData.MAUBINH_ID;
+									break;
+									case "AZGB_PHOM":
+										userData.gameId = MainData.PHOM_ID;
+									break;
+									case "AZGB_TLMN":
+										userData.gameId = MainData.TLMN_ID;
+									break;
+									case "AZGB_SAM":
+										userData.gameId = MainData.SAM_ID;
+									break;
+									case "AZGB_XITO":
+										userData.gameId = MainData.XITO_ID;
+									break;
+									default:
+								}
 							}
+							
+							if (!EsObject(friendList[i]).doesPropertyExist(DataFieldMauBinh.LOSE))
+								userData.lose = 0;
+							else
+								userData.lose = EsObject(friendList[i]).getInteger(DataFieldMauBinh.LOSE);
+							if (!EsObject(friendList[i]).doesPropertyExist(DataFieldMauBinh.WIN))
+								userData.win = 0;
+							else
+								userData.win = EsObject(friendList[i]).getInteger(DataFieldMauBinh.WIN);
+								
+							userData.money = EsObject(friendList[i]).getString(DataFieldMauBinh.MONEY);
+							
+							userData.avatar = EsObject(friendList[i]).getString(DataFieldMauBinh.AVATAR);
+							userData.isFriend = true;
+							
+							if (userData.userName != mainData.chooseChannelData.myInfo.uId)
+								tempUserList.push(userData);
 						}
 						
-						if (!EsObject(friendList[i]).doesPropertyExist(DataFieldMauBinh.LOSE))
-							userData.lose = 0;
-						else
-							userData.lose = EsObject(friendList[i]).getInteger(DataFieldMauBinh.LOSE);
-						if (!EsObject(friendList[i]).doesPropertyExist(DataFieldMauBinh.WIN))
-							userData.win = 0;
-						else
-							userData.win = EsObject(friendList[i]).getInteger(DataFieldMauBinh.WIN);
-							
-						userData.money = EsObject(friendList[i]).getString(DataFieldMauBinh.MONEY);
-						
-						userData.avatar = EsObject(friendList[i]).getString(DataFieldMauBinh.AVATAR);
-						userData.isFriend = true;
-						
-						if (userData.userName != mainData.chooseChannelData.myInfo.uId)
-							tempUserList.push(userData);
+						mainData.lobbyRoomData.friendList = tempUserList;
 					}
-					
-					mainData.lobbyRoomData.friendList = tempUserList;
+					catch (err:Error)
+					{
+						
+					}
 				break;
 				case Command.REMOVE_FRIEND: // Server confirm remove friend
 					trace("aaaaaaaaaaaaaaaaaaaaa");
@@ -1276,7 +1281,6 @@ package control
 			//var createGameRequest:CreateGameRequest = new CreateGameRequest();
 			var createGameRequest:QuickJoinGameRequest = new QuickJoinGameRequest();
 			createGameRequest.gameType = myData.gameType;
-			//createGameRequest.zoneName = mainData.game_id + "_" + String(myData.channelId);
 			createGameRequest.zoneName = mainData.game_id + "_" + String(mainData.currentChannelId);
 			createGameRequest.gameDetails = gameDetails;
 			createGameRequest.createOnly = true;
@@ -1472,11 +1476,10 @@ package control
 		
 		private function joinRoom(roomName: String, roomPassword: String = "", roomDescription: String = "", plugins: Array = null, roomCapacity: int = -1): void
 		{
-			if (myData.channelId != -1)
-				leaveRoom();
+			leaveRoom();
 				
 			var createRoomRequest:CreateRoomRequest = new CreateRoomRequest();
-			createRoomRequest.zoneName = mainData.game_id + "_" + String(myData.channelId);
+			createRoomRequest.zoneName = mainData.game_id + "_" + String(mainData.currentChannelId);
 			createRoomRequest.roomName = roomName;
 			createRoomRequest.roomDescription = roomDescription;
 			createRoomRequest.capacity = roomCapacity;
@@ -1513,11 +1516,9 @@ package control
 		 */		
 		public function getUserInRoom(roomId:int):void
 		{
-			var zoneName:String = mainData.game_id + "_" + myData.channelId;
-			var zoneId: int = electroServer.managerHelper.zoneManager.zoneByName(zoneName).id;
 			var getUsersInRoomRequest:GetUsersInRoomRequest = new GetUsersInRoomRequest();
 			getUsersInRoomRequest.roomId = roomId;
-			getUsersInRoomRequest.zoneId = zoneId;
+			getUsersInRoomRequest.zoneId = currentZone.id;
 			electroServer.engine.send(getUsersInRoomRequest);
 		}
 		
@@ -1719,16 +1720,15 @@ package control
 		
 		private function leaveRoom(): void
 		{
-			if (myData.roomId == -1)
+			if (!currentZone)
 				return;
-			if (myData.roomId != Room(Zone(electroServer.managerHelper.zoneManager.zones[0]).getJoinedRooms()[0]).id)
+			if (!currentRoom)
 				return;
 			var leaveRoomRequest:LeaveRoomRequest = new LeaveRoomRequest();
-			leaveRoomRequest.zoneId = myData.zoneId;
-			leaveRoomRequest.roomId = myData.roomId;
+			leaveRoomRequest.zoneId = currentZone.id;
+			leaveRoomRequest.roomId = currentRoom.id;
 			myData.roomId = -1;
 			electroServer.engine.send(leaveRoomRequest);
-			
 		}
 		
 		public function closeConnection():void
@@ -1830,6 +1830,16 @@ package control
 			var pingRequest:GetUserCountRequest = new GetUserCountRequest();
 			electroServer.engine.send(pingRequest);
 			sendPublicMessage(Command.HEART_BEAT, null);
+		}
+		
+		public function get currentZone():Zone 
+		{
+			return electroServer.managerHelper.zoneManager.zones[0];
+		}
+		
+		public function get currentRoom():Room 
+		{
+			return currentZone.getJoinedRooms()[0];
 		}
 	}
 

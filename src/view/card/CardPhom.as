@@ -162,6 +162,12 @@ package view.card
 			}
 		}
 		
+		public function addStartPoint():void
+		{
+			startX = x;
+			startY = y;
+		}
+		
 		private function movingComplete(e:Event):void 
 		{
 			isMoving = false;

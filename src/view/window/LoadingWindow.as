@@ -30,7 +30,7 @@ package view.window
 				timerToCloseWindow.removeEventListener(TimerEvent.TIMER_COMPLETE, onCompleteTimerCloseWindow);
 				timerToCloseWindow.stop();
 			}
-			timerToCloseWindow = new Timer(5000, 1);
+			timerToCloseWindow = new Timer(30000, 1);
 			timerToCloseWindow.addEventListener(TimerEvent.TIMER_COMPLETE, onCompleteTimerCloseWindow);
 			timerToCloseWindow.start();
 		}

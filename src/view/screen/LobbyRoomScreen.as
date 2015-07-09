@@ -352,6 +352,23 @@ package view.screen
 			gameLogo.gotoAndStop(mainData.gameType);
 		}
 		
+		public function updateChannelName():void
+		{
+			for (var j:int = 0; j < mainData.chooseChannelData.channelInfoArray.length; j++) 
+			{
+				var channelObject:Object = mainData.chooseChannelData.channelInfoArray[j];
+				if (channelObject[DataFieldMauBinh.CHANNEL_NUM] == mainData.currentChannelId)
+				{
+					GameDataTLMN.getInstance().levelLobby = channelObject[DataFieldMauBinh.CHANNEL_NAME];
+					mainData.playingData.gameRoomData.channelName = channelObject[DataFieldMauBinh.CHANNEL_NAME];
+					mainData.playingData.gameRoomData.betting = String(channelObject[DataFieldMauBinh.BETS]).split(",");
+					mainData.fee = channelObject[DataFieldMauBinh.DEALER_FEE];
+					channelInfoTxt.text = channelObject[DataFieldMauBinh.CHANNEL_NAME];
+					mainData.channelNum = String(mainData.currentChannelId).charAt(0);
+				}
+			}
+		}
+		
 		private function onCloseMessageBox(e:Event):void 
 		{
 			messageBox.parent.removeChild(messageBox);
@@ -501,6 +518,12 @@ package view.screen
 		{
 			firstLayer.addChild(smallButtonMenu);
 			otherMenu.visible = true;
+			currentChannelButton = null;
+			if (channelList)
+			{
+				if (channelList.parent)
+					channelList.parent.removeChild(channelList);
+			}
 			e.stopPropagation();
 		}
 		
@@ -808,6 +831,8 @@ package view.screen
 					currentChannelButton = e.currentTarget;
 					channelList.x = channelSmallButtonArray[i].x + channelSmallButtonArray[i].width;
 					channelList.y = channelSmallButtonArray[i].y;
+					if (otherMenu)
+						otherMenu.visible = false;
 					
 					e.stopImmediatePropagation();
 					return;
