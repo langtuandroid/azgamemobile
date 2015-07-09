@@ -443,7 +443,6 @@ package model
 		public var loginData:Object;
 		
 		public var gameIp:String = "203.162.121.120";
-		public var electroInfo:Object;
 		public var game_id:String = '';
 		
 		/*public var phone1:String = "7739";
@@ -618,7 +617,34 @@ package model
 			if (value)
 				dispatchEvent(new Event(CONNECT_FAIL));
 		}
-
+		
+		public static const CLOSE_RECONNECT_WINDOW:String = "closeReconnectWindow";
+		private var _isCloseReconnectWindow:Boolean;
+		public function get isCloseReconnectWindow():Boolean 
+		{
+			return _isCloseReconnectWindow;
+		}
+		
+		public function set isCloseReconnectWindow(value:Boolean):void 
+		{
+			_isCloseReconnectWindow = value;
+			if (value)
+				dispatchEvent(new Event(CLOSE_RECONNECT_WINDOW));
+		}
+		
+		public static const LOGIN_SUCCESS:String = "loginSuccess";
+		private var _isLoginSuccess:Boolean;
+		public function get isLoginSuccess():Boolean 
+		{
+			return _isLoginSuccess;
+		}
+		
+		public function set isLoginSuccess(value:Boolean):void 
+		{
+			_isLoginSuccess = value;
+			if (value)
+				dispatchEvent(new Event(LOGIN_SUCCESS));
+		}
 
 		public static const MAUBINH_ID:int = 1;
 		public static const PHOM_ID:int = 2;
@@ -652,7 +678,7 @@ package model
 		//public var version:String = "v1.4.1";
 
 		public var version:String = "v1.9.6";
-		public var isTest:Boolean = false; // biến để check xem đang chạy trên server test hay server thật
+		public var isTest:Boolean = true; // biến để check xem đang chạy trên server test hay server thật
 
 		public var isFacebookVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào facebook không
 		public var isWebVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào web không
@@ -673,8 +699,9 @@ package model
 		public var chl_Allow:Array
 		public var chl_Auto_Allow:Array
 		public var isNoCallLeaveRoom:Boolean;
-		public var isReconnectVersion:Boolean = false;
+		public var isReconnectVersion:Boolean = true;
 		public var isFirstLoginFacebook:Boolean = true;
+		public var isReconnectPhom:Boolean = false;
 	}
 
 }

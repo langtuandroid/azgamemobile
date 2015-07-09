@@ -17,7 +17,6 @@ package model
 		public var roomList:Object;
 		public var roomListUpdate:Object; // dùng để lưu lại những room vừa có update
 		
-		public var channelId:int = -1;
 		public var gameName:String;
 		public var gameRoomInfo:Object;
 		public var gameType:String = "TienLenMNPlugin";

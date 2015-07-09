@@ -328,8 +328,31 @@ package view.window.loginWindow
 		{
 			mainData.removeEventListener(MainData.UPDATE_FACEBOOK_DATA, onUpdateFacebookData);
 			mainData.removeEventListener(MainData.LOGIN_FACEBOOK_FAIL, onLoginFacebookFail);
+			mainData.removeEventListener(MainData.CLOSE_RECONNECT_WINDOW, onCloseReconnectWindow);
 			mainData.chooseChannelData.removeEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
 			mainData.isOnLoginWindow = false;
+		}
+		
+		private function onCloseReconnectWindow(e:Event):void 
+		{
+			if (mainData.isReconnectPhom)
+			{
+				if (mainData.loginType == '1')
+				{
+					loginMobile();
+					mainData.isFirstLogin = false;
+				}
+				else if (mainData.loginType == '2')
+				{
+					loginFacebook();
+					mainData.isFirstLogin = false;
+				}
+				else if (mainData.loginType == '3')
+				{
+					loginEmail();
+					mainData.isFirstLogin = false;
+				}
+			}
 		}
 		
 		private function onAddedToStage(e:Event):void 
@@ -345,6 +368,7 @@ package view.window.loginWindow
 			var mainRequest:MainRequest;
 			var data:Object;
 			////
+			mainData.addEventListener(MainData.CLOSE_RECONNECT_WINDOW, onCloseReconnectWindow);
 			mainData.addEventListener(MainData.LOGIN_FACEBOOK_FAIL, onLoginFacebookFail);
 			mainData.chooseChannelData.addEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
 			mainData.isOnLoginWindow = true;
@@ -739,6 +763,8 @@ package view.window.loginWindow
 			
 			mainData.isAtLogin = false;
 			mainData.chooseChannelData.myInfo = myInfo;
+			
+			mainData.isLoginSuccess = true;
 			
 			if (mainData.isLoadSound)
 			{

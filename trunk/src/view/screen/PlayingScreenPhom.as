@@ -797,17 +797,68 @@ package view.screen
 				case Command.UPDATE_POT: // update tiền trong gà
 					listenUpdatePot(e.data[ModelField.DATA]);
 				break;
+				case Command.USER_DISCONNECT:
+					listenUserDisconnect(e.data[ModelField.DATA]);
+				break;
+				case Command.USER_RECONNECT:
+					listenUserReconnect(e.data[ModelField.DATA]);
+				break;
+			}
+		}
+		
+		private function listenUserDisconnect(data:Object):void 
+		{
+			for (var i:int = 0; i < playingPlayerArray.length; i++) 
+			{
+				if (PlayerInfoPhom(playingPlayerArray[i]).userName == data[DataFieldPhom.USER_NAME])
+				{
+					PlayerInfoPhom(playingPlayerArray[i]).showReconnectIcon();
+					return;
+				}
+			}
+		}
+		
+		private function listenUserReconnect(data:Object):void 
+		{
+			for (var i:int = 0; i < playingPlayerArray.length; i++) 
+			{
+				if (PlayerInfoPhom(playingPlayerArray[i]).userName == data[DataFieldPhom.USER_NAME])
+				{
+					PlayerInfoPhom(playingPlayerArray[i]).hideReconnectIcon();
+					return;
+				}
 			}
 		}
 		
 		private function listenHaveUserJoinRoom(data:Object):void 
 		{
+			var i:int;
+			if (mainData.isReconnectVersion)
+			{
+				for (i = 0; i < allPlayerArray.length; i++) 
+				{
+					if (allPlayerArray[i])
+					{
+						if (PlayerInfoPhom(allPlayerArray[i]).userName == data[DataFieldPhom.USER_NAME])
+							return;
+					}
+				}
+				if (playingPlayerArray)
+				{
+					for (i = 0; i < playingPlayerArray.length; i++) 
+					{
+						if (PlayerInfoPhom(playingPlayerArray[i]).userName == data[DataFieldPhom.USER_NAME])
+							return;
+					}
+				}
+			}
+			
 			SoundManager.getInstance().soundManagerPhom.playOtherJoinGamePlayerSound(data[DataFieldPhom.SEX]);
 			
 			chatBox.addChatSentence(data[DataFieldPhom.DISPLAY_NAME] + " " + mainData.init.gameDescription.playingScreen.userJoinRoom, "Thông báo");
 			var indexEmpty:int;
 			indexEmpty = allPlayerArray.length;
-			for (var i:int = 0; i < allPlayerArray.length; i++) 
+			for (i = 0; i < allPlayerArray.length; i++) 
 			{
 				if (!allPlayerArray[i])
 				{
@@ -968,6 +1019,8 @@ package view.screen
 				}
 			}
 			
+			if (!outPlayer && mainData.isReconnectVersion)
+				return;
 			SoundManager.getInstance().soundManagerPhom.playOtherExitGamePlayerSound(outPlayer.sex);
 			
 			for (i = 0; i < allPlayerArray.length; i++) 
@@ -1085,6 +1138,21 @@ package view.screen
 			}
 			
 			checkConflictIp();
+			
+			if (playingPlayerArray)
+				belowUserInfo.playingPlayerArray = playingPlayerArray;
+				
+			if (belowUserInfo.isPlaying && belowUserInfo.userName == data[DataFieldPhom.CURRENT_TURN])
+			{
+				if (!data[DataFieldPhom.IS_DRAW_CARD] && !data[DataFieldPhom.IS_DRAW_CARD])
+					belowUserInfo.setMyTurn(PlayerInfoPhom.GET_CARD);
+				else if (!data[DataFieldPhom.IS_LAYING_DONE])
+					belowUserInfo.setMyTurn(PlayerInfoPhom.DOWN_CARD);
+				else if (!data[DataFieldPhom.IS_SEND_DONE])
+					belowUserInfo.setMyTurn(PlayerInfoPhom.SEND_CARD);
+				else
+					belowUserInfo.setMyTurn(PlayerInfoPhom.PLAY_CARD);
+			}
 		}
 		
 		private function listenDealCard(data:Object):void 
@@ -1133,6 +1201,7 @@ package view.screen
 				if (playingPlayerArray[i] == belowUserInfo) // Gán cho mình dữ liệu các lá bài của server gửi về
 				{							
 					PlayerInfoPhom(playingPlayerArray[i]).cardInfoArray = data[DataFieldPhom.PLAYER_CARDS] as Array;
+					mainData.isReconnectPhom = true;
 				}
 				else // Nếu không thì chuyền dữ liệu gồm các lá bài úp
 				{
@@ -1361,14 +1430,24 @@ package view.screen
 					{
 						if (allPlayerArray[i])
 						{
-							if (PlayerInfoPhom(allPlayerArray[i]).isReadyPlay && allPlayerArray[i] != belowUserInfo)
+							if (PlayerInfoPhom(allPlayerArray[i]).isReadyPlay)
 							{
-								belowUserInfo.isReadyPlay = false;
-								hideReadyButton();
-								showStartButton();
-								
-								countTimeToKickRoomMaster();
-								return;
+								if (!mainData.isReconnectVersion)
+								{
+									belowUserInfo.isReadyPlay = false;
+									hideReadyButton();
+									showStartButton();
+									countTimeToKickRoomMaster();
+									return;
+								}
+								else if (allPlayerArray[i] != belowUserInfo || !belowUserInfo.isRoomMaster)
+								{
+									belowUserInfo.isReadyPlay = false;
+									hideReadyButton();
+									showStartButton();
+									countTimeToKickRoomMaster();
+									return;
+								}
 							}
 						}
 					}
@@ -1524,6 +1603,7 @@ package view.screen
 		
 		private function listenGameOver(data:Object):void // ván bài kết thúc
 		{
+			mainData.isReconnectPhom = false;
 			var playerList:Array = data[DataFieldPhom.PLAYER_LIST] as Array;
 			var moneyEffectPosition:Point;
 			var resultEffectPosition:Point;
@@ -1775,7 +1855,7 @@ package view.screen
 					{
 						if (allPlayerArray[j])
 						{
-							if (PlayerInfoPhom(allPlayerArray[j]).isReadyPlay)
+							if (PlayerInfoPhom(allPlayerArray[j]).isReadyPlay && allPlayerArray[j] != belowUserInfo)
 							{
 								showStartButton();
 								waitToPlay.visible = false;
@@ -1804,6 +1884,7 @@ package view.screen
 						PlayerInfoPhom(allPlayerArray[i]).isReadyPlay = true;
 				}
 			}
+			playingPlayerArray = new Array();
 		}
 		
 		private function listenHaveUserStealCard(data:Object):void // có user ăn bài
@@ -2441,7 +2522,12 @@ package view.screen
 						}
 					}
 					if (PlayerInfoPhom(allPlayerArray[i]).isReadyPlay)
-						countReady++;
+					{
+						if (!mainData.isReconnectVersion)
+							countReady++;
+						else if (allPlayerArray[i] != belowUserInfo || !belowUserInfo.isRoomMaster)
+							countReady++;
+					}
 				}
 			}
 			

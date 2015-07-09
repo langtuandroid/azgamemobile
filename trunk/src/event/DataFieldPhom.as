@@ -120,6 +120,7 @@ package event
 		public static const LOGO:String = "logo";
 		public static const ROOM:String = "room";
 		public static const CURRENT_GAME_ID:String = "currentGameId";
+		public static const CURRENT_TURN:String = "currentTurn";
 		public static const READY:String = "ready";
 		public static const USERNAME_ARRAY:String = "usernameArray";
 		public static const USERS_NUMBER:String = "usersNumber";
@@ -153,6 +154,10 @@ package event
 		public static const POT: String = "pot";
 		public static const DESTINATION_USER:String = "destinationUser";
 		public static const DEVICE_ID: String = "deviceId";
+		static public const IS_DRAW_CARD:String = "isDrawCard";
+		static public const IS_STEAL_CARD:String = "isStealCard";
+		static public const IS_LAYING_DONE:String = "isLayingDone";
+		static public const IS_SEND_DONE:String = "isSendDone";
 		
 		public function DataFieldPhom() 
 		{

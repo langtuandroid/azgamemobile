@@ -15,6 +15,7 @@ package control.electroServerCommand
 	import view.window.AlertWindow;
 	import view.window.BaseWindow;
 	import view.window.ConfirmInvitePlayWindow;
+	import view.window.ReconnectWindow;
 	import view.window.windowLayer.WindowLayer;
 	/**
 	 * ...
@@ -476,16 +477,38 @@ package control.electroServerCommand
 			removeEventForCoreAPI();
 			coreAPI = null;
 			
-			var closeConnectionWindow:AlertWindow = new AlertWindow();
-			//closeConnectionWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onCloseConnectionWindowClose);
+			if (mainData.isReconnectVersion)
+			{
+				if (mainData.isReconnectPhom)
+				{
+					var reconnectWindow:ReconnectWindow = new ReconnectWindow();
+					reconnectWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onCloseReconnectWindow);
+					windowLayer.openWindow(reconnectWindow);
+				}
+				else
+				{
+					var closeConnectionWindow:AlertWindow = new AlertWindow();
+					closeConnectionWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onCloseConnectionWindowClose);
+					closeConnectionWindow.setNotice("Kết nối bị gián đoạn. Vui lòng kiểm tra lại internet");
+					windowLayer.openWindow(closeConnectionWindow);
+				}
+				return;
+			}
+			closeConnectionWindow = new AlertWindow();
+			closeConnectionWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onCloseConnectionWindowClose);
 			closeConnectionWindow.setNotice("Kết nối bị gián đoạn. \n Vui lòng thử lại...");
 			windowLayer.openWindow(closeConnectionWindow);
 		}
 		
+		private function onCloseReconnectWindow(e:Event):void 
+		{
+			mainData.isCloseReconnectWindow = true;
+		}
+		
 		private function onCloseConnectionWindowClose(e:Event):void 
 		{
-			windowLayer.openLoadingWindow();
-			startConnect('', 0);
+			//windowLayer.openLoadingWindow();
+			//startConnect('', 0);
 		}
 		
 		private function onConnectFail(e:ElectroServerEvent):void 

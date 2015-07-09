@@ -764,6 +764,33 @@ package view
 			showTab(_shopWindow._type + 1);
 		}
 		
+		public function checkReconnect():void
+		{
+			if (mainData.isReconnectVersion)
+			{
+				if (mainData.isReconnectPhom)
+				{
+					gameId = 2;
+					mainData.gameName = 'PHỎM';
+					mainData.game_id = 'AZGB_PHOM';
+					mainData.portNumber = 5301;
+					mainData.minBetRate = 10;
+					mainData.resetMatchTime = 6.5;
+					if (mainData.isTest)
+						mainData.portNumber = 3301;
+					if (!SoundManager.getInstance().isLoadSoundPhom)
+						SoundManager.getInstance().loadSoundPhom();
+					mainData.gameType = MainData.PHOM;
+					
+					MainCommand.getInstance().initVar();
+					mainData.lobbyRoomData.invitePlayData = new Object();
+					dispatchEvent(new Event(SELECT_GAME));
+					SoundManager.getInstance().playBackgroundMusicMauBinh();
+					isRecentlySelectGame = false;
+				}
+			}
+		}
+		
 		private function onAddedToStage(e:Event):void 
 		{
 			SoundManager.getInstance().stopBackgroundMusicMauBinh();
@@ -822,6 +849,7 @@ package view
 			
 			
 			mainData.addEventListener(MainData.UPDATE_SYSTEM_NOTICE, onUpdateSystemNotice);
+			mainData.addEventListener(MainData.LOGIN_SUCCESS, onLoginSuccess);
 			/*noticeTimer = new Timer(30000);
 			noticeTimer.addEventListener(TimerEvent.TIMER, onTimerGetNotice);
 			noticeTimer.start();*/
@@ -921,12 +949,18 @@ package view
 				noticeTimer.removeEventListener(TimerEvent.TIMER, onTimerGetNotice);
 			}
 			mainData.removeEventListener(MainData.UPDATE_SYSTEM_NOTICE, onUpdateSystemNotice);
+			mainData.removeEventListener(MainData.LOGIN_SUCCESS, onLoginSuccess);
 			mainData.isOnSelectGameWindow = false;
 			mainData.chooseChannelData.removeEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
 
 			stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			noticeText.txt.x = -noticeText.txt.width
 
+		}
+		
+		private function onLoginSuccess(e:Event):void 
+		{
+			checkReconnect();
 		}
 		
 		private function onUpdateMyInfo(e:Event):void 
@@ -982,6 +1016,7 @@ package view
 						mainData.portNumber = 3101;
 					if (!SoundManager.getInstance().isLoadSoundTlmn)
 						SoundManager.getInstance().addSound();
+					mainData.gameType = MainData.TLMN;
 				break;
 				case samIcon:
 					gameId = 4;
@@ -1006,6 +1041,7 @@ package view
 						mainData.portNumber = 3401;
 					if (!SoundManager.getInstance().isLoadSoundTlmn)
 						SoundManager.getInstance().addSound();
+					mainData.gameType = MainData.SAM;
 				break;
 				case phomIcon:
 					gameId = 2;
@@ -1018,6 +1054,7 @@ package view
 						mainData.portNumber = 3301;
 					if (!SoundManager.getInstance().isLoadSoundPhom)
 						SoundManager.getInstance().loadSoundPhom();
+					mainData.gameType = MainData.PHOM;
 				break;
 				case maubinhIcon:
 					gameId = 6;
@@ -1030,8 +1067,8 @@ package view
 						mainData.portNumber = 3201;
 					if (!SoundManager.getInstance().isLoadSoundMauBinh)
 						SoundManager.getInstance().loadSoundMauBinh();
+					mainData.gameType = MainData.MAUBINH;
 				break;
-				
 				case xitoIcon:
 					gameId = 5;
 					mainData.maxPlayer = 5;
@@ -1044,44 +1081,13 @@ package view
 						mainData.portNumber = 3501;
 					if (!SoundManager.getInstance().isLoadSoundXito)
 						SoundManager.getInstance().loadSoundXito();
+					mainData.gameType = MainData.XITO;
 				break;
 				case luckyCardIcon:
-					
 					return;
 				break;
 				default:
 			}
-			
-			mainData.electroInfo = new Object();
-			switch (gameId) 
-			{
-				case 3:
-					mainData.gameType = MainData.TLMN;
-					mainData.minBetRate = 10;
-				break;
-				case 4:
-					mainData.gameType = MainData.SAM;
-					mainData.minBetRate = 10;
-				break;
-				case 2:
-					mainData.gameType = MainData.PHOM;
-					mainData.minBetRate = 10;
-				break;
-				case 6:
-					mainData.gameType = MainData.MAUBINH;
-					mainData.minBetRate = 10;
-				break;
-				case 5:
-					mainData.gameType = MainData.XITO;
-					mainData.minBetRate = 10;
-				break;
-				default:
-			}
-			/*MainCommand.getInstance().initVar();
-			mainData.lobbyRoomData.invitePlayData = new Object();
-			dispatchEvent(new Event(SELECT_GAME));
-			
-			SoundManager.getInstance().playBackgroundMusicMauBinh();*/
 		}
 		
 		

@@ -8,10 +8,13 @@ package event
 	{
 		public static const PRIVATE_CHAT: String = "privateChat";
 		public static const PUBLIC_CHAT: String = "publicChat";
+		static public const USER_RECONNECT:String = "userReconnect";
+		static public const USER_DISCONNECT:String = "userDisconnect";
 		public static var UPDATE_CURRENT_GAME_ROOM:String = "updateCurrentGameRoom";
 		public static var INVITE_PLAY:String = "invitePlay";
 		public static var INVITE_ADD_FRIEND:String = "inviteAddFriend";
 		public static var GET_PLAYING_INFO:String = "getPlayingInfo";
+		public static var USER_JOIN_ROOM_RESPOND:String = "userJoinRoomResponse";
 		public static var GET_USER_IN_LOBBY:String = "getUserInLobby";
 		public static var GET_FRIEND_LIST:String = "getFriendList";
 		public static var GET_ROOM_LIST:String = "getRoomList";
