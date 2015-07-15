@@ -213,13 +213,13 @@ package view.window.shop
 			scrollViewForSms.columnNumber = 1;
 			scrollViewForSms.isScrollVertical = true;
 			myContent.smsBg.addChild(scrollViewForSms);
-			myContent.smsBg.setChildIndex(myContent.smsBg.chonMangMc, myContent.smsBg.numChildren - 1);
+			//myContent.smsBg.setChildIndex(myContent.smsBg.chonMangMc, myContent.smsBg.numChildren - 1);
 			
 			//scrollViewForInfo.x = -315;
 			//scrollViewForInfo.y = 50;
 			//scrollViewForSms.visible = false;
 			
-			myContent.smsBg.chonMangMc.visible = false;
+			myContent.chonMangMc.visible = false;
 			/*var textfield:TextField = new TextField();
 			textfield.text = "31/07 - v1";
 			textfield.x = 50;
@@ -510,18 +510,114 @@ package view.window.shop
 			myContent.acticedAcc.allNotActice.chooseSendMail.addEventListener(MouseEvent.MOUSE_UP, choseTypeSendActiveHandler);
 			myContent.acticedAcc.notActiveMail.chooseSendMail.addEventListener(MouseEvent.MOUSE_UP, choseTypeSendActiveHandler);
 			
+			myContent.acticedAcc.allNotActice.chooseSms.addEventListener(MouseEvent.MOUSE_UP, choseSmsActiveHandler);
+			myContent.acticedAcc.notActivePhone.chooseSms.addEventListener(MouseEvent.MOUSE_UP, choseSmsActiveHandler);
+			
+			myContent.acticedAcc.allNotActice.chooseCodeSms.addEventListener(MouseEvent.MOUSE_UP, choseCodeActiveHandler);
+			myContent.acticedAcc.notActivePhone.chooseCodeSms.addEventListener(MouseEvent.MOUSE_UP, choseCodeActiveHandler);
+			
 			myContent.acticedAcc.notActiveMail.agreeBtn.addEventListener(MouseEvent.MOUSE_UP, sendNotActiveHandler);
 			myContent.acticedAcc.allNotActice.agreeBtn.addEventListener(MouseEvent.MOUSE_UP, sendAllNotActiveHandler);
 			
-			myContent.acticedAcc.allNotActice.sendSms.addEventListener(MouseEvent.MOUSE_UP, sendSmsHandler);
+			myContent.acticedAcc.allNotActice.sendSms.addEventListener(MouseEvent.MOUSE_UP, sendAllSmsHandler);
 			myContent.acticedAcc.notActivePhone.sendSms.addEventListener(MouseEvent.MOUSE_UP, sendSmsHandler);
 			
 			
 		}
 		
+		private function sendAllSmsHandler(e:MouseEvent):void 
+		{
+			var method:String = "POST";
+			var url:String;
+			var httpRequest:HTTPRequest = new HTTPRequest();
+			var obj:Object;
+			
+			if (myContent.acticedAcc.allNotActice.chooseCodeSms.currentFrame == 2 ) 
+			{
+				if (myContent.acticedAcc.allNotActice.codeSmsTxt.text == "Nhập mã kích hoạt" ||
+					myContent.acticedAcc.allNotActice.codeSmsTxt.text == "") 
+				{
+					windowLayer.openAlertWindow("Bạn chưa nhập mã kích hoạt!");
+				}
+				else 
+				{
+					windowLayer.openLoadingWindow();
+					url = basePath + "service02/OnplayUserExt.asmx/ActivePhone";
+					obj = new Object();
+					obj.active_code = myContent.acticedAcc.notActivePhone.codeSmsTxt.text;
+					httpRequest.sendRequest(method, url, obj, sendActivePhoneSuccess, true);
+				}
+			}
+			else if (myContent.acticedAcc.allNotActice.chooseSms.currentFrame == 2 )
+			{
+				activing = [];
+				
+				activing = [arrSms[0][1], arrSms[0][2], true, arrSms[0][3]];
+				
+				showChonMang();
+			}
+		}
+		
+		private function choseSmsActiveHandler(e:MouseEvent):void 
+		{
+			myContent.acticedAcc.allNotActice.chooseSms.gotoAndStop(2);
+			myContent.acticedAcc.allNotActice.chooseCodeSms.gotoAndStop(1);
+			myContent.acticedAcc.notActivePhone.chooseSms.gotoAndStop(2);
+			myContent.acticedAcc.notActivePhone.chooseCodeSms.gotoAndStop(1);
+		}
+		
+		private function choseCodeActiveHandler(e:MouseEvent):void 
+		{
+			myContent.acticedAcc.allNotActice.chooseSms.gotoAndStop(1);
+			myContent.acticedAcc.allNotActice.chooseCodeSms.gotoAndStop(2);
+			myContent.acticedAcc.notActivePhone.chooseSms.gotoAndStop(1);
+			myContent.acticedAcc.notActivePhone.chooseCodeSms.gotoAndStop(2);
+		}
+		
 		private function sendSmsHandler(e:MouseEvent):void 
 		{
+			var method:String = "POST";
+			var url:String;
+			var httpRequest:HTTPRequest = new HTTPRequest();
+			var obj:Object;
 			
+			if (myContent.acticedAcc.notActivePhone.chooseCodeSms.currentFrame == 2 ) 
+			{
+				if (myContent.acticedAcc.notActivePhone.codeSmsTxt.text == "Nhập mã kích hoạt" ||
+					myContent.acticedAcc.notActivePhone.codeSmsTxt.text == "") 
+				{
+					windowLayer.openAlertWindow("Bạn chưa nhập mã kích hoạt!");
+				}
+				else 
+				{
+					windowLayer.openLoadingWindow();
+					url = basePath + "service02/OnplayUserExt.asmx/ActivePhone";
+					obj = new Object();
+					obj.active_code = myContent.acticedAcc.notActivePhone.codeSmsTxt.text;
+					httpRequest.sendRequest(method, url, obj, sendActivePhoneSuccess, true);
+				}
+			}
+			else if (myContent.acticedAcc.notActivePhone.chooseSms.currentFrame == 2 )
+			{
+				activing = [];
+				
+				activing = [arrSms[0][1], arrSms[0][2], true, arrSms[0][3]];
+				
+				showChonMang();
+			}
+		}
+		
+		private function sendActivePhoneSuccess(obj:Object):void 
+		{
+			closeLoading();
+			if (obj.TypeMsg == 1) 
+			{
+				windowLayer.openAlertWindow("Chúc mừng bạn đã kích hoạt điện thoại thành công");
+			}
+			else 
+			{
+				windowLayer.openAlertWindow(obj.Msg);
+			}
 		}
 		
 		private function onClickShowAllAvatar(e:MouseEvent):void 
@@ -1376,39 +1472,39 @@ package view.window.shop
 		private function showChonMang():void 
 		{
 			
-			myContent.smsBg.chonMangMc.viettelBtn.gotoAndStop(1);
-			myContent.smsBg.chonMangMc.vinaBtn.gotoAndStop(1);
-			myContent.smsBg.chonMangMc.mobiBtn.gotoAndStop(1);
+			myContent.chonMangMc.viettelBtn.gotoAndStop(1);
+			myContent.chonMangMc.vinaBtn.gotoAndStop(1);
+			myContent.chonMangMc.mobiBtn.gotoAndStop(1);
 			
-			myContent.smsBg.chonMangMc.viettelBtn.buttonMode = true;
-			myContent.smsBg.chonMangMc.vinaBtn.buttonMode = true;
-			myContent.smsBg.chonMangMc.mobiBtn.buttonMode = true;
-			myContent.smsBg.chonMangMc.closeBtn.buttonMode = true;
+			myContent.chonMangMc.viettelBtn.buttonMode = true;
+			myContent.chonMangMc.vinaBtn.buttonMode = true;
+			myContent.chonMangMc.mobiBtn.buttonMode = true;
+			myContent.chonMangMc.closeBtn.buttonMode = true;
 			
-			myContent.smsBg.chonMangMc.visible = true;
+			myContent.chonMangMc.visible = true;
 			
-			myContent.smsBg.chonMangMc.closeBtn.addEventListener(MouseEvent.CLICK, onCloseChonMang);
-			myContent.smsBg.chonMangMc.viettelBtn.addEventListener(MouseEvent.CLICK, onChonVit);
-			myContent.smsBg.chonMangMc.vinaBtn.addEventListener(MouseEvent.CLICK, onChonVina);
-			myContent.smsBg.chonMangMc.mobiBtn.addEventListener(MouseEvent.CLICK, onChonMobi);
+			myContent.chonMangMc.closeBtn.addEventListener(MouseEvent.CLICK, onCloseChonMang);
+			myContent.chonMangMc.viettelBtn.addEventListener(MouseEvent.CLICK, onChonVit);
+			myContent.chonMangMc.vinaBtn.addEventListener(MouseEvent.CLICK, onChonVina);
+			myContent.chonMangMc.mobiBtn.addEventListener(MouseEvent.CLICK, onChonMobi);
 			
 			if (activing[3] == 'viettel') 
 			{
-				myContent.smsBg.chonMangMc.viettelBtn.buttonMode = false;
-				myContent.smsBg.chonMangMc.viettelBtn.gotoAndStop(2);
-				myContent.smsBg.chonMangMc.viettelBtn.removeEventListener(MouseEvent.CLICK, onChonVit);
+				myContent.chonMangMc.viettelBtn.buttonMode = false;
+				myContent.chonMangMc.viettelBtn.gotoAndStop(2);
+				myContent.chonMangMc.viettelBtn.removeEventListener(MouseEvent.CLICK, onChonVit);
 			}
 			else if (activing[3] == 'vina') 
 			{
-				myContent.smsBg.chonMangMc.vinaBtn.buttonMode = false;
-				myContent.smsBg.chonMangMc.vinaBtn.gotoAndStop(2);
-				myContent.smsBg.chonMangMc.vinaBtn.removeEventListener(MouseEvent.CLICK, onChonVina);
+				myContent.chonMangMc.vinaBtn.buttonMode = false;
+				myContent.chonMangMc.vinaBtn.gotoAndStop(2);
+				myContent.chonMangMc.vinaBtn.removeEventListener(MouseEvent.CLICK, onChonVina);
 			}
 			else if (activing[3] == 'mobi') 
 			{
-				myContent.smsBg.chonMangMc.mobiBtn.buttonMode = false;
-				myContent.smsBg.chonMangMc.mobiBtn.gotoAndStop(3);
-				myContent.smsBg.chonMangMc.mobiBtn.removeEventListener(MouseEvent.CLICK, onChonMobi);
+				myContent.chonMangMc.mobiBtn.buttonMode = false;
+				myContent.chonMangMc.mobiBtn.gotoAndStop(3);
+				myContent.chonMangMc.mobiBtn.removeEventListener(MouseEvent.CLICK, onChonMobi);
 			}
 		}
 		
@@ -1492,15 +1588,29 @@ package view.window.shop
 			
 			if (str == 'viettel') 
 			{
+				if (activing[2]) 
+				{
+					tutorialAddMoney.contentMess.text = "vmg nap1 sb " + mainData.chooseChannelData.myInfo.name;
+				}
+				else 
+				{
+					tutorialAddMoney.contentMess.text = "vmg " + activing[1] + " " + activing[0] + " " + mainData.chooseChannelData.myInfo.name;
+				}
 				
-				tutorialAddMoney.contentMess.text = "vmg " + activing[1] + " " + activing[0] + " " + mainData.chooseChannelData.myInfo.name, mainData.phone3
 				tutorialAddMoney.numberTxt.text = mainData.phone6;
 				
 			}
 			else 
 			{
+				if (activing[2]) 
+				{
+					tutorialAddMoney.contentMess.text = "vmg sb nap1 " + mainData.chooseChannelData.myInfo.name;
+				}
+				else 
+				{
+					tutorialAddMoney.contentMess.text = "vmg " + activing[0] + " " + activing[1] + " " + mainData.chooseChannelData.myInfo.name;
+				}
 				
-				tutorialAddMoney.contentMess.text = "vmg " + activing[0] + " " + activing[1] + " " + mainData.chooseChannelData.myInfo.name, mainData.phone3
 				tutorialAddMoney.numberTxt.text = mainData.phone6;
 				
 			}
@@ -1508,11 +1618,11 @@ package view.window.shop
 		
 		private function onCloseChonMang(e:MouseEvent):void 
 		{
-			myContent.smsBg.chonMangMc.visible = false;
-			myContent.smsBg.chonMangMc.closeBtn.removeEventListener(MouseEvent.CLICK, onCloseChonMang);
-			myContent.smsBg.chonMangMc.viettelBtn.removeEventListener(MouseEvent.CLICK, onChonVit);
-			myContent.smsBg.chonMangMc.vinaBtn.removeEventListener(MouseEvent.CLICK, onChonVina);
-			myContent.smsBg.chonMangMc.mobiBtn.removeEventListener(MouseEvent.CLICK, onChonMobi);
+			myContent.chonMangMc.visible = false;
+			myContent.chonMangMc.closeBtn.removeEventListener(MouseEvent.CLICK, onCloseChonMang);
+			myContent.chonMangMc.viettelBtn.removeEventListener(MouseEvent.CLICK, onChonVit);
+			myContent.chonMangMc.vinaBtn.removeEventListener(MouseEvent.CLICK, onChonVina);
+			myContent.chonMangMc.mobiBtn.removeEventListener(MouseEvent.CLICK, onChonMobi);
 		}
 		
 		private function turnOnSendSMS(msg:String, phone:String):void
@@ -1814,6 +1924,11 @@ package view.window.shop
 			myContent.acticedAcc.allNotActice.chooseSendMail.gotoAndStop(1);
 			myContent.acticedAcc.notActiveMail.chooseCode.gotoAndStop(2);
 			myContent.acticedAcc.notActiveMail.chooseSendMail.gotoAndStop(1);
+			
+			myContent.acticedAcc.allNotActice.chooseSms.gotoAndStop(2);
+			myContent.acticedAcc.allNotActice.chooseCodeSms.gotoAndStop(1);
+			myContent.acticedAcc.notActivePhone.chooseSms.gotoAndStop(2);
+			myContent.acticedAcc.notActivePhone.chooseCodeSms.gotoAndStop(1);
 			
 			switch (type) 
 			{
@@ -2557,7 +2672,7 @@ package view.window.shop
 				var expireAvatar:String = arrData[i]['it_sell_expire_dt'];
 				var idAvtWeb:String = arrData[i]['it_cd_wb'];
 				//var idAvt:String = arrData[i]['it_id'];
-				var idAvt:String = arrData[i]['it_explain'];
+				var idAvt:String = 'sanhbai4';
 				var tail:String = arrData[i]['it_file_ext'];
 				
 				var contentAvatar:ContentItemPurchase = new ContentItemPurchase();
@@ -3445,7 +3560,7 @@ package view.window.shop
 			
 			if (mainData.country == "VN") 
 			{
-				if (mainData.isOnAndroid) 
+				/*if (mainData.isOnAndroid) 
 				{
 					scrollView.visible = true;
 					scrollViewForRank.visible = false;
@@ -3456,10 +3571,10 @@ package view.window.shop
 					headerOn(1);
 					boardOn(3);
 					tabOn(2);
-					
+					loadItemPurchase();
 					
 				}
-				else 
+				else */
 				{
 					scrollView.visible = true;
 					scrollViewForRank.visible = false;
@@ -3506,11 +3621,11 @@ package view.window.shop
 					tabOn(2);
 					
 					//loadItem(5);
-					if (mainData.isOnIos) 
+					/*if (mainData.isOnIos) 
 					{
 						loadItemPurchase();
-					}
-					
+					}*/
+					loadItemPurchase();
 				}
 				
 				

@@ -48,27 +48,27 @@ package chat.view.chatRow
 		{
 			//trace("game name: ", gameName)
 			var gamename:String = '[Tiến lên]';
-			if (gameName == "TLMN") 
+			if (gameName == "AZGB_TLMN") 
 			{
 				content.gameNameMc.gotoAndStop(1);
 				gamename = '[Tiến lên]';
 			}
-			else if (gameName == "PHOM") 
+			else if (gameName == "AZGB_PHOM") 
 			{
 				content.gameNameMc.gotoAndStop(2);
 				gamename = '[Phỏm]';
 			}
-			else if (gameName == "BINH") 
+			else if (gameName == "AZGB_BINH") 
 			{
 				content.gameNameMc.gotoAndStop(3);
 				gamename = '[Binh]';
 			}
-			else if (gameName == "SAM") 
+			else if (gameName == "AZGB_SAM") 
 			{
 				content.gameNameMc.gotoAndStop(4);
 				gamename = '[Sâm]';
 			}
-			else if (gameName == "BACAY") 
+			else if (gameName == "AZGB_BACAY") 
 			{
 				//trace("o chu 3 cay")
 				content.gameNameMc.gotoAndStop(5);
@@ -85,7 +85,19 @@ package chat.view.chatRow
 			tempTextField.autoSize = TextFieldAutoSize.LEFT;
 			tempTextField.text = gamename + ' ';
 			tempTextField.width = tempTextField.textWidth;
-			var tempFormat;
+			
+			var t:TextField = new TextField();
+			t.defaultTextFormat = new TextFormat("Tahoma", 16, 0xFFFFFF);
+			t.autoSize = TextFieldAutoSize.LEFT;
+			t.text = displayName + ':';
+			t.width = t.textWidth;
+			
+			var tf:TextFormat = new TextFormat();
+			tf.font = 'Tahoma';
+			tf.size = 16;
+			tf.color = 0x0099FF;
+			
+			var tempFormat:ElementFormat;
 			if (isSystemMess)
 			{
 				tempFormat = new ElementFormat();
@@ -150,7 +162,7 @@ package chat.view.chatRow
 				}*/
 			}
 			
-			var nameTextField:SmileyRenderer = new SmileyRenderer(mapper, tempFormat, tempTextField.width);
+			var nameTextField:SmileyRenderer = new SmileyRenderer(mapper, tempFormat, t.width);
 			nameTextField.lineHeight = lineHeight;
 			
 			nameTextField.text = displayName + ":";
@@ -159,7 +171,7 @@ package chat.view.chatRow
 			nameTextField.y = 10;*/
 			var distanceString:String = "";
 			
-			while (nameTextField.width > tempTextField.width)
+			while (nameTextField.width > t.width)
 			{
 				distanceString += " ";
 				tempTextField.text = distanceString;

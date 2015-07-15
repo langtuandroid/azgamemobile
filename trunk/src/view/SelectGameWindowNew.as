@@ -302,6 +302,23 @@ package view
 			obj = new Object();
 			obj.it_group_id = String(1);
 			obj.it_type = String(2);
+			if (mainData.isOnIos) 
+			{
+				obj.source_id = 'IOS';
+			}
+			else if (mainData.isOnAndroid) 
+			{
+				obj.source_id = 'Android';
+			}
+			else if (mainData.isWebVersion) 
+			{
+				obj.source_id = 'Web';
+			}
+			else if (mainData.isFacebookVersion) 
+			{
+				obj.source_id = 'Facebook';
+			}
+			
 			httpRequest.sendRequest(method, url, obj, loadMyGameSuccess, true);
 		}
 		

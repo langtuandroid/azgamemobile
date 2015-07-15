@@ -205,6 +205,7 @@ package chat
 			
 			urlLoader.removeEventListener(Event.COMPLETE, getListChatComplete);
 			urlLoader.removeEventListener(IOErrorEvent.IO_ERROR , ioErrorHandler);
+			urlLoader = null;
 			
 		}
 		private function getListChatComplete(e:Event):void 
@@ -222,7 +223,7 @@ package chat
 					{
 						isMe = true;
 					}
-					addChatSentence(obj.Data[i].Content, obj.Data[i].Nk_Nm, obj.Data[i].game_id, isMe);
+					addChatSentence(obj.Data[i].Content, obj.Data[i].Nk_Nm, obj.Data[i].Game_Id, isMe);
 				}
 			}
 			
@@ -343,7 +344,7 @@ package chat
 				else
 				{
 					currentText = inputText.text;
-					if (inputText.text != "")
+					if (inputText.text != "" && inputText.text != "Nhập thông tin để chat...")
 					{
 						
 						haveUserChat();
