@@ -6,6 +6,7 @@ package inapp_purchase
 	import com.milkmangames.nativeextensions.android.events.*;
 	import flash.text.TextField;
 	import model.MainData;
+	import request.HTTPRequest;
 	import view.window.windowLayer.WindowLayer;
 	/**
 	 * ...
@@ -19,6 +20,8 @@ package inapp_purchase
 		private var myPurchases:Vector.<AndroidPurchase>;
 		/** Showing what you own */
 		private var txtInventory:TextField;
+		
+		private var isCreated:Boolean = false;
 	
 		public function GoogleInapp() 
 		{
@@ -44,32 +47,37 @@ package inapp_purchase
 				return;
 			}
 			
+			if (!isCreated) 
+			{
+				isCreated = true;
+				
+				AndroidIAB.create();
+				
+				// listeners for billing service startup
+				AndroidIAB.androidIAB.addEventListener(AndroidBillingEvent.SERVICE_READY,onServiceReady);
+				AndroidIAB.androidIAB.addEventListener(AndroidBillingEvent.SERVICE_NOT_SUPPORTED, onServiceUnsupported);
+				
+				// listeners for making a purchase
+				AndroidIAB.androidIAB.addEventListener(AndroidBillingEvent.PURCHASE_SUCCEEDED,onPurchaseSuccess);
+				AndroidIAB.androidIAB.addEventListener(AndroidBillingErrorEvent.PURCHASE_FAILED, onPurchaseFailed);
+				
+				// listeners for player's owned items
+				AndroidIAB.androidIAB.addEventListener(AndroidBillingEvent.INVENTORY_LOADED, onInventoryLoaded);
+				AndroidIAB.androidIAB.addEventListener(AndroidBillingErrorEvent.LOAD_INVENTORY_FAILED, onInventoryFailed);
+				
+				// listeners for consuming an item
+				AndroidIAB.androidIAB.addEventListener(AndroidBillingEvent.CONSUME_SUCCEEDED, onConsumed);
+				AndroidIAB.androidIAB.addEventListener(AndroidBillingErrorEvent.CONSUME_FAILED, onConsumeFailed);
+				
+				// listeners for item details
+				AndroidIAB.androidIAB.addEventListener(AndroidBillingEvent.ITEM_DETAILS_LOADED, onItemDetails);
+				AndroidIAB.androidIAB.addEventListener(AndroidBillingErrorEvent.ITEM_DETAILS_FAILED, onDetailsFailed);
+				
+				// start the  billing service.  in onServiceReady(), we'll update everything else.
+				
+				AndroidIAB.androidIAB.startBillingService(PUBLIC_KEY);
+			}
 			
-			AndroidIAB.create();
-			
-			// listeners for billing service startup
-			AndroidIAB.androidIAB.addEventListener(AndroidBillingEvent.SERVICE_READY,onServiceReady);
-			AndroidIAB.androidIAB.addEventListener(AndroidBillingEvent.SERVICE_NOT_SUPPORTED, onServiceUnsupported);
-			
-			// listeners for making a purchase
-			AndroidIAB.androidIAB.addEventListener(AndroidBillingEvent.PURCHASE_SUCCEEDED,onPurchaseSuccess);
-			AndroidIAB.androidIAB.addEventListener(AndroidBillingErrorEvent.PURCHASE_FAILED, onPurchaseFailed);
-			
-			// listeners for player's owned items
-			AndroidIAB.androidIAB.addEventListener(AndroidBillingEvent.INVENTORY_LOADED, onInventoryLoaded);
-			AndroidIAB.androidIAB.addEventListener(AndroidBillingErrorEvent.LOAD_INVENTORY_FAILED, onInventoryFailed);
-			
-			// listeners for consuming an item
-			AndroidIAB.androidIAB.addEventListener(AndroidBillingEvent.CONSUME_SUCCEEDED, onConsumed);
-			AndroidIAB.androidIAB.addEventListener(AndroidBillingErrorEvent.CONSUME_FAILED, onConsumeFailed);
-			
-			// listeners for item details
-			AndroidIAB.androidIAB.addEventListener(AndroidBillingEvent.ITEM_DETAILS_LOADED, onItemDetails);
-			AndroidIAB.androidIAB.addEventListener(AndroidBillingErrorEvent.ITEM_DETAILS_FAILED, onDetailsFailed);
-			
-			// start the  billing service.  in onServiceReady(), we'll update everything else.
-			
-			AndroidIAB.androidIAB.startBillingService(PUBLIC_KEY);
 			
 		}
 		
@@ -104,7 +112,7 @@ package inapp_purchase
 		/** Dispatched when the billing service is started -now you can make other calls */
 		private function onServiceReady(e:AndroidBillingEvent):void
 		{
-			WindowLayer.getInstance().openAlertWindow('serive chay dc roi');
+			
 			// as soon as it starts, we load up the player's inventory to get a list of what they own
 			trace("Service ready. Loading inventory...");		
 			AndroidIAB.androidIAB.loadPlayerInventory();
@@ -210,7 +218,7 @@ package inapp_purchase
 		/** This will be triggered if Google Play billing is not supported on the device. */
 		private function onServiceUnsupported(e:AndroidBillingEvent):void
 		{
-			WindowLayer.getInstance().openAlertWindow('service toi roi');
+			WindowLayer.getInstance().openAlertWindow('Thiết bị này không được hỗ trợ!');
 			trace("billing service not supported.");
 		}
 		
@@ -218,25 +226,64 @@ package inapp_purchase
 		private function onPurchaseSuccess(e:AndroidBillingEvent):void
 		{
 			trace("Successful purchase of '"+e.itemId+"'="+e.purchases[0]);
-
+			
+			var method:String = "POST";
+			var url:String;
+			var httpRequest:HTTPRequest = new HTTPRequest();
+			var obj:Object;
+			var basePath:String;
+			if (MainData.getInstance().isTest) 
+			{
+				basePath = "http://wss.test.azgame.us/";
+			}
+			else 
+			{
+				basePath = "http://wss.azgame.us/";
+			}
+			url = basePath + "service02/OnplayShopExt.asmx/GoogleStoreVerifyReceipt";
+			
+			obj = new Object();
+			obj.nick_name = MainData.getInstance().chooseChannelData.myInfo.name;
+			obj.access_token = MainData.getInstance().token;
+			obj.item_id = e.itemId;
+			obj.order_id = e.purchases[0].orderId;
+			obj.item_type = e.purchases[0].itemType;
+			obj.item_signature = e.purchases[0].signature;
+			obj.item_time_buy = e.purchases[0].purchaseTime;
+			obj.item_token_buy = e.purchases[0].purchaseToken;
+			
+			httpRequest.sendRequest(method, url, obj, onUpdateUserInfo, true);
 			// every time a purchase is updated, refresh your inventory from the server.
-			reloadInventory();
+			//reloadInventory();
+		}
+		
+		private function onUpdateUserInfo(obj:Object):void 
+		{
+			if (obj.TypeMsg == '1') 
+			{
+				WindowLayer.getInstance().openAlertWindow("Chúc mừng bạn đã mua thành công gói vàng này!");
+			}
+			else 
+			{
+				WindowLayer.getInstance().openAlertWindow("Service bị lỗi!");
+			}
 		}
 		
 		/** This is called when an error occurs trying to buy something */
 		private function onPurchaseFailed(e:AndroidBillingErrorEvent):void
 		{
-			trace("Failure purchasing '"+e.itemId+"', reason:"+e.text);
+			trace("Failure purchasing '" + e.itemId + "', reason:" + e.text);
+			WindowLayer.getInstance().openAlertWindow("Không thanh toán thành công, xin vui lòng thử lại!");
 		}
 
 		/** Callback when the player's inventory has been loaded, after calling loadPlayerInventory() */	
 		private function onInventoryLoaded(e:AndroidBillingEvent):void
 		{
-			WindowLayer.getInstance().openAlertWindow("Inventory updated.");
+			
 			for each(var purchase:AndroidPurchase in e.purchases)
 			{
 				trace("You own the item:" + purchase.itemId);
-				WindowLayer.getInstance().openAlertWindow("Inventory updated.------" + purchase.itemId);
+				
 				// this is where you'd update the state of your app to reflect ownership of the item
 			}
 
@@ -308,7 +355,7 @@ package inapp_purchase
 			
 			for each(var purchase:AndroidPurchase in myPurchases)
 			{
-				WindowLayer.getInstance().openAlertWindow("You own the item: " + purchase.itemId);
+				
 				allOwnedItemIds.push(purchase.itemId);
 				loadItemDetails(allOwnedItemIds);
 			}

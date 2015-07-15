@@ -705,6 +705,7 @@ package view.window.loginWindow
 				{
 					zLoginWindow(content).loadingLayer.visible = false;
 					WindowLayer.getInstance().openAlertWindow(value.UserMessage);
+					CallJs.getInstance().hideLoading();
 					return;
 				}
 				
