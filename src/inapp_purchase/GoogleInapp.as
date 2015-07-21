@@ -152,17 +152,17 @@ package inapp_purchase
 			trace("start purchase of managed item 'my_levelpack'...");
 			
 			// check if we already own this item.  myPurchases was previously loaded by loadPlayerInventory()
-			/*if (myPurchases)
+			if (myPurchases)
 			{
 				for each(var purchase:AndroidPurchase in myPurchases)
 				{
-					if (purchase.itemId==id)
+					if (purchase.itemId == id)
 					{
-						trace("You already own the levelpack!");
+						AndroidIAB.androidIAB.consumeItem(id);
 						return;
 					}
 				}
-			}*/
+			}
 			
 			AndroidIAB.androidIAB.purchaseItem(id);
 			trace("Waiting for purchase response...");
@@ -227,34 +227,11 @@ package inapp_purchase
 		{
 			trace("Successful purchase of '"+e.itemId+"'="+e.purchases[0]);
 			
-			var method:String = "POST";
-			var url:String;
-			var httpRequest:HTTPRequest = new HTTPRequest();
-			var obj:Object;
-			var basePath:String;
-			if (MainData.getInstance().isTest) 
-			{
-				basePath = "http://wss.test.azgame.us/";
-			}
-			else 
-			{
-				basePath = "http://wss.azgame.us/";
-			}
-			url = basePath + "service02/OnplayShopExt.asmx/GoogleStoreVerifyReceipt";
-			
-			obj = new Object();
-			obj.nick_name = MainData.getInstance().chooseChannelData.myInfo.name;
-			obj.access_token = MainData.getInstance().token;
-			obj.item_id = e.itemId;
-			obj.order_id = e.purchases[0].orderId;
-			obj.item_type = e.purchases[0].itemType;
-			obj.item_signature = e.purchases[0].signature;
-			obj.item_time_buy = e.purchases[0].purchaseTime;
-			obj.item_token_buy = e.purchases[0].purchaseToken;
-			
-			httpRequest.sendRequest(method, url, obj, onUpdateUserInfo, true);
+			WindowLayer.getInstance().openAlertWindow("Successful purchase of '" + e.itemId + "'=" + e.purchases[0]);
+			sendBuySuccess(e.itemId, e.purchases[0].orderId, e.purchases[0].itemType, e.purchases[0].signature,
+							e.purchases[0].purchaseTime, e.purchases[0].purchaseToken)
 			// every time a purchase is updated, refresh your inventory from the server.
-			//reloadInventory();
+			reloadInventory();
 		}
 		
 		private function onUpdateUserInfo(obj:Object):void 
@@ -273,7 +250,8 @@ package inapp_purchase
 		private function onPurchaseFailed(e:AndroidBillingErrorEvent):void
 		{
 			trace("Failure purchasing '" + e.itemId + "', reason:" + e.text);
-			WindowLayer.getInstance().openAlertWindow("Không thanh toán thành công, xin vui lòng thử lại!");
+			WindowLayer.getInstance().closeAllWindow();
+			WindowLayer.getInstance().openAlertWindow("Failure purchasing '" + e.itemId + "', reason:" + e.text);
 		}
 
 		/** Callback when the player's inventory has been loaded, after calling loadPlayerInventory() */	
@@ -283,7 +261,7 @@ package inapp_purchase
 			for each(var purchase:AndroidPurchase in e.purchases)
 			{
 				trace("You own the item:" + purchase.itemId);
-				
+				MainData.getInstance().itemArr.push(purchase.itemId);
 				// this is where you'd update the state of your app to reflect ownership of the item
 			}
 
@@ -315,7 +293,7 @@ package inapp_purchase
 				trace("price:"+item.price);
 			}
 			
-			MainData.getInstance().itemArr = arr;
+			
 		}
 		
 		/** An error occurred loading the item details */
@@ -327,15 +305,49 @@ package inapp_purchase
 		/** An Item was successfully consumed */
 		private function onConsumed(e:AndroidBillingEvent):void
 		{
-			trace("Did consume item:"+e.itemId);
+			WindowLayer.getInstance().openAlertWindow("Did consume item:"+e.itemId + ' = ' + e.purchases[0]);
 			// reload inventory now that it has changed
+			
+			sendBuySuccess(e.itemId, e.purchases[0].orderId, e.purchases[0].itemType, e.purchases[0].signature,
+							e.purchases[0].purchaseTime, e.purchases[0].purchaseToken)
 			AndroidIAB.androidIAB.loadPlayerInventory();		
+		}
+		
+		private function sendBuySuccess(itemId:String, orderId:String, itemType:String, signature:String,
+										purchaseTime:Number, token:String):void 
+		{
+			var method:String = "POST";
+			var url:String;
+			var httpRequest:HTTPRequest = new HTTPRequest();
+			var obj:Object;
+			var basePath:String;
+			if (MainData.getInstance().isTest) 
+			{
+				basePath = "http://wss.test.azgame.us/";
+			}
+			else 
+			{
+				basePath = "http://wss.azgame.us/";
+			}
+			url = basePath + "service02/OnplayShopExt.asmx/GoogleStoreVerifyReceipt";
+			
+			obj = new Object();
+			obj.nick_name = MainData.getInstance().chooseChannelData.myInfo.name;
+			obj.access_token = MainData.getInstance().token;
+			obj.item_id = itemId;
+			obj.order_id = orderId;
+			obj.item_type = itemType;
+			obj.item_signature = signature;
+			obj.item_time_buy = purchaseTime;
+			obj.item_token_buy = token;
+			
+			httpRequest.sendRequest(method, url, obj, onUpdateUserInfo, true);
 		}
 		
 		/** Attempt to consume item has failed */
 		private function onConsumeFailed(e:AndroidBillingErrorEvent):void
 		{
-			trace("Consume spell failed:"+e.errorID+"/"+e.text);
+			WindowLayer.getInstance().openAlertWindow("Consume spell failed:"+e.errorID+"/"+e.text);
 		}
 
 		//

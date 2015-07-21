@@ -17,6 +17,7 @@ package chat.view.chatRow
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
 	import flash.utils.Dictionary;
 	import org.bytearray.tools.SmileyRenderer;
 	
@@ -32,7 +33,7 @@ package chat.view.chatRow
 		public var chatContainerWidth:int;
 		public var format:ElementFormat;
 		private var lineNumber:int;
-		private var lineHeight:Number = 16;
+		private var lineHeight:Number = 20;
 		
 		private var content:MovieClip;
 		private var loader:Loader;
@@ -68,6 +69,11 @@ package chat.view.chatRow
 				content.gameNameMc.gotoAndStop(4);
 				gamename = '[Sâm]';
 			}
+			else if (gameName == "AZGB_XITO") 
+			{
+				content.gameNameMc.gotoAndStop(6);
+				gamename = '[Xì tố]';
+			}
 			else if (gameName == "AZGB_BACAY") 
 			{
 				//trace("o chu 3 cay")
@@ -79,12 +85,12 @@ package chat.view.chatRow
 				content.gameNameMc.gotoAndStop(1);
 			}
 			
-			content.gameNameMc.visible = false;
-			var tempTextField:TextField = new TextField();
+			content.gameNameMc.visible = true;
+			/*var tempTextField:TextField = new TextField();
 			tempTextField.defaultTextFormat = new TextFormat("Tahoma", 16, 0xFFFFFF);
 			tempTextField.autoSize = TextFieldAutoSize.LEFT;
-			tempTextField.text = gamename + ' ';
-			tempTextField.width = tempTextField.textWidth;
+			tempTextField.htmlText = gamename + "<font color='#0099FF'> " + displayName + "</font>" + ":";
+			tempTextField.width = tempTextField.textWidth;*/
 			
 			var t:TextField = new TextField();
 			t.defaultTextFormat = new TextFormat("Tahoma", 16, 0xFFFFFF);
@@ -161,22 +167,55 @@ package chat.view.chatRow
 					tempFormat.color = 0xFFFFFF;
 				}*/
 			}
-			
-			var nameTextField:SmileyRenderer = new SmileyRenderer(mapper, tempFormat, t.width);
+			 
+			/*if (displayName.length > 20) 
+			{
+				displayName = displayName.slice(0, 20) + '...';
+			}*/
+			var nameTextField:SmileyRenderer = new SmileyRenderer(mapper, tempFormat, chatContainerWidth - 9);
 			nameTextField.lineHeight = lineHeight;
 			
 			nameTextField.text = displayName + ":";
 			
 			/*nameTextField.x = 15;
 			nameTextField.y = 10;*/
-			var distanceString:String = "";
-			
-			while (nameTextField.width > t.width)
+			var tfn:TextFormat = new TextFormat();
+			tfn.size = 16;
+			tfn.align = TextFormatAlign.LEFT;
+			var distanceString:SmileyRenderer = new SmileyRenderer(mapper, tempFormat, t.width);
+			distanceString.text = '';
+			var i:int;
+			var count:int = 0;
+			/*for (i = 0; i < tempTextField.text.length; i++) 
 			{
-				distanceString += " ";
-				tempTextField.text = distanceString;
-			}
-			distanceString += "  ";
+				
+				count++
+				if (count < 2) 
+				{
+					distanceString.text = distanceString.text + " ";
+				}
+				else if (count == 2) 
+				{
+					distanceString.text = distanceString.text + "  ";
+					count = 0;
+				}
+			}*/
+			
+			/*count = 0;
+			for (i = 0; i < nameTextField.text.length; i++) 
+			{
+				
+				count++
+				if (count == 1) 
+				{
+					distanceString.appendText(" ");
+				}
+				else if (count == 2) 
+				{
+					distanceString.appendText("  ");
+					count = 0;
+				}
+			}*/
 			
 			var smileyText:SmileyRenderer = new SmileyRenderer(mapper, format, chatContainerWidth - 9);
 			
@@ -187,20 +226,37 @@ package chat.view.chatRow
 			smileyText.standardHeight = tempSmiley.firstLine.height;
 			smileyText.reg = regExp;
 			
-			smileyText.text = distanceString + sentence;
+			smileyText.text = distanceString.text + sentence;
 			if (nameTextField.height < smileyText.firstLine.height)
 				smileyText.y = - (smileyText.firstLine.height - nameTextField.height) - 1;
 			content.addChild(smileyText);
-			content.addChild(tempTextField);
+			//content.addChild(tempTextField);
 			content.addChild(nameTextField);
 			
 			
-			nameTextField.x = tempTextField.x + tempTextField.textWidth;
-			smileyText.x = nameTextField.x + nameTextField.width;
-			nameTextField.y = 3;
-			smileyText.y = 3;
+			//nameTextField.x = tempTextField.x + tempTextField.textWidth;
+			//smileyText.x = nameTextField.x + nameTextField.width;
+			nameTextField.y = -5;
+			nameTextField.x = content.gameNameMc.x + content.gameNameMc.width + 5;
+			smileyText.x = content.gameNameMc.x + content.gameNameMc.width + 5;
+			smileyText.y = 15;
 			
-			lineNumber = smileyText.lineNumber;
+			lineNumber = smileyText.lineNumber + 1;
+			
+			/*var tf:TextFormat = new TextFormat();
+			tf.size = 16;
+			tf.align = TextFormatAlign.LEFT;
+			var txt:TextField = new TextField();
+			txt.defaultTextFormat = tf;
+			txt.multiline = true;
+			txt.wordWrap = true	;
+			txt.width = 280;
+			txt.mouseEnabled = false;
+			txt.antiAliasType = AntiAliasType.ADVANCED;
+			txt.htmlText = gamename + "<font color='#0000FF'> " + displayName + "</font>" + sentence;
+			txt.height = txt.textHeight + 2;
+			
+			content.addChild(txt);*/
 		}
 		
 		public override function get height():Number 

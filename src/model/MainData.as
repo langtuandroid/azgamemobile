@@ -591,18 +591,8 @@ package model
 			_storeKitExample = value;
 		}
 
-		public static const LOAD_ITEM_SUCCESS:String = 'loadItemSuccess';
-		private var _itemArr:Array;
-		public function get itemArr():Array 
-		{
-			return _itemArr;
-		}
 		
-		public function set itemArr(value:Array):void 
-		{
-			_itemArr = value;
-			dispatchEvent(new Event(LOAD_ITEM_SUCCESS));
-		}
+		public var itemArr:Array = [];
 		
 		public static const CONNECT_FAIL:String = "connectFail";
 		private var _connectFail:Boolean;
@@ -645,6 +635,7 @@ package model
 			if (value)
 				dispatchEvent(new Event(LOGIN_SUCCESS));
 		}
+		
 
 		public static const MAUBINH_ID:int = 1;
 		public static const PHOM_ID:int = 2;
@@ -677,11 +668,11 @@ package model
 		public var token:String;
 		//public var version:String = "v1.4.1";
 
-		public var version:String = "v1.9.6";
-		public var isTest:Boolean = true; // biến để check xem đang chạy trên server test hay server thật
+		public var version:String = "v1.9.4";
+		public var isTest:Boolean = false; // biến để check xem đang chạy trên server test hay server thật
 
-		public var isFacebookVersion:Boolean = true; // biến để check xem có phải là bản nhúng vào facebook không
-		public var isWebVersion:Boolean = true; // biến để check xem có phải là bản nhúng vào web không
+		public var isFacebookVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào facebook không
+		public var isWebVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào web không
 		public var isShowScroll:Boolean;
 		public var country:String = "";
 		public var joinedGame:Boolean = false;
@@ -699,7 +690,7 @@ package model
 		public var chl_Allow:Array
 		public var chl_Auto_Allow:Array
 		public var isNoCallLeaveRoom:Boolean;
-		public var isReconnectVersion:Boolean = true;
+		public var isReconnectVersion:Boolean = false;
 		public var isFirstLoginFacebook:Boolean = true;
 		public var isReconnectPhom:Boolean = false;
 	}

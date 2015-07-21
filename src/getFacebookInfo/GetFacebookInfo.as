@@ -140,7 +140,7 @@ package getFacebookInfo
 					
 					break;
 				case GVFacebookEvent.FB_LOGIN_FAILED:
-					
+					mainData.isLoginFacebookFail = true;
 					break;
 				case GVFacebookEvent.FB_REQUEST_FAILED:
 					

@@ -317,6 +317,23 @@ package view.window.loginWindow
 			sharedObject.setProperty("isNotFirstLoginMobile", 1);
 			mainData.loginData = value;
 			
+			if (value.Data.UserStatus) 
+			{
+				if (value.Data.UserStatus == 2) 
+				{
+					zLoginWindow(content).loadingLayer.visible = false;
+					WindowLayer.getInstance().openAlertWindow(value.UserMessage);
+				}
+				else if (value.Data.UserStatus == 3 || value.Data.UserStatus == 4) 
+				{
+					zLoginWindow(content).loadingLayer.visible = false;
+					WindowLayer.getInstance().openAlertWindow(value.UserMessage);
+					CallJs.getInstance().hideLoading();
+					return;
+				}
+				
+			}
+			
 			zLoginWindow(content).loadingLayer.visible = false;
 			
 			excuteUserInfo(value);
@@ -510,11 +527,11 @@ package view.window.loginWindow
 		{
 			//if (!mainData.isFacebookVersion)
 				//WindowLayer.getInstance().openAlertWindow("onLoginFacebookRespond");
-			WindowLayer.getInstance().closeAllWindow();
+			
 			if (value["status"] == "IO_ERROR")
 			{
 				
-				
+				WindowLayer.getInstance().closeAllWindow();
 				/////////////////////////////////////
 				zLoginWindow(content).loadingLayer.visible = false;
 				
@@ -534,6 +551,7 @@ package view.window.loginWindow
 			}
 			if (value.TypeMsg < 1)
 			{
+				WindowLayer.getInstance().closeAllWindow();
 				zLoginWindow(content).loadingLayer.visible = false;
 				if (int(value.TypeMsg) == -10)
 				{
@@ -554,8 +572,25 @@ package view.window.loginWindow
 			}
 			if (value.TypeMsg == 1)
 			{
+				WindowLayer.getInstance().closeAllWindow();
 				mainData.loginData = value;
 				zLoginWindow(content).loadingLayer.visible = false;
+				if (value.Data.UserStatus) 
+				{
+					if (value.Data.UserStatus == 2) 
+					{
+						zLoginWindow(content).loadingLayer.visible = false;
+						WindowLayer.getInstance().openAlertWindow(value.UserMessage);
+					}
+					else if (value.Data.UserStatus == 3 || value.Data.UserStatus == 4) 
+					{
+						zLoginWindow(content).loadingLayer.visible = false;
+						WindowLayer.getInstance().openAlertWindow(value.UserMessage);
+						CallJs.getInstance().hideLoading();
+						return;
+					}
+					
+				}
 				excuteUserInfo(value);
 				close(BaseWindow.MIDDLE_EFFECT);
 				

@@ -1382,7 +1382,7 @@ package view.screen
 			
 			if (max_sq_id == '0') 
 			{
-				chatBox.getListChat();
+				chatBox.startChat();
 			}
 			
 			
