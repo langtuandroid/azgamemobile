@@ -331,11 +331,12 @@ package miniGame
 			
 			httpReq.sendRequest(method, str, obj, showResultGame, true);
 			
+			
 		}
 		
 		private function showResultGame(obj:Object):void 
 		{
-			
+			trace('da thay ket qua tu game mini')
 			if (obj.TypeMsg == 1) 
 			{
 				SoundManager.getInstance().playSound(ConstMiniGame.SOUND_WIN);	

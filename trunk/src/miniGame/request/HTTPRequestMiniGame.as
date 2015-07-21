@@ -78,6 +78,7 @@ package miniGame.request
 		private function onTimeOut(e:TimerEvent):void 
 		{
 			clearAll();
+			completeFunction( { "status":"TIME_OUT", "description":"Kết nối internet gặp vấn đề, bạn vui lòng thử lại!" } );
 		}
 		
 		private function onIOError(e:IOErrorEvent):void 
@@ -120,6 +121,7 @@ package miniGame.request
 			urlLoader.removeEventListener(Event.COMPLETE, onRequestComplete);
 			urlLoader.removeEventListener(IOErrorEvent.IO_ERROR , onIOError);
 			dispatchEvent(new Event(LOAD_COMPLETE));
+			
 		}
 	}
 

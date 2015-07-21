@@ -544,7 +544,7 @@ package view.window.shop
 					windowLayer.openLoadingWindow();
 					url = basePath + "service02/OnplayUserExt.asmx/ActivePhone";
 					obj = new Object();
-					obj.active_code = myContent.acticedAcc.notActivePhone.codeSmsTxt.text;
+					obj.active_code = myContent.acticedAcc.allNotActice.codeSmsTxt.text;
 					httpRequest.sendRequest(method, url, obj, sendActivePhoneSuccess, true);
 				}
 			}
@@ -612,7 +612,8 @@ package view.window.shop
 			closeLoading();
 			if (obj.TypeMsg == 1) 
 			{
-				windowLayer.openAlertWindow("Chúc mừng bạn đã kích hoạt điện thoại thành công");
+				windowLayer.openAlertWindow(obj.Msg);
+				updateUserInfo();
 			}
 			else 
 			{
@@ -772,6 +773,7 @@ package view.window.shop
 			if (obj.TypeMsg == 1) 
 			{
 				windowLayer.openAlertWindow("Chúc mừng bạn đã kích hoạt mail thành công");
+				updateUserInfo();
 			}
 			else 
 			{
@@ -805,9 +807,9 @@ package view.window.shop
 			{
 				myContent.acticedAcc.notActivePhone.codeSmsTxt.text = "";
 			}
-			if (myContent.acticedAcc.allNotActice.codemailTxt.text == "Nhập mã kích hoạt") 
+			if (myContent.acticedAcc.allNotActice.codeSmsTxt.text == "Nhập mã kích hoạt") 
 			{
-				myContent.acticedAcc.allNotActice.codemailTxt.text = "";
+				myContent.acticedAcc.allNotActice.codeSmsTxt.text = "";
 			}
 		}
 		
@@ -829,9 +831,9 @@ package view.window.shop
 			{
 				myContent.acticedAcc.notActiveMail.codeCheckTxt.text = "";
 			}
-			if (myContent.acticedAcc.allNotActice.codeSmsTxt.text == "Nhập mã kích hoạt") 
+			if (myContent.acticedAcc.allNotActice.codeCheckTxt.text == "Nhập mã kích hoạt") 
 			{
-				myContent.acticedAcc.allNotActice.codeSmsTxt.text = "";
+				myContent.acticedAcc.allNotActice.codeCheckTxt.text = "";
 			}
 		}
 		
@@ -1336,7 +1338,7 @@ package view.window.shop
 				url = basePath + "Service01/Billings/OnplayMobile.asmx/CardCharging";
 				
 				obj = new Object();
-				obj.nick_name = mainData.chooseChannelData.myInfo.name;
+				obj.nick_name = myContent.rakingBg.userNameTxt.text;
 				obj.telco_code = _typOfNetwork;
 				obj.card_serial = myContent.rakingBg.serinumberTxt.text;
 				obj.card_id = myContent.rakingBg.codenumberTxt.text;
@@ -1512,7 +1514,7 @@ package view.window.shop
 		{
 			onCloseChonMang(null);
 			
-			if (mainData.isFacebookVersion) 
+			if (mainData.isFacebookVersion || mainData.isOnIos) 
 			{
 				showTut('viettel');
 			}
@@ -1537,7 +1539,7 @@ package view.window.shop
 		{
 			onCloseChonMang(null);
 			
-			if (mainData.isFacebookVersion) 
+			if (mainData.isFacebookVersion || mainData.isOnIos) 
 			{
 				showTut('vina');
 			}
@@ -1560,7 +1562,7 @@ package view.window.shop
 		{
 			onCloseChonMang(null);
 			
-			if (mainData.isFacebookVersion) 
+			if (mainData.isFacebookVersion || mainData.isOnIos) 
 			{
 				showTut('mobi');
 			}
@@ -1582,10 +1584,11 @@ package view.window.shop
 		{
 			tutorialAddMoney = new TutorialAddMoneyPopup();
 			myContent.addChild(tutorialAddMoney);
-			tutorialAddMoney.x = 47 + (865 - tutorialAddMoney.width) / 2;
+			tutorialAddMoney.x = (865 - tutorialAddMoney.width) / 2;
 			tutorialAddMoney.y = 86 + (363 - tutorialAddMoney.height) / 2;
+			tutorialAddMoney.closeBtn.buttonMode = true;
 			tutorialAddMoney.closeBtn.addEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);
-			
+			tutorialAddMoney.contentMess.mouseEnabled = true;
 			if (str == 'viettel') 
 			{
 				if (activing[2]) 
@@ -2672,7 +2675,8 @@ package view.window.shop
 				var expireAvatar:String = arrData[i]['it_sell_expire_dt'];
 				var idAvtWeb:String = arrData[i]['it_cd_wb'];
 				//var idAvt:String = arrData[i]['it_id'];
-				var idAvt:String = 'sanhbai4';
+				var idAvt:String = arrData[i]['it_explain'];
+				//var idAvt:String = 'sanhbai4';
 				var tail:String = arrData[i]['it_file_ext'];
 				
 				var contentAvatar:ContentItemPurchase = new ContentItemPurchase();
@@ -3489,8 +3493,6 @@ package view.window.shop
 			
 			
 			httpReq.sendRequest(method, str, obj, getCountrySuccess, true);*/
-			mainData.removeEventListener(MainData.LOAD_ITEM_SUCCESS, onLoadItemSuccess);
-			mainData.addEventListener(MainData.LOAD_ITEM_SUCCESS, onLoadItemSuccess);
 			
 			if (mainData.isOnAndroid) 
 			{
@@ -3505,59 +3507,9 @@ package view.window.shop
 			
 		}
 		
-		private function onLoadItemSuccess(e:Event):void 
-		{
-			removeAllArray();
-			
-			
-			var arrData:Array = mainData.itemArr;
-			var countX:int;
-			var countY:int;
-			var i:int;
-			closeLoading();
-			
-			
-			for (i = arrData.length - 1; i > -1; i-- ) 
-			{
-				var nameAvatar:String = 'it_name';
-				var chipAvatar:String = arrData[i][2];
-				var payGold:String = 'it_pay_gold';
-				var linkAvatar:String = 'http://files.azgame.us/item_ios/WAZ/WAZ000048.gif';
-				var expireAvatar:String = 'it_sell_expire_dt';
-				var idAvtWeb:String = 'it_cd_wb';
-				//var idAvt:String = arrData[i]['it_id'];
-				var idAvt:String = arrData[i][0];
-				var tail:String = arrData[i][3];
-				
-				var contentAvatar:ContentItemPurchase = new ContentItemPurchase();
-				_arrPurchase.push(contentAvatar);
-				//contentAvatar.x = 10 + countX * 440;
-				//contentAvatar.y = 5 + countY * 135;
-				
-				if (countX < 2) 
-				{
-					countX++;
-				}
-				else 
-				{
-					countY++;
-					countX = 0;
-				}
-				
-				
-				contentAvatar.addInfo(idAvt, nameAvatar, chipAvatar, payGold, linkAvatar, expireAvatar, idAvtWeb, tail);
-				scrollView.addRow(contentAvatar);
-				//_arrBoard[3].addChild(contentAvatar);
-				
-				contentAvatar.addEventListener(ConstTlmn.BUY_ITEM, onBuyItemPurchase);
-			}
-			
-			closeLoading();
-		}
-		
 		private function getCountrySuccess():void 
 		{
-			
+			loadItemPurchase();
 			if (mainData.country == "VN") 
 			{
 				/*if (mainData.isOnAndroid) 

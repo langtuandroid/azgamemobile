@@ -569,15 +569,15 @@ package view
 					showTab(2);
 				break;
 				case addMoneyTabEnable:
-					if (mainData.isFacebookVersion || mainData.isWebVersion) 
+					/*if (mainData.isFacebookVersion || mainData.isWebVersion) 
 					{
 						showTab(3);
 					}
 					else if (mainData.country == "VN") 
 					{
 						showTab(3);
-					}
-					
+					}*/
+					showTab(3);
 				break;
 				case shopTabEnable:
 					showTab(4);

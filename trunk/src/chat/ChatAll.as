@@ -113,12 +113,12 @@ package chat
 			tfChose = new TextFormat();
 			tfChose.color = 0x059ADD;
 			
-			chatContainerWidth = 160;// content["zChatContainer"].width;
+			chatContainerWidth = 230;// content["zChatContainer"].width;
 			chatContainerHeight = 190;// content["zChatContainer"].height;
 			
 			scrollView = new ScrollViewYun();
 			scrollView.maxList = 30;
-			scrollView.isForMobile = false;
+			scrollView.isForMobile = !mainData.isShowScroll;
 			scrollView.setData(content["zChatContainer"], 5);
 			addChild(scrollView);
 			
@@ -143,7 +143,23 @@ package chat
 			8501, "192.168.0.254", "BACAY_13", "BACAY_14", "BACAY_15");*/
 		}
 		
-		public function getListChat():void 
+		public function startChat():void 
+		{
+			getListChat();
+			if (timeOutTimer) 
+			{
+				timeOutTimer.stop();
+				timeOutTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, onTimeOut);
+				
+				timeOutTimer = null;
+			}
+			
+			timeOutTimer = new Timer(33 * 1000, 1);
+			timeOutTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onTimeOut);
+			timeOutTimer.start();
+		}
+		
+		private function getListChat():void 
 		{
 			var basePath:String = '';
 			if (mainData.isTest) 
@@ -169,37 +185,37 @@ package chat
 			urlReq.method = URLRequestMethod.POST;
 			
 			
-			
 			urlLoader = new URLLoader();
 			urlLoader.dataFormat = URLLoaderDataFormat.TEXT;
 			urlLoader.addEventListener(Event.COMPLETE, getListChatComplete, false, 0, true);
 			urlLoader.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler, false, 0, true);
 			urlLoader.load(urlReq);
 			
-			if (timeOutTimer) 
+			/*if (timeOutTimer) 
 			{
 				timeOutTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, onTimeOut);
 				timeOutTimer.stop();
 				timeOutTimer = null;
 			}
 			
-			timeOutTimer = new Timer(30 * 1000, 1);
-			timeOutTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onTimeOut);
-			timeOutTimer.start();
+			timeOutTimer = new Timer(25 * 1000);
+			timeOutTimer.addEventListener(TimerEvent.TIMER, onTimeOut);
+			timeOutTimer.start();*/
 		}
 		
 		private function onTimeOut(e:TimerEvent):void 
 		{
 			clearAll();
-			getListChat();
+			startChat();
 		}
 		
 		private function clearAll():void
 		{
-			if (timeOutTimer)
+			if (timeOutTimer) 
 			{
-				timeOutTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, onTimeOut);
 				timeOutTimer.stop();
+				timeOutTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, onTimeOut);
+				
 				timeOutTimer = null;
 			}
 			
@@ -227,7 +243,7 @@ package chat
 				}
 			}
 			
-			getListChat();
+			startChat();
 			
 		}
 		
@@ -424,15 +440,17 @@ package chat
 			content['up_downMc'].buttonMode = true;
 			
 			content['up_downMc'].addEventListener(MouseEvent.CLICK, onHideChat);
-			//content['chatBtn'].addEventListener(MouseEvent.CLICK, onChoseChat);
-			content['messBtn'].addEventListener(MouseEvent.CLICK, onChoseMess);
+			content['chatBtn'].addEventListener(MouseEvent.CLICK, onChoseChat);
+			//content['messBtn'].addEventListener(MouseEvent.CLICK, onChoseMess);
 			content['sendBtn'].addEventListener(MouseEvent.CLICK, onSendMess);
+			
+			
 		}
 		
 		private function onSendMess(e:MouseEvent):void 
 		{
 			currentText = inputText.text;
-			if (inputText.text != "")
+			if (inputText.text != "" && inputText.text != "Nhập thông tin để chat...")
 			{
 				haveUserChat();
 			}

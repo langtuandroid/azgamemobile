@@ -301,6 +301,8 @@ package view.window.registerWindow
 			myInfo.logo = '';
 			myInfo.sex = value.Data["GenderCode"];
 			
+			mainData.isAtLogin = false;
+			
 			MyDataTLMN.getInstance().myId = value.Data["Id"];
 			MyDataTLMN.getInstance().myDisplayName = value.Data["Displayname"];
 			MyDataTLMN.getInstance().myMoney[0] = value.Data["Money"];
