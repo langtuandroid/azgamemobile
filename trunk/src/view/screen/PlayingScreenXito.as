@@ -75,7 +75,7 @@ package view.screen
 		private var totalMoneyText:TextField;
 		private var previousBetText:TextField;
 		
-		private var chatBox:ChatBox
+		private var chatBox:ChatBoxPhom
 		
 		private var cardManager:CardManagerXito;
 		private var allPlayerArray:Array; // Mảng chứa tất cả người chơi
@@ -159,7 +159,7 @@ package view.screen
 			hidePosition();
 			createVariable();
 			mainData.playingData.addEventListener(PlayingData.UPDATE_PLAYING_SCREEN, onUpdatePlayingScreen);
-			chatBox = new ChatBox();
+			chatBox = new ChatBoxPhom();
 			chatBox.maxCharsChat = 50;
 			chatBox.visible = false;
 			chatBox.addEventListener(ChatBox.HAVE_CHAT, onHaveChat);
