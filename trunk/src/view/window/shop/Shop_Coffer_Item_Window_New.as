@@ -2675,7 +2675,17 @@ package view.window.shop
 				var expireAvatar:String = arrData[i]['it_sell_expire_dt'];
 				var idAvtWeb:String = arrData[i]['it_cd_wb'];
 				//var idAvt:String = arrData[i]['it_id'];
-				var idAvt:String = arrData[i]['it_explain'];
+				var idAvt:String = '';
+				if (mainData.isOnIos) 
+				{
+					idAvt = arrData[i]['it_explain'];
+				}
+				else 
+				{
+					idAvt = arrData[i]['it_explain'];
+					idAvt = idAvt.toLowerCase();
+				}
+				
 				//var idAvt:String = 'sanhbai4';
 				var tail:String = arrData[i]['it_file_ext'];
 				
@@ -3509,7 +3519,7 @@ package view.window.shop
 		
 		private function getCountrySuccess():void 
 		{
-			loadItemPurchase();
+			//loadItemPurchase();
 			if (mainData.country == "VN") 
 			{
 				/*if (mainData.isOnAndroid) 

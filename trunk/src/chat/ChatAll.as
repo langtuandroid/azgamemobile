@@ -76,7 +76,7 @@ package chat
 		private var isFirstLoad:Boolean = true;
 		private var init:XML;
 		public var currentText:String;
-		private var _maxCharsChat:int = 40;
+		private var _maxCharsChat:int = 50;
 		
 		public var zInputText:TextField;
 		public var zChatContainer:Sprite;
@@ -168,8 +168,8 @@ package chat
 			}
 			else 
 			{
-				//basePath = "http://wss.azgame.us/Service03/";
-				basePath = "http://wss.test.azgame.us/Service03/";
+				basePath = "http://wss.azgame.us/Service03/";
+				//basePath = "http://wss.test.azgame.us/Service03/";
 			}
 			
 			var url:String = basePath + "/OnplayServerChat.asmx/GetListMessages";
@@ -257,8 +257,8 @@ package chat
 			}
 			else 
 			{
-				//basePath = "http://wss.azgame.us/Service03/";
-				basePath = "http://wss.test.azgame.us/Service03/";
+				basePath = "http://wss.azgame.us/Service03/";
+				//basePath = "http://wss.test.azgame.us/Service03/";
 			}
 			
 			var url:String = basePath + "/OnplayServerChat.asmx/NewMessage";
