@@ -20,6 +20,7 @@ package control.electroServerCommand
 	import view.window.AlertWindow;
 	import view.window.BaseWindow;
 	import view.window.ConfirmInvitePlayWindow;
+	import view.window.ReconnectWindow;
 	import view.window.windowLayer.WindowLayer;
 	/**
 	 * ...
@@ -527,7 +528,23 @@ package control.electroServerCommand
 			windowLayer.closeAllWindow();
 			mainData.isCloseConnection = true;
 			coreAPI = null;
-			
+			if (mainData.isReconnectVersion)
+			{
+				if (mainData.isReconnectTlmn)
+				{
+					var reconnectWindow:ReconnectWindow = new ReconnectWindow();
+					reconnectWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onCloseReconnectWindow);
+					windowLayer.openWindow(reconnectWindow);
+				}
+				else
+				{
+					var closeConnectionWindow:AlertWindow = new AlertWindow();
+					closeConnectionWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onCloseConnectionWindowClose);
+					closeConnectionWindow.setNotice("Kết nối bị gián đoạn. Vui lòng kiểm tra lại internet");
+					windowLayer.openWindow(closeConnectionWindow);
+				}
+				return;
+			}
 			var closeConnectionWindow:AlertWindow = new AlertWindow();
 			//closeConnectionWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onCloseConnectionWindowClose);
 			closeConnectionWindow.setNotice("Kết nối bị gián đoạn. \n Vui lòng thử lại...");

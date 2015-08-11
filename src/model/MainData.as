@@ -636,7 +636,20 @@ package model
 				dispatchEvent(new Event(LOGIN_SUCCESS));
 		}
 		
-
+		public static const BUY_ITEM_SUCCESS:String = "buyItemSuccess";
+		private var _buyItemSuccess:Boolean;
+		public function get buyItemSuccess():Boolean 
+		{
+			return _buyItemSuccess;
+		}
+		
+		public function set buyItemSuccess(value:Boolean):void 
+		{
+			_buyItemSuccess = value;
+			
+			dispatchEvent(new Event(BUY_ITEM_SUCCESS));
+		}
+		
 		public static const MAUBINH_ID:int = 1;
 		public static const PHOM_ID:int = 2;
 		public static const TLMN_ID:int = 3;
@@ -668,8 +681,8 @@ package model
 		public var token:String;
 		//public var version:String = "v1.4.1";
 
-		public var version:String = "v1.9.4";
-		public var isTest:Boolean = false; // biến để check xem đang chạy trên server test hay server thật
+		public var version:String = "v1.9.7";
+		public var isTest:Boolean = true; // biến để check xem đang chạy trên server test hay server thật
 
 		public var isFacebookVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào facebook không
 		public var isWebVersion:Boolean = false; // biến để check xem có phải là bản nhúng vào web không
@@ -690,9 +703,10 @@ package model
 		public var chl_Allow:Array
 		public var chl_Auto_Allow:Array
 		public var isNoCallLeaveRoom:Boolean;
-		public var isReconnectVersion:Boolean = false;
+		public var isReconnectVersion:Boolean = true;
 		public var isFirstLoginFacebook:Boolean = true;
 		public var isReconnectPhom:Boolean = false;
+		public var isReconnectTlmn:Boolean = true;
 	}
 
 }

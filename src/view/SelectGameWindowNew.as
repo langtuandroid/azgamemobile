@@ -136,6 +136,14 @@ package view
 			
 			pokerIcon.gotoAndStop(2);
 			
+			tlmnIcon.gotoAndStop(1);
+			samIcon.gotoAndStop(1);
+			maubinhIcon.gotoAndStop(1);
+			phomIcon.gotoAndStop(1);
+			luckyCardIcon.gotoAndStop(1);
+			xitoIcon.gotoAndStop(1);
+			luckyCardIcon.gotoAndStop(1);
+			
 			gameList = new Array();
 			
 			gameList.push(xitoIcon);
@@ -804,6 +812,10 @@ package view
 					dispatchEvent(new Event(SELECT_GAME));
 					SoundManager.getInstance().playBackgroundMusicMauBinh();
 					isRecentlySelectGame = false;
+				}
+				else if (mainData.isReconnectTlmn)
+				{
+					
 				}
 			}
 		}

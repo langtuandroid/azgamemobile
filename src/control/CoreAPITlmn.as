@@ -552,6 +552,50 @@ package control
 			}
 			switch (command) 
 			{
+				case Command.USER_JOIN_ROOM_RESPOND:
+					if (!e.parameters.getBoolean("isGameRoom"))
+						return;
+					if (timerToGetRoomList)
+					{
+						timerToGetRoomList.removeEventListener(TimerEvent.TIMER, onGetRoomList)
+						timerToGetRoomList.stop();
+						mainData.isNoRenderLobbyList = false;
+					}
+					
+					electroServer.engine.removeEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
+					electroServer.engine.removeEventListener(MessageType.RoomVariableUpdateEvent.name, onRoomVariableUpdateEvent);
+					
+					myData.roomId = e.parameters.getInteger("roomId");
+					
+					myData.gameRoomInfo = new Object();
+					myData.gameRoomInfo[DataFieldPhom.ROOM_ID] = myData.roomId;
+					myData.gameRoomInfo[DataFieldPhom.ROOM_BET] = e.parameters.getString(DataFieldPhom.ROOM_BET);
+					myData.gameRoomInfo[DataFieldPhom.ROOM_NAME] = '';
+					myData.gameRoomInfo[DataFieldPhom.IS_SEND_CARD] = true;
+					myData.gameRoomInfo[DataFieldPhom.GAME_ID] = e.parameters.getInteger("gameId");
+					mainData.playingData.gameRoomData.roomPassword = e.parameters.getString("password");
+					
+					// Gửi pluginRequest lên lấy thông tin các user trong phòng chơi
+					var pluginMessage:EsObject = new EsObject();
+					pluginMessage.setString("command", Command.GET_PLAYING_INFO);
+					sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, pluginMessage);
+				break;
+				case Command.USER_EXIT:
+					object = new Object();
+					object[DataFieldPhom.USER_NAME] = e.parameters.getString(DataFieldPhom.USER_NAME);
+					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.HAVE_USER_OUT_ROOM, object));	
+				break;
+				case Command.USER_DISCONNECT:
+					object = new Object();
+					object[DataFieldPhom.USER_NAME] = e.parameters.getString(DataFieldPhom.USER_NAME);
+					callPlayingScreenAction(Command.USER_DISCONNECT, object);
+				break;
+				case Command.USER_RECONNECT:
+					object = new Object();
+					object[DataFieldPhom.USER_NAME] = e.parameters.getString(DataFieldPhom.USER_NAME);
+					callPlayingScreenAction(Command.USER_RECONNECT, object);	
+				break;
+				
 				case CommandTlmn.ENDROUND:
 					GameDataTLMN.getInstance().finishRound = true;
 					GameDataTLMN.getInstance().firstPlayer = e.parameters.getString("userName");
