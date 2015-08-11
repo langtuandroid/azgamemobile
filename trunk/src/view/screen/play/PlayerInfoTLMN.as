@@ -188,7 +188,7 @@ package view.screen.play
 			content.inviteBtn.addEventListener(MouseEvent.CLICK, onClickInvite);
 			content.showDetailUser.addEventListener(MouseEvent.CLICK, onClickShowContex);
 			nothing();
-			
+			hideReconnectIcon();
 			//ready = true;
 			//dealCard([]);
 			//addCardDeck(13);
@@ -1733,5 +1733,15 @@ package view.screen.play
 			content.samResult.visible = false;
 		}
 		
+		public function showReconnectIcon():void
+		{
+			
+			content.reconnectIcon.visible = true;
+		}
+		
+		public function hideReconnectIcon():void
+		{
+			content.reconnectIcon.visible = false;
+		}
 	}
 }

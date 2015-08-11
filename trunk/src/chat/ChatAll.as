@@ -9,9 +9,14 @@ package chat
 	import flash.events.IOErrorEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.events.NetStatusEvent;
+	import flash.events.SyncEvent;
 	import flash.events.TimerEvent;
 	import flash.filters.GlowFilter;
 	import flash.geom.Rectangle;
+	import flash.net.NetConnection;
+	import flash.net.Responder;
+	import flash.net.SharedObject;
 	import flash.net.URLLoader;
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
@@ -96,7 +101,12 @@ package chat
 		
 		private var urlLoader:URLLoader;
 		private var timeOutTimer:Timer;
+		private var nc:NetConnection = null;
+		private var textchat_so:SharedObject = null;
+		private var lastChatId:Number = 0;
+		private var chatSharedObjectName:String = "textchat";
 		
+
 		public function ChatAll() 
 		{
 			var byteArray:ByteArray = new MyData() as ByteArray;
@@ -145,7 +155,7 @@ package chat
 		
 		public function startChat():void 
 		{
-			getListChat();
+			/*getListChat();
 			if (timeOutTimer) 
 			{
 				timeOutTimer.stop();
@@ -156,8 +166,101 @@ package chat
 			
 			timeOutTimer = new Timer(33 * 1000, 1);
 			timeOutTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onTimeOut);
-			timeOutTimer.start();
+			timeOutTimer.start();*/
+			
+			nc = new NetConnection();
+		
+			// trace connection status information
+			nc.addEventListener(NetStatusEvent.NET_STATUS, ncOnStatus);
+			
+			nc.connect("rtmp://cdn.aivo.vn/textchat");
 		}
+		
+		private function ncOnStatus(infoObject:NetStatusEvent):void 
+		{
+			trace("nc: "+infoObject.info.code+" ("+infoObject.info.description+")");
+	
+			if (infoObject.info.code == "NetConnection.Connect.Success")
+			{
+				initSharedObject(chatSharedObjectName);
+				if (timeOutTimer) 
+				{
+					timeOutTimer.stop();
+					timeOutTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, onTimeOut);
+					
+					timeOutTimer = null;
+				}
+				
+				timeOutTimer = new Timer(1800 * 1000, 1);
+				timeOutTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onTimeOut);
+				timeOutTimer.start();
+			}
+			else if (infoObject.info.code == "NetConnection.Connect.Failed")
+				trace('cn failded ' + "Connection failed: Try rtmp://[server-ip-address]/textchat");
+			else if (infoObject.info.code == "NetConnection.Connect.Rejected")
+				trace('cn reject' + infoObject.info.description);
+		}
+		
+		private function initSharedObject(soName:String):void
+		{
+			// initialize the shared object server side
+			nc.call("initSharedObject", new Responder(connectSharedObjectRes), soName);
+		}
+		
+		private function connectSharedObjectRes(soName:String):void
+		{
+			connectSharedObject(soName);
+		}
+		
+		private function connectSharedObject(soName:String):void
+		{
+			
+			textchat_so = SharedObject.getRemote(soName, nc.uri);
+			
+			// add new message to the chat box as they come in
+			textchat_so.addEventListener(SyncEvent.SYNC, syncEventHandler);
+
+			textchat_so.connect(nc);	
+		}
+		
+		private function syncEventHandler(ev:SyncEvent):void
+		{
+			var infoObj:Object = ev.changeList;
+			
+			// if first time only show last 4 messages in the list
+			if (lastChatId == 0)
+			{
+				lastChatId = Number(textchat_so.data["lastChatId"]) - 4;
+				if (lastChatId < 0)
+					lastChatId = 0;
+			}
+			
+			// show new messasges
+			var currChatId:Number = Number(textchat_so.data["lastChatId"]);
+			
+			// if there are new messages to display
+			if (currChatId > 0)
+			{
+				var i:Number;
+				for(i=(lastChatId+1);i<=currChatId;i++)
+				{
+					if (textchat_so.data["chatData"+i] != undefined)
+					{
+						var chatMessage:Object = textchat_so.data["chatData"+i];
+						var isMe:Boolean = false;
+						if (chatMessage.user == mainData.chooseChannelData.myInfo.name) 
+						{
+							isMe = true;
+						}
+						
+						addChatSentence(chatMessage.message, chatMessage.user, chatMessage.game_id, isMe, false);
+					}
+				}
+				
+				lastChatId = currChatId;
+			}
+		}
+
 		
 		private function getListChat():void 
 		{
@@ -206,7 +309,8 @@ package chat
 		private function onTimeOut(e:TimerEvent):void 
 		{
 			clearAll();
-			startChat();
+			nc.connect("rtmp://cdn.aivo.vn/textchat");
+			//startChat();
 		}
 		
 		private function clearAll():void
@@ -250,7 +354,7 @@ package chat
 		
 		private function haveUserChat():void 
 		{
-			var basePath:String = '';
+			/*var basePath:String = '';
 			if (mainData.isTest) 
 			{
 				basePath = "http://wss.test.azgame.us/Service03/";
@@ -277,18 +381,29 @@ package chat
 			urlLoader.dataFormat = URLLoaderDataFormat.TEXT;
 			urlLoader.addEventListener(Event.COMPLETE, loaderCompleteHandler, false, 0, true);
 			
-			urlLoader.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler, false, 0, true);
-			urlLoader.load(urlReq);
+			urlLoader.addEventListener(IOErrorEvent.IO_ERROR, ioErrorNewMessHandler, false, 0, true);
+			urlLoader.load(urlReq);*/
+			var chatMessage:Object = new Object();
+	
+			chatMessage.message = currentText;
+			chatMessage.game_id = mainData.game_id;
+			chatMessage.user = mainData.chooseChannelData.myInfo.name;
+			nc.call("addMessage", null, 'textchat', chatMessage);
+		}
+		
+		private function ioErrorNewMessHandler(e:IOErrorEvent):void 
+		{
+			trace('ko gui len dc chat moi')
 		}
 		
 		private function ioErrorHandler(e:IOErrorEvent):void 
 		{
-			trace('ko gui len dc')
+			trace('ko gui len dc list mess')
 		}
 		
 		private function loaderCompleteHandler(e:Event):void 
 		{
-			
+			trace('da gui len dc chat moi')
 		}
 		
 		private function onIconClick(e:MouseEvent):void 

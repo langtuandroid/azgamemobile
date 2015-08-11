@@ -15,6 +15,7 @@ package view.window.shop
 	import flash.net.navigateToURL;
 	import flash.net.URLRequest;
 	import flash.text.TextField;
+	import flash.text.TextFormat;
 	import flash.ui.Keyboard;
 	import flash.utils.Timer;
 	import inapp_purchase.GoogleInapp;
@@ -108,12 +109,11 @@ package view.window.shop
 									['20,000 đ', '11,000,000 G', '13,000,000 G', '15,000,000 G', 'gold', 'nap20', ''],
 									['30,000 đ', '18,000,000 G', '21,000,000 G', '24,000,000 G', 'gold', 'nap30', ''],
 									['50,000 đ', '35,000,000 G', '40,000,000 G', '45,000,000 G', 'gold', 'nap50', ''],
-									['100,000 đ', '75,000,000 G', '85,000,000 G', '95,000,000 G', 'gold', 'nap100', 'vina'],
-									['10,000 đ', '60 C', '60 C', '60 C', 'chip', 'nap10', ''],
-									['20,000 đ', '120 C', '120 C', '120 C', 'chip', 'nap20', ''],
-									['30,000 đ', '180 C', '180 C', '180 C', 'chip', 'nap30', ''],
-									['50,000 đ', '300 C', '300 C', '300 C', 'chip', 'nap50', ''],
-									['100,000 đ', '600 C', '600 C', '600 C', 'chip', 'nap100', 'vina']
+									
+									['10,000 đ', '60 Chip', '60 Chip', '60 Chip', 'chip', 'nap10', ''],
+									['20,000 đ', '120 Chip', '120 Chip', '120 Chip', 'chip', 'nap20', ''],
+									['30,000 đ', '180 Chip', '180 Chip', '180 Chip', 'chip', 'nap30', ''],
+									['50,000 đ', '300 Chip', '300 Chip', '300 Chip', 'chip', 'nap50', '']
 									];
 		private var arrSms:Array = [];
 		
@@ -246,10 +246,27 @@ package view.window.shop
 			headerOn(2);
 			boardOn(3);
 			
+			var tfG:TextFormat = new TextFormat();
+			tfG.color = 0xFF9900;
+			var tfC:TextFormat = new TextFormat();
+			tfC.color = 0x66CC33;
 			for (i = 0; i < arrInfoSms.length; i++) 
 			{
 				var mc:MovieClip = new ContentSmsMc();
 				mc.moneyTxt.text = arrInfoSms[i][0];
+				if (arrInfoSms[i][4] == 'chip') 
+				{
+					mc.receiveMoney1Txt.defaultTextFormat = tfC;
+					mc.receiveMoney2Txt.defaultTextFormat = tfC;
+					mc.receiveMoney3Txt.defaultTextFormat = tfC;
+				}
+				else 
+				{
+					mc.receiveMoney1Txt.defaultTextFormat = tfG;
+					mc.receiveMoney2Txt.defaultTextFormat = tfG;
+					mc.receiveMoney3Txt.defaultTextFormat = tfG;
+				}
+				
 				mc.receiveMoney1Txt.text = arrInfoSms[i][1];
 				mc.receiveMoney2Txt.text = arrInfoSms[i][2];
 				mc.receiveMoney3Txt.text = arrInfoSms[i][3];
@@ -1587,8 +1604,18 @@ package view.window.shop
 			tutorialAddMoney.x = (865 - tutorialAddMoney.width) / 2;
 			tutorialAddMoney.y = 86 + (363 - tutorialAddMoney.height) / 2;
 			tutorialAddMoney.closeBtn.buttonMode = true;
+			tutorialAddMoney.smsBtn.buttonMode = true;
 			tutorialAddMoney.closeBtn.addEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);
+			tutorialAddMoney.smsBtn.addEventListener(MouseEvent.MOUSE_UP, onChangeSms);
 			tutorialAddMoney.contentMess.mouseEnabled = true;
+			if (mainData.isOnIos) 
+			{
+				tutorialAddMoney.smsBtn.visible = true;
+			}
+			else 
+			{
+				tutorialAddMoney.smsBtn.visible = false;
+			}
 			if (str == 'viettel') 
 			{
 				if (activing[2]) 
@@ -1617,6 +1644,13 @@ package view.window.shop
 				tutorialAddMoney.numberTxt.text = mainData.phone6;
 				
 			}
+		}
+		
+		private function onChangeSms(e:MouseEvent):void 
+		{
+			var callURL:String="sms:" + tutorialAddMoney.contentMess.text + '?body=' + tutorialAddMoney.numberTxt.text;
+			var targetURL:URLRequest = new URLRequest(callURL);
+			navigateToURL(targetURL);
 		}
 		
 		private function onCloseChonMang(e:MouseEvent):void 
@@ -1656,7 +1690,7 @@ package view.window.shop
 		
 		private function onCloseTutorial(e:MouseEvent):void 
 		{
-			
+			tutorialAddMoney.smsBtn.removeEventListener(MouseEvent.MOUSE_UP, onChangeSms);
 			tutorialAddMoney.closeBtn.removeEventListener(MouseEvent.MOUSE_UP, onCloseTutorial);
 			myContent.removeChild(tutorialAddMoney);
 			tutorialAddMoney = null;
@@ -2776,7 +2810,8 @@ package view.window.shop
 		private function onBuyItemPurchase(e:Event):void 
 		{
 			//thanh toan the tin dung
-			windowLayer.openLoadingWindow();
+			
+			mainData.addEventListener(MainData.BUY_ITEM_SUCCESS, onBuyItemSuccess);
 			
 			goldChoseBuy = e.currentTarget as ContentItemPurchase;
 			if (mainData.isOnIos) 
@@ -2788,6 +2823,12 @@ package view.window.shop
 				GoogleInapp.getInstance().purchaseLevelPack(goldChoseBuy._idAvt);
 			}
 			
+		}
+		
+		private function onBuyItemSuccess(e:Event):void 
+		{
+			mainData.removeEventListener(MainData.BUY_ITEM_SUCCESS, onBuyItemSuccess);
+			updateUserInfo();
 		}
 		
 		private function loadItemGiftSuccess(obj:Object):void 

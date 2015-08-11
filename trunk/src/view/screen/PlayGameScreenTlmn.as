@@ -7,6 +7,7 @@ package view.screen
 	import control.ConstTlmn;
 	import control.electroServerCommand.ElectroServerCommandTlmn;
 	import control.electroServerCommand.ElectroServerCommandTlmn;
+	import event.Command;
 	import event.DataFieldMauBinh;
 	import event.DataFieldPhom;
 	import flash.net.SharedObject;
@@ -508,7 +509,36 @@ package view.screen
 				case PlayingScreenActionTlmn.ERROR:
 					listenErrorDiscard();
 				break;
-				
+				case Command.USER_DISCONNECT:
+					listenUserDisconnect(e.data[ModelFieldTLMN.DATA]);
+				break;
+				case Command.USER_RECONNECT:
+					listenUserReconnect(e.data[ModelFieldTLMN.DATA]);
+				break;
+			}
+		}
+		
+		private function listenUserDisconnect(data:Object):void 
+		{
+			for (var i:int = 0; i < playingPlayerArray.length; i++) 
+			{
+				if (PlayerInfoPhom(playingPlayerArray[i]).userName == data[DataFieldPhom.USER_NAME])
+				{
+					PlayerInfoPhom(playingPlayerArray[i]).showReconnectIcon();
+					return;
+				}
+			}
+		}
+		
+		private function listenUserReconnect(data:Object):void 
+		{
+			for (var i:int = 0; i < playingPlayerArray.length; i++) 
+			{
+				if (PlayerInfoPhom(playingPlayerArray[i]).userName == data[DataFieldPhom.USER_NAME])
+				{
+					PlayerInfoPhom(playingPlayerArray[i]).hideReconnectIcon();
+					return;
+				}
 			}
 		}
 		

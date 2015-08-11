@@ -162,6 +162,20 @@ package inapp_purchase
 						return;
 					}
 				}
+				/*var check:Boolean = false;
+				for (var i:int = 0; i < MainData.getInstance().itemArr.length; i++) 
+				{
+					if (MainData.getInstance().itemArr[i] == id) 
+					{
+						check = true;
+						break;
+					}
+				}
+				if (check) 
+				{
+					AndroidIAB.androidIAB.consumeItem(id);
+					return;
+				}*/
 			}
 			
 			AndroidIAB.androidIAB.purchaseItem(id);
@@ -226,8 +240,8 @@ package inapp_purchase
 		private function onPurchaseSuccess(e:AndroidBillingEvent):void
 		{
 			trace("Successful purchase of '"+e.itemId+"'="+e.purchases[0]);
-			
-			WindowLayer.getInstance().openAlertWindow("Successful purchase of '" + e.itemId + "'=" + e.purchases[0]);
+			//MainData.getInstance().buyItemSuccess = true;
+			//WindowLayer.getInstance().closeAllWindow();
 			sendBuySuccess(e.itemId, e.purchases[0].orderId, e.purchases[0].itemType, e.purchases[0].signature,
 							e.purchases[0].purchaseTime, e.purchases[0].purchaseToken)
 			// every time a purchase is updated, refresh your inventory from the server.
@@ -239,6 +253,7 @@ package inapp_purchase
 			if (obj.TypeMsg == '1') 
 			{
 				WindowLayer.getInstance().openAlertWindow("Chúc mừng bạn đã mua thành công gói vàng này!");
+				MainData.getInstance().buyItemSuccess = true;
 			}
 			else 
 			{
@@ -250,7 +265,8 @@ package inapp_purchase
 		private function onPurchaseFailed(e:AndroidBillingErrorEvent):void
 		{
 			trace("Failure purchasing '" + e.itemId + "', reason:" + e.text);
-			WindowLayer.getInstance().closeAllWindow();
+			//MainData.getInstance().buyItemSuccess = false;
+			//WindowLayer.getInstance().closeAllWindow();
 			WindowLayer.getInstance().openAlertWindow("Failure purchasing '" + e.itemId + "', reason:" + e.text);
 		}
 
@@ -261,7 +277,19 @@ package inapp_purchase
 			for each(var purchase:AndroidPurchase in e.purchases)
 			{
 				trace("You own the item:" + purchase.itemId);
-				MainData.getInstance().itemArr.push(purchase.itemId);
+				var check:Boolean = true;
+				for (var i:int = 0; i < MainData.getInstance().itemArr.length; i++) 
+				{
+					if (MainData.getInstance().itemArr[i] == purchase.itemId) 
+					{
+						check = false;
+					}
+				}
+				if (check) 
+				{
+					MainData.getInstance().itemArr.push(purchase.itemId);
+				}
+				
 				// this is where you'd update the state of your app to reflect ownership of the item
 			}
 
@@ -305,7 +333,7 @@ package inapp_purchase
 		/** An Item was successfully consumed */
 		private function onConsumed(e:AndroidBillingEvent):void
 		{
-			WindowLayer.getInstance().openAlertWindow("Did consume item:"+e.itemId + ' = ' + e.purchases[0]);
+			//WindowLayer.getInstance().openAlertWindow("Did consume item:"+e.itemId + ' = ' + e.purchases[0]);
 			// reload inventory now that it has changed
 			
 			sendBuySuccess(e.itemId, e.purchases[0].orderId, e.purchases[0].itemType, e.purchases[0].signature,
