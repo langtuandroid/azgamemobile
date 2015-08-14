@@ -5691,7 +5691,7 @@ package view.screen
 			_myInfo.addInfoForMe(_arrUserList[0].userName, _arrUserList[0].money, _arrUserList[0].avatar, 
 									_arrUserList[0].remaningCard, _arrUserList[0].level,
 									_arrUserList[0].isMaster, _isPlaying, _arrUserList[0].displayName, _arrUserList[0].ready,
-									_arrUserList[0].ip, _arrUserList[0].deviceId, _arrUserList[0].win, _arrUserList[0].lose);
+									_arrUserList[0].ip, _arrUserList[0].deviceId, _arrUserList[0].win, _arrUserList[0].lose, _arrUserList[0][DataField.CARDS]);
 			//
 			MyDataTLMN.getInstance().myMoney[0] = String(_arrUserList[0].money);
 			mainData.chooseChannelData.myInfo.money = Number(_arrUserList[0].money);

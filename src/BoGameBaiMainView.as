@@ -1,6 +1,8 @@
 package 
 {
 	
+	import com.google.analytics.AnalyticsTracker;
+	import com.google.analytics.GATracker;
 	import control.ConstTlmn;
 	import flash.desktop.SystemIdleMode;
 	import getFacebookInfo.GetFacebookInfo;
@@ -198,7 +200,9 @@ package
 			}
 			
 			
+			var tracker:AnalyticsTracker = new GATracker( this, "UA-55118479-1", "AS3", false );
 			
+			tracker.trackPageview('vaogame');
 			
 		}
 		
@@ -684,6 +688,7 @@ package
 		private function onJoinLobbyRoomSuccess(e:Event):void 
 		{
 			mainData.isReconnectPhom = false;
+			mainData.isReconnectTlmn = false;
 			if (windowLayerChild.isNoCloseAll)
 				windowLayerChild.isNoCloseAll = false;
 			else
