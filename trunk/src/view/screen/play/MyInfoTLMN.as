@@ -1116,7 +1116,7 @@ package view.screen.play
 		 */
 		public function addInfoForMe(userName:String, money:String, linkAvatar:String, remainingCard:int, level:String,
 										isMaster:Boolean, isPlaying:Boolean, displayName:String, ready:Boolean, ip:String,
-										device:String, win:int, lose:int):void 
+										device:String, win:int, lose:int, myCard:Array):void 
 		{
 			_userName = userName;
 			_winCount = win;
@@ -1166,6 +1166,11 @@ package view.screen.play
 					content.readyBtn.visible = false;
 					content.confirmReady.visible = false;
 					
+				}
+				
+				if (myCard.length > 0) 
+				{
+					addCardImg(myCard);
 				}
 				
 			}
@@ -1388,6 +1393,29 @@ package view.screen.play
 			TweenMax.to(arrCardDeal[countDealCard], .7, { scaleX:0, onComplete:onComplete} );
 			TweenMax.to(_arrCardImage[countDealCard], .7, { scaleX:1 } );
 			countDealCard++;
+		}
+		
+		private function addCardImg(arr:Array):void 
+		{
+			
+			for (var i:int = 0; i < arr.length; i++) 
+			{
+				var card:CardTlmn = new CardTlmn(_arrCardInt[i]);
+				card.x = _distanceConstan + _distance * i;
+				card.y = _distanceConstanY;
+				
+				content.cardContainer.addChild(card);
+				_arrCardImage.push(card);
+				card.buttonMode = true;
+				card._posCardY = _distanceConstanY;
+				card.pos = i;
+				
+			}
+			
+			hideSortCard();
+		
+			addClickCard();
+			_parent.canExitGame = true;
 		}
 		
 		private function onComplete():void 

@@ -352,7 +352,7 @@ package view.window.loginWindow
 		
 		private function onCloseReconnectWindow(e:Event):void 
 		{
-			if (mainData.isReconnectPhom)
+			if (mainData.isReconnectPhom || mainData.isReconnectTlmn)
 			{
 				if (mainData.loginType == '1')
 				{

@@ -520,11 +520,11 @@ package view.screen
 		
 		private function listenUserDisconnect(data:Object):void 
 		{
-			for (var i:int = 0; i < playingPlayerArray.length; i++) 
+			for (var i:int = 0; i < _arrUserInfo.length; i++) 
 			{
-				if (PlayerInfoPhom(playingPlayerArray[i]).userName == data[DataFieldPhom.USER_NAME])
+				if (_arrUserInfo[i]._userName == data[DataFieldPhom.USER_NAME])
 				{
-					PlayerInfoPhom(playingPlayerArray[i]).showReconnectIcon();
+					_arrUserInfo[i].showReconnectIcon();
 					return;
 				}
 			}
@@ -532,11 +532,11 @@ package view.screen
 		
 		private function listenUserReconnect(data:Object):void 
 		{
-			for (var i:int = 0; i < playingPlayerArray.length; i++) 
+			for (var i:int = 0; i < _arrUserInfo.length; i++) 
 			{
-				if (PlayerInfoPhom(playingPlayerArray[i]).userName == data[DataFieldPhom.USER_NAME])
+				if (_arrUserInfo[i]._userName == data[DataFieldPhom.USER_NAME])
 				{
-					PlayerInfoPhom(playingPlayerArray[i]).hideReconnectIcon();
+					_arrUserInfo[i].hideReconnectIcon();
 					return;
 				}
 			}
@@ -629,7 +629,7 @@ package view.screen
 				_myInfo._ready = true;
 				_myInfo.dealCard(obj[DataField.PLAYER_CARDS]);
 				writelog("deal card for me");
-				
+				mainData.isReconnectTlmn = true;
 			}
 			else 
 			{
@@ -1021,6 +1021,7 @@ package view.screen
 		
 		private function showWhiteWin(obj:Object):void 
 		{
+			mainData.isReconnectTlmn = false;
 			var i:int;
 			var j:int;
 			var rd:int;
@@ -1215,7 +1216,7 @@ package view.screen
 		
 		private function listenWhiteWin(obj:Object):void 
 		{
-			
+			mainData.isReconnectTlmn = false;
 			whiteWin = true;
 			objWhiteWin = obj;
 			////trace(obj)
@@ -1423,6 +1424,7 @@ package view.screen
 		
 		private function listenGameOver(obj:Object):void 
 		{
+			mainData.isReconnectTlmn = false;
 			_isPlaying = false;
 			_stageGame = 2;
 			GameDataTLMN.getInstance().finishRound = false;
@@ -5028,7 +5030,8 @@ package view.screen
 			_myInfo.addInfoForMe(_arrUserList[0].userName, _arrUserList[0].money, _arrUserList[0].avatar, 
 									_arrUserList[0].remaningCard, _arrUserList[0].level,
 									_arrUserList[0].isMaster, _isPlaying, _arrUserList[0].displayName, _arrUserList[0].ready,
-									_arrUserList[0].ip, _arrUserList[0].deviceId, _arrUserList[0].win, _arrUserList[0].lose);
+									_arrUserList[0].ip, _arrUserList[0].deviceId, _arrUserList[0].win, _arrUserList[0].lose,
+									_arrUserList[0][DataField.CARDS]);
 			//
 			MyDataTLMN.getInstance().myMoney[0] = String(_arrUserList[0].money);
 			mainData.chooseChannelData.myInfo.money = Number(_arrUserList[0].money);

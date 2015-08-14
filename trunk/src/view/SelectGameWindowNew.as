@@ -815,7 +815,22 @@ package view
 				}
 				else if (mainData.isReconnectTlmn)
 				{
+					gameId = 1;
+					mainData.gameName = 'TLMN';
+					mainData.game_id = 'AZGB_TLMN';
+					mainData.portNumber = 5101;
+					mainData.minBetRate = 10;
+					mainData.resetMatchTime = 6.5;
+					if (mainData.isTest)
+						mainData.portNumber = 3101;
 					
+					mainData.gameType = MainData.TLMN;
+					
+					MainCommand.getInstance().initVar();
+					mainData.lobbyRoomData.invitePlayData = new Object();
+					dispatchEvent(new Event(SELECT_GAME));
+					SoundManager.getInstance().playBackgroundMusicMauBinh();
+					isRecentlySelectGame = false;
 				}
 			}
 		}

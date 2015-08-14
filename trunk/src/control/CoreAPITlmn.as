@@ -60,6 +60,7 @@ package control
 	import event.DataFieldPhom;
 	import model.GameDataTLMN;
 	import model.MyDataTLMN;
+	import model.playingData.PlayingScreenActionTlmn;
 	import request.HTTPRequest;
 	
 	import event.ElectroServerEventTlmn;
@@ -426,13 +427,22 @@ package control
 			electroServer.engine.removeEventListener(MessageType.LoginResponse.name, onLoginResponse);
 			if (e.successful)
 			{
-				this.dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.LOGIN_SUCCESS));
 				
-				/*var uuvr:UpdateUserVariableRequest = new UpdateUserVariableRequest();
-				uuvr.name = DataFieldMauBinh.OTHER_INFO;
+				
+				if (!mainData.isReconnectVersion)
+				{
+					this.dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.LOGIN_SUCCESS));
+				}
+				else
+				{
+					electroServer.engine.addEventListener(MessageType.JoinRoomEvent.name, onJoinLobbyRoomEvent);
+				}
+				
+				var uuvr:UpdateUserVariableRequest = new UpdateUserVariableRequest();
+				uuvr.name = DataFieldPhom.OTHER_INFO;
 				uuvr.value = new EsObject();
-				uuvr.value.setString(DataFieldMauBinh.SEX, mainData.chooseChannelData.myInfo.sex);
-				electroServer.engine.send(uuvr);*/
+				uuvr.value.setString(DataFieldPhom.SEX, mainData.chooseChannelData.myInfo.sex);
+				electroServer.engine.send(uuvr);
 		
 			} else {
 				this.dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.LOGIN_FAIL));
@@ -453,7 +463,7 @@ package control
 			trace("onJoinLobbyRoomEvent onJoinLobbyRoomEvent onJoinLobbyRoomEvent");
 			electroServer.engine.removeEventListener(MessageType.JoinRoomEvent.name, onJoinLobbyRoomEvent);
 			
-			dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.JOIN_LOBBY_ROOM_SUCCESS));
+			
 			
 			myData.zoneId = e.zoneId;
 			myData.roomId = e.roomId;
@@ -461,6 +471,17 @@ package control
 			
 			GameDataTLMN.getInstance().zoneId = e.zoneId;
 			GameDataTLMN.getInstance().roomId = e.roomId;
+			
+			if (e.roomName != "Lobby" && mainData.isReconnectVersion)
+			{
+				var zoneName:String = electroServer.managerHelper.zoneManager.zoneById(e.zoneId).name;
+				var cutString:String = zoneName.slice(mainData.game_id.length + 1, zoneName.length);
+				mainData.currentChannelId = int(cutString);
+				electroServer.engine.addEventListener(MessageType.UserVariableUpdateEvent.name, onUserVariableUpdateEvent);
+				return;
+			}
+			
+			dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.JOIN_LOBBY_ROOM_SUCCESS));
 			
 			 //Gửi pluginRequest lên lấy thông tin friendList
 			if (MyDataTLMN.getInstance().isGame == 1) 
@@ -565,6 +586,12 @@ package control
 					electroServer.engine.removeEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
 					electroServer.engine.removeEventListener(MessageType.RoomVariableUpdateEvent.name, onRoomVariableUpdateEvent);
 					
+					GameDataTLMN.getInstance().roomId = e.parameters.getInteger("roomId");
+					GameDataTLMN.getInstance().gameRoomInfo = new Object();
+					GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_ID] = GameDataTLMN.getInstance().roomId;
+					GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET] = e.parameters.getString(DataFieldPhom.ROOM_BET);
+					GameDataTLMN.getInstance().gameRoomInfo[DataField.GAME_ID] = e.parameters.getInteger("gameId");
+					
 					myData.roomId = e.parameters.getInteger("roomId");
 					
 					myData.gameRoomInfo = new Object();
@@ -578,21 +605,22 @@ package control
 					// Gửi pluginRequest lên lấy thông tin các user trong phòng chơi
 					var pluginMessage:EsObject = new EsObject();
 					pluginMessage.setString("command", Command.GET_PLAYING_INFO);
-					sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, pluginMessage);
+					sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().roomId, 
+										GameDataTLMN.getInstance().gameType, pluginMessage);
 				break;
 				case Command.USER_EXIT:
 					object = new Object();
-					object[DataFieldPhom.USER_NAME] = e.parameters.getString(DataFieldPhom.USER_NAME);
-					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.HAVE_USER_OUT_ROOM, object));	
+					object[DataField.USER_NAME] = e.parameters.getString(DataFieldPhom.USER_NAME);
+					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.HAVE_USER_OUT_ROOM, object));	
 				break;
 				case Command.USER_DISCONNECT:
 					object = new Object();
-					object[DataFieldPhom.USER_NAME] = e.parameters.getString(DataFieldPhom.USER_NAME);
+					object[DataField.USER_NAME] = e.parameters.getString(DataFieldPhom.USER_NAME);
 					callPlayingScreenAction(Command.USER_DISCONNECT, object);
 				break;
 				case Command.USER_RECONNECT:
 					object = new Object();
-					object[DataFieldPhom.USER_NAME] = e.parameters.getString(DataFieldPhom.USER_NAME);
+					object[DataField.USER_NAME] = e.parameters.getString(DataFieldPhom.USER_NAME);
 					callPlayingScreenAction(Command.USER_RECONNECT, object);	
 				break;
 				
@@ -645,7 +673,14 @@ package control
 						{
 							object[DataField.SEX] = false;
 						}
-						
+						if (EsObject(tempUserList[i]).doesPropertyExist(DataField.CARDS))
+						{
+							object[DataField.CARDS] = EsObject(tempUserList[i]).getIntegerArray(DataField.CARDS);
+						}
+						else 
+						{
+							object[DataField.CARDS] = [];
+						}
 						object[DataField.READY] = false;
 						if (EsObject(tempUserList[i]).doesPropertyExist(DataField.POSITION))
 							object[DataField.POSITION] = EsObject(tempUserList[i]).getInteger(DataField.POSITION);
@@ -1098,7 +1133,15 @@ package control
 				break;
 			}
 		}
-		
+		// Hàm để gọi một hành động xẩy ra trong playingScreen
+		private function callPlayingScreenAction(actionName:String, data:Object):void
+		{
+			var playingScreenAction:PlayingScreenActionTlmn = new PlayingScreenActionTlmn();
+			playingScreenAction.actionName = actionName;
+			playingScreenAction.data = data;
+			mainData.playingData.playingScreenAction = playingScreenAction;
+			GameDataTLMN.getInstance().playingData.playingScreenAction = playingScreenAction;
+		}
 		public function kickUser(userName:String):void
 		{
 			var esObject:EsObject = new EsObject();
