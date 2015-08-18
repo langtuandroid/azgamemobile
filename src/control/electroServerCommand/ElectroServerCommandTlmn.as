@@ -10,6 +10,8 @@ package control.electroServerCommand
 	import event.ElectroServerEvent;
 	import event.ElectroServerEventTlmn;
 	import flash.events.Event;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	import model.EsConfiguration;
 	import model.GameDataTLMN;
 	import model.MainData;
@@ -533,7 +535,7 @@ package control.electroServerCommand
 				if (mainData.isReconnectTlmn)
 				{
 					var reconnectWindow:ReconnectWindow = new ReconnectWindow();
-					reconnectWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onCloseReconnectWindow);
+					//reconnectWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onCloseReconnectWindow);
 					windowLayer.openWindow(reconnectWindow);
 				}
 				else
@@ -586,12 +588,26 @@ package control.electroServerCommand
 			coreAPI.login(mainData.chooseChannelData.myInfo.id, mainData.chooseChannelData.myInfo.name);
 		}
 		
-		private function onLoginFail(e:ElectroServerEventTlmn):void 
+		private function onLoginFail(e:ElectroServerEvent):void 
 		{
 			windowLayer.closeAllWindow();
 			mainData.isCloseConnection = true;
-			windowLayer.openAlertWindow(mainData.init.gameDescription.alertSentence.loginFail);
+			if (mainData.isReconnectTlmn && mainData.isReconnectVersion)
+			{
+				var timerToReconnect:Timer = new Timer(1000, 1);
+				timerToReconnect.addEventListener(TimerEvent.TIMER_COMPLETE, onTimerToReconnect);
+				timerToReconnect.start();
+			}
+			else
+			{
+				windowLayer.openAlertWindow(mainData.init.gameDescription.alertSentence.loginFail);
+			}
 			closeConnection();
+		}
+		
+		private function onTimerToReconnect(e:TimerEvent):void 
+		{
+			mainData.isCloseReconnectWindow = true;
 		}
 		
 		private function onPluginNotFound(e:ElectroServerEventTlmn):void 

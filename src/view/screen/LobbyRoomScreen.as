@@ -309,7 +309,6 @@ package view.screen
 				selectGameWindow.addEventListener(SelectGameWindowNew.RE_LOGIN_CLICK, onReLoginClick);
 				selectGameWindow.x = mainData.stageWidth / 2;
 				selectGameWindow.y = mainData.stageHeight / 2;
-				selectGameWindow.visible = true;
 			}
 			else 
 			{
@@ -321,6 +320,7 @@ package view.screen
 				}
 				
 			}
+			selectGameWindow.visible = true;
 			tutorialBoard.y = 74;
 			helpButton.y = 30;
 			musicOnButton.y = 30;
@@ -399,6 +399,24 @@ package view.screen
 		
 		public function excuteWhenJoinLobby():void
 		{	
+			var isReconnectGame:Boolean;
+			if (mainData.isReconnectPhom)
+				isReconnectGame = true;
+			if (mainData.isReconnectSam)
+				isReconnectGame = true;
+			if (mainData.isReconnectTlmn)
+				isReconnectGame = true;
+			if (mainData.isReconnectMauBinh)
+				isReconnectGame = true;
+			if (mainData.isReconnectXito)
+				isReconnectGame = true;
+			if (mainData.isReconnectVersion && isReconnectGame)
+			{
+				mainCommand.electroServerCommand.startConnect("", mainData.currentChannelId);
+				mainData.isFirstJoinLobby = false;
+				return;
+			}
+			
 			mainData.isNotLobby = false;
 			mainCommand.getInfoCommand.getChannelInfo();
 			mainCommand.getInfoCommand.getVirtualRoomInfo();
@@ -962,6 +980,20 @@ package view.screen
 			}
 		}
 		
+		public function removeSelectGameWindow():void
+		{
+			if (selectGameWindow)
+			{
+				if (selectGameWindow.parent)
+					selectGameWindow.parent.removeChild(selectGameWindow);
+			}
+			if (_newBg)
+			{
+				if (_newBg.parent)
+					bgLayer.removeChild(_newBg);
+			}
+		}
+		
 		private function onAddedToStage(e:Event):void 
 		{
 			mainData.chooseChannelData.addEventListener(ChooseChannelData.UPDATE_MY_INFO, onUpdateMyInfo);
@@ -1184,12 +1216,7 @@ package view.screen
 				
 				//mainData.currentChannelId = 14;
 				//mainData.currentPort = 5131;
-				if (selectGameWindow)
-				{
-					if (selectGameWindow.parent)
-						selectGameWindow.parent.removeChild(selectGameWindow);
-				}
-				bgLayer.removeChild(_newBg);
+				removeSelectGameWindow();
 				
 				mainCommand.electroServerCommand.startConnect("", mainData.currentChannelId);
 				mainData.fee = channelObject[DataFieldMauBinh.DEALER_FEE];
@@ -1623,8 +1650,8 @@ package view.screen
 				roomList.setNameChannel("Kênh: " + mainData.playingData.gameRoomData.channelName);
 			}
 			
-			var tempTween1:GTween = new GTween(roomList, effectTime, { x:0, alpha:1 }, { ease:Back.easeOut } );
-			var tempTween2:GTween = new GTween(userList, effectTime, { x:0, alpha:1 }, { ease:Back.easeOut } );
+			var tempTween1:GTween = new GTween(roomList, effectTime, { x:0}, { ease:Back.easeOut } );
+			var tempTween2:GTween = new GTween(userList, effectTime, { x:0}, { ease:Back.easeOut } );
 			tempTween1.addEventListener(Event.COMPLETE, openComplete);
 		}
 		
@@ -1648,8 +1675,8 @@ package view.screen
 			mainData.removeEventListener(MainData.FRIEND_CONFIRM_ADD_FRIEND_INVITE, onFriendConfirmAddFriendInvite);
 			mainData.lobbyRoomData.removeEventListener(LobbyRoomData.HAVE_INVITE_PLAY, onHaveInvitePlay);
 			GTween.defaultDispatchEvents = true;
-			var tempTween1:GTween = new GTween(roomList, effectTime, { x:0, alpha:0 }, { ease:Back.easeIn } );
-			var tempTween2:GTween = new GTween(userList, effectTime, { x:0, alpha:0 }, { ease:Back.easeIn } );
+			var tempTween1:GTween = new GTween(roomList, effectTime, { x:0}, { ease:Back.easeIn } );
+			var tempTween2:GTween = new GTween(userList, effectTime, { x:0}, { ease:Back.easeIn } );
 			tempTween2.addEventListener(Event.COMPLETE, closeComplete);
 		}
 		

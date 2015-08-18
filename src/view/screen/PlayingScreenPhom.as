@@ -1046,6 +1046,10 @@ package view.screen
 		
 		private function listenJoinRoom(data:Object):void 
 		{
+			if (mainData.isReconnectVersion)
+			{
+				WindowLayer.getInstanceReconnect().closeAllWindow();
+			}
 			SoundManager.getInstance().soundManagerPhom.playOtherJoinGamePlayerSound(mainData.chooseChannelData.myInfo.sex);
 			
 			var channelName:String = mainData.playingData.gameRoomData.channelName;
@@ -1144,14 +1148,50 @@ package view.screen
 				
 			if (belowUserInfo.isPlaying && belowUserInfo.userName == data[DataFieldPhom.CURRENT_TURN])
 			{
-				if (!data[DataFieldPhom.IS_DRAW_CARD] && !data[DataFieldPhom.IS_DRAW_CARD])
+				if (!data[DataFieldPhom.IS_DRAW_CARD] && !data[DataFieldPhom.IS_STEAL_CARD])
+				{
 					belowUserInfo.setMyTurn(PlayerInfoPhom.GET_CARD);
-				else if (!data[DataFieldPhom.IS_LAYING_DONE])
-					belowUserInfo.setMyTurn(PlayerInfoPhom.DOWN_CARD);
-				else if (!data[DataFieldPhom.IS_SEND_DONE])
-					belowUserInfo.setMyTurn(PlayerInfoPhom.SEND_CARD);
+				}
 				else
-					belowUserInfo.setMyTurn(PlayerInfoPhom.PLAY_CARD);
+				{
+					var isPlayCard:Boolean = false;
+					for (i = 0; i < userList.length; i++) 
+					{
+						if (userList[i][DataFieldPhom.USER_NAME] == mainData.chooseChannelData.myInfo.uId)
+						{
+							if (!userList[i][DataFieldPhom.DISCARDED_CARDS])
+							{
+								isPlayCard = true;
+								break;
+							}
+						}
+					}
+					if (isPlayCard)
+					{
+						belowUserInfo.setMyTurn(PlayerInfoPhom.PLAY_CARD);
+					}
+					else
+					{
+						if (!data[DataFieldPhom.IS_LAYING_DONE])
+						{
+							belowUserInfo.setMyTurn(PlayerInfoPhom.DOWN_CARD);
+						}
+						else
+						{ 
+							if (!data[DataFieldPhom.IS_SEND_DONE])
+								belowUserInfo.setMyTurn(PlayerInfoPhom.SEND_CARD);
+							else
+								belowUserInfo.setMyTurn(PlayerInfoPhom.PLAY_CARD);
+						}
+					}
+				}
+				
+			}
+			
+			if (belowUserInfo.isPlaying)
+			{
+				if (mainData.isReconnectVersion)
+					mainData.isReconnectPhom = true;
 			}
 		}
 		
@@ -1201,7 +1241,8 @@ package view.screen
 				if (playingPlayerArray[i] == belowUserInfo) // Gán cho mình dữ liệu các lá bài của server gửi về
 				{							
 					PlayerInfoPhom(playingPlayerArray[i]).cardInfoArray = data[DataFieldPhom.PLAYER_CARDS] as Array;
-					mainData.isReconnectPhom = true;
+					if (mainData.isReconnectVersion)
+						mainData.isReconnectPhom = true;
 				}
 				else // Nếu không thì chuyền dữ liệu gồm các lá bài úp
 				{
@@ -1603,7 +1644,8 @@ package view.screen
 		
 		private function listenGameOver(data:Object):void // ván bài kết thúc
 		{
-			mainData.isReconnectPhom = false;
+			if (mainData.isReconnectVersion)
+				mainData.isReconnectPhom = false;
 			var playerList:Array = data[DataFieldPhom.PLAYER_LIST] as Array;
 			var moneyEffectPosition:Point;
 			var resultEffectPosition:Point;

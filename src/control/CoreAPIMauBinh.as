@@ -321,6 +321,9 @@ package control
 		// sau khi kết nối thành công với server thì login
 		public function login(userName:String, password:String = ""): void
 		{
+			if (mainData.isReconnectVersion)
+				electroServer.engine.addEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
+			
 			electroServer.engine.addEventListener(MessageType.LoginResponse.name, onLoginResponse);
 			var loginRequest:LoginRequest = new LoginRequest();
 			loginRequest.userName = userName;
@@ -345,7 +348,14 @@ package control
 			electroServer.engine.removeEventListener(MessageType.LoginResponse.name, onLoginResponse);
 			if (e.successful)
 			{
-				this.dispatchEvent(new ElectroServerEvent(ElectroServerEvent.LOGIN_SUCCESS));
+				if (!mainData.isReconnectVersion)
+				{
+					this.dispatchEvent(new ElectroServerEvent(ElectroServerEvent.LOGIN_SUCCESS));
+				}
+				else
+				{
+					electroServer.engine.addEventListener(MessageType.JoinRoomEvent.name, onJoinLobbyRoomEvent);
+				}
 				
 				/*var uuvr:UpdateUserVariableRequest = new UpdateUserVariableRequest();
 				uuvr.name = DataFieldMauBinh.OTHER_INFO;
@@ -374,6 +384,16 @@ package control
 			
 			myData.zoneId = e.zoneId;
 			myData.roomId = e.roomId;
+			
+			if (e.roomName != "Lobby" && mainData.isReconnectVersion)
+			{
+				var zoneName:String = electroServer.managerHelper.zoneManager.zoneById(e.zoneId).name;
+				var cutString:String = zoneName.slice(mainData.game_id.length + 1, zoneName.length);
+				mainData.currentChannelId = int(cutString);
+				electroServer.engine.addEventListener(MessageType.UserVariableUpdateEvent.name, onUserVariableUpdateEvent);
+				return;
+			}
+			
 			myData.saveUserList = new Object();
 			
 			 //Gửi pluginRequest lên lấy thông tin friendList
@@ -437,6 +457,49 @@ package control
 			var userName:String
 			switch (command) 
 			{
+				case Command.USER_JOIN_ROOM_RESPOND:
+					if (!e.parameters.getBoolean("isGameRoom"))
+						return;
+					if (timerToGetRoomList)
+					{
+						timerToGetRoomList.removeEventListener(TimerEvent.TIMER, onGetRoomList)
+						timerToGetRoomList.stop();
+						mainData.isNoRenderLobbyList = false;
+					}
+					
+					electroServer.engine.removeEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
+					electroServer.engine.removeEventListener(MessageType.RoomVariableUpdateEvent.name, onRoomVariableUpdateEvent);
+					
+					myData.roomId = e.parameters.getInteger("roomId");
+					
+					myData.gameRoomInfo = new Object();
+					myData.gameRoomInfo[DataFieldMauBinh.ROOM_ID] = myData.roomId;
+					myData.gameRoomInfo[DataFieldMauBinh.ROOM_BET] = e.parameters.getString(DataFieldMauBinh.ROOM_BET);
+					myData.gameRoomInfo[DataFieldMauBinh.ROOM_NAME] = '';
+					myData.gameRoomInfo[DataFieldMauBinh.IS_SEND_CARD] = true;
+					myData.gameRoomInfo[DataFieldMauBinh.GAME_ID] = e.parameters.getInteger("gameId");
+					mainData.playingData.gameRoomData.roomPassword = e.parameters.getString("password");
+					
+					// Gửi pluginRequest lên lấy thông tin các user trong phòng chơi
+					var pluginMessage:EsObject = new EsObject();
+					pluginMessage.setString("command", Command.GET_PLAYING_INFO);
+					sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, pluginMessage);
+				break;
+				case Command.USER_EXIT:
+					object = new Object();
+					object[DataFieldMauBinh.USER_NAME] = e.parameters.getString(DataFieldMauBinh.USER_NAME);
+					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.HAVE_USER_OUT_ROOM, object));	
+				break;
+				case Command.USER_DISCONNECT:
+					object = new Object();
+					object[DataFieldMauBinh.USER_NAME] = e.parameters.getString(DataFieldMauBinh.USER_NAME);
+					callPlayingScreenAction(Command.USER_DISCONNECT, object);
+				break;
+				case Command.USER_RECONNECT:
+					object = new Object();
+					object[DataFieldMauBinh.USER_NAME] = e.parameters.getString(DataFieldMauBinh.USER_NAME);
+					callPlayingScreenAction(Command.USER_RECONNECT, object);	
+				break;
 				case Command.GET_PLAYING_INFO: // lấy thông tin của các người chơi trong phòng chơi
 					var userList:Array = new Array();
 					var tempUserList:Array = e.parameters.getEsObjectArray(DataFieldMauBinh.PLAYER_LIST);
@@ -1116,7 +1179,8 @@ package control
 				{
 					var object:Object = new Object();
 					object[DataFieldMauBinh.USER_NAME] = e.userName;
-					dispatchEvent(new ElectroServerEvent(ElectroServerEvent.HAVE_USER_OUT_ROOM, object));
+					if (!mainData.isReconnectVersion)
+						dispatchEvent(new ElectroServerEvent(ElectroServerEvent.HAVE_USER_OUT_ROOM, object));
 				}
 			}
 		}
@@ -1312,23 +1376,23 @@ package control
 			electroServer.engine.removeEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
 			electroServer.engine.removeEventListener(MessageType.RoomVariableUpdateEvent.name, onRoomVariableUpdateEvent);
 			if (e.successful) {
-				electroServer.engine.addEventListener(MessageType.ZoneUpdateEvent.name, onZoneUpdateEvent);
-				//electroServer.engine.removeEventListener(MessageType.UserVariableUpdateEvent.name, onUserVariableUpdateEvent);
-				
-				myData.roomId = e.gameDetails.getInteger("roomId");
-				var i:int;
-				
-				myData.gameRoomInfo = new Object();
-				myData.gameRoomInfo[DataFieldMauBinh.ROOM_ID] = myData.roomId;
-				myData.gameRoomInfo[DataFieldMauBinh.ROOM_BET] = e.gameDetails.getString(DataFieldMauBinh.ROOM_BET);
-				myData.gameRoomInfo[DataFieldMauBinh.ROOM_NAME] = e.gameDetails.getString(DataFieldMauBinh.ROOM_NAME);
-				myData.gameRoomInfo[DataFieldMauBinh.IS_SEND_CARD] = e.gameDetails.getBoolean(DataFieldMauBinh.IS_SEND_CARD);
-				myData.gameRoomInfo[DataFieldMauBinh.GAME_ID] = e.gameId;
-				
-				// Gửi pluginRequest lên lấy thông tin các user trong phòng chơi
-				var pluginMessage:EsObject = new EsObject();
-				pluginMessage.setString("command", Command.GET_PLAYING_INFO);
-				sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, pluginMessage);
+				if (!mainData.isReconnectVersion)
+				{
+					myData.roomId = e.gameDetails.getInteger("roomId");
+					var i:int;
+					
+					myData.gameRoomInfo = new Object();
+					myData.gameRoomInfo[DataFieldMauBinh.ROOM_ID] = myData.roomId;
+					myData.gameRoomInfo[DataFieldMauBinh.ROOM_BET] = e.gameDetails.getString(DataFieldMauBinh.ROOM_BET);
+					myData.gameRoomInfo[DataFieldMauBinh.ROOM_NAME] = e.gameDetails.getString(DataFieldMauBinh.ROOM_NAME);
+					myData.gameRoomInfo[DataFieldMauBinh.IS_SEND_CARD] = e.gameDetails.getBoolean(DataFieldMauBinh.IS_SEND_CARD);
+					myData.gameRoomInfo[DataFieldMauBinh.GAME_ID] = e.gameId;
+					
+					// Gửi pluginRequest lên lấy thông tin các user trong phòng chơi
+					var pluginMessage:EsObject = new EsObject();
+					pluginMessage.setString("command", Command.GET_PLAYING_INFO);
+					sendPluginRequest(myData.zoneId, myData.roomId, myData.gameType, pluginMessage);
+				}
 			}
 			else 
 			{

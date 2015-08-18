@@ -8,6 +8,8 @@ package control.electroServerCommand
 	import event.DataFieldPhom;
 	import event.ElectroServerEvent;
 	import flash.events.Event;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	import model.EsConfiguration;
 	import model.MainData;
 	import model.modelField.ModelField;
@@ -375,7 +377,6 @@ package control.electroServerCommand
 		
 		private function onJoinGameRoomFail(e:ElectroServerEvent):void 
 		{
-			trace("ON JOIN GAME ROOM FAIL");
 			windowLayer.closeAllWindow();
 			windowLayer.openAlertWindow(mainData.init.gameDescription.alertSentence.joinGameRoomFail);
 			windowLayer.isNoCloseAll = true;
@@ -463,7 +464,6 @@ package control.electroServerCommand
 		
 		private function onGameRoomInvalid(e:ElectroServerEvent):void 
 		{
-			trace("ON GAME ROOM INVALID");
 			windowLayer.openAlertWindow(mainData.init.gameDescription.alertSentence.gameRoomInvalid);
 		}
 		
@@ -471,7 +471,6 @@ package control.electroServerCommand
 		{
 			if (mainData.isOpeningKickOutWindow)
 				return;
-			trace("ON CLOSE CONNECTION");
 			windowLayer.closeAllWindow();
 			mainData.isCloseConnection = true;
 			removeEventForCoreAPI();
@@ -482,8 +481,8 @@ package control.electroServerCommand
 				if (mainData.isReconnectPhom)
 				{
 					var reconnectWindow:ReconnectWindow = new ReconnectWindow();
-					reconnectWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onCloseReconnectWindow);
-					windowLayer.openWindow(reconnectWindow);
+					reconnectWindow.addEventListener(ReconnectWindow.RECONNECT, onCloseReconnectWindow);
+					WindowLayer.getInstanceReconnect().openWindow(reconnectWindow);
 				}
 				else
 				{
@@ -538,8 +537,22 @@ package control.electroServerCommand
 		{
 			windowLayer.closeAllWindow();
 			mainData.isCloseConnection = true;
-			windowLayer.openAlertWindow(mainData.init.gameDescription.alertSentence.loginFail);
+			if (mainData.isReconnectPhom && mainData.isReconnectVersion)
+			{
+				var timerToReconnect:Timer = new Timer(1000, 1);
+				timerToReconnect.addEventListener(TimerEvent.TIMER_COMPLETE, onTimerToReconnect);
+				timerToReconnect.start();
+			}
+			else
+			{
+				windowLayer.openAlertWindow(mainData.init.gameDescription.alertSentence.loginFail);
+			}
 			closeConnection();
+		}
+		
+		private function onTimerToReconnect(e:TimerEvent):void 
+		{
+			mainData.isCloseReconnectWindow = true;
 		}
 		
 		private function onPluginNotFound(e:ElectroServerEvent):void 
