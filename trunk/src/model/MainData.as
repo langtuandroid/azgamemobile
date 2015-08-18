@@ -706,6 +706,9 @@ package model
 		public var isReconnectVersion:Boolean = true;
 		public var isFirstLoginFacebook:Boolean = true;
 		public var isReconnectPhom:Boolean = false;
+		public var isReconnectSam:Boolean = false;
+		public var isReconnectMauBinh:Boolean = false;
+		public var isReconnectXito:Boolean = false;
 		public var isReconnectTlmn:Boolean = false;
 	}
 

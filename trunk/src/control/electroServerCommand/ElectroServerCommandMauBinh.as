@@ -8,6 +8,8 @@ package control.electroServerCommand
 	import event.DataFieldMauBinh;
 	import event.ElectroServerEvent;
 	import flash.events.Event;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	import model.EsConfiguration;
 	import model.MainData;
 	import model.modelField.ModelField;
@@ -15,6 +17,7 @@ package control.electroServerCommand
 	import view.window.AlertWindow;
 	import view.window.BaseWindow;
 	import view.window.ConfirmInvitePlayWindow;
+	import view.window.ReconnectWindow;
 	import view.window.windowLayer.WindowLayer;
 	/**
 	 * ...
@@ -483,16 +486,38 @@ package control.electroServerCommand
 			mainData.isCloseConnection = true;
 			coreAPI = null;
 			
-			var closeConnectionWindow:AlertWindow = new AlertWindow();
-			//closeConnectionWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onCloseConnectionWindowClose);
+			if (mainData.isReconnectVersion)
+			{
+				if (mainData.isReconnectPhom)
+				{
+					var reconnectWindow:ReconnectWindow = new ReconnectWindow();
+					reconnectWindow.addEventListener(ReconnectWindow.RECONNECT, onCloseReconnectWindow);
+					WindowLayer.getInstanceReconnect().openWindow(reconnectWindow);
+				}
+				else
+				{
+					var closeConnectionWindow:AlertWindow = new AlertWindow();
+					closeConnectionWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onCloseConnectionWindowClose);
+					closeConnectionWindow.setNotice("Kết nối bị gián đoạn. Vui lòng kiểm tra lại internet");
+					windowLayer.openWindow(closeConnectionWindow);
+				}
+				return;
+			}
+			closeConnectionWindow = new AlertWindow();
+			closeConnectionWindow.addEventListener(BaseWindow.CLOSE_COMPLETE, onCloseConnectionWindowClose);
 			closeConnectionWindow.setNotice("Kết nối bị gián đoạn. \n Vui lòng thử lại...");
 			windowLayer.openWindow(closeConnectionWindow);
 		}
 		
+		private function onCloseReconnectWindow(e:Event):void 
+		{
+			mainData.isCloseReconnectWindow = true;
+		}
+		
 		private function onCloseConnectionWindowClose(e:Event):void 
 		{
-			windowLayer.openLoadingWindow();
-			startConnect('', 0);
+			//windowLayer.openLoadingWindow();
+			//startConnect('', 0);
 		}
 		
 		private function onConnectFail(e:ElectroServerEvent):void 
@@ -522,8 +547,22 @@ package control.electroServerCommand
 		{
 			windowLayer.closeAllWindow();
 			mainData.isCloseConnection = true;
-			windowLayer.openAlertWindow(mainData.init.gameDescription.alertSentence.loginFail);
+			if (mainData.isReconnectPhom && mainData.isReconnectVersion)
+			{
+				var timerToReconnect:Timer = new Timer(1000, 1);
+				timerToReconnect.addEventListener(TimerEvent.TIMER_COMPLETE, onTimerToReconnect);
+				timerToReconnect.start();
+			}
+			else
+			{
+				windowLayer.openAlertWindow(mainData.init.gameDescription.alertSentence.loginFail);
+			}
 			closeConnection();
+		}
+		
+		private function onTimerToReconnect(e:TimerEvent):void 
+		{
+			mainData.isCloseReconnectWindow = true;
 		}
 		
 		private function onPluginNotFound(e:ElectroServerEvent):void 

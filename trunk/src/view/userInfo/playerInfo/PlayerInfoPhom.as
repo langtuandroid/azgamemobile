@@ -1592,18 +1592,7 @@ package view.userInfo.playerInfo
 					setMyTurn(PLAY_CARD);
 				break;
 				case DO_NOTHING: 
-					/*if (isWaitingToReady) // Thời gian đếm lúc sẵn sàng
-					{
-						var kickOutWindow:AlertWindow = new AlertWindow();
-						kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutReady);
-						windowLayer.openWindow(kickOutWindow);
-						windowLayer.isNoCloseAll = true;
-						
-						exitButton.removeEventListener(MouseEvent.CLICK, onOtherButtonClick);
-						dispatchEvent(new Event(EXIT, true));
-						electroServerCommand.joinLobbyRoom();
-						EffectLayer.getInstance().removeAllEffect();
-					}*/
+					
 				break;
 			}
 		}
@@ -2184,22 +2173,13 @@ package view.userInfo.playerInfo
 				if (mainData.chooseChannelData.myInfo.money < 0)
 					mainData.chooseChannelData.myInfo.money = 0;
 					
-				/*if (mainData.chooseChannelData.myInfo.money < mainData.playingData.gameRoomData.betting[0])
-				{
-					var kickOutWindow:AlertWindow = new AlertWindow();
-					kickOutWindow.setNotice(mainData.init.gameDescription.playingScreen.kickOutMoney);
-					windowLayer.openWindow(kickOutWindow);
-					dispatchEvent(new Event(PlayingScreen.BACK_TO_CHOOSE_CHANNEL_SCREEN, true));
-					electroServerCommand.closeConnection();
-				}
-				else
-				{*/
-					exitButton.removeEventListener(MouseEvent.CLICK, onOtherButtonClick);
-					dispatchEvent(new Event(EXIT, true));
-					if (mainData.isReconnectVersion)
-						mainData.isNoCallLeaveRoom = true;
-					electroServerCommand.joinLobbyRoom();
-				/*}*/
+				exitButton.removeEventListener(MouseEvent.CLICK, onOtherButtonClick);
+				if (mainData.isReconnectVersion)
+					mainData.isReconnectPhom = false;
+				dispatchEvent(new Event(EXIT, true));
+				if (mainData.isReconnectVersion)
+					mainData.isNoCallLeaveRoom = true;
+				electroServerCommand.joinLobbyRoom();
 				EffectLayer.getInstance().removeAllEffect();
 			}
 		}

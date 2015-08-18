@@ -112,12 +112,14 @@ package
 		private var lobbyRoomLayer:Sprite;
 		private var playingScreenLayer:Sprite;
 		private var windowLayer:Sprite;
+		private var reconnectWindowLayer:Sprite;
 		private var debugLayer:Sprite;
 		private var effectLayer:Sprite;
 		
 		private var mainCommand:MainCommand = MainCommand.getInstance();
 		private var mainData:MainData = MainData.getInstance();
 		
+		private var reconnectWindowLayerChild:WindowLayer = WindowLayer.getInstanceReconnect();
 		private var windowLayerChild:WindowLayer = WindowLayer.getInstance();
 		private var effectLayerChild:EffectLayer = EffectLayer.getInstance();
 		private var electroServerCommand:* = mainCommand.electroServerCommand;
@@ -313,6 +315,9 @@ package
 			
 			// add windowLayer
 			addWindowLayer();
+			
+			// add reconnect windowLayer
+			addReconnectWindowLayer();
 			
 			// add effectLayer
 			addEffectLayer();
@@ -639,6 +644,7 @@ package
 			minigameLayer = new Sprite();
 			effectLayer = new Sprite();
 			windowLayer = new Sprite();
+			reconnectWindowLayer = new Sprite();
 			debugLayer = new Sprite();
 			debugLayer.visible = false;
 			
@@ -649,6 +655,7 @@ package
 			addChild(minigameLayer);
 			addChild(effectLayer);
 			addChild(windowLayer);
+			addChild(reconnectWindowLayer);
 			addChild(debugLayer);
 			
 			setupDebugLayer();
@@ -687,7 +694,15 @@ package
 		
 		private function onJoinLobbyRoomSuccess(e:Event):void 
 		{
-			mainData.isReconnectPhom = false;
+			if (mainData.isReconnectVersion)
+			{
+				mainData.isReconnectPhom = false;
+				mainData.isReconnectTlmn = false;
+				mainData.isReconnectXito = false;
+				mainData.isReconnectSam = false;
+				mainData.isReconnectMauBinh = false;
+			}
+			WindowLayer.getInstanceReconnect().closeAllWindow();
 			mainData.isReconnectTlmn = false;
 			if (windowLayerChild.isNoCloseAll)
 				windowLayerChild.isNoCloseAll = false;
@@ -696,7 +711,6 @@ package
 				
 			//lobbyRoomScreen.updateGameType();
 			lobbyRoomScreen.updateChannelName();
-			//trace("joinlobby mainview: ", mainData.joinedGame)
 			if (!mainData.joinedGame) 
 			{
 				checkEventExist();
@@ -809,6 +823,11 @@ package
 			windowLayer.addChild(windowLayerChild);
 		}
 		
+		private function addReconnectWindowLayer():void // show bảng chơi
+		{
+			reconnectWindowLayer.addChild(reconnectWindowLayerChild);
+		}
+		
 		private function addEffectLayer():void // show bảng chơi
 		{
 			effectLayer.addChild(effectLayerChild);
@@ -841,6 +860,7 @@ package
 			playingScreen.effectClose();
 			removePlayingScreen();
 			addLobbyRoomScreen();
+			lobbyRoomScreen.removeSelectGameWindow();
 			lobbyRoomScreen.excuteWhenJoinLobby();
 			switch (mainData.gameType) 
 			{

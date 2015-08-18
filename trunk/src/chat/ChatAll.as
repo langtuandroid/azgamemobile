@@ -323,10 +323,12 @@ package chat
 				timeOutTimer = null;
 			}
 			
-			urlLoader.removeEventListener(Event.COMPLETE, getListChatComplete);
-			urlLoader.removeEventListener(IOErrorEvent.IO_ERROR , ioErrorHandler);
-			urlLoader = null;
-			
+			if (urlLoader)
+			{
+				urlLoader.removeEventListener(Event.COMPLETE, getListChatComplete);
+				urlLoader.removeEventListener(IOErrorEvent.IO_ERROR , ioErrorHandler);
+				urlLoader = null;
+			}
 		}
 		private function getListChatComplete(e:Event):void 
 		{
@@ -335,16 +337,20 @@ package chat
 			if (obj.TypeMsg == 1) 
 			{
 				
-				max_sq_id = obj.Data[obj.Data.length - 1 ].Sq_Id;
-				for (var i:int = 0; i < obj.Data.length; i++) 
+				if (obj.Data.length > 0)
 				{
-					var isMe:Boolean = false;
-					if (mainData.chooseChannelData.myInfo.name == obj.Data[i].Nk_Nm) 
+					max_sq_id = obj.Data[obj.Data.length - 1 ].Sq_Id;
+					for (var i:int = 0; i < obj.Data.length; i++) 
 					{
-						isMe = true;
+						var isMe:Boolean = false;
+						if (mainData.chooseChannelData.myInfo.name == obj.Data[i].Nk_Nm) 
+						{
+							isMe = true;
+						}
+						addChatSentence(obj.Data[i].Content, obj.Data[i].Nk_Nm, obj.Data[i].Game_Id, isMe);
 					}
-					addChatSentence(obj.Data[i].Content, obj.Data[i].Nk_Nm, obj.Data[i].Game_Id, isMe);
 				}
+				
 			}
 			
 			startChat();

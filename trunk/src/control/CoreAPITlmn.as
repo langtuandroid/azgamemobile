@@ -58,6 +58,7 @@ package control
 	import event.DataField;
 	import event.DataFieldMauBinh;
 	import event.DataFieldPhom;
+	import event.ElectroServerEvent;
 	import model.GameDataTLMN;
 	import model.MyDataTLMN;
 	import model.playingData.PlayingScreenActionTlmn;
@@ -404,6 +405,9 @@ package control
 		// sau khi kết nối thành công với server thì login
 		public function login(userName:String, password:String = ""): void
 		{
+			if (mainData.isReconnectVersion)
+				electroServer.engine.addEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
+			
 			electroServer.engine.addEventListener(MessageType.LoginResponse.name, onLoginResponse);
 			var loginRequest:LoginRequest = new LoginRequest();
 			loginRequest.userName = userName;
@@ -616,12 +620,12 @@ package control
 				case Command.USER_DISCONNECT:
 					object = new Object();
 					object[DataField.USER_NAME] = e.parameters.getString(DataFieldPhom.USER_NAME);
-					callPlayingScreenAction(Command.USER_DISCONNECT, object);
+					//callPlayingScreenAction(Command.USER_DISCONNECT, object);
 				break;
 				case Command.USER_RECONNECT:
 					object = new Object();
 					object[DataField.USER_NAME] = e.parameters.getString(DataFieldPhom.USER_NAME);
-					callPlayingScreenAction(Command.USER_RECONNECT, object);	
+					//callPlayingScreenAction(Command.USER_RECONNECT, object);	
 				break;
 				
 				case CommandTlmn.ENDROUND:
@@ -1319,7 +1323,8 @@ package control
 					var object:Object = new Object();
 					object[DataField.USER_NAME] = e.userName;
 					
-					dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.HAVE_USER_OUT_ROOM, object));
+					if (!mainData.isReconnectVersion)
+						dispatchEvent(new ElectroServerEvent(ElectroServerEvent.HAVE_USER_OUT_ROOM, object));
 				}
 			}
 			
@@ -1524,27 +1529,6 @@ package control
 			electroServer.engine.send(joinGameRequest);
 		}
 		
-		public function findGameRoom(roomId:int, password:String):void
-		{
-			if (!myData.roomList[roomId])
-			{
-				dispatchEvent(new ElectroServerEventTlmn(ElectroServerEventTlmn.GAME_ROOM_INVALID));
-			}
-			else
-			{
-				leaveRoom();
-				var joinGameRequest:JoinGameRequest = new JoinGameRequest();
-				joinGameRequest.gameId = myData.roomList[roomId][DataFieldMauBinh.GAME_ID];
-				joinGameRequest.password = password;
-				electroServer.engine.addEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
-				if (electroServer.engine.connected) 
-				{
-					electroServer.engine.send(joinGameRequest);
-				}
-				
-			}
-		}
-		
 		public function onCreateOrJoinGameResponse(e:CreateOrJoinGameResponse):void
 		{
 			if (timerToGetRoomList)
@@ -1557,31 +1541,31 @@ package control
 			electroServer.engine.removeEventListener(MessageType.CreateOrJoinGameResponse.name, onCreateOrJoinGameResponse);
 			electroServer.engine.removeEventListener(MessageType.RoomVariableUpdateEvent.name, onRoomVariableUpdateEvent);
 			if (e.successful) {
-				electroServer.engine.addEventListener(MessageType.ZoneUpdateEvent.name, onZoneUpdateEvent);
-				//electroServer.engine.removeEventListener(MessageType.UserVariableUpdateEvent.name, onUserVariableUpdateEvent);
-				
-				myData.roomId = e.roomId;
-				GameDataTLMN.getInstance().roomId = e.roomId;
-				
-				var i:int;
-				
-				myData.gameRoomInfo = new Object();
-				myData.gameRoomInfo[DataFieldMauBinh.ROOM_ID] = myData.roomId;
-				myData.gameRoomInfo[DataFieldMauBinh.ROOM_BET] = e.gameDetails.getString(DataFieldMauBinh.ROOM_BET);
-				myData.gameRoomInfo[DataFieldMauBinh.ROOM_NAME] = e.gameDetails.getString(DataFieldMauBinh.ROOM_NAME);
-				//myData.gameRoomInfo[DataFieldMauBinh.IS_SEND_CARD] = e.gameDetails.getBoolean(DataFieldMauBinh.IS_SEND_CARD);
-				myData.gameRoomInfo[DataFieldMauBinh.GAME_ID] = e.gameId;
-				
-				GameDataTLMN.getInstance().gameRoomInfo = new Object();
-				GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_ID] = GameDataTLMN.getInstance().roomId;
-				GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET] = e.gameDetails.getString(DataField.ROOM_BET);
-				
-				GameDataTLMN.getInstance().gameRoomInfo[DataField.GAME_ID] = e.gameId;
-				// Gửi pluginRequest lên lấy thông tin các user trong phòng chơi
-				var pluginMessage:EsObject = new EsObject();
-				pluginMessage.setString("command", CommandTlmn.GET_PLAYING_INFO);
-				sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().roomId, 
-				GameDataTLMN.getInstance().gameType, pluginMessage);
+				if (!mainData.isReconnectVersion)
+				{
+					myData.roomId = e.roomId;
+					GameDataTLMN.getInstance().roomId = e.roomId;
+					
+					var i:int;
+					
+					myData.gameRoomInfo = new Object();
+					myData.gameRoomInfo[DataFieldMauBinh.ROOM_ID] = myData.roomId;
+					myData.gameRoomInfo[DataFieldMauBinh.ROOM_BET] = e.gameDetails.getString(DataFieldMauBinh.ROOM_BET);
+					myData.gameRoomInfo[DataFieldMauBinh.ROOM_NAME] = e.gameDetails.getString(DataFieldMauBinh.ROOM_NAME);
+					//myData.gameRoomInfo[DataFieldMauBinh.IS_SEND_CARD] = e.gameDetails.getBoolean(DataFieldMauBinh.IS_SEND_CARD);
+					myData.gameRoomInfo[DataFieldMauBinh.GAME_ID] = e.gameId;
+					
+					GameDataTLMN.getInstance().gameRoomInfo = new Object();
+					GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_ID] = GameDataTLMN.getInstance().roomId;
+					GameDataTLMN.getInstance().gameRoomInfo[DataField.ROOM_BET] = e.gameDetails.getString(DataField.ROOM_BET);
+					
+					GameDataTLMN.getInstance().gameRoomInfo[DataField.GAME_ID] = e.gameId;
+					// Gửi pluginRequest lên lấy thông tin các user trong phòng chơi
+					var pluginMessage:EsObject = new EsObject();
+					pluginMessage.setString("command", CommandTlmn.GET_PLAYING_INFO);
+					sendPluginRequest(GameDataTLMN.getInstance().zoneId, GameDataTLMN.getInstance().roomId, 
+					GameDataTLMN.getInstance().gameType, pluginMessage);
+				}
 			}
 			else 
 			{

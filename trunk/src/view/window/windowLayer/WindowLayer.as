@@ -27,6 +27,14 @@ package view.window.windowLayer
 			
 		}
 		
+		private static var _instanceReconnect:WindowLayer;
+		public static function getInstanceReconnect():WindowLayer
+		{
+			if (!_instanceReconnect)
+				_instanceReconnect = new WindowLayer();
+			return _instanceReconnect;
+		}
+		
 		private static var _instance:WindowLayer;
 		public static function getInstance():WindowLayer
 		{

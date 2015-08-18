@@ -8,26 +8,35 @@ package view.window
 	import flash.utils.Timer;
 	import model.MainData;
 	import request.MainRequest;
+	import view.window.windowLayer.WindowLayer;
 	/**
 	 * ...
 	 * @author ...
 	 */
 	public class ReconnectWindow extends BaseWindow 
 	{
+		public static const RECONNECT:String = "reconnect";
 		private var closeButton:SimpleButton;
 		private var countDownTimeTxt:TextField;
 		private var countNumber:int;
 		private var timerToCountDown:Timer;
 		private var timerToCheckInternet:Timer;
+		private var gameBackground:zGameBackground;
 		
 		public function ReconnectWindow() 
 		{
+			gameBackground = new zGameBackground();
+			addChild(gameBackground);
+			gameBackground.x = -gameBackground.width / 2;
+			gameBackground.y = -gameBackground.height / 2;
+			
 			addContent("zReconnectWindow");
 			
 			countDownTimeTxt = content["countDownTimeTxt"];
 			countDownTimeTxt.text = '';
 			closeButton = content["closeButton"];
 			closeButton.addEventListener(MouseEvent.CLICK, onCloseWindow);
+			closeButton.visible = false;
 			
 			countNumber = 30;
 			countDownTimeTxt.text = String(countNumber);
@@ -60,17 +69,18 @@ package view.window
 		
 		private function getSystemNoticeInfoFn(value:Object):void 
 		{
+			if (!stage)
+				return;
 			if (value["status"] == "IO_ERROR")
 			{
 				timerToCheckInternet = new Timer(1000, 1);
 				timerToCheckInternet.addEventListener(TimerEvent.TIMER_COMPLETE, onTimerCompleteToCheckInternet);
 				timerToCheckInternet.start();
-				trace("aaaaaaaaaaaaaaaaa IO_ERROR");
 			}
 			else
 			{
-				close();
-				trace("bbbbbbbbbbbbbbbbbbbbbbbbbb close");
+				//close();
+				dispatchEvent(new Event(RECONNECT));
 			}
 		}
 		
@@ -98,6 +108,8 @@ package view.window
 				timerToCountDown.removeEventListener(TimerEvent.TIMER, onTimerToCountDown);
 				timerToCountDown.stop();
 				close();
+				MainData.getInstance().isReconnectPhom = false;
+				WindowLayer.getInstance().openAlertWindow("Kết nối bị gián đoạn. \n Vui lòng thử lại...");
 			}
 		}
 		

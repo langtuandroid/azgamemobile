@@ -793,6 +793,7 @@ package view
 		{
 			if (mainData.isReconnectVersion)
 			{
+				mainData.maxPlayer = 4;
 				if (mainData.isReconnectPhom)
 				{
 					gameId = 2;
@@ -813,6 +814,47 @@ package view
 					SoundManager.getInstance().playBackgroundMusicMauBinh();
 					isRecentlySelectGame = false;
 				}
+				else if (mainData.isReconnectMauBinh)
+				{
+					gameId = 6;
+					mainData.gameName = 'BINH';
+					mainData.game_id = 'AZGB_BINH';
+					mainData.portNumber = 5201;
+					mainData.minBetRate = 10;
+					mainData.resetMatchTime = 8;
+					if (mainData.isTest)
+						mainData.portNumber = 3201;
+					if (!SoundManager.getInstance().isLoadSoundMauBinh)
+						SoundManager.getInstance().loadSoundMauBinh();
+					mainData.gameType = MainData.MAUBINH;
+					
+					MainCommand.getInstance().initVar();
+					mainData.lobbyRoomData.invitePlayData = new Object();
+					dispatchEvent(new Event(SELECT_GAME));
+					SoundManager.getInstance().playBackgroundMusicMauBinh();
+					isRecentlySelectGame = false;
+				}
+				else if (mainData.isReconnectXito)
+				{
+					gameId = 5;
+					mainData.maxPlayer = 5;
+					mainData.gameName = 'Xì tố';
+					mainData.game_id = 'AZGB_XITO';
+					mainData.portNumber = 5501;
+					mainData.minBetRate = 10;
+					mainData.resetMatchTime = 6.5;
+					if (mainData.isTest)
+						mainData.portNumber = 3501;
+					if (!SoundManager.getInstance().isLoadSoundXito)
+						SoundManager.getInstance().loadSoundXito();
+					mainData.gameType = MainData.XITO;
+					
+					MainCommand.getInstance().initVar();
+					mainData.lobbyRoomData.invitePlayData = new Object();
+					dispatchEvent(new Event(SELECT_GAME));
+					SoundManager.getInstance().playBackgroundMusicMauBinh();
+					isRecentlySelectGame = false;
+				}
 				else if (mainData.isReconnectTlmn)
 				{
 					gameId = 1;
@@ -825,6 +867,38 @@ package view
 						mainData.portNumber = 3101;
 					
 					mainData.gameType = MainData.TLMN;
+					
+					MainCommand.getInstance().initVar();
+					mainData.lobbyRoomData.invitePlayData = new Object();
+					dispatchEvent(new Event(SELECT_GAME));
+					SoundManager.getInstance().playBackgroundMusicMauBinh();
+					isRecentlySelectGame = false;
+				}
+				else if (mainData.isReconnectSam)
+				{
+					gameId = 4;
+					mainData.minBetRate = 10;
+					mainData.game_id = 'AZGB_SAM';
+					
+					mainData.portNumber = 5401;
+					
+					mainData.gameName = 'Sâm';
+					mainData.gameType = 'SAM';
+					
+					mainData.game_id = 'AZGB_SAM';
+					
+					GameDataTLMN.getInstance().gameName = "Sam";
+					GameDataTLMN.getInstance().gameType = "SamPlugin";
+					GameDataTLMN.getInstance().lobbyName = "Sam";
+					GameDataTLMN.getInstance().lobbyPluginName = "LobbyPlugin";
+					GameDataTLMN.getInstance().gameZone = "SAM";
+					
+					MyDataTLMN.getInstance().isGame = 2;
+					if (mainData.isTest)
+						mainData.portNumber = 3401;
+					if (!SoundManager.getInstance().isLoadSoundTlmn)
+						SoundManager.getInstance().addSound();
+					mainData.gameType = MainData.SAM;
 					
 					MainCommand.getInstance().initVar();
 					mainData.lobbyRoomData.invitePlayData = new Object();

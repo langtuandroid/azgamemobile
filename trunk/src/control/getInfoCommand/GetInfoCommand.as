@@ -96,7 +96,6 @@ package control.getInfoCommand
 		private function getChannelInfoFn(value:Object):void 
 		{
 			//mainData.chooseChannelData.channelInfoArray = value as Array;
-			
 			if (value["TypeMsg"])
 			{
 				mainData.chooseChannelData.channelInfoArray = value["Data"];

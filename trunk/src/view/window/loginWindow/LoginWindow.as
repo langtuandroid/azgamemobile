@@ -31,6 +31,7 @@ package view.window.loginWindow
 	import view.window.ConfirmWindow;
 	import view.window.FillNameWindow;
 	import view.window.ForgetPassWindow;
+	import view.window.ReconnectWindow;
 	import view.window.RegisterFacebookWindow;
 	import view.window.registerWindow.RegisterWindow;
 	import view.window.SpecialGroupWindow;
@@ -354,7 +355,9 @@ package view.window.loginWindow
 		{
 			if (mainData.isReconnectPhom || mainData.isReconnectTlmn)
 			{
-				if (mainData.loginType == '1')
+				mainData.isFirstLogin = false;
+				mainData.isLoginSuccess = true;
+				/*if (mainData.loginType == '1')
 				{
 					loginMobile();
 					mainData.isFirstLogin = false;
@@ -368,7 +371,7 @@ package view.window.loginWindow
 				{
 					loginEmail();
 					mainData.isFirstLogin = false;
-				}
+				}*/
 			}
 		}
 		
